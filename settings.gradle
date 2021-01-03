@@ -1,0 +1,2 @@
+rootProject.name = "Compose Tutorials"
+include ':Tutorial1-1Basics'
