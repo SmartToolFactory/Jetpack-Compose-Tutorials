@@ -1,5 +1,11 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.content.Intent
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.style.ClickableSpan
+import android.view.View
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +23,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,8 +35,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.text.HtmlCompat
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.components.TutorialText
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
 
 
@@ -121,6 +130,9 @@ private fun TutorialContent() {
 
         // Draw text shadow
         TextShadowExample()
+
+        // Draw Spannable example
+        SpannableTextExample()
 
         Spacer(modifier = Modifier.padding(bottom = 32.dp))
     }
@@ -304,6 +316,81 @@ private fun TextShadowExample() {
             )
         )
     }
+}
+
+@Composable
+private fun SpannableTextExample(modifier: Modifier = Modifier) {
+
+    TutorialText2(text = "Spannable Text")
+
+    val annotatedColorString = buildAnnotatedString {
+        append("RedGreenBlue")
+        addStyle(style = SpanStyle(color = Color.Red, fontSize = 24.sp), start = 0, end = 3)
+        addStyle(
+            style = SpanStyle(
+                color = Color.Green,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            ), start = 3, end = 8
+        )
+        addStyle(
+            style = SpanStyle(
+                color = Color.Blue,
+                fontSize = 26.sp,
+                textDecoration = TextDecoration.Underline
+            ),
+            start = 8,
+            end = this.length
+        )
+    }
+
+    Text(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        text = annotatedColorString
+    )
+
+    val annotatedLinkString = buildAnnotatedString {
+        val str = "Click this link to go to web site"
+        val startIndex = str.indexOf("link")
+        val endIndex = startIndex + 4
+        append(str)
+        addStyle(
+            style = SpanStyle(
+                color = Color(0xff64B5F6),
+                textDecoration = TextDecoration.Underline
+            ), start = startIndex, end = endIndex
+        )
+    }
+
+    Text(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        text = annotatedLinkString
+    )
+
+
+    // TODO Figure out how to add hyperlink to spannable text
+    val str: Spanned = HtmlCompat.fromHtml(
+        "<a href=\"http://www.github.com\">Github</a>", HtmlCompat.FROM_HTML_MODE_LEGACY
+    )
+
+    val ss = SpannableString("Android is a Software stack")
+    val clickableSpan: ClickableSpan = object : ClickableSpan() {
+        override fun onClick(textView: View) {
+
+        }
+
+        override fun updateDrawState(ds: TextPaint) {
+            super.updateDrawState(ds)
+            ds.isUnderlineText = false
+        }
+    }
+    ss.setSpan(clickableSpan, 22, 27, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+
 }
 
 
