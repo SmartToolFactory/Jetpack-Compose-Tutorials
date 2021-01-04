@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawShadow
 import androidx.compose.ui.draw.shadow
@@ -39,15 +40,15 @@ private fun TutorialContent() {
         TutorialHeader(text = "Clickable")
         TutorialText(
             text = "1-) Adding clickable to Modifier makes a component clickable." +
-                    "\nPadding before clickable makes area clickable smaller than components size."
+                    "\nPadding before clickable makes clickable area smaller than component's total area."
         )
         ClickableModifierExample()
 
         TutorialHeader(text = "Surface")
-        TutorialText(text = "2-) Surface can clip it's children to selected shapes.")
+        TutorialText(text = "2-) Surface can clips it's children to selected shape.")
         SurfaceShapeExample()
 
-        TutorialText(text = "3-) Surface can set Z index and border of it's content.")
+        TutorialText(text = "3-) Surface can set Z index and border of it's children.")
         SurfaceZIndexExample()
 
         TutorialText(text = "4-) Surface can set content color for Text and Image.")
@@ -55,7 +56,7 @@ private fun TutorialContent() {
 
         TutorialText(
             text = "5-) Components can have offset in both x and y axes. Surface inside" +
-                    " another surface gets clipped when it overflow in parent."
+                    " another surface gets clipped when it overflows from it's parent."
         )
         SurfaceClickPropagationExample()
 
@@ -264,7 +265,7 @@ fun SurfaceContentColorExample() {
         contentColor = (Color(0xFF26C6DA))
     ) {
         Text(
-            text = "Text inside Surface uses content color for font color.",
+            text = "Text inside Surface uses Surface's content color as a default color.",
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)
         )
@@ -283,32 +284,33 @@ fun SurfaceClickPropagationExample() {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clipToBounds()
             .clickable(onClick = {
                 Toast.makeText(context, "Box Clicked", Toast.LENGTH_SHORT).show()
             })
     ) {
 
         Surface(
+            elevation = 10.dp,
+            shape = RoundedCornerShape(10.dp),
+            color = (Color(0xFFFDD835)),
             modifier = Modifier
                 .preferredSize(150.dp)
                 .padding(12.dp)
+                .clip(RoundedCornerShape(10.dp))
                 .clickable(onClick = {
                     Toast.makeText(
                         context,
                         "Surface(Left) inside Box is clicked!",
                         Toast.LENGTH_SHORT
                     ).show()
-                }),
-            elevation = 10.dp,
-            shape = RoundedCornerShape(10.dp),
-            color = (Color(0xFFFDD835))
+                })
         ) {
 
             Surface(
                 modifier = Modifier
                     .preferredSize(80.dp)
                     .offset(x = 50.dp, y = (-20).dp)
+                    .clip(CircleShape)
                     .clickable(onClick = {
                         Toast.makeText(
                             context,
@@ -317,7 +319,6 @@ fun SurfaceClickPropagationExample() {
                         ).show()
                     }),
                 elevation = 12.dp,
-                shape = CircleShape,
                 color = (Color(0xFF26C6DA))
             ) {
 
@@ -330,6 +331,7 @@ fun SurfaceClickPropagationExample() {
                 .preferredSize(110.dp)
                 .padding(12.dp)
                 .offset(x = 110.dp, y = 20.dp)
+                .clip(CutCornerShape(10.dp))
                 .clickable(onClick = {
                     Toast.makeText(
                         context,
@@ -338,7 +340,6 @@ fun SurfaceClickPropagationExample() {
                     ).show()
 
                 }),
-            shape = CutCornerShape(10.dp),
             color = (Color(0xFFF4511E)),
             elevation = 8.dp
         ) {}

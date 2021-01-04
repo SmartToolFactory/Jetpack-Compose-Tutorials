@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
 
         val tutorial1_3 = TutorialSectionModel(
             title = "1-3 Modifiers",
-            description = "Change various modifiers such as padding, dimensions, shadow," +
+            description = "Change modifiers such as padding, dimensions, shadow," +
                     " background, and more.",
             action = {
                 Tutorial1_2Screen()
@@ -190,16 +190,15 @@ class MainActivity : AppCompatActivity() {
 
         val tutorial2_2 = TutorialSectionModel(
             title = "2-2 Button",
-            description = "Create button with text and/or with image, Floating Action Button " +
-                    ", or Chips. Modify properties of buttons including color, text, " +
-                    "and click actions.",
+            description = "Create Button with text and/or with image, Floating Action Button " +
+                    ", or Chips. Modify properties of buttons such as color, text, or state.",
             action = {
                 Tutorial2_2Screen()
             },
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_BUTTON,
-                TAG_IMAGE_BUTTON,
+                TAG_ICON_BUTTON,
                 TAG_FAB_BUTTON,
                 TAG_CHIP
             )

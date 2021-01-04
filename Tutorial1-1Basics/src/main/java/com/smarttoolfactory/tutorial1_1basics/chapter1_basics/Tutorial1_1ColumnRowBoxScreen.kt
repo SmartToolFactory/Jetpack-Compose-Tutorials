@@ -43,11 +43,11 @@ private fun TutorialContent() {
     ScrollableColumn(Modifier.fillMaxSize()) {
 
         TutorialHeader(text = "Row")
-        TutorialText(text = "1-) Row aligns it's children horizontally")
+        TutorialText(text = "1-) Row is a layout composable that places its children in a horizontal sequence.")
         RowExample()
 
         TutorialHeader(text = "Column")
-        TutorialText(text = "2-) Column aligns it's children vertically")
+        TutorialText(text = "2-) Column is a layout composable that places its children in a vertical sequence.")
         ColumnExample()
 
         TutorialText(
