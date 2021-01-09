@@ -20,14 +20,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.text.SoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialText
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
-import java.util.regex.Pattern
 
 // TODO Add Filtering and Regex
+/**
+ * TextField is composable that replaces [EditText] in classic Android Views.
+ *
+ * It's input component for entering text.
+ *
+ *
+ * ### Note
+ * As of 1.0.0-alpha-09 it does not have Assitive Text, Error Text, Character Counter,
+ * Prefix, and Suffix.
+ */
 @Composable
 fun Tutorial2_3Screen() {
     TutorialContent()
@@ -61,6 +73,24 @@ private fun TutorialContent() {
             }
         )
 
+        TutorialText2(text = "Error")
+
+        val errorText = remember { mutableStateOf(TextFieldValue("Don't leave blank")) }
+        val isError = remember { mutableStateOf(false) }
+
+        TextField(
+            modifier = fullWidthModifier,
+            value = errorText.value,
+            label = { Text("Label") },
+            placeholder = { Text("Placeholder") },
+            onValueChange = { newValue ->
+
+                errorText.value = newValue
+
+            },
+            isErrorValue = errorText.value.text.isEmpty(),
+        )
+
         TutorialText2(text = "Colors")
 
         TextField(
@@ -75,6 +105,25 @@ private fun TutorialContent() {
             backgroundColor = Color(0xffFFD54F),
             inactiveColor = Color(0xff42A5F5),
             errorColor = Color(0xff2E7D32)
+        )
+
+        TextField(
+            modifier = fullWidthModifier,
+            value = textFieldValue.value,
+            label = { Text("Label") },
+            placeholder = { Text("Placeholder") },
+            onValueChange = { newValue ->
+                textFieldValue.value = newValue
+            },
+            activeColor = Color(0xffFF8F00),
+            backgroundColor = Color(0xffFFD54F),
+            inactiveColor = Color(0xff42A5F5),
+            errorColor = Color(0xff2E7D32),
+            textStyle = TextStyle(
+                color = Color.White,
+                fontStyle = FontStyle.Italic,
+                fontWeight = FontWeight.Bold
+            )
         )
 
 
