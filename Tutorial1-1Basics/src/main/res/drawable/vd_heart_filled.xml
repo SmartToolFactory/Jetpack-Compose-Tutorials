@@ -1,0 +1,13 @@
+<vector android:name="heartbreak"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:name="fill"
+        android:pathData="M 28 39 L 26.405 37.567 C 20.74 32.471 17 29.109 17 24.995 C 17 21.632 19.657 19 23.05 19 C 24.964 19 26.801 19.883 28 21.272 C 29.199 19.883 31.036 19 32.95 19 C 36.343 19 39 21.632 39 24.995 C 39 29.109 35.26 32.471 29.595 37.567 L 28 39 L 28 39 Z"
+        android:fillColor="#e91e63"
+        android:strokeColor="#e91e63"
+        android:strokeWidth="2"/>
+</vector>
