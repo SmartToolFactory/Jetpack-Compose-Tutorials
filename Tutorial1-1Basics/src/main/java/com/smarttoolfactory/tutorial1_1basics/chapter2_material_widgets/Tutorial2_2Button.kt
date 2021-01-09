@@ -350,10 +350,3 @@ fun ChipExample(modifier: Modifier) {
     }
 }
 
-@Composable
-fun FullWidthRow(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-
-    Row(modifier = modifier.fillMaxWidth()) {
-        content()
-    }
-}

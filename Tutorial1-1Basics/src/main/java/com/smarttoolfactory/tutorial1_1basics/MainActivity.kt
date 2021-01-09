@@ -24,6 +24,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_3Screen
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialSectionCard
 import com.smarttoolfactory.tutorial1_1basics.model.*
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
@@ -204,11 +205,25 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        val tutorial2_3 = TutorialSectionModel(
+            title = "2-3 TextField",
+            description = "Create TextField component with different properties such as " +
+                    "color, background, font weight, family, style, spacing and others.",
+            action = {
+                Tutorial2_3Screen()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_TEXT
+            )
+        )
+
         return listOf(
             tutorial1_1,
             tutorial1_2,
             tutorial2_1,
-            tutorial2_2
+            tutorial2_2,
+            tutorial2_3
         )
     }
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,7 +41,7 @@ import androidx.core.text.HtmlCompat
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
 
-
+// TODO Fix HyperLink
 @Composable
 fun Tutorial2_1Screen() {
     TutorialContent()
@@ -351,7 +352,8 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
         text = annotatedColorString
     )
 
-    val annotatedLinkString = buildAnnotatedString {
+    val annotatedLinkString: AnnotatedString = buildAnnotatedString {
+
         val str = "Click this link to go to web site"
         val startIndex = str.indexOf("link")
         val endIndex = startIndex + 4
@@ -362,35 +364,47 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
                 textDecoration = TextDecoration.Underline
             ), start = startIndex, end = endIndex
         )
+
+        // attach a string annotation that stores a URL to the text "Jetpack Compose".
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "http://www.github.com",
+            start = startIndex,
+            end = endIndex
+        )
+
+    }
+
+  val str =  AnnotatedString.Builder().apply {
+        append("link: Jetpack Compose")
+        // attach a string annotation that stores a URL to the text "Jetpack Compose".
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "https://developer.android.com/jetpack/compose",
+            start = 6,
+            end = 21
+        )
+    }.toAnnotatedString()
+
+  val linkText =  with(AnnotatedString.Builder()) {
+        append("link: Jetpack Compose")
+        // attach a string annotation that stores a URL to the text "Jetpack Compose".
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "https://developer.android.com/jetpack/compose",
+            start = 6,
+            end = 21
+        )
+
+        toAnnotatedString()
     }
 
     Text(
         modifier = modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        text = annotatedLinkString
+        text = linkText
     )
-
-
-    // TODO Figure out how to add hyperlink to spannable text
-    val str: Spanned = HtmlCompat.fromHtml(
-        "<a href=\"http://www.github.com\">Github</a>", HtmlCompat.FROM_HTML_MODE_LEGACY
-    )
-
-    val ss = SpannableString("Android is a Software stack")
-    val clickableSpan: ClickableSpan = object : ClickableSpan() {
-        override fun onClick(textView: View) {
-
-        }
-
-        override fun updateDrawState(ds: TextPaint) {
-            super.updateDrawState(ds)
-            ds.isUnderlineText = false
-        }
-    }
-    ss.setSpan(clickableSpan, 22, 27, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-
 }
 
 
