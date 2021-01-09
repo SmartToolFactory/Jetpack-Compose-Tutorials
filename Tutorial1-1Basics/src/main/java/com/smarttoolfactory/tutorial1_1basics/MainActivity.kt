@@ -25,6 +25,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_4Screen
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialSectionCard
 import com.smarttoolfactory.tutorial1_1basics.model.*
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
@@ -36,6 +37,8 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
  * for [NavGraphBuilder]
  */
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var tutorialList: List<TutorialSectionModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         val navController = rememberNavController()
 
         // Create Tutorial List
-        val tutorialList = createTutorialList()
+        tutorialList = createTutorialList()
 
         // Create Navigation for each Composable Page
         NavHost(
@@ -207,14 +210,33 @@ class MainActivity : AppCompatActivity() {
 
         val tutorial2_3 = TutorialSectionModel(
             title = "2-3 TextField",
-            description = "Create TextField component with different properties such as " +
-                    "color, background, font weight, family, style, spacing and others.",
+            description = "Create TextField component with regular style or outlined. Set error," +
+                    " colors, state, icons, and IME actions.",
             action = {
                 Tutorial2_3Screen()
             },
             tags = listOf(
                 TAG_COMPOSE,
-                TAG_TEXT
+                TAG_TEXT_FIELD,
+                TAG_OUTLINED_TEXT_FIELD,
+                TAG_IME,
+                TAG_REGEX
+            )
+        )
+
+        val tutorial2_4 = TutorialSectionModel(
+            title = "2-4 Image",
+            description = "Create Image to display images, set image and crop styles. Use " +
+                    "resource to retrieve images and Coil for fetching image from remote sources.",
+            action = {
+                Tutorial2_4Screen()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_IMAGE,
+                TAG_DRAWABLE,
+                TAG_VECTOR_DRAWABLE,
+                TAG_BITMAP
             )
         )
 
@@ -223,7 +245,8 @@ class MainActivity : AppCompatActivity() {
             tutorial1_2,
             tutorial2_1,
             tutorial2_2,
-            tutorial2_3
+            tutorial2_3,
+            tutorial2_4
         )
     }
 }

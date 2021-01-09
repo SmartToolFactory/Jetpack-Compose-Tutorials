@@ -1,7 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,7 +36,6 @@ import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
  * TextField is composable that replaces [EditText] in classic Android Views.
  *
  * It's input component for entering text.
- *
  *
  * ### Note
  * As of 1.0.0-alpha-09 it does not have Assitive Text, Error Text, Character Counter,
@@ -76,7 +77,6 @@ private fun TutorialContent() {
         TutorialText2(text = "Error")
 
         val errorText = remember { mutableStateOf(TextFieldValue("Don't leave blank")) }
-        val isError = remember { mutableStateOf(false) }
 
         TextField(
             modifier = fullWidthModifier,
@@ -107,6 +107,7 @@ private fun TutorialContent() {
             errorColor = Color(0xff2E7D32)
         )
 
+        TutorialText2(text = "Colors & Text Style")
         TextField(
             modifier = fullWidthModifier,
             value = textFieldValue.value,
@@ -115,9 +116,9 @@ private fun TutorialContent() {
             onValueChange = { newValue ->
                 textFieldValue.value = newValue
             },
-            activeColor = Color(0xffFF8F00),
-            backgroundColor = Color(0xffFFD54F),
-            inactiveColor = Color(0xff42A5F5),
+            activeColor = Color(0xffFFE082),
+            backgroundColor = Color(0xff039BE5),
+            inactiveColor = Color(0xffAEEA00),
             errorColor = Color(0xff2E7D32),
             textStyle = TextStyle(
                 color = Color.White,
@@ -147,7 +148,7 @@ private fun TutorialContent() {
             onValueChange = { newValue ->
                 textFieldValue.value = newValue
             },
-            activeColor = Color(0xff7B1FA2),
+            activeColor = Color(0xff43A047),
             inactiveColor = Color(0xff66BB6A),
             errorColor = Color(0xffFFEB3B)
         )
@@ -284,5 +285,7 @@ private fun TutorialContent() {
                 ).show()
             }
         )
+
+        Spacer(modifier = Modifier.padding(bottom = 32.dp))
     }
 }

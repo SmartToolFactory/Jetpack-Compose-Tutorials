@@ -20,8 +20,16 @@ const val TAG_FAB_BUTTON = "Floating Action Button"
 const val TAG_CHIP = "Chip"
 
 // TEXT FIELD
+const val TAG_TEXT_FIELD = "TextField"
+const val TAG_OUTLINED_TEXT_FIELD = "Outlined TextField"
+const val TAG_IME = "IME"
+const val TAG_REGEX = "Regex"
 
 // IMAGE
+const val TAG_IMAGE ="Image"
+const val TAG_DRAWABLE = "Drawable"
+const val TAG_VECTOR_DRAWABLE = "Vector Drawable"
+const val TAG_BITMAP = "Bitmap"
 
 // CARD
 
