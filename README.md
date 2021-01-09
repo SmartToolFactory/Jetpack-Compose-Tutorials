@@ -11,7 +11,7 @@ and  Navigation.
 
 |Tutorial|Preview|
 |-------|-------|
-|<h3>1-1 Column, Row, Box, Modifiers</h3><br/>Create Rows that adds elements in horizontal order, and Columns that adds elements in vertical order.|<img src ="/./screenshots/tutorial1-1.jpg" width=350> |
+|<h3>1-1 Column, Row, Box, Modifiers</h3><br/>Create Row that adds elements in horizontal order, and Column that adds elements in vertical order.|<img src ="/./screenshots/tutorial1-1.jpg" width=350> |
 |<h3>1-2 Surface, Shape, Clickable</h3><br/>Create and modify Surface to draw background for Composables, add click action to any composable. Set weight or offset modifiers.|<img src ="/./screenshots/tutorial1-2.jpg" width=350> |
 
 #### Material Widgets

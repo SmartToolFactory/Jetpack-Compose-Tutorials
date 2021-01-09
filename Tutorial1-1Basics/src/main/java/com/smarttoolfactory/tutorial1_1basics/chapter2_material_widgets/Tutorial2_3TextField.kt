@@ -2,16 +2,15 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.widget.EditText
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
@@ -21,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -127,6 +127,23 @@ private fun TutorialContent() {
             )
         )
 
+        TutorialText2(text = "Shape")
+
+        Surface(
+            modifier = fullWidthModifier,
+            shape = RoundedCornerShape(25),
+            elevation = 2.dp,
+            border = BorderStroke(1.dp, Color.LightGray)
+        ) {
+            TextField(
+                value = textFieldValue.value,
+                placeholder = { Text("Search") },
+                onValueChange = { newValue ->
+                    textFieldValue.value = newValue
+                },
+                backgroundColor = Color.White,
+            )
+        }
 
         TutorialText2(text = "Outlined")
 
@@ -286,6 +303,44 @@ private fun TutorialContent() {
             }
         )
 
+        TutorialText(
+            text = "5-) With VisualTransformation and Regex it's possible to " +
+                    "transform text based on a format such as masked chars, phone " +
+                    "or currency."
+        )
+
+        val maskText = remember { mutableStateOf(TextFieldValue("")) }
+        OutlinedTextField(
+            modifier = fullWidthModifier,
+            value = maskText.value,
+            label = { Text("Mask Chars") },
+            placeholder = { Text(text = "") },
+            onValueChange = { newValue ->
+                maskText.value = newValue
+            },
+            singleLine = true,
+            visualTransformation = PasswordMaskTransformation()
+        )
+
         Spacer(modifier = Modifier.padding(bottom = 32.dp))
     }
 }
+
+
+class PasswordMaskTransformation() : VisualTransformation {
+
+    override fun filter(text: AnnotatedString): TransformedText {
+        return TransformedText(
+            AnnotatedString(text.text.replace(".".toRegex(), "!")),
+            maskOffsetMap
+        )
+    }
+
+    private val maskOffsetMap = object : OffsetMap {
+        override fun originalToTransformed(offset: Int) = offset
+        override fun transformedToOriginal(offset: Int) = offset
+    }
+}
+
+
+
