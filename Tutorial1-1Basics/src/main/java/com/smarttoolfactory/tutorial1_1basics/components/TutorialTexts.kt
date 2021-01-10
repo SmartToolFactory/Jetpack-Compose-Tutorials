@@ -46,7 +46,7 @@ fun TutorialText(text: String, modifier: Modifier = Modifier, addBullet: Boolean
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         text = annotatedString
     )
 }
