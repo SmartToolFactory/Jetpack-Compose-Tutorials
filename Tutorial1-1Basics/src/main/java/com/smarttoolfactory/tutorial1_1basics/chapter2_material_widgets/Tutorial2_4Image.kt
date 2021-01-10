@@ -32,9 +32,20 @@ import coil.request.ImageRequest
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.components.*
 
-
+// TODO Add PorterDuff blend modes and Coil Image loading
 @Composable
 fun Tutorial2_4Screen() {
+    val imageBitmapSrc: ImageBitmap = imageResource(id = R.drawable.composite_src)
+    val imageBitmapDst: ImageBitmap = imageResource(id = R.drawable.composite_dst)
+
+//    androidx.compose.foundation.Canvas(modifier = Modifier.size(500.dp),
+//        onDraw = {
+//
+//            drawImage(imageBitmapDst)
+//            drawImage(imageBitmapSrc, blendMode = BlendMode.SrcOut)
+//
+//        })
+
     TutorialContent()
 }
 
@@ -64,15 +75,15 @@ private fun TutorialContent() {
         )
         ImageShapeAndFilterExample()
 
-        TutorialText(
-            text = "4-) Use Coil to fetch an image resource from network and " +
-                    "set it to Image component."
-        )
+//        TutorialText(
+//            text = "4-) Use Coil to fetch an image resource from network and " +
+//                    "set it to Image component."
+//        )
+//
+//        ImageDownloadExample()
 
-        ImageDownloadExample()
-
         TutorialText(
-            text = "5-) ContentScale represents a rule to apply to scale a source " +
+            text = "4-) ContentScale represents a rule to apply to scale a source " +
                     "rectangle to be inscribed into a destination."
         )
         ImageContentScaleExample()
@@ -100,7 +111,6 @@ fun ImageDownloadExample() {
         .build()
 
     context.imageLoader.enqueue(request)
-
 
 }
 
@@ -251,6 +261,30 @@ private fun ImageShapeAndFilterExample() {
             colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Color)
         )
     }
+
+    // TODO PorterDuff mode is not working properly, or i couldn't figure it out yet
+    // Check out https://stackoverflow.com/questions/65653560/jetpack-compose-applying-porterduffmode-to-image
+//    val imageBitmapSrc: ImageBitmap = imageResource(id = R.drawable.composite_src)
+//    val imageBitmapDst: ImageBitmap = imageResource(id = R.drawable.composite_dst)
+//
+//    val size = Size(imageBitmapSrc.width.toFloat(), imageBitmapSrc.height.toFloat())
+//
+//    val blendPainter = remember {
+//        object : Painter() {
+//
+//            override val intrinsicSize: Size
+//                get() = size
+//
+//            override fun DrawScope.onDraw() {
+////                drawRect(Color(0xffBDBDBD), size = size)
+//                drawImage(imageBitmapDst)
+//                drawImage(imageBitmapSrc, blendMode = BlendMode.SrcOut)
+//            }
+//        }
+//    }
+//
+//    Image(blendPainter)
+
 }
 
 @Composable

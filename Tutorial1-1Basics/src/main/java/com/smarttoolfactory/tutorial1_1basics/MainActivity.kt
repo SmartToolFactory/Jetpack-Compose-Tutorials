@@ -226,8 +226,8 @@ class MainActivity : AppCompatActivity() {
 
         val tutorial2_4 = TutorialSectionModel(
             title = "2-4 Image",
-            description = "Create Image to display images, set image and crop styles. Use " +
-                    "resource to retrieve images and Coil for fetching image from remote sources.",
+            description = "Create Image to display images, set image and crop styles. " +
+                    "Change shape of Image or apply ColorFilter and PorterDuff modes.",
             action = {
                 Tutorial2_4Screen()
             },
