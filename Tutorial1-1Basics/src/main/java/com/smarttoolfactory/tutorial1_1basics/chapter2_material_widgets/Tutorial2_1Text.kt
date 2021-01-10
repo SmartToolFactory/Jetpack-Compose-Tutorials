@@ -1,11 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
-import android.content.Intent
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.style.ClickableSpan
-import android.view.View
+import androidx.compose.foundation.ClickableText
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +18,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.AmbientUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -36,12 +33,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.text.HtmlCompat
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
 
-// TODO Fix HyperLink
 @Composable
 fun Tutorial2_1Screen() {
     TutorialContent()
@@ -361,6 +355,7 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
         addStyle(
             style = SpanStyle(
                 color = Color(0xff64B5F6),
+                fontSize = 18.sp,
                 textDecoration = TextDecoration.Underline
             ), start = startIndex, end = endIndex
         )
@@ -368,42 +363,30 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
         // attach a string annotation that stores a URL to the text "Jetpack Compose".
         addStringAnnotation(
             tag = "URL",
-            annotation = "http://www.github.com",
+            annotation = "https://github.com/SmartToolFactory",
             start = startIndex,
             end = endIndex
         )
 
     }
 
-  val str =  AnnotatedString.Builder().apply {
-        append("link: Jetpack Compose")
-        // attach a string annotation that stores a URL to the text "Jetpack Compose".
-        addStringAnnotation(
-            tag = "URL",
-            annotation = "https://developer.android.com/jetpack/compose",
-            start = 6,
-            end = 21
-        )
-    }.toAnnotatedString()
+    // UriHandler parse and opens URI inside AnnotatedString Item in Browse
+    val uriHandler: UriHandler = AmbientUriHandler.current
 
-  val linkText =  with(AnnotatedString.Builder()) {
-        append("link: Jetpack Compose")
-        // attach a string annotation that stores a URL to the text "Jetpack Compose".
-        addStringAnnotation(
-            tag = "URL",
-            annotation = "https://developer.android.com/jetpack/compose",
-            start = 6,
-            end = 21
-        )
-
-        toAnnotatedString()
-    }
-
-    Text(
+    // 🔥 Clickable text returns position of text that is clicked in onClick callback
+    ClickableText(
         modifier = modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        text = linkText
+        text = annotatedLinkString,
+        onClick = {
+            annotatedLinkString
+                .getStringAnnotations( it, it)
+                .firstOrNull()?.let { stringAnnotation ->
+                    println("🔥 Clicked: $it, item: ${stringAnnotation.item}")
+                    uriHandler.openUri(stringAnnotation.item)
+                }
+        }
     )
 }
 
