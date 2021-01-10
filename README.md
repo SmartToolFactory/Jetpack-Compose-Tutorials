@@ -20,4 +20,4 @@ and  Navigation.
 |<h3>2-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others|<img src ="/./screenshots/tutorial2-1.jpg" width=350> |
 |<h3>2-2 Button, IconButton, FAB, Chip</h3><br/>Create button with text and/or with image, Floating Action Button  or Chips. Modify properties of buttons including color, text, and click actions.|<img src ="/./screenshots/tutorial2-2.jpg" width=350> |
 |<h3>2-3 TextField</h3><br/>Create TextField component with regular style or outlined. Set error, colors, state, icons, and IME actions.|<img src ="/./screenshots/tutorial2-3.jpg" width=350> |
-|<h3>2-4 Image</h3><br/>Create Image to display images, set image and Content scales to fit, expand or shrink image. Change shape of Image or apply ColorFilter and PorterDuff modes.|<img src ="/./screenshots/tutorial2-4.gif" width=350> |
+|<h3>2-4 Image</h3><br/>Create Image with image, vector resource or with Painter, set image and Content scales to fit, expand or shrink image. Change shape of Image or apply ColorFilter and PorterDuff modes.|<img src ="/./screenshots/tutorial2-4.gif" width=350> |
