@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import kotlin.math.max
 
-@OptIn(InternalLayoutApi::class)
 @Composable
 fun FullWidthRow(
     modifier: Modifier = Modifier,

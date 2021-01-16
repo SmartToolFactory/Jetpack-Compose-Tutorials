@@ -336,7 +336,7 @@ class PasswordMaskTransformation() : VisualTransformation {
         )
     }
 
-    private val maskOffsetMap = object : OffsetMap {
+    private val maskOffsetMap = object : OffsetMapping {
         override fun originalToTransformed(offset: Int) = offset
         override fun transformedToOriginal(offset: Int) = offset
     }

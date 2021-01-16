@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -230,23 +231,23 @@ private fun ButtonBackgroundExample(modifier: Modifier) {
 @Composable
 private fun GradientButtonExample(modifier: Modifier) {
 
+    val horizontalGradientBrush = Brush.horizontalGradient(
+        colors = listOf(
+            Color(0xffF57F17),
+            Color(0xffFFEE58),
+            Color(0xffFFF9C4)
+        )
+    )
+
+    val verticalGradientBrush = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xff4E342E),
+            Color(0xff8D6E63),
+            Color(0xffD7CCC8)
+        )
+    )
+
     FullWidthRow {
-        val horizontalGradientBrush = Brush.horizontalGradient(
-            colors = listOf(
-                Color(0xffF57F17),
-                Color(0xffFFEE58),
-                Color(0xffFFF9C4)
-            )
-        )
-
-        val verticalGradientBrush = Brush.verticalGradient(
-            colors = listOf(
-                Color(0xff4E342E),
-                Color(0xff8D6E63),
-                Color(0xffD7CCC8)
-            )
-        )
-
         Column(
             modifier = modifier
                 .clip(RoundedCornerShape(20))
@@ -267,6 +268,19 @@ private fun GradientButtonExample(modifier: Modifier) {
             Text(text = "Vertical Gradient")
         }
 
+    }
+
+    FullWidthRow {
+        Button(contentPadding = PaddingValues(0.dp), onClick = {}) {
+            Text(
+                text = "Vertical Gradient",
+                modifier = modifier
+                    .preferredHeight(ButtonDefaults.MinHeight)
+                    .align(Alignment.CenterVertically)
+                    .background(brush = verticalGradientBrush)
+                    .padding(8.dp)
+            )
+        }
     }
 }
 
