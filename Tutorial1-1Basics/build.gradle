@@ -54,7 +54,7 @@ dependencies {
     def nav_compose_version = "1.0.0-alpha06"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
 
     // Coil
     implementation("io.coil-kt:coil:1.1.0")

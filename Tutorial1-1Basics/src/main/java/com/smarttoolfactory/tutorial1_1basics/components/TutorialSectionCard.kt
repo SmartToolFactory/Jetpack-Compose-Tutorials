@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -54,8 +55,9 @@ fun TutorialSectionCard(
 
             // Horizontal list for tags
             LazyRow(content = {
-                items(model.tags) { item ->
-                    TutorialChip(text = item)
+
+                items(model.tags) { tag ->
+                    TutorialChip(text = tag)
                     Spacer(Modifier.preferredWidth(8.dp))
                 }
             })

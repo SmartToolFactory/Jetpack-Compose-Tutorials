@@ -62,7 +62,11 @@ fun Chip(
             if (drawableRes != -1) {
                 Image(
                     bitmap = imageResource(drawableRes),
-                    modifier = Modifier.padding(8.dp).preferredSize(20.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .preferredSize(20.dp)
+                        .clip(CircleShape),
+                    contentDescription = null
                 )
             }
             Text(
@@ -96,7 +100,11 @@ fun OutlinedChip(
             if (drawableRes != -1) {
                 Image(
                     bitmap = imageResource(drawableRes),
-                    modifier = Modifier.padding(8.dp).preferredSize(20.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .preferredSize(20.dp)
+                        .clip(CircleShape),
+                    contentDescription = null
                 )
             }
             Text(
@@ -117,9 +125,14 @@ fun CircleCloseButton(modifier: Modifier) {
     Surface(color = Color.DarkGray, modifier = modifier, shape = CircleShape) {
         IconButton(
             onClick = {},
-            modifier = Modifier.preferredSize(16.dp).padding(1.dp)
+            modifier = Modifier
+                .preferredSize(16.dp)
+                .padding(1.dp)
         ) {
-            Icon(Icons.Filled.Close, tint = Color(0xFFE0E0E0))
+            Icon(
+                Icons.Filled.Close, tint = Color(0xFFE0E0E0),
+                contentDescription = null
+            )
         }
     }
 }

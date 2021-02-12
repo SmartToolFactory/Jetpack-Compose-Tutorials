@@ -147,7 +147,8 @@ private fun ButtonWithIconExample(modifier: Modifier) {
             Row {
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp),
+                    contentDescription = null
                 )
                 Text(text = "Icon+Text")
             }
@@ -160,7 +161,8 @@ private fun ButtonWithIconExample(modifier: Modifier) {
             Text(text = "Text+Icon")
             Icon(
                 imageVector = Icons.Default.FavoriteBorder,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp),
+                contentDescription = null
             )
         }
 
@@ -169,7 +171,10 @@ private fun ButtonWithIconExample(modifier: Modifier) {
             shape = RoundedCornerShape(20),
             modifier = modifier
         ) {
-            Icon(imageVector = Icons.Default.FavoriteBorder)
+            Icon(
+                imageVector = Icons.Default.FavoriteBorder,
+                contentDescription = null
+            )
         }
     }
 
@@ -180,12 +185,14 @@ private fun ButtonWithIconExample(modifier: Modifier) {
         ) {
             Icon(
                 imageVector = Icons.Default.Call,
-                modifier = Modifier.padding(start = 4.dp, end = 4.dp)
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                contentDescription = null
             )
             Text(text = "Icon+Text+Icon")
             Icon(
                 imageVector = Icons.Default.FavoriteBorder,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp),
+                contentDescription = null
             )
         }
     }
@@ -289,7 +296,10 @@ private fun IconButtonExample(modifier: Modifier) {
 
     FullWidthRow {
         IconButton(onClick = {}, modifier = modifier) {
-            Icon(Icons.Filled.Favorite)
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = null
+            )
         }
 
         var checked by remember { mutableStateOf(false) }
@@ -300,7 +310,10 @@ private fun IconButtonExample(modifier: Modifier) {
             modifier = modifier
         ) {
             val tint = animate(if (checked) Color(0xffE91E63) else Color(0xffB0BEC5))
-            Icon(Icons.Filled.Favorite, tint = tint)
+            Icon(
+                Icons.Filled.Favorite, tint = tint,
+                contentDescription = null
+            )
         }
     }
 }
@@ -314,7 +327,10 @@ private fun FloatingActionButtonExample(modifier: Modifier) {
             onClick = {},
             modifier = modifier,
         ) {
-            Icon(Icons.Filled.Favorite)
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = null
+            )
         }
 
         FloatingActionButton(
@@ -322,7 +338,10 @@ private fun FloatingActionButtonExample(modifier: Modifier) {
             modifier = modifier,
             backgroundColor = Color(0xffFFA000)
         ) {
-            Icon(Icons.Filled.Done, tint = Color.White)
+            Icon(
+                Icons.Filled.Done, tint = Color.White,
+                contentDescription = null
+            )
         }
 
         ExtendedFloatingActionButton(
@@ -332,7 +351,12 @@ private fun FloatingActionButtonExample(modifier: Modifier) {
         )
 
         ExtendedFloatingActionButton(
-            icon = { Icon(imageVector = Icons.Filled.Favorite, tint = Color.White) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.Favorite, tint = Color.White,
+                    contentDescription = null
+                )
+            },
             text = { Text("Like", color = Color.White) },
             backgroundColor = Color(0xffEC407A),
             onClick = {},

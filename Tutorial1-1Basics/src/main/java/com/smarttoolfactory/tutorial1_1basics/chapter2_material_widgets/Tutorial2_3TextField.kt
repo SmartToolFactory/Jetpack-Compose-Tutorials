@@ -238,7 +238,12 @@ private fun TutorialContent() {
             onValueChange = { newValue ->
                 emailText.value = newValue
             },
-            leadingIcon = { Icon(imageVector = Icons.Default.Email) }
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = null
+                )
+            }
         )
 
         OutlinedTextField(
@@ -249,8 +254,18 @@ private fun TutorialContent() {
             onValueChange = { newValue ->
                 emailText.value = newValue
             },
-            leadingIcon = { Icon(imageVector = Icons.Default.Email) },
-            trailingIcon = { Icon(imageVector = Icons.Default.Edit) }
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = null
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null
+                )
+            }
         )
 
         TutorialText(
@@ -326,8 +341,10 @@ private fun TutorialContent() {
     }
 }
 
-
-class PasswordMaskTransformation() : VisualTransformation {
+/**
+ * VisualTransformation transforms [AnnotatedString] to required format.
+ */
+class PasswordMaskTransformation : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
         return TransformedText(

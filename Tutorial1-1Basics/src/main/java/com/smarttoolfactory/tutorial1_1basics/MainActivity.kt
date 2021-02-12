@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +16,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
@@ -29,7 +26,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialSectionCard
 import com.smarttoolfactory.tutorial1_1basics.model.*
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
-
+import androidx.navigation.compose.navigate
 /**
  * This is the single and only Activity that contains Composable Tutorial list.
  *
@@ -121,7 +118,11 @@ class MainActivity : AppCompatActivity() {
                             navController.navigate(item.title)
                         }
                     }
-                })
+
+
+
+                }
+            )
         }
     }
 

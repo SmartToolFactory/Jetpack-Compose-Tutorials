@@ -13,8 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
@@ -106,7 +106,7 @@ fun ImageDownloadExample() {
 
             val imageBitmap =
                 drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight).asImageBitmap()
-            Image(imageBitmap)
+            Image(imageBitmap, contentDescription = null)
         }
         .build()
 
@@ -119,7 +119,7 @@ fun ImageDownloadExample() {
 private fun BasicImageExample() {
     TutorialText2(text = "ImageBitmap")
     val imageRes: ImageBitmap = imageResource(id = R.drawable.landscape1)
-    Image(imageRes)
+    Image(imageRes, contentDescription = null)
 }
 
 @Composable
@@ -133,16 +133,16 @@ private fun ImageVectorExample() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         val vectorRes1: ImageVector = vectorResource(id = R.drawable.vd_clock_alarm)
-        Image(vectorRes1, modifier = Modifier.preferredSize(60.dp))
+        Image(vectorRes1, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
 
         val vectorRes2: ImageVector = vectorResource(id = R.drawable.vd_dashboard_active)
-        Image(vectorRes2, modifier = Modifier.preferredSize(60.dp))
+        Image(vectorRes2, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
 
         val vectorRes3: ImageVector = vectorResource(id = R.drawable.vd_home_active)
-        Image(vectorRes3, modifier = Modifier.preferredSize(60.dp))
+        Image(vectorRes3, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
 
         val vectorRes4: ImageVector = vectorResource(id = R.drawable.vd_notification_active)
-        Image(vectorRes4, modifier = Modifier.preferredSize(60.dp))
+        Image(vectorRes4, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
     }
 }
 
@@ -170,7 +170,7 @@ fun ImagePainterExample() {
             }
         }
     }
-    Image(painter = customPainter)
+    Image(painter = customPainter, contentDescription = null)
 }
 
 @Composable
@@ -209,7 +209,7 @@ private fun DrawOnImageExample() {
             ), 150.0f, paint
         )
 
-        Image(bitmap = newImageBitmap)
+        Image(bitmap = newImageBitmap, contentDescription = null)
     }
 }
 
@@ -228,10 +228,33 @@ private fun ImageShapeAndFilterExample() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
-        Image(modifier = Modifier.clip(RoundedCornerShape(10.dp)), bitmap = avatarBitmap1)
-        Image(modifier = Modifier.clip(CircleShape), bitmap = avatarBitmap2)
-        Image(modifier = Modifier.clip(CutCornerShape(10.dp)), bitmap = avatarBitmap3)
-        Image(modifier = Modifier.clip(diamondShape), bitmap = avatarBitmap4)
+        Image(
+            modifier = Modifier
+                .clip(RoundedCornerShape(10.dp)),
+            bitmap = avatarBitmap1,
+            contentDescription = null
+        )
+        Image(
+            modifier = Modifier
+                .shadow(4.dp)
+                .clip(CircleShape), bitmap = avatarBitmap2,
+            contentDescription = null
+        )
+        Image(
+            modifier = Modifier
+                .shadow(5.dp, CutCornerShape(10.dp))
+                .clip(CutCornerShape(10.dp)),
+            bitmap = avatarBitmap3,
+            contentDescription = null
+        )
+
+        // 🔥 Adding clip = true flag adds shadow and clips to shape
+        Image(
+            modifier = Modifier
+                .shadow(2.dp, diamondShape, clip = true),
+            bitmap = avatarBitmap4,
+            contentDescription = null
+        )
     }
 
     TutorialText2(text = "Color Filter")
@@ -243,22 +266,26 @@ private fun ImageShapeAndFilterExample() {
 
         Image(
             bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Darken)
+            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Darken),
+            contentDescription = null
         )
 
         Image(
             bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Lighten)
+            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Lighten),
+            contentDescription = null
         )
 
         Image(
             bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.DstOver)
+            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.DstOver),
+            contentDescription = null
         )
 
         Image(
             bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Color)
+            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Color),
+            contentDescription = null
         )
     }
 
@@ -303,68 +330,73 @@ private fun ImageContentScaleExample() {
 
     FullWidthColumn {
 
-        val bitMap = imageResource(id = R.drawable.landscape10)
+        val imageBitmap: ImageBitmap = imageResource(id = R.drawable.landscape10)
 
         TutorialText2(text = "Original")
 
-        Image(
-            bitmap = bitMap
-        )
+        Image(bitmap = imageBitmap, contentDescription = null)
 
         TutorialText2(text = "ContentScale.None")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
-            contentScale = ContentScale.None
+            bitmap = imageBitmap,
+            contentScale = ContentScale.None,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.Crop")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
+            bitmap = imageBitmap,
             contentScale = ContentScale.Crop,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.FillBounds")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
-            contentScale = ContentScale.FillBounds
+            bitmap = imageBitmap,
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.FillHeight")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
-            contentScale = ContentScale.FillHeight
+            bitmap = imageBitmap,
+            contentScale = ContentScale.FillHeight,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.FillWidth")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
-            contentScale = ContentScale.FillWidth
+            bitmap = imageBitmap,
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.Fit")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
-            contentScale = ContentScale.Fit
+            bitmap = imageBitmap,
+            contentScale = ContentScale.Fit,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.Inside")
 
         Image(
             modifier = imageModifier,
-            bitmap = bitMap,
-            contentScale = ContentScale.Inside
+            bitmap = imageBitmap,
+            contentScale = ContentScale.Inside,
+            contentDescription = null
         )
 
 
@@ -373,7 +405,7 @@ private fun ImageContentScaleExample() {
         TutorialText2(text = "Original")
 
         Image(
-            bitmap = bitmap2
+            bitmap = bitmap2, contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.None")
@@ -381,7 +413,8 @@ private fun ImageContentScaleExample() {
         Image(
             modifier = imageModifier2,
             bitmap = bitmap2,
-            contentScale = ContentScale.None
+            contentScale = ContentScale.None,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.Crop")
@@ -390,6 +423,7 @@ private fun ImageContentScaleExample() {
             modifier = imageModifier2,
             bitmap = bitmap2,
             contentScale = ContentScale.Crop,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.FillBounds")
@@ -397,7 +431,8 @@ private fun ImageContentScaleExample() {
         Image(
             modifier = imageModifier2,
             bitmap = bitmap2,
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.FillHeight")
@@ -405,7 +440,8 @@ private fun ImageContentScaleExample() {
         Image(
             modifier = imageModifier2,
             bitmap = bitmap2,
-            contentScale = ContentScale.FillHeight
+            contentScale = ContentScale.FillHeight,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.FillWidth")
@@ -413,7 +449,8 @@ private fun ImageContentScaleExample() {
         Image(
             modifier = imageModifier2,
             bitmap = bitmap2,
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.Fit")
@@ -421,7 +458,8 @@ private fun ImageContentScaleExample() {
         Image(
             modifier = imageModifier2,
             bitmap = bitmap2,
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
+            contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.Inside")
@@ -429,7 +467,8 @@ private fun ImageContentScaleExample() {
         Image(
             modifier = imageModifier2,
             bitmap = bitmap2,
-            contentScale = ContentScale.Inside
+            contentScale = ContentScale.Inside,
+            contentDescription = null
         )
     }
 }
@@ -439,4 +478,43 @@ private val diamondShape = GenericShape { size ->
     lineTo(size.width, size.height / 2f)
     lineTo(size.width / 2f, size.height)
     lineTo(0f, size.height / 2f)
+}
+
+
+private val chatBubbleShape = GenericShape { size ->
+
+    val corner = 5f
+
+    Outline.Rounded(
+        RoundRect(
+            rect = size.toRect(),
+            topLeft = corner.toRadius(),
+            topRight = 0f.toRadius(),
+            bottomRight = corner.toRadius(),
+            bottomLeft = corner.toRadius()
+        )
+    )
+}
+
+private val triangleShape = GenericShape { size: Size ->
+
+
+    moveTo(0f, 0f)
+    lineTo(size.width, 0f)
+    lineTo(0f, size.height)
+    lineTo(0f, 0f)
+}
+
+fun Float.toRadius() = CornerRadius(this)
+
+@Composable
+fun chatBubble() {
+
+    Row {
+        Box() {
+
+        }
+    }
+
+
 }
