@@ -1,8 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter1_basics
 
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -40,44 +40,46 @@ fun Tutorial1_1Screen() {
 @Composable
 private fun TutorialContent() {
 
-    ScrollableColumn(Modifier.fillMaxSize()) {
+    LazyColumn(Modifier.fillMaxSize()) {
 
-        TutorialHeader(text = "Row")
-        TutorialText(text = "1-) Row is a layout composable that places its children in a horizontal sequence.")
-        RowExample()
+        item {
+            TutorialHeader(text = "Row")
+            TutorialText(text = "1-) Row is a layout composable that places its children in a horizontal sequence.")
+            RowExample()
 
-        TutorialHeader(text = "Column")
-        TutorialText(text = "2-) Column is a layout composable that places its children in a vertical sequence.")
-        ColumnExample()
+            TutorialHeader(text = "Column")
+            TutorialText(text = "2-) Column is a layout composable that places its children in a vertical sequence.")
+            ColumnExample()
 
-        TutorialText(
-            text = "3-) Padding order determines whether it's padding or margin for that component."
-                    + "In example below check out paddings."
-        )
-        ColumnsAndRowPaddingsExample()
+            TutorialText(
+                text = "3-) Padding order determines whether it's padding or margin for that component."
+                        + "In example below check out paddings."
+            )
+            ColumnsAndRowPaddingsExample()
 
-        TutorialText(text = "4-) Shadow can be applied to Column or Row.")
-        ShadowExample()
+            TutorialText(text = "4-) Shadow can be applied to Column or Row.")
+            ShadowExample()
 
-        TutorialHeader(text = "Box")
-        TutorialText(
-            text = "5-) Box aligns children on top of each other like a Stack. " +
-                    "The one declared last is on top"
-        )
-        BoxExample()
+            TutorialHeader(text = "Box")
+            TutorialText(
+                text = "5-) Box aligns children on top of each other like a Stack. " +
+                        "The one declared last is on top"
+            )
+            BoxExample()
 
-        TutorialText(
-            text = "6-) Elements in Box can be aligned with different alignments."
-        )
-        BoxShadowAndAlignmentExample()
+            TutorialText(
+                text = "6-) Elements in Box can be aligned with different alignments."
+            )
+            BoxShadowAndAlignmentExample()
 
-        TutorialHeader(text = "Weight and Spacer")
-        TutorialText(
-            text = "7-) Weight determines based on total weight how much of the parents " +
-                    "dimensions a child should occupy. Spacer to create horizontal or vertical " +
-                    "space between components."
-        )
-        WeightAndSpacerExample()
+            TutorialHeader(text = "Weight and Spacer")
+            TutorialText(
+                text = "7-) Weight determines based on total weight how much of the parents " +
+                        "dimensions a child should occupy. Spacer to create horizontal or vertical " +
+                        "space between components."
+            )
+            WeightAndSpacerExample()
+        }
 
     }
 

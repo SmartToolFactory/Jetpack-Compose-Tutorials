@@ -2,9 +2,9 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
@@ -14,17 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.*
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.DeferredResource
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.loadImageResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.imageLoader
@@ -52,28 +55,28 @@ fun Tutorial2_4Screen() {
 @Composable
 private fun TutorialContent() {
 
-    ScrollableColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        item {
+            TutorialHeader(text = "Image")
 
-        TutorialHeader(text = "Image")
+            TutorialText(
+                text = "1-) Image component lays out and draws a given  ImageBitmap, ImageVector," +
+                        "or Painter."
+            )
 
-        TutorialText(
-            text = "1-) Image component lays out and draws a given  ImageBitmap, ImageVector," +
-                    "or Painter."
-        )
+            BasicImageExample()
+            ImageVectorExample()
+            ImagePainterExample()
 
-        BasicImageExample()
-        ImageVectorExample()
-        ImagePainterExample()
+            TutorialText(
+                text = "2-) With Canvas we can draw on a ImageBitmap and set ImageBitmap to an Image."
+            )
+            DrawOnImageExample()
 
-        TutorialText(
-            text = "2-) With Canvas we can draw on a ImageBitmap and set ImageBitmap to an Image."
-        )
-        DrawOnImageExample()
-
-        TutorialText(
-            text = "3-) Set shape or/and filter for the Image."
-        )
-        ImageShapeAndFilterExample()
+            TutorialText(
+                text = "3-) Set shape or/and filter for the Image."
+            )
+            ImageShapeAndFilterExample()
 
 //        TutorialText(
 //            text = "4-) Use Coil to fetch an image resource from network and " +
@@ -82,11 +85,12 @@ private fun TutorialContent() {
 //
 //        ImageDownloadExample()
 
-        TutorialText(
-            text = "4-) ContentScale represents a rule to apply to scale a source " +
-                    "rectangle to be inscribed into a destination."
-        )
-        ImageContentScaleExample()
+            TutorialText(
+                text = "4-) ContentScale represents a rule to apply to scale a source " +
+                        "rectangle to be inscribed into a destination."
+            )
+            ImageContentScaleExample()
+        }
     }
 }
 
@@ -97,7 +101,7 @@ fun ImageDownloadExample() {
 
     var image by remember { mutableStateOf<ImageBitmap?>(null) }
 
-    val context = AmbientContext.current
+    val context = LocalContext.current
 
     val request = ImageRequest.Builder(context)
         .data("https://www.example.com/image.jpg")
@@ -473,7 +477,7 @@ private fun ImageContentScaleExample() {
     }
 }
 
-private val diamondShape = GenericShape { size ->
+private val diamondShape = GenericShape { size: Size, layoutDirection: LayoutDirection ->
     moveTo(size.width / 2f, 0f)
     lineTo(size.width, size.height / 2f)
     lineTo(size.width / 2f, size.height)
@@ -481,23 +485,7 @@ private val diamondShape = GenericShape { size ->
 }
 
 
-private val chatBubbleShape = GenericShape { size ->
-
-    val corner = 5f
-
-    Outline.Rounded(
-        RoundRect(
-            rect = size.toRect(),
-            topLeft = corner.toRadius(),
-            topRight = 0f.toRadius(),
-            bottomRight = corner.toRadius(),
-            bottomLeft = corner.toRadius()
-        )
-    )
-}
-
-private val triangleShape = GenericShape { size: Size ->
-
+private val triangleShape = GenericShape { size: Size, layoutDirection: LayoutDirection ->
 
     moveTo(0f, 0f)
     lineTo(size.width, 0f)

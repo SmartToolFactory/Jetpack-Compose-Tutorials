@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -25,8 +25,9 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_4Screen
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialSectionCard
 import com.smarttoolfactory.tutorial1_1basics.model.*
-import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import androidx.navigation.compose.navigate
+import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
+
 /**
  * This is the single and only Activity that contains Composable Tutorial list.
  *

@@ -1,10 +1,10 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import androidx.compose.animation.animate
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -31,27 +31,30 @@ fun Tutorial2_2Screen() {
 @Composable
 private fun TutorialContent() {
 
-    ScrollableColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(Modifier.fillMaxSize()) {
 
-        val paddingModifier = Modifier.padding(8.dp)
+        item {
 
-        TutorialHeader(text = "Button")
+            val paddingModifier = Modifier.padding(8.dp)
 
-        TutorialText2(text = "Button")
-        ButtonExample(paddingModifier)
-        DisabledButtonExample(paddingModifier)
-        ButtonWithIconExample(paddingModifier)
-        ButtonBackgroundExample(paddingModifier)
-        GradientButtonExample(paddingModifier)
+            TutorialHeader(text = "Button")
 
-        TutorialText2(text = "Icon Button")
-        IconButtonExample(paddingModifier)
+            TutorialText2(text = "Button")
+            ButtonExample(paddingModifier)
+            DisabledButtonExample(paddingModifier)
+            ButtonWithIconExample(paddingModifier)
+            ButtonBackgroundExample(paddingModifier)
+            GradientButtonExample(paddingModifier)
 
-        TutorialHeader(text = "Floating Action Button")
-        FloatingActionButtonExample(paddingModifier)
+            TutorialText2(text = "Icon Button")
+            IconButtonExample(paddingModifier)
 
-        TutorialHeader(text = "Chip")
-        ChipExample(paddingModifier)
+            TutorialHeader(text = "Floating Action Button")
+            FloatingActionButtonExample(paddingModifier)
+
+            TutorialHeader(text = "Chip")
+            ChipExample(paddingModifier)
+        }
     }
 }
 
@@ -89,10 +92,10 @@ private fun ButtonExample(modifier: Modifier) {
             onClick = {},
             modifier = modifier,
             shape = RoundedCornerShape(
-                topLeftPercent = 30,
-                topRightPercent = 0,
-                bottomLeftPercent = 0,
-                bottomRightPercent = 0
+                topStartPercent = 30,
+                topEndPercent = 0,
+                bottomStartPercent = 0,
+                bottomEndPercent = 0
             )
         ) {
             Text(text = "Rounded")

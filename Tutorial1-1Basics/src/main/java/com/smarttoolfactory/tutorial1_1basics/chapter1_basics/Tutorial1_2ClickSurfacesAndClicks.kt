@@ -2,10 +2,10 @@ package com.smarttoolfactory.tutorial1_1basics.chapter1_basics
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,12 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.drawShadow
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,32 +32,32 @@ fun Tutorial1_2Screen() {
 @Composable
 private fun TutorialContent() {
 
-    ScrollableColumn(Modifier.fillMaxSize()) {
+    LazyColumn(Modifier.fillMaxSize()) {
 
-        TutorialHeader(text = "Clickable")
-        TutorialText(
-            text = "1-) Adding clickable to Modifier makes a component clickable." +
-                    "\nPadding before clickable makes clickable area smaller than component's total area."
-        )
-        ClickableModifierExample()
+        item {
+            TutorialHeader(text = "Clickable")
+            TutorialText(
+                text = "1-) Adding clickable to Modifier makes a component clickable." +
+                        "\nPadding before clickable makes clickable area smaller than component's total area."
+            )
+            ClickableModifierExample()
 
-        TutorialHeader(text = "Surface")
-        TutorialText(text = "2-) Surface can clips it's children to selected shape.")
-        SurfaceShapeExample()
+            TutorialHeader(text = "Surface")
+            TutorialText(text = "2-) Surface can clips it's children to selected shape.")
+            SurfaceShapeExample()
 
-        TutorialText(text = "3-) Surface can set Z index and border of it's children.")
-        SurfaceZIndexExample()
+            TutorialText(text = "3-) Surface can set Z index and border of it's children.")
+            SurfaceZIndexExample()
 
-        TutorialText(text = "4-) Surface can set content color for Text and Image.")
-        SurfaceContentColorExample()
+            TutorialText(text = "4-) Surface can set content color for Text and Image.")
+            SurfaceContentColorExample()
 
-        TutorialText(
-            text = "5-) Components can have offset in both x and y axes. Surface inside" +
-                    " another surface gets clipped when it overflows from it's parent."
-        )
-        SurfaceClickPropagationExample()
-
-
+            TutorialText(
+                text = "5-) Components can have offset in both x and y axes. Surface inside" +
+                        " another surface gets clipped when it overflows from it's parent."
+            )
+            SurfaceClickPropagationExample()
+        }
     }
 
 }
@@ -79,7 +76,7 @@ private fun TutorialContent() {
 fun ClickableModifierExample() {
 
     // Provides a Context that can be used by Android applications
-    val context = AmbientContext.current
+    val context = LocalContext.current
 
     // Weight in Row acts as Weight in LinearLayout with horizontal orientation
 
@@ -91,7 +88,9 @@ fun ClickableModifierExample() {
                 .fillMaxHeight()
                 .background(Color(0xFF388E3C))
                 .clickable(onClick = {
-                    Toast.makeText(context, "Clicked me", Toast.LENGTH_SHORT).show()
+                    Toast
+                        .makeText(context, "Clicked me", Toast.LENGTH_SHORT)
+                        .show()
                 }),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -111,7 +110,9 @@ fun ClickableModifierExample() {
                 .background(Color(0xFF1E88E5))
                 .padding(15.dp)
                 .clickable(onClick = {
-                    Toast.makeText(context, "Clicked me", Toast.LENGTH_SHORT).show()
+                    Toast
+                        .makeText(context, "Clicked me", Toast.LENGTH_SHORT)
+                        .show()
                 }),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -245,12 +246,18 @@ fun SurfaceZIndexExample() {
 
         //
         Surface(
-            shape = CutCornerShape(topRightPercent = 20),
+            shape = CutCornerShape(topStartPercent = 20),
             modifier = modifier,
             color = (Color(0xFFB2FF59)),
             elevation = 15.dp,
             border = BorderStroke(2.dp, color = Color(0xFFd50000))
-        ) {}
+        ) {
+
+        }
+
+        Surface() {
+
+        }
     }
 }
 
@@ -276,7 +283,7 @@ fun SurfaceContentColorExample() {
 fun SurfaceClickPropagationExample() {
 
     // Provides a Context that can be used by Android applications
-    val context = AmbientContext.current
+    val context = LocalContext.current
 
     // 🔥 Offset moves a component in x and y axes which can be either positive or negative
     // 🔥🔥 When a component inside surface is offset from original position it gets clipped.
@@ -285,7 +292,9 @@ fun SurfaceClickPropagationExample() {
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable(onClick = {
-                Toast.makeText(context, "Box Clicked", Toast.LENGTH_SHORT).show()
+                Toast
+                    .makeText(context, "Box Clicked", Toast.LENGTH_SHORT)
+                    .show()
             })
     ) {
 
@@ -298,11 +307,13 @@ fun SurfaceClickPropagationExample() {
                 .padding(12.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .clickable(onClick = {
-                    Toast.makeText(
-                        context,
-                        "Surface(Left) inside Box is clicked!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast
+                        .makeText(
+                            context,
+                            "Surface(Left) inside Box is clicked!",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
                 })
         ) {
 
@@ -312,11 +323,13 @@ fun SurfaceClickPropagationExample() {
                     .offset(x = 50.dp, y = (-20).dp)
                     .clip(CircleShape)
                     .clickable(onClick = {
-                        Toast.makeText(
-                            context,
-                            "Surface inside Surface is clicked!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast
+                            .makeText(
+                                context,
+                                "Surface inside Surface is clicked!",
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
                     }),
                 elevation = 12.dp,
                 color = (Color(0xFF26C6DA))
@@ -333,11 +346,13 @@ fun SurfaceClickPropagationExample() {
                 .offset(x = 110.dp, y = 20.dp)
                 .clip(CutCornerShape(10.dp))
                 .clickable(onClick = {
-                    Toast.makeText(
-                        context,
-                        "Surface(Right) inside Box is clicked!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast
+                        .makeText(
+                            context,
+                            "Surface(Right) inside Box is clicked!",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
 
                 }),
             color = (Color(0xFFF4511E)),

@@ -1,10 +1,10 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import androidx.compose.foundation.ClickableText
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AmbientTextStyle
@@ -44,92 +44,94 @@ fun Tutorial2_1Screen() {
 @Composable
 private fun TutorialContent() {
 
-    ScrollableColumn(Modifier.fillMaxSize()) {
+    LazyColumn(Modifier.fillMaxSize()) {
 
-        TutorialHeader(text = "Text")
+        item {
+            TutorialHeader(text = "Text")
 
-        TutorialText2(text = "Font Color")
-        TextSampleRow {
-            CustomText(text = "Red 700", color = Color(0xffd32f2f))
-            CustomText(text = "Purple 700", color = Color(0xff7B1FA2))
-            CustomText(text = "Green 700", color = Color(0xff1976D2))
-            CustomText(text = "Teal 700", color = Color(0xff00796B))
-        }
+            TutorialText2(text = "Font Color")
+            TextSampleRow {
+                CustomText(text = "Red 700", color = Color(0xffd32f2f))
+                CustomText(text = "Purple 700", color = Color(0xff7B1FA2))
+                CustomText(text = "Green 700", color = Color(0xff1976D2))
+                CustomText(text = "Teal 700", color = Color(0xff00796B))
+            }
 
-        // Examples about font related properties
-        TextFontExample()
+            // Examples about font related properties
+            TextFontExample()
 
-        TutorialText2(text = "Letter Spacing")
-        TextSampleRow {
-            CustomText(text = " LS:0.4sp", letterSpacing = 0.4.sp)
-            CustomText(text = "LS:1sp", letterSpacing = 1.sp)
-            CustomText(text = "LS:2sp", letterSpacing = 2.sp)
-            CustomText(text = "LS:4sp", letterSpacing = 4.sp)
-        }
+            TutorialText2(text = "Letter Spacing")
+            TextSampleRow {
+                CustomText(text = " LS:0.4sp", letterSpacing = 0.4.sp)
+                CustomText(text = "LS:1sp", letterSpacing = 1.sp)
+                CustomText(text = "LS:2sp", letterSpacing = 2.sp)
+                CustomText(text = "LS:4sp", letterSpacing = 4.sp)
+            }
 
-        TutorialText2(text = "Text Decoration")
-        TextSampleRow {
-            CustomText(text = "Underline", textDecoration = TextDecoration.Underline)
-            CustomText(text = "LineThrough", textDecoration = TextDecoration.LineThrough)
-            CustomText(
-                text = "Underline+LineThrough", textDecoration = TextDecoration.combine(
-                    listOf(
-                        TextDecoration.Underline,
-                        TextDecoration.LineThrough
+            TutorialText2(text = "Text Decoration")
+            TextSampleRow {
+                CustomText(text = "Underline", textDecoration = TextDecoration.Underline)
+                CustomText(text = "LineThrough", textDecoration = TextDecoration.LineThrough)
+                CustomText(
+                    text = "Underline+LineThrough", textDecoration = TextDecoration.combine(
+                        listOf(
+                            TextDecoration.Underline,
+                            TextDecoration.LineThrough
+                        )
                     )
                 )
+            }
+
+            TutorialText2(text = "Line Height")
+            CustomText(
+                text = "This text has line height of 15 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
+                lineHeight = 15.sp
             )
+
+            Divider(modifier = Modifier.padding(4.dp))
+            CustomText(
+                text = "This text has line height of 20 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
+                lineHeight = 20.sp
+            )
+            Divider(modifier = Modifier.padding(4.dp))
+            CustomText(
+                text = "This text has line height of 25 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
+                lineHeight = 25.sp
+            )
+            Divider(modifier = Modifier.padding(4.dp))
+            CustomText(
+                text = "This text has line height of 30 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
+                lineHeight = 30.sp
+            )
+            Divider(modifier = Modifier.padding(4.dp))
+
+            TutorialText2(text = "Overflow")
+            CustomText(
+                text = "Clip the overflowing text to fix its container. " +
+                        "If the text exceeds the given number of lines, it will be truncated according to " +
+                        " overflow and softWrap.",
+                overflow = TextOverflow.Clip,
+                maxLines = 1
+            )
+            CustomText(
+                text = "Use an ellipsis to indicate that the text has overflowed. " +
+                        "If the text exceeds the given number of lines, it will be truncated according to " +
+                        " overflow and softWrap.",
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+
+            // Draw background and border examples
+            TextBackgroundAndBorderExample()
+
+            // Draw text shadow
+            TextShadowExample()
+
+            // Draw Spannable example
+            SpannableTextExample()
+
+            Spacer(modifier = Modifier.padding(bottom = 32.dp))
         }
-
-        TutorialText2(text = "Line Height")
-        CustomText(
-            text = "This text has line height of 15 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
-            lineHeight = 15.sp
-        )
-
-        Divider(modifier = Modifier.padding(4.dp))
-        CustomText(
-            text = "This text has line height of 20 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
-            lineHeight = 20.sp
-        )
-        Divider(modifier = Modifier.padding(4.dp))
-        CustomText(
-            text = "This text has line height of 25 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
-            lineHeight = 25.sp
-        )
-        Divider(modifier = Modifier.padding(4.dp))
-        CustomText(
-            text = "This text has line height of 30 sp. Line height for the Paragraph in TextUnit unit, e.g. SP or EM.",
-            lineHeight = 30.sp
-        )
-        Divider(modifier = Modifier.padding(4.dp))
-
-        TutorialText2(text = "Overflow")
-        CustomText(
-            text = "Clip the overflowing text to fix its container. " +
-                    "If the text exceeds the given number of lines, it will be truncated according to " +
-                    " overflow and softWrap.",
-            overflow = TextOverflow.Clip,
-            maxLines = 1
-        )
-        CustomText(
-            text = "Use an ellipsis to indicate that the text has overflowed. " +
-                    "If the text exceeds the given number of lines, it will be truncated according to " +
-                    " overflow and softWrap.",
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-
-        // Draw background and border examples
-        TextBackgroundAndBorderExample()
-
-        // Draw text shadow
-        TextShadowExample()
-
-        // Draw Spannable example
-        SpannableTextExample()
-
-        Spacer(modifier = Modifier.padding(bottom = 32.dp))
     }
 }
 
@@ -209,7 +211,7 @@ private fun TextBackgroundAndBorderExample() {
             color = Color.White,
             text = "Cyan 500",
             modifier = Modifier
-                .background(Color(0xff00BCD4), shape = CutCornerShape(topLeftPercent = 25))
+                .background(Color(0xff00BCD4), shape = CutCornerShape(topStartPercent = 25))
                 .padding(20.dp)
         )
         CustomText(
@@ -253,7 +255,7 @@ private fun TextBackgroundAndBorderExample() {
                 .border(
                     width = 4.dp,
                     Color(0xff00BCD4),
-                    shape = CutCornerShape(topLeftPercent = 25)
+                    shape = CutCornerShape(topStartPercent = 25)
                 )
                 .padding(20.dp)
         )
@@ -381,7 +383,7 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
         text = annotatedLinkString,
         onClick = {
             annotatedLinkString
-                .getStringAnnotations( it, it)
+                .getStringAnnotations(it, it)
                 .firstOrNull()?.let { stringAnnotation ->
                     println("🔥 Clicked: $it, item: ${stringAnnotation.item}")
                     uriHandler.openUri(stringAnnotation.item)
