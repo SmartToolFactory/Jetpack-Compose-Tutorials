@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +24,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.DeferredResource
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.loadImageResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -122,8 +120,8 @@ fun ImageDownloadExample() {
 @Composable
 private fun BasicImageExample() {
     TutorialText2(text = "ImageBitmap")
-    val imageRes: ImageBitmap = imageResource(id = R.drawable.landscape1)
-    Image(imageRes, contentDescription = null)
+    val painter: Painter = painterResource(id = R.drawable.landscape1)
+    Image(painter, contentDescription = null)
 }
 
 @Composable
@@ -136,16 +134,16 @@ private fun ImageVectorExample() {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val vectorRes1: ImageVector = vectorResource(id = R.drawable.vd_clock_alarm)
+        val vectorRes1: Painter = painterResource(id = R.drawable.vd_clock_alarm)
         Image(vectorRes1, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
 
-        val vectorRes2: ImageVector = vectorResource(id = R.drawable.vd_dashboard_active)
+        val vectorRes2: Painter = painterResource(id = R.drawable.vd_dashboard_active)
         Image(vectorRes2, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
 
-        val vectorRes3: ImageVector = vectorResource(id = R.drawable.vd_home_active)
+        val vectorRes3: Painter = painterResource(id = R.drawable.vd_home_active)
         Image(vectorRes3, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
 
-        val vectorRes4: ImageVector = vectorResource(id = R.drawable.vd_notification_active)
+        val vectorRes4: Painter = painterResource(id = R.drawable.vd_notification_active)
         Image(vectorRes4, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
     }
 }
@@ -220,10 +218,10 @@ private fun DrawOnImageExample() {
 @Composable
 private fun ImageShapeAndFilterExample() {
 
-    val avatarBitmap1 = imageResource(id = R.drawable.avatar_1_raster)
-    val avatarBitmap2 = imageResource(id = R.drawable.avatar_2_raster)
-    val avatarBitmap3 = imageResource(id = R.drawable.avatar_3_raster)
-    val avatarBitmap4 = imageResource(id = R.drawable.avatar_4_raster)
+    val avatarBitmap1 = painterResource(id = R.drawable.avatar_1_raster)
+    val avatarBitmap2 = painterResource(id = R.drawable.avatar_2_raster)
+    val avatarBitmap3 = painterResource(id = R.drawable.avatar_3_raster)
+    val avatarBitmap4 = painterResource(id = R.drawable.avatar_4_raster)
 
     TutorialText2(text = "Shape")
 
@@ -235,20 +233,20 @@ private fun ImageShapeAndFilterExample() {
         Image(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp)),
-            bitmap = avatarBitmap1,
+            painter = avatarBitmap1,
             contentDescription = null
         )
         Image(
             modifier = Modifier
                 .shadow(4.dp)
-                .clip(CircleShape), bitmap = avatarBitmap2,
+                .clip(CircleShape), painter = avatarBitmap2,
             contentDescription = null
         )
         Image(
             modifier = Modifier
                 .shadow(5.dp, CutCornerShape(10.dp))
                 .clip(CutCornerShape(10.dp)),
-            bitmap = avatarBitmap3,
+            painter = avatarBitmap3,
             contentDescription = null
         )
 
@@ -256,7 +254,7 @@ private fun ImageShapeAndFilterExample() {
         Image(
             modifier = Modifier
                 .shadow(2.dp, diamondShape, clip = true),
-            bitmap = avatarBitmap4,
+            painter = avatarBitmap4,
             contentDescription = null
         )
     }
@@ -267,55 +265,53 @@ private fun ImageShapeAndFilterExample() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
-
         Image(
-            bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Darken),
+            painter = avatarBitmap1,
+            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.Darken),
             contentDescription = null
         )
 
         Image(
-            bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Lighten),
+            painter = avatarBitmap1,
+            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.Lighten),
             contentDescription = null
         )
 
         Image(
-            bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.DstOver),
+            painter = avatarBitmap1,
+            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.DstOver),
             contentDescription = null
         )
 
         Image(
-            bitmap = avatarBitmap1,
-            colorFilter = ColorFilter(color = Color.Green, blendMode = BlendMode.Color),
+            painter = avatarBitmap1,
+            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.Color),
             contentDescription = null
         )
     }
 
     // TODO PorterDuff mode is not working properly, or i couldn't figure it out yet
     // Check out https://stackoverflow.com/questions/65653560/jetpack-compose-applying-porterduffmode-to-image
-//    val imageBitmapSrc: ImageBitmap = imageResource(id = R.drawable.composite_src)
-//    val imageBitmapDst: ImageBitmap = imageResource(id = R.drawable.composite_dst)
-//
-//    val size = Size(imageBitmapSrc.width.toFloat(), imageBitmapSrc.height.toFloat())
-//
-//    val blendPainter = remember {
-//        object : Painter() {
-//
-//            override val intrinsicSize: Size
-//                get() = size
-//
-//            override fun DrawScope.onDraw() {
-////                drawRect(Color(0xffBDBDBD), size = size)
-//                drawImage(imageBitmapDst)
-//                drawImage(imageBitmapSrc, blendMode = BlendMode.SrcOut)
-//            }
-//        }
-//    }
-//
-//    Image(blendPainter)
+    val imageBitmapSrc: ImageBitmap = imageResource(id = R.drawable.composite_src)
+    val imageBitmapDst: ImageBitmap = imageResource(id = R.drawable.composite_dst)
 
+    val size = Size(imageBitmapSrc.width.toFloat(), imageBitmapSrc.height.toFloat())
+
+    val blendPainter = remember {
+        object : Painter() {
+
+            override val intrinsicSize: Size
+                get() = size
+
+            override fun DrawScope.onDraw() {
+//                drawRect(Color(0xffBDBDBD), size = size)
+                drawImage(imageBitmapDst)
+                drawImage(imageBitmapSrc, blendMode = BlendMode.SrcOut)
+            }
+        }
+    }
+
+    Image(blendPainter, contentDescription = null)
 }
 
 @Composable
@@ -334,17 +330,17 @@ private fun ImageContentScaleExample() {
 
     FullWidthColumn {
 
-        val imageBitmap: ImageBitmap = imageResource(id = R.drawable.landscape10)
+        val painter = painterResource(id = R.drawable.landscape10)
 
         TutorialText2(text = "Original")
 
-        Image(bitmap = imageBitmap, contentDescription = null)
+        Image(painter = painter, contentDescription = null)
 
         TutorialText2(text = "ContentScale.None")
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.None,
             contentDescription = null
         )
@@ -353,7 +349,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
@@ -362,7 +358,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.FillBounds,
             contentDescription = null
         )
@@ -371,7 +367,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.FillHeight,
             contentDescription = null
         )
@@ -380,7 +376,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.FillWidth,
             contentDescription = null
         )
@@ -389,7 +385,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.Fit,
             contentDescription = null
         )
@@ -398,25 +394,25 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier,
-            bitmap = imageBitmap,
+            painter = painter,
             contentScale = ContentScale.Inside,
             contentDescription = null
         )
 
 
-        val bitmap2 = imageResource(id = R.drawable.landscape5)
+        val painter2: Painter = painterResource(id = R.drawable.landscape5)
 
         TutorialText2(text = "Original")
 
         Image(
-            bitmap = bitmap2, contentDescription = null
+            painter = painter2, contentDescription = null
         )
 
         TutorialText2(text = "ContentScale.None")
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.None,
             contentDescription = null
         )
@@ -425,7 +421,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
@@ -434,7 +430,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.FillBounds,
             contentDescription = null
         )
@@ -443,7 +439,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.FillHeight,
             contentDescription = null
         )
@@ -452,7 +448,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.FillWidth,
             contentDescription = null
         )
@@ -461,7 +457,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.Fit,
             contentDescription = null
         )
@@ -470,7 +466,7 @@ private fun ImageContentScaleExample() {
 
         Image(
             modifier = imageModifier2,
-            bitmap = bitmap2,
+            painter = painter2,
             contentScale = ContentScale.Inside,
             contentDescription = null
         )
