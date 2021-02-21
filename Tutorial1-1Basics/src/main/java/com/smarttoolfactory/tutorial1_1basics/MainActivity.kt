@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,6 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
@@ -25,7 +29,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_4Screen
 import com.smarttoolfactory.tutorial1_1basics.components.TutorialSectionCard
 import com.smarttoolfactory.tutorial1_1basics.model.*
-import androidx.navigation.compose.navigate
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 
 /**
@@ -114,14 +117,12 @@ class MainActivity : AppCompatActivity() {
             LazyColumn(
                 modifier = Modifier.padding(top = 16.dp),
                 content = {
+
                     items(tutorialList) { item: TutorialSectionModel ->
                         TutorialSectionCard(item) {
                             navController.navigate(item.title)
                         }
                     }
-
-
-
                 }
             )
         }
@@ -190,7 +191,10 @@ class MainActivity : AppCompatActivity() {
             },
             tags = listOf(
                 TAG_COMPOSE,
-                TAG_TEXT
+                TAG_TEXT,
+                TAG_FONT_STYLE,
+                TAG_ANNOTATED_STRING,
+                TAG_HYPERLINK
             )
         )
 

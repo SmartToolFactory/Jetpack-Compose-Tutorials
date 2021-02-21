@@ -19,7 +19,7 @@ and  Navigation.
 #### Material Widgets
 |Tutorial|Preview|
 |-------|-------|
-|<h3>2-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String<br>|<img src ="/./screenshots/tutorial2-1.jpg" width=320> |
+|<h3>2-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial2-1.jpg" width=320> |
 |  |  |
 |<h3>2-2 Button, IconButton, FAB, Chip</h3><br/>Create button with text and/or with image, Floating Action Button  or Chips. Modify properties of buttons including color, text, and click actions.<br><br> • Button<br>• IconButton<br>• FloatingActionButton<br>• Chip<br>|<img src ="/./screenshots/tutorial2-2.jpg" width=320> |
 |  |  |

@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,10 +20,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.*
+import androidx.compose.ui.res.DeferredResource
+import androidx.compose.ui.res.loadImageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -36,17 +36,6 @@ import com.smarttoolfactory.tutorial1_1basics.components.*
 // TODO Add PorterDuff blend modes and Coil Image loading
 @Composable
 fun Tutorial2_4Screen() {
-    val imageBitmapSrc: ImageBitmap = imageResource(id = R.drawable.composite_src)
-    val imageBitmapDst: ImageBitmap = imageResource(id = R.drawable.composite_dst)
-
-//    androidx.compose.foundation.Canvas(modifier = Modifier.size(500.dp),
-//        onDraw = {
-//
-//            drawImage(imageBitmapDst)
-//            drawImage(imageBitmapSrc, blendMode = BlendMode.SrcOut)
-//
-//        })
-
     TutorialContent()
 }
 
@@ -153,8 +142,10 @@ fun ImagePainterExample() {
 
     TutorialText2(text = "Painter")
 
-    val imageBitmap: ImageBitmap = imageResource(id = R.drawable.landscape3)
-
+    val imageBitmap: ImageBitmap = imageFromResource(
+        LocalContext.current.resources,
+        R.drawable.landscape3
+    )
     val customPainter = remember {
         object : Painter() {
 
@@ -238,8 +229,9 @@ private fun ImageShapeAndFilterExample() {
         )
         Image(
             modifier = Modifier
-                .shadow(4.dp)
-                .clip(CircleShape), painter = avatarBitmap2,
+                .shadow(4.dp, CircleShape)
+                .clip(CircleShape),
+            painter = avatarBitmap2,
             contentDescription = null
         )
         Image(
@@ -292,26 +284,33 @@ private fun ImageShapeAndFilterExample() {
 
     // TODO PorterDuff mode is not working properly, or i couldn't figure it out yet
     // Check out https://stackoverflow.com/questions/65653560/jetpack-compose-applying-porterduffmode-to-image
-    val imageBitmapSrc: ImageBitmap = imageResource(id = R.drawable.composite_src)
-    val imageBitmapDst: ImageBitmap = imageResource(id = R.drawable.composite_dst)
-
-    val size = Size(imageBitmapSrc.width.toFloat(), imageBitmapSrc.height.toFloat())
-
-    val blendPainter = remember {
-        object : Painter() {
-
-            override val intrinsicSize: Size
-                get() = size
-
-            override fun DrawScope.onDraw() {
-//                drawRect(Color(0xffBDBDBD), size = size)
-                drawImage(imageBitmapDst)
-                drawImage(imageBitmapSrc, blendMode = BlendMode.SrcOut)
-            }
-        }
-    }
-
-    Image(blendPainter, contentDescription = null)
+//    val imageBitmapSrc: ImageBitmap = imageFromResource(
+//        LocalContext.current.resources,
+//        R.drawable.composite_src
+//    )
+//    val imageBitmapDst: ImageBitmap = imageFromResource(
+//        LocalContext.current.resources,
+//        R.drawable.composite_dst
+//    )
+//
+//    val size = Size(imageBitmapSrc.width.toFloat() * 2, imageBitmapSrc.height.toFloat() * 2)
+//
+//    val blendPainter = remember {
+//        object : Painter() {
+//
+//            override val intrinsicSize: Size
+//                get() = size
+//
+//            override fun DrawScope.onDraw() {
+//
+//                drawRect(color = Color.Green, blendMode = BlendMode.Clear)
+//                drawImage(image = imageBitmapDst)
+//                drawImage(image =imageBitmapDst, blendMode = BlendMode.Lighten)
+//            }
+//        }
+//    }
+//
+//    Image(blendPainter, contentDescription = null)
 }
 
 @Composable
@@ -482,23 +481,15 @@ private val diamondShape = GenericShape { size: Size, layoutDirection: LayoutDir
 
 
 private val triangleShape = GenericShape { size: Size, layoutDirection: LayoutDirection ->
+   val path = Path()
+    path.apply {
 
-    moveTo(0f, 0f)
-    lineTo(size.width, 0f)
-    lineTo(0f, size.height)
-    lineTo(0f, 0f)
-}
-
-fun Float.toRadius() = CornerRadius(this)
-
-@Composable
-fun chatBubble() {
-
-    Row {
-        Box() {
-
-        }
+        moveTo(0f, 0f)
+        lineTo(size.width, 0f)
+        lineTo(0f, size.height)
+        lineTo(0f, 0f)
     }
 
-
+    addPath(path = path)
 }
+

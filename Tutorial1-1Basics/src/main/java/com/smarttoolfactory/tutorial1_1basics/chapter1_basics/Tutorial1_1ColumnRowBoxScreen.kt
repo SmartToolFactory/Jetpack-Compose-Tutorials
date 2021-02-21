@@ -80,9 +80,7 @@ private fun TutorialContent() {
             )
             WeightAndSpacerExample()
         }
-
     }
-
 }
 
 @Composable

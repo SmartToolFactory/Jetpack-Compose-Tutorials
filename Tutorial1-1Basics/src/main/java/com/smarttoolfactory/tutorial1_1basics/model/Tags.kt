@@ -12,6 +12,9 @@ const val TAG_COMPOSE_CLICKABLE = "Clickable"
 
 // TEXT
 const val TAG_TEXT = "Text"
+const val TAG_FONT_STYLE = "Font Style"
+const val TAG_ANNOTATED_STRING = "Annotated String"
+const val TAG_HYPERLINK = "Hyperink"
 
 // BUTTON
 const val TAG_BUTTON = "Button"
@@ -26,7 +29,7 @@ const val TAG_IME = "IME"
 const val TAG_REGEX = "Regex"
 
 // IMAGE
-const val TAG_IMAGE ="Image"
+const val TAG_IMAGE = "Image"
 const val TAG_DRAWABLE = "Drawable"
 const val TAG_VECTOR_DRAWABLE = "Vector Drawable"
 const val TAG_BITMAP = "Bitmap"

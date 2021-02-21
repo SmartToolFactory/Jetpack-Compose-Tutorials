@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -296,6 +297,8 @@ private fun TutorialContent() {
 
             val context = LocalContext.current
 
+            lateinit var softwareKeyboardController: SoftwareKeyboardController
+
             OutlinedTextField(
                 modifier = fullWidthModifier,
                 value = searchText.value,
@@ -304,13 +307,16 @@ private fun TutorialContent() {
                 onValueChange = { newValue ->
                     searchText.value = newValue
                 },
+                onTextInputStarted = { softwareKeyboardController = it },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Characters,
                     imeAction = ImeAction.Go,
                 ),
+
                 keyboardActions = KeyboardActions(onGo = {
 
+                    softwareKeyboardController.hideSoftwareKeyboard()
 
                     Toast.makeText(
                         context,
