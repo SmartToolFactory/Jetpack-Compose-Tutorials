@@ -27,6 +27,7 @@ const val TAG_TEXT_FIELD = "TextField"
 const val TAG_OUTLINED_TEXT_FIELD = "Outlined TextField"
 const val TAG_IME = "IME"
 const val TAG_REGEX = "Regex"
+const val TAG_VISUAL_TRANSFORMATION= "Visual Transformation"
 
 // IMAGE
 const val TAG_IMAGE = "Image"

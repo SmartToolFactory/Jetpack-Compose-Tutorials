@@ -226,6 +226,7 @@ class MainActivity : AppCompatActivity() {
                 TAG_TEXT_FIELD,
                 TAG_OUTLINED_TEXT_FIELD,
                 TAG_IME,
+                TAG_VISUAL_TRANSFORMATION,
                 TAG_REGEX
             )
         )

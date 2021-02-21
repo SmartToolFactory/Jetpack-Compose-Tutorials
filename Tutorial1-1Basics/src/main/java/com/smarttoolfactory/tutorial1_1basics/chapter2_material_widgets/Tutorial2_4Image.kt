@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,12 +10,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
@@ -27,11 +28,16 @@ import androidx.compose.ui.res.loadImageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
-import coil.imageLoader
-import coil.request.ImageRequest
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.components.*
+import dev.chrisbanes.accompanist.coil.CoilImage
+import dev.chrisbanes.accompanist.glide.GlideImage
+import dev.chrisbanes.accompanist.imageloading.ImageLoadState
+import dev.chrisbanes.accompanist.imageloading.MaterialLoadingImage
+import dev.chrisbanes.accompanist.picasso.PicassoImage
 
 // TODO Add PorterDuff blend modes and Coil Image loading
 @Composable
@@ -65,15 +71,25 @@ private fun TutorialContent() {
             )
             ImageShapeAndFilterExample()
 
-//        TutorialText(
-//            text = "4-) Use Coil to fetch an image resource from network and " +
-//                    "set it to Image component."
-//        )
-//
-//        ImageDownloadExample()
+            TutorialText(
+                text = "4-) Use Glide library to fetch an image resource from network and " +
+                        "set it to Image component."
+            )
+
+            ImageDownloadWithGlideExample()
 
             TutorialText(
-                text = "4-) ContentScale represents a rule to apply to scale a source " +
+                text = "4-) Use Accompanyst library to fetch an image resource from network and " +
+                        "set it to Image component using Coil, Picasso and Glide"
+            )
+//            ImageAsyncDownloadExample()
+
+            TutorialText(
+                text = "5-) Use Accompanist library to fetch image resource from network"
+            )
+
+            TutorialText(
+                text = "5-) ContentScale represents a rule to apply to scale a source " +
                         "rectangle to be inscribed into a destination."
             )
             ImageContentScaleExample()
@@ -82,27 +98,97 @@ private fun TutorialContent() {
 }
 
 @Composable
-fun ImageDownloadExample() {
+fun ImageDownloadWithGlideExample() {
     val url =
         "https://avatars3.githubusercontent.com/u/35650605?s=400&u=058086fd5c263f50f2fbe98ed24b5fbb7d437a4e&v=4"
 
-    var image by remember { mutableStateOf<ImageBitmap?>(null) }
+    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
+    val sizeModifier = Modifier.fillMaxWidth().width(150.dp)
     val context = LocalContext.current
 
-    val request = ImageRequest.Builder(context)
-        .data("https://www.example.com/image.jpg")
-        .target { drawable ->
-            // Handle the result.
+    val glide = Glide.with(context)
 
-            val imageBitmap =
-                drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight).asImageBitmap()
-            Image(imageBitmap, contentDescription = null)
+
+    val target = object : CustomTarget<Bitmap>() {
+        override fun onLoadCleared(placeholder: Drawable?) {
+            imageBitmap = null
         }
-        .build()
 
-    context.imageLoader.enqueue(request)
+        override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+            imageBitmap = bitmap.asImageBitmap()
+        }
+    }
 
+    glide
+        .asBitmap()
+        .load(url)
+        .into(target)
+
+    Column(
+        modifier = sizeModifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        imageBitmap?.let { imgBitmap ->
+            // Image is a pre-defined composable that lays out and draws a given [ImageBitmap].
+            Image(bitmap = imgBitmap, contentDescription = null)
+        }
+    }
+}
+
+
+//@Composable
+//fun ImageAsyncDownloadExample() {
+//
+//    val rowModifier = Modifier
+//        .fillMaxHeight()
+//        .padding(4.dp)
+//
+//    Row(modifier = rowModifier) {
+//        CoilImage(
+//            data = "https://source.unsplash.com/pGM4sjt_BdQ",
+//            modifier = rowModifier.weight(1f),
+//            content = loadImage(),
+//        )
+//        PicassoImage(
+//            data = "https://source.unsplash.com/-LojFX9NfPY",
+//            modifier = rowModifier.weight(1f),
+//            content = loadImage()
+//        )
+//        GlideImage(
+//            data = "https://source.unsplash.com/-LojFX9NfPY",
+//            modifier = rowModifier.weight(1f),
+//            content = loadImage()
+//        )
+//    }
+//}
+
+private fun loadImage(): @Composable (
+BoxScope.(imageLoadState: ImageLoadState) -> Unit) = { imageState ->
+    when (imageState) {
+        is ImageLoadState.Success -> {
+            MaterialLoadingImage(
+                result = imageState,
+                contentDescription = null,
+                fadeInEnabled = true,
+                fadeInDurationMs = 600,
+                contentScale = ContentScale.Crop,
+            )
+        }
+        is ImageLoadState.Error,
+        is ImageLoadState.Empty -> {
+            Image(
+                painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null
+            )
+        }
+        is ImageLoadState.Loading -> {
+            Box(Modifier.matchParentSize()) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
+            }
+        }
+    }
 }
 
 
@@ -164,6 +250,7 @@ fun ImagePainterExample() {
         }
     }
     Image(painter = customPainter, contentDescription = null)
+
 }
 
 @Composable
@@ -312,6 +399,7 @@ private fun ImageShapeAndFilterExample() {
 //
 //    Image(blendPainter, contentDescription = null)
 }
+
 
 @Composable
 private fun ImageContentScaleExample() {
@@ -481,7 +569,7 @@ private val diamondShape = GenericShape { size: Size, layoutDirection: LayoutDir
 
 
 private val triangleShape = GenericShape { size: Size, layoutDirection: LayoutDirection ->
-   val path = Path()
+    val path = Path()
     path.apply {
 
         moveTo(0f, 0f)
