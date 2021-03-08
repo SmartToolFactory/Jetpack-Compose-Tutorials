@@ -1,14 +1,14 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
-import androidx.compose.foundation.ClickableText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AmbientTextStyle
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Divider
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.platform.AmbientUriHandler
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -373,7 +373,7 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
     }
 
     // UriHandler parse and opens URI inside AnnotatedString Item in Browse
-    val uriHandler: UriHandler = AmbientUriHandler.current
+    val uriHandler: UriHandler = LocalUriHandler.current
 
     // 🔥 Clickable text returns position of text that is clicked in onClick callback
     ClickableText(
@@ -409,7 +409,7 @@ private fun CustomText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
-    style: TextStyle = AmbientTextStyle.current
+    style: TextStyle = LocalTextStyle.current
 ) {
 
     Text(

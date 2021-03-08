@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -43,22 +44,24 @@ fun TutorialSectionCard(
             )
 
             // Vertical spacing
-            Spacer(Modifier.preferredHeight(8.dp))
+            Spacer(Modifier.height(8.dp))
 
             // Description text
-            Providers(AmbientContentAlpha provides ContentAlpha.medium) {
-                Text(model.description, style = MaterialTheme.typography.body2)
-            }
+            // TODO Deprecated
+
+//            Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+            Text(model.description, style = MaterialTheme.typography.body2, color = Color.Gray)
+//            }
 
             // Vertical spacing
-            Spacer(Modifier.preferredHeight(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             // Horizontal list for tags
             LazyRow(content = {
 
                 items(model.tags) { tag ->
                     TutorialChip(text = tag)
-                    Spacer(Modifier.preferredWidth(8.dp))
+                    Spacer(Modifier.width(8.dp))
                 }
             })
         }

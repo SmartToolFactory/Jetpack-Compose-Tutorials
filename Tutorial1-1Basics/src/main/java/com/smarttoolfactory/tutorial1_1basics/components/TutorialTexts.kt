@@ -2,13 +2,11 @@ package com.smarttoolfactory.tutorial1_1basics.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AmbientContentAlpha
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -54,13 +52,17 @@ fun TutorialText(text: String, modifier: Modifier = Modifier, addBullet: Boolean
 @Composable
 fun TutorialText2(text: String, modifier: Modifier = Modifier) {
 
-    Providers(AmbientContentAlpha provides ContentAlpha.medium) {
-        Text(
-            text, style = MaterialTheme.typography.body2, modifier = modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
-        )
-    }
+    // TODO Deprecated
+//    Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.body2,
+        color = Color.Gray,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+    )
+//    }
 }
 
 @Preview

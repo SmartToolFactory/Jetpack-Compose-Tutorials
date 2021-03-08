@@ -12,6 +12,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
  * * Tutorial navigation is done via [NavController] and ```composable``` extension function
  * for [NavGraphBuilder]
  */
+@ExperimentalComposeUiApi
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tutorialList: List<TutorialSectionModel>

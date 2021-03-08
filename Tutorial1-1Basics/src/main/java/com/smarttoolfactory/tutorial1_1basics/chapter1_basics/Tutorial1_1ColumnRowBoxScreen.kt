@@ -34,6 +34,7 @@ import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
  */
 @Composable
 fun Tutorial1_1Screen() {
+
     TutorialContent()
 }
 
@@ -120,7 +121,8 @@ fun RowExample() {
 
 @Composable
 fun ColumnExample() {
-    val modifier = Modifier.padding(8.dp)
+    val modifier = Modifier
+        .padding(8.dp)
         .fillMaxWidth()
         .height(160.dp)
         .background(Color.LightGray)
@@ -159,16 +161,40 @@ fun ColumnExample() {
 
 @Composable
 fun RowTexts() {
-    Text(text = "Row1", modifier = Modifier.background(Color(0xFFFF9800)).padding(4.dp))
-    Text(text = "Row2", modifier = Modifier.background(Color(0xFFFFA726)).padding(4.dp))
-    Text(text = "Row3", modifier = Modifier.background(Color(0xFFFFB74D)).padding(4.dp))
+    Text(
+        text = "Row1", modifier = Modifier
+            .background(Color(0xFFFF9800))
+            .padding(4.dp)
+    )
+    Text(
+        text = "Row2", modifier = Modifier
+            .background(Color(0xFFFFA726))
+            .padding(4.dp)
+    )
+    Text(
+        text = "Row3", modifier = Modifier
+            .background(Color(0xFFFFB74D))
+            .padding(4.dp)
+    )
 }
 
 @Composable
 fun ColumnTexts() {
-    Text(text = "Column1", modifier = Modifier.background(Color(0xFF8BC34A)).padding(4.dp))
-    Text(text = "Column2", modifier = Modifier.background(Color(0xFF9CCC65)).padding(4.dp))
-    Text(text = "Column3", modifier = Modifier.background(Color(0xFFAED581)).padding(4.dp))
+    Text(
+        text = "Column1", modifier = Modifier
+            .background(Color(0xFF8BC34A))
+            .padding(4.dp)
+    )
+    Text(
+        text = "Column2", modifier = Modifier
+            .background(Color(0xFF9CCC65))
+            .padding(4.dp)
+    )
+    Text(
+        text = "Column3", modifier = Modifier
+            .background(Color(0xFFAED581))
+            .padding(4.dp)
+    )
 }
 
 
@@ -203,14 +229,20 @@ fun ColumnsAndRowPaddingsExample() {
 
     Row(modifier = rowModifier, horizontalArrangement = Arrangement.SpaceEvenly) {
 
-        Column(modifier = modifierA.background(Color(0xFFFFFFFF)).padding(8.dp)) {
+        Column(
+            modifier = modifierA
+                .background(Color(0xFFFFFFFF))
+                .padding(8.dp)
+        ) {
             Text(text = "Text A1")
             Text(text = "Text A2")
             Text(text = "Text A3")
         }
 
         Column(
-            modifier = modifierB.background(Color(0xFF9575CD)).padding(top = 12.dp, bottom = 22.dp)
+            modifier = modifierB
+                .background(Color(0xFF9575CD))
+                .padding(top = 12.dp, bottom = 22.dp)
         ) {
             Text(text = "Text B1")
             Text(text = "Text B2")
@@ -253,18 +285,21 @@ fun ShadowExample() {
 
 @Composable
 fun BoxExample() {
+
+    val modifier = Modifier
+        .fillMaxWidth()
+        .height(250.dp)
+        .background(Color.LightGray)
+
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .background(Color.LightGray)
+        modifier = modifier
 
     ) {
 
         // This is the one at the bottom
         Text(
             text = "First",
-            modifier = Modifier
+            modifier = modifier
                 .background(Color(0xFF1976D2))
                 .size(200.dp),
             color = Color.White,
@@ -275,6 +310,7 @@ fun BoxExample() {
             text = "Second",
             modifier = Modifier
                 .background(Color(0xFF2196F3))
+
                 .size(150.dp),
             color = Color.White
         )
@@ -292,6 +328,7 @@ fun BoxExample() {
 
 @Composable
 fun BoxShadowAndAlignmentExample() {
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -317,10 +354,11 @@ fun BoxShadowAndAlignmentExample() {
         }
 
         Box(
-            modifier = Modifier.shadow(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(8.dp)
-            )
+            modifier = Modifier
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(8.dp)
+                )
                 .align(Alignment.TopEnd)
 
         ) {
@@ -334,12 +372,16 @@ fun BoxShadowAndAlignmentExample() {
             )
         }
 
-        Box(
-            modifier = Modifier.shadow(
+
+        val modifier = Modifier
+            .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(8.dp)
             )
-                .align(Alignment.BottomStart)
+            .align(Alignment.BottomStart)
+
+        Box(
+            modifier = modifier
 
         ) {
             // This is the one on top
@@ -347,6 +389,7 @@ fun BoxShadowAndAlignmentExample() {
                 text = "Third ",
                 modifier = Modifier
                     .background(Color(0xFFFFD54F))
+
                     .size(100.dp),
                 color = Color.White
             )
@@ -358,7 +401,8 @@ fun BoxShadowAndAlignmentExample() {
 fun WeightAndSpacerExample() {
 
     // This is parent modifier
-    val modifier = Modifier.fillMaxWidth()
+    val modifier = Modifier
+        .fillMaxWidth()
         .height(60.dp)
         .background(Color.LightGray)
 
@@ -394,7 +438,7 @@ fun WeightAndSpacerExample() {
     }
 
     // This spacer is for column which behaves as padding below this component
-    Spacer(modifier = Modifier.preferredHeight(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Preview

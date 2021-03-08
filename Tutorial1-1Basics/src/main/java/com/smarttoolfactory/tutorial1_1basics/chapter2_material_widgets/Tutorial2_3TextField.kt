@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.widget.EditText
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,11 +16,12 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,11 +41,13 @@ import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
  * As of 1.0.0-alpha-09 it does not have Assitive Text, Error Text, Character Counter,
  * Prefix, and Suffix.
  */
+@ExperimentalComposeUiApi
 @Composable
 fun Tutorial2_3Screen() {
     TutorialContent()
 }
 
+@ExperimentalComposeUiApi
 @Composable
 private fun TutorialContent() {
 
@@ -85,30 +86,33 @@ private fun TutorialContent() {
             TextField(
                 modifier = fullWidthModifier,
                 value = errorText.value,
-                label = { Text("Label") },
-                placeholder = { Text("Placeholder") },
                 onValueChange = { newValue ->
-
                     errorText.value = newValue
-
                 },
-                isErrorValue = errorText.value.text.isEmpty(),
+                label = {
+                    Text(text = "")
+                },
+                placeholder = { Text("Placeholder") },
+                isError = errorText.value.text.isEmpty(),
             )
+
 
             TutorialText2(text = "Colors")
 
             TextField(
                 modifier = fullWidthModifier,
                 value = textFieldValue.value,
-                label = { Text("Label") },
-                placeholder = { Text("Placeholder") },
                 onValueChange = { newValue ->
                     textFieldValue.value = newValue
                 },
-                activeColor = Color(0xffFF8F00),
-                backgroundColor = Color(0xffFFD54F),
-                inactiveColor = Color(0xff42A5F5),
-                errorColor = Color(0xff2E7D32)
+                label = { Text("Label") },
+                placeholder = { Text("Placeholder") },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color(0xffFFD54F),
+                    disabledTextColor = Color(0xff42A5F5),
+                    errorLabelColor = Color(0xff2E7D32),
+                    disabledLabelColor = Color(0xff42A5F5)
+                )
             )
 
             TutorialText2(text = "Colors & Text Style")
@@ -120,10 +124,15 @@ private fun TutorialContent() {
                 onValueChange = { newValue ->
                     textFieldValue.value = newValue
                 },
-                activeColor = Color(0xffFFE082),
-                backgroundColor = Color(0xff039BE5),
-                inactiveColor = Color(0xffAEEA00),
-                errorColor = Color(0xff2E7D32),
+                colors = TextFieldDefaults.textFieldColors(
+
+                    backgroundColor = Color(0xff039BE5),
+                    disabledTextColor = Color(0xff42A5F5),
+                    errorLabelColor = Color(0xff2E7D32),
+                    focusedLabelColor = Color(0xffAEEA00),
+                    placeholderColor =  Color(0xffFFE082),
+                ),
+
                 textStyle = TextStyle(
                     color = Color.White,
                     fontStyle = FontStyle.Italic,
@@ -141,11 +150,13 @@ private fun TutorialContent() {
             ) {
                 TextField(
                     value = textFieldValue.value,
-                    placeholder = { Text("Search") },
                     onValueChange = { newValue ->
                         textFieldValue.value = newValue
                     },
-                    backgroundColor = Color.White,
+                    placeholder = { Text("Search") },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.White
+                    )
                 )
             }
 
@@ -164,14 +175,22 @@ private fun TutorialContent() {
             OutlinedTextField(
                 modifier = fullWidthModifier,
                 value = textFieldValue.value,
-                label = { Text("Label") },
-                placeholder = { Text("Placeholder") },
                 onValueChange = { newValue ->
                     textFieldValue.value = newValue
                 },
-                activeColor = Color(0xff43A047),
-                inactiveColor = Color(0xff66BB6A),
-                errorColor = Color(0xffFFEB3B)
+                label = { Text("Label") },
+                placeholder = { Text("Placeholder") },
+
+                colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.Blue,
+                    backgroundColor = Color.Yellow,
+                    placeholderColor = Color(0xffFFF176),
+                    unfocusedLabelColor = Color(0xff43A047),
+                    focusedLabelColor = Color(0xff66BB6A),
+                    errorLabelColor = Color(0xffFFEB3B),
+                    unfocusedIndicatorColor = Color(0xffFF5722),
+                    focusedIndicatorColor = Color(0xff1976D2)
+                )
             )
 
             TutorialText2(text = "Single Line and Line Height")
@@ -299,34 +318,34 @@ private fun TutorialContent() {
 
             lateinit var softwareKeyboardController: SoftwareKeyboardController
 
-            OutlinedTextField(
-                modifier = fullWidthModifier,
-                value = searchText.value,
-                label = { Text("Search onImeActionPerformed") },
-                placeholder = { Text(text = "") },
-                onValueChange = { newValue ->
-                    searchText.value = newValue
-                },
-                onTextInputStarted = { softwareKeyboardController = it },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Characters,
-                    imeAction = ImeAction.Go,
-                ),
-
-                keyboardActions = KeyboardActions(onGo = {
-
-                    softwareKeyboardController.hideSoftwareKeyboard()
-
-                    Toast.makeText(
-                        context,
-                        "ImeAction performed onGo " +
-                                ", and softwareKeyboardController.hideSoftwareKeyboard()",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
-            )
-
+//            OutlinedTextField(
+//                modifier = fullWidthModifier,
+//                value = searchText.value,
+//                onValueChange = { newValue ->
+//                    searchText.value = newValue
+//                },
+//                label = { Text("Search onImeActionPerformed") },
+//                placeholder = { Text(text = "") },
+//
+//                onTextInputStarted = { softwareKeyboardController = it },
+//                singleLine = true,
+//                keyboardOptions = KeyboardOptions(
+//                    capitalization = KeyboardCapitalization.Characters,
+//                    imeAction = ImeAction.Go,
+//                ),
+//
+//                keyboardActions = KeyboardActions(onGo = {
+//
+//                    softwareKeyboardController.hideSoftwareKeyboard()
+//
+//                    Toast.makeText(
+//                        context,
+//                        "ImeAction performed onGo " +
+//                                ", and softwareKeyboardController.hideSoftwareKeyboard()",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                })
+//            )
 
 
             TutorialText(

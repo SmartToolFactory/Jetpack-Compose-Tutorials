@@ -23,8 +23,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.DeferredResource
-import androidx.compose.ui.res.loadImageResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -33,11 +32,8 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.components.*
-import dev.chrisbanes.accompanist.coil.CoilImage
-import dev.chrisbanes.accompanist.glide.GlideImage
 import dev.chrisbanes.accompanist.imageloading.ImageLoadState
 import dev.chrisbanes.accompanist.imageloading.MaterialLoadingImage
-import dev.chrisbanes.accompanist.picasso.PicassoImage
 
 // TODO Add PorterDuff blend modes and Coil Image loading
 @Composable
@@ -104,7 +100,9 @@ fun ImageDownloadWithGlideExample() {
 
     var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
-    val sizeModifier = Modifier.fillMaxWidth().width(150.dp)
+    val sizeModifier = Modifier
+        .fillMaxWidth()
+        .width(150.dp)
     val context = LocalContext.current
 
     val glide = Glide.with(context)
@@ -210,16 +208,16 @@ private fun ImageVectorExample() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         val vectorRes1: Painter = painterResource(id = R.drawable.vd_clock_alarm)
-        Image(vectorRes1, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
+        Image(vectorRes1, modifier = Modifier.size(60.dp), contentDescription = null)
 
         val vectorRes2: Painter = painterResource(id = R.drawable.vd_dashboard_active)
-        Image(vectorRes2, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
+        Image(vectorRes2, modifier = Modifier.size(60.dp), contentDescription = null)
 
         val vectorRes3: Painter = painterResource(id = R.drawable.vd_home_active)
-        Image(vectorRes3, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
+        Image(vectorRes3, modifier = Modifier.size(60.dp), contentDescription = null)
 
         val vectorRes4: Painter = painterResource(id = R.drawable.vd_notification_active)
-        Image(vectorRes4, modifier = Modifier.preferredSize(60.dp), contentDescription = null)
+        Image(vectorRes4, modifier = Modifier.size(60.dp), contentDescription = null)
     }
 }
 
@@ -228,10 +226,11 @@ fun ImagePainterExample() {
 
     TutorialText2(text = "Painter")
 
-    val imageBitmap: ImageBitmap = imageFromResource(
+    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(
         LocalContext.current.resources,
         R.drawable.landscape3
     )
+
     val customPainter = remember {
         object : Painter() {
 
@@ -261,42 +260,44 @@ private fun DrawOnImageExample() {
             with PendingResource. Once the loading finishes, recompose is scheduled and this
              function will return deferred image resource with LoadedResource or FailedResource.
          */
-    val deferredResource: DeferredResource<ImageBitmap> =
-        loadImageResource(id = R.drawable.landscape2)
 
-    deferredResource.resource.resource?.let { imageBitmap ->
-
-        // We need a MUTABLE Bitmap to draw on Canvas to not get IllegalArgumentException
-        val bitmap = imageBitmap.asAndroidBitmap().copy(Bitmap.Config.ARGB_8888, true)
-
-        val paint = Paint().apply {
-            style = PaintingStyle.Stroke
-            strokeWidth = 10f
-            color = Color(0xff29B6F6)
-
-        }
-
-        // We need a ImageBitmap for Jetpack Compose Canvas
-        val newImageBitmap = bitmap.asImageBitmap()
-
-        val canvas = Canvas(newImageBitmap)
-
-        canvas.drawRect(0f, 0f, 200f, 200f, paint = paint)
-        canvas.drawCircle(
-            Offset(
-                newImageBitmap.width / 2 - 75f,
-                newImageBitmap.height / 2 + 75f
-            ), 150.0f, paint
-        )
-
-        Image(bitmap = newImageBitmap, contentDescription = null)
-    }
+    // TODO Deprecated, update to beta01
+//    val deferredResource: DeferredResource<ImageBitmap> =
+//        loadImageResource(id = R.drawable.landscape2)
+//
+//    deferredResource.resource.resource?.let { imageBitmap ->
+//
+//        // We need a MUTABLE Bitmap to draw on Canvas to not get IllegalArgumentException
+//        val bitmap = imageBitmap.asAndroidBitmap().copy(Bitmap.Config.ARGB_8888, true)
+//
+//        val paint = Paint().apply {
+//            style = PaintingStyle.Stroke
+//            strokeWidth = 10f
+//            color = Color(0xff29B6F6)
+//
+//        }
+//
+//        // We need a ImageBitmap for Jetpack Compose Canvas
+//        val newImageBitmap = bitmap.asImageBitmap()
+//
+//        val canvas = Canvas(newImageBitmap)
+//
+//        canvas.drawRect(0f, 0f, 200f, 200f, paint = paint)
+//        canvas.drawCircle(
+//            Offset(
+//                newImageBitmap.width / 2 - 75f,
+//                newImageBitmap.height / 2 + 75f
+//            ), 150.0f, paint
+//        )
+//
+//        Image(bitmap = newImageBitmap, contentDescription = null)
+//    }
 }
 
 @Composable
 private fun ImageShapeAndFilterExample() {
 
-    val avatarBitmap1 = painterResource(id = R.drawable.avatar_1_raster)
+    val avatarBitmap1: Painter = painterResource(id = R.drawable.avatar_1_raster)
     val avatarBitmap2 = painterResource(id = R.drawable.avatar_2_raster)
     val avatarBitmap3 = painterResource(id = R.drawable.avatar_3_raster)
     val avatarBitmap4 = painterResource(id = R.drawable.avatar_4_raster)
@@ -304,7 +305,7 @@ private fun ImageShapeAndFilterExample() {
     TutorialText2(text = "Shape")
 
     FullWidthRow(
-        modifier = Modifier.preferredHeight(100.dp),
+        modifier = Modifier.height(100.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
@@ -340,7 +341,7 @@ private fun ImageShapeAndFilterExample() {
 
     TutorialText2(text = "Color Filter")
     FullWidthRow(
-        modifier = Modifier.preferredHeight(100.dp),
+        modifier = Modifier.height(100.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 

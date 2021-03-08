@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
-import androidx.compose.animation.animate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -285,7 +284,7 @@ private fun GradientButtonExample(modifier: Modifier) {
             Text(
                 text = "Vertical Gradient",
                 modifier = modifier
-                    .preferredHeight(ButtonDefaults.MinHeight)
+                    .height(ButtonDefaults.MinHeight)
                     .align(Alignment.CenterVertically)
                     .background(brush = verticalGradientBrush)
                     .padding(8.dp)
@@ -312,7 +311,12 @@ private fun IconButtonExample(modifier: Modifier) {
             onCheckedChange = { checked = it },
             modifier = modifier
         ) {
-            val tint = animate(if (checked) Color(0xffE91E63) else Color(0xffB0BEC5))
+
+            // TODO as of beta01 this animation is deprecated
+//            val tint = animate(if (checked) Color(0xffE91E63) else Color(0xffB0BEC5))
+
+            val tint = Color(0xffE91E63)
+
             Icon(
                 Icons.Filled.Favorite, tint = tint,
                 contentDescription = null

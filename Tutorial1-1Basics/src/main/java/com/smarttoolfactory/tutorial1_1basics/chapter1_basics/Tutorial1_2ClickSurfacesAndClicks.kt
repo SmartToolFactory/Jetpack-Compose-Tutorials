@@ -95,6 +95,8 @@ fun ClickableModifierExample() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+
             Text(
                 color = Color.White,
                 fontSize = 24.sp,
@@ -303,7 +305,7 @@ fun SurfaceClickPropagationExample() {
             shape = RoundedCornerShape(10.dp),
             color = (Color(0xFFFDD835)),
             modifier = Modifier
-                .preferredSize(150.dp)
+                .size(150.dp)
                 .padding(12.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .clickable(onClick = {
@@ -319,7 +321,7 @@ fun SurfaceClickPropagationExample() {
 
             Surface(
                 modifier = Modifier
-                    .preferredSize(80.dp)
+                    .size(80.dp)
                     .offset(x = 50.dp, y = (-20).dp)
                     .clip(CircleShape)
                     .clickable(onClick = {
@@ -341,7 +343,7 @@ fun SurfaceClickPropagationExample() {
 
         Surface(
             modifier = Modifier
-                .preferredSize(110.dp)
+                .size(110.dp)
                 .padding(12.dp)
                 .offset(x = 110.dp, y = 20.dp)
                 .clip(CutCornerShape(10.dp))

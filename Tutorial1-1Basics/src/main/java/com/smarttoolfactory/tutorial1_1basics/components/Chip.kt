@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -34,11 +34,11 @@ fun TutorialChip(modifier: Modifier = Modifier, text: String) {
         ) {
             Box(
                 modifier = Modifier
-                    .preferredSize(8.dp, 8.dp)
+                    .size(8.dp, 8.dp)
                     .clip(CircleShape)
                     .background(color = MaterialTheme.colors.secondary)
             )
-            Spacer(Modifier.preferredWidth(4.dp))
+            Spacer(Modifier.width(4.dp))
             Text(text = text)
         }
     }
@@ -61,10 +61,10 @@ fun Chip(
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (drawableRes != -1) {
                 Image(
-                    bitmap = imageResource(drawableRes),
+                    painter = painterResource(drawableRes),
                     modifier = Modifier
                         .padding(8.dp)
-                        .preferredSize(20.dp)
+                        .size(20.dp)
                         .clip(CircleShape),
                     contentDescription = null
                 )
@@ -99,10 +99,10 @@ fun OutlinedChip(
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (drawableRes != -1) {
                 Image(
-                    bitmap = imageResource(drawableRes),
+                    painter = painterResource(drawableRes),
                     modifier = Modifier
                         .padding(8.dp)
-                        .preferredSize(20.dp)
+                        .size(20.dp)
                         .clip(CircleShape),
                     contentDescription = null
                 )
@@ -126,7 +126,7 @@ fun CircleCloseButton(modifier: Modifier) {
         IconButton(
             onClick = {},
             modifier = Modifier
-                .preferredSize(16.dp)
+                .size(16.dp)
                 .padding(1.dp)
         ) {
             Icon(
