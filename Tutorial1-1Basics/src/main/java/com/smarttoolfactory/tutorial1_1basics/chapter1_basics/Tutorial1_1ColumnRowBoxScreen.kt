@@ -75,8 +75,8 @@ private fun TutorialContent() {
 
             TutorialHeader(text = "Weight and Spacer")
             TutorialText(
-                text = "7-) Weight determines based on total weight how much of the parents " +
-                        "dimensions a child should occupy. Spacer to create horizontal or vertical " +
+                text = "7-) Weight determines, based on total weight, how much of the parent's " +
+                        "dimensions should be occupied by each child. Spacer is used to create horizontal or vertical " +
                         "space between components."
             )
             WeightAndSpacerExample()
@@ -310,7 +310,6 @@ fun BoxExample() {
             text = "Second",
             modifier = Modifier
                 .background(Color(0xFF2196F3))
-
                 .size(150.dp),
             color = Color.White
         )

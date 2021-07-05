@@ -354,6 +354,7 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
         val startIndex = str.indexOf("link")
         val endIndex = startIndex + 4
         append(str)
+
         addStyle(
             style = SpanStyle(
                 color = Color(0xff64B5F6),

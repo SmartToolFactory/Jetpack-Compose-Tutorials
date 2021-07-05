@@ -96,7 +96,6 @@ fun ClickableModifierExample() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
             Text(
                 color = Color.White,
                 fontSize = 24.sp,
@@ -216,7 +215,6 @@ fun SurfaceZIndexExample() {
             .weight(1f)
             .padding(12.dp)
 
-
         // Rectangle Shape
         Surface(
             shape = RectangleShape,
@@ -224,9 +222,7 @@ fun SurfaceZIndexExample() {
             color = (Color(0xFFFDD835)),
             elevation = 5.dp,
             border = BorderStroke(5.dp, color = Color(0xFFFF6F00))
-        ) {
-
-        }
+        ) {}
 
         // Rounder Corner Shape
         Surface(
@@ -246,20 +242,14 @@ fun SurfaceZIndexExample() {
             border = BorderStroke(2.dp, color = Color(0xFF004D40))
         ) {}
 
-        //
+        // Rectangle with cut corner on top left
         Surface(
             shape = CutCornerShape(topStartPercent = 20),
             modifier = modifier,
             color = (Color(0xFFB2FF59)),
             elevation = 15.dp,
             border = BorderStroke(2.dp, color = Color(0xFFd50000))
-        ) {
-
-        }
-
-        Surface() {
-
-        }
+        ) {}
     }
 }
 
@@ -335,9 +325,7 @@ fun SurfaceClickPropagationExample() {
                     }),
                 elevation = 12.dp,
                 color = (Color(0xFF26C6DA))
-            ) {
-
-            }
+            ) {}
 
         }
 
