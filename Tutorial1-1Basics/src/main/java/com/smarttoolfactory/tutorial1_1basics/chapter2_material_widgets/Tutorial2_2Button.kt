@@ -1,5 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -312,10 +314,10 @@ private fun IconButtonExample(modifier: Modifier) {
             modifier = modifier
         ) {
 
-            // TODO as of beta01 this animation is deprecated
-//            val tint = animate(if (checked) Color(0xffE91E63) else Color(0xffB0BEC5))
-
-            val tint = Color(0xffE91E63)
+            val tint by animateColorAsState(
+                targetValue = if (checked) Color(0xffE91E63) else Color(0xffB0BEC5),
+            animationSpec = tween(durationMillis = 400)
+            )
 
             Icon(
                 Icons.Filled.Favorite, tint = tint,

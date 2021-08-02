@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.widget.EditText
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -316,36 +319,35 @@ private fun TutorialContent() {
 
             val context = LocalContext.current
 
-            lateinit var softwareKeyboardController: SoftwareKeyboardController
+            val keyboardController = LocalSoftwareKeyboardController.current
 
-//            OutlinedTextField(
-//                modifier = fullWidthModifier,
-//                value = searchText.value,
-//                onValueChange = { newValue ->
-//                    searchText.value = newValue
-//                },
-//                label = { Text("Search onImeActionPerformed") },
-//                placeholder = { Text(text = "") },
-//
-//                onTextInputStarted = { softwareKeyboardController = it },
-//                singleLine = true,
-//                keyboardOptions = KeyboardOptions(
-//                    capitalization = KeyboardCapitalization.Characters,
-//                    imeAction = ImeAction.Go,
-//                ),
-//
-//                keyboardActions = KeyboardActions(onGo = {
-//
-//                    softwareKeyboardController.hideSoftwareKeyboard()
-//
-//                    Toast.makeText(
-//                        context,
-//                        "ImeAction performed onGo " +
-//                                ", and softwareKeyboardController.hideSoftwareKeyboard()",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                })
-//            )
+            OutlinedTextField(
+                modifier = fullWidthModifier,
+                value = searchText.value,
+                onValueChange = { newValue ->
+                    searchText.value = newValue
+                },
+                label = { Text("Search onImeActionPerformed") },
+                placeholder = { Text(text = "") },
+
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Characters,
+                    imeAction = ImeAction.Go,
+                ),
+
+                keyboardActions = KeyboardActions(onGo = {
+
+                    keyboardController?.hide()
+
+                    Toast.makeText(
+                        context,
+                        "ImeAction performed onGo " +
+                                ", and keyboardController?.hide()",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+            )
 
 
             TutorialText(
