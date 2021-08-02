@@ -299,7 +299,7 @@ fun BoxExample() {
         // This is the one at the bottom
         Text(
             text = "First",
-            modifier = modifier
+            modifier = Modifier
                 .background(Color(0xFF1976D2))
                 .size(200.dp),
             color = Color.White,
@@ -337,7 +337,8 @@ fun BoxShadowAndAlignmentExample() {
     ) {
 
         Box(
-            modifier = Modifier.shadow(
+            modifier = Modifier
+                .shadow(
                 elevation = 4.dp,
                 shape = RoundedCornerShape(8.dp)
             )
@@ -355,7 +356,7 @@ fun BoxShadowAndAlignmentExample() {
         Box(
             modifier = Modifier
                 .shadow(
-                    elevation = 4.dp,
+                    elevation = 8.dp,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .align(Alignment.TopEnd)
@@ -388,7 +389,6 @@ fun BoxShadowAndAlignmentExample() {
                 text = "Third ",
                 modifier = Modifier
                     .background(Color(0xFFFFD54F))
-
                     .size(100.dp),
                 color = Color.White
             )

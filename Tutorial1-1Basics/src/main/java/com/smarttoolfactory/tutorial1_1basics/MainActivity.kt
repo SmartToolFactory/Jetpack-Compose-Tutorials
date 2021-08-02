@@ -67,14 +67,14 @@ class MainActivity : AppCompatActivity() {
             startDestination = "start_destination"
         ) {
 
-            composable("start_destination") {
+            composable(route = "start_destination") { navBackEntryStack ->
                 TutorialComponent(tutorialList, navController)
             }
 
             // Set navigation route as title of tutorial card
             // and invoke @Composable inside lambda of this card.
             tutorialList.forEach { model ->
-                composable(model.title) {
+                composable(route = model.title) { navBackEntryStack ->
                     model.action?.invoke()
                 }
             }
