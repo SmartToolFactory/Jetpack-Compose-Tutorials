@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.text.SpannableString
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -133,7 +133,7 @@ private fun TutorialContent() {
                     disabledTextColor = Color(0xff42A5F5),
                     errorLabelColor = Color(0xff2E7D32),
                     focusedLabelColor = Color(0xffAEEA00),
-                    placeholderColor =  Color(0xffFFE082),
+                    placeholderColor = Color(0xffFFE082),
                 ),
 
                 textStyle = TextStyle(
@@ -185,7 +185,7 @@ private fun TutorialContent() {
                 placeholder = { Text("Placeholder") },
 
                 colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.Blue,
+                    textColor = Color.Blue,
                     backgroundColor = Color.Yellow,
                     placeholderColor = Color(0xffFFF176),
                     unfocusedLabelColor = Color(0xff43A047),
@@ -370,6 +370,22 @@ private fun TutorialContent() {
             )
 
             Spacer(modifier = Modifier.padding(bottom = 32.dp))
+
+            val phoneText = remember { mutableStateOf(TextFieldValue("")) }
+            OutlinedTextField(
+                modifier = fullWidthModifier,
+                value = phoneText.value,
+                label = { Text("Phone") },
+                placeholder = { Text(text = "") },
+                onValueChange = { newValue ->
+                    phoneText.value = newValue
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                maxLines = 1,
+                visualTransformation = PhoneVisualTransformation()
+            )
+
+            Spacer(modifier = Modifier.padding(bottom = 32.dp))
         }
     }
 }
@@ -392,5 +408,110 @@ class PasswordMaskTransformation : VisualTransformation {
     }
 }
 
+/**
+ * VisualTransformation that transforms user input into
+ * ```
+ * XXX-XXX-XXXX
+ * ```
+ */
+class PhoneVisualTransformation : VisualTransformation {
+
+    override fun filter(text: AnnotatedString): TransformedText {
+        //
+        // Making XXX-XXX-XXXX
+        val trimmed = if (text.text.length >= 10) text.text.substring(0..9) else text.text
+
+        var output = ""
+        for (i in trimmed.indices) {
+            output += trimmed[i]
+            if (i % 3 == 2 && i != 8) output += "-"
+        }
+
+        println("PhoneVisualTransformation text: $text, trimmed: $trimmed, output: $output")
 
 
+        return TransformedText(AnnotatedString(output), phoneOffsetMap)
+    }
+
+    private val phoneOffsetMap = object : OffsetMapping {
+
+        override fun originalToTransformed(offset: Int): Int {
+
+            // XXX
+            if (offset <= 2) return offset
+            // XXXXXX(5th) is transformed to XXX-XXX
+            if (offset <= 5) return offset + 1
+            // XXXXXXXXXX(5th to 9th) is transformed to XXX-XXX
+            if (offset <= 9) return offset + 2
+
+            // Number of chars in XXX-XXX-XXXX
+            return 12
+        }
+
+        override fun transformedToOriginal(offset: Int): Int {
+
+            println("🔥 transformedToOriginal() offset: $offset")
+            // indexes of -
+            // XXX
+            if (offset <= 2) return offset
+            // XXX-XXX
+            if (offset <= 6) return offset - 1
+            // XXX-XXX-XXXX
+            if (offset <= 11) return offset - 2
+            return 10
+        }
+
+    }
+}
+
+fun passwordFilter(text: AnnotatedString): TransformedText {
+    return TransformedText(
+        AnnotatedString("*".repeat(text.text.length)),
+
+        /**
+         * [OffsetMapping.Identity] is a predefined [OffsetMapping] that can be used for the
+         * transformation that does not change the character count.
+         */
+        OffsetMapping.Identity
+    )
+}
+
+fun creditCardFilter(text: AnnotatedString): TransformedText {
+
+    // Making XXXX-XXXX-XXXX-XXXX string.
+    val trimmed = if (text.text.length >= 16) text.text.substring(0..15) else text.text
+    var out = ""
+    for (i in trimmed.indices) {
+        out += trimmed[i]
+        if (i % 4 == 3 && i != 15) out += "-"
+    }
+
+    /**
+     * The offset translator should ignore the hyphen characters, so conversion from
+     *  original offset to transformed text works like
+     *  - The 4th char of the original text is 5th char in the transformed text.
+     *  - The 13th char of the original text is 15th char in the transformed text.
+     *  Similarly, the reverse conversion works like
+     *  - The 5th char of the transformed text is 4th char in the original text.
+     *  - The 12th char of the transformed text is 10th char in the original text.
+     */
+    val creditCardOffsetTranslator = object : OffsetMapping {
+        override fun originalToTransformed(offset: Int): Int {
+            if (offset <= 3) return offset
+            if (offset <= 7) return offset + 1
+            if (offset <= 11) return offset + 2
+            if (offset <= 16) return offset + 3
+            return 19
+        }
+
+        override fun transformedToOriginal(offset: Int): Int {
+            if (offset <= 4) return offset
+            if (offset <= 9) return offset - 1
+            if (offset <= 14) return offset - 2
+            if (offset <= 19) return offset - 3
+            return 16
+        }
+    }
+
+    return TransformedText(AnnotatedString(out), creditCardOffsetTranslator)
+}
