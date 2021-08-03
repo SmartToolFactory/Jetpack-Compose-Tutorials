@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
-import android.text.SpannableString
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -369,16 +368,17 @@ private fun TutorialContent() {
                 visualTransformation = PasswordMaskTransformation()
             )
 
-            Spacer(modifier = Modifier.padding(bottom = 32.dp))
 
             val phoneText = remember { mutableStateOf(TextFieldValue("")) }
+            val maxChar = 10
+
             OutlinedTextField(
                 modifier = fullWidthModifier,
                 value = phoneText.value,
                 label = { Text("Phone") },
                 placeholder = { Text(text = "") },
                 onValueChange = { newValue ->
-                    phoneText.value = newValue
+                    if (newValue.text.length <= maxChar) phoneText.value = newValue
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 maxLines = 1,
