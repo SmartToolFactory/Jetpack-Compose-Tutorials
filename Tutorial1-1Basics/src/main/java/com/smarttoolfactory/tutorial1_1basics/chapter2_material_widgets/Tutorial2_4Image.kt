@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,32 +11,34 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.components.*
-import dev.chrisbanes.accompanist.imageloading.ImageLoadState
-import dev.chrisbanes.accompanist.imageloading.MaterialLoadingImage
 
-// TODO Add PorterDuff blend modes and Coil Image loading
 @Composable
 fun Tutorial2_4Screen() {
     TutorialContent()
@@ -53,39 +56,46 @@ private fun TutorialContent() {
                         "or Painter."
             )
 
-            BasicImageExample()
-            ImageVectorExample()
-            ImagePainterExample()
+            ImageFromPainterExample()
+            ImageFromVectorDrawableExample()
+            ImageFromImageBitmapExample()
 
             TutorialText(
                 text = "2-) With Canvas we can draw on a ImageBitmap and set ImageBitmap to an Image."
             )
-            DrawOnImageExample()
+
+            DrawOverImageBitmapExample()
+            DrawOverImageBitmapExample2()
 
             TutorialText(
-                text = "3-) Set shape or/and filter for the Image."
+                text = """3-) With androidx.compose.ui.graphics.Canvas 
+                    we can add a watermark on ImageBitmap and use this ImageBitmap for Image
+                    or save it into a file.
+                    """
+            )
+            DrawOnImageBitmapExample()
+
+            TutorialText(
+                text = "4-) Set shape or/and filter for the Image."
             )
             ImageShapeAndFilterExample()
 
             TutorialText(
-                text = "4-) Use Glide library to fetch an image resource from network and " +
+                text = "5) Use Glide library to fetch an image resource from network and " +
                         "set it to Image component."
             )
 
             ImageDownloadWithGlideExample()
 
             TutorialText(
-                text = "4-) Use Accompanyst library to fetch an image resource from network and " +
-                        "set it to Image component using Coil, Picasso and Glide"
+                text = "5) Use Coil library to fetch an image resource from network and " +
+                        "set it to Image component."
             )
-//            ImageAsyncDownloadExample()
+            ImageDownloadWithCoilExample()
+
 
             TutorialText(
-                text = "5-) Use Accompanist library to fetch image resource from network"
-            )
-
-            TutorialText(
-                text = "5-) ContentScale represents a rule to apply to scale a source " +
+                text = "6-) ContentScale represents a rule to apply to scale a source " +
                         "rectangle to be inscribed into a destination."
             )
             ImageContentScaleExample()
@@ -94,112 +104,15 @@ private fun TutorialContent() {
 }
 
 @Composable
-fun ImageDownloadWithGlideExample() {
-    val url =
-        "https://avatars3.githubusercontent.com/u/35650605?s=400&u=058086fd5c263f50f2fbe98ed24b5fbb7d437a4e&v=4"
-
-    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
-
-    val sizeModifier = Modifier
-        .fillMaxWidth()
-        .width(150.dp)
-    val context = LocalContext.current
-
-    val glide = Glide.with(context)
-
-
-    val target = object : CustomTarget<Bitmap>() {
-        override fun onLoadCleared(placeholder: Drawable?) {
-            imageBitmap = null
-        }
-
-        override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
-            imageBitmap = bitmap.asImageBitmap()
-        }
-    }
-
-    glide
-        .asBitmap()
-        .load(url)
-        .into(target)
-
-    Column(
-        modifier = sizeModifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        imageBitmap?.let { imgBitmap ->
-            // Image is a pre-defined composable that lays out and draws a given [ImageBitmap].
-            Image(bitmap = imgBitmap, contentDescription = null)
-        }
-    }
-}
-
-
-//@Composable
-//fun ImageAsyncDownloadExample() {
-//
-//    val rowModifier = Modifier
-//        .fillMaxHeight()
-//        .padding(4.dp)
-//
-//    Row(modifier = rowModifier) {
-//        CoilImage(
-//            data = "https://source.unsplash.com/pGM4sjt_BdQ",
-//            modifier = rowModifier.weight(1f),
-//            content = loadImage(),
-//        )
-//        PicassoImage(
-//            data = "https://source.unsplash.com/-LojFX9NfPY",
-//            modifier = rowModifier.weight(1f),
-//            content = loadImage()
-//        )
-//        GlideImage(
-//            data = "https://source.unsplash.com/-LojFX9NfPY",
-//            modifier = rowModifier.weight(1f),
-//            content = loadImage()
-//        )
-//    }
-//}
-
-private fun loadImage(): @Composable (
-BoxScope.(imageLoadState: ImageLoadState) -> Unit) = { imageState ->
-    when (imageState) {
-        is ImageLoadState.Success -> {
-            MaterialLoadingImage(
-                result = imageState,
-                contentDescription = null,
-                fadeInEnabled = true,
-                fadeInDurationMs = 600,
-                contentScale = ContentScale.Crop,
-            )
-        }
-        is ImageLoadState.Error,
-        is ImageLoadState.Empty -> {
-            Image(
-                painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = null
-            )
-        }
-        is ImageLoadState.Loading -> {
-            Box(Modifier.matchParentSize()) {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun BasicImageExample() {
-    TutorialText2(text = "ImageBitmap")
+private fun ImageFromPainterExample() {
+    TutorialText2(text = "Image from painterResource")
     val painter: Painter = painterResource(id = R.drawable.landscape1)
     Image(painter, contentDescription = null)
 }
 
 @Composable
-private fun ImageVectorExample() {
-    TutorialText2(text = "ImageVector")
+private fun ImageFromVectorDrawableExample() {
+    TutorialText2(text = "Image from vector Drawable")
     FullWidthRow(
         modifier = Modifier
             .background(Color.LightGray)
@@ -207,6 +120,7 @@ private fun ImageVectorExample() {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Painters from vector drawables
         val vectorRes1: Painter = painterResource(id = R.drawable.vd_clock_alarm)
         Image(vectorRes1, modifier = Modifier.size(60.dp), contentDescription = null)
 
@@ -222,77 +136,144 @@ private fun ImageVectorExample() {
 }
 
 @Composable
-fun ImagePainterExample() {
+fun ImageFromImageBitmapExample() {
 
-    TutorialText2(text = "Painter")
+    TutorialText2(text = "Image from ImageBitmap")
+
+    val imageBitmap = ImageBitmap.imageResource(
+        LocalContext.current.resources,
+        R.drawable.landscape2
+    )
+
+    Image(bitmap = imageBitmap, contentDescription = null)
+}
+
+@Composable
+fun DrawOverImageBitmapExample() {
+
+    TutorialText2(text = "Draw over ImageBitmap with Painter")
 
     val imageBitmap: ImageBitmap = ImageBitmap.imageResource(
         LocalContext.current.resources,
         R.drawable.landscape3
     )
 
-    val customPainter = remember {
-        object : Painter() {
+    val customPainter: Painter = object : Painter() {
 
-            override val intrinsicSize: Size
-                get() = Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
+        override val intrinsicSize: Size
+            get() = Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
 
-            override fun DrawScope.onDraw() {
-                drawImage(imageBitmap)
-                drawLine(
-                    color = Color.Red,
-                    start = Offset(0f, 0f),
-                    end = Offset(imageBitmap.width.toFloat(), imageBitmap.height.toFloat()),
-                    strokeWidth = 5f
-                )
-            }
+        override fun DrawScope.onDraw() {
+            drawImage(imageBitmap)
+            drawLine(
+                color = Color.Red,
+                start = Offset(0f, 0f),
+                end = Offset(imageBitmap.width.toFloat(), imageBitmap.height.toFloat()),
+                strokeWidth = 5f
+            )
         }
     }
+
     Image(painter = customPainter, contentDescription = null)
 
 }
 
 @Composable
-private fun DrawOnImageExample() {
-    /*
-            Load the image in background thread.
-            Until resource loading complete, this function returns deferred image resource
-            with PendingResource. Once the loading finishes, recompose is scheduled and this
-             function will return deferred image resource with LoadedResource or FailedResource.
-         */
+fun DrawOverImageBitmapExample2() {
 
-    // TODO Deprecated, update to beta01
-//    val deferredResource: DeferredResource<ImageBitmap> =
-//        loadImageResource(id = R.drawable.landscape2)
-//
-//    deferredResource.resource.resource?.let { imageBitmap ->
-//
-//        // We need a MUTABLE Bitmap to draw on Canvas to not get IllegalArgumentException
-//        val bitmap = imageBitmap.asAndroidBitmap().copy(Bitmap.Config.ARGB_8888, true)
-//
-//        val paint = Paint().apply {
-//            style = PaintingStyle.Stroke
-//            strokeWidth = 10f
-//            color = Color(0xff29B6F6)
-//
-//        }
-//
-//        // We need a ImageBitmap for Jetpack Compose Canvas
-//        val newImageBitmap = bitmap.asImageBitmap()
-//
-//        val canvas = Canvas(newImageBitmap)
-//
-//        canvas.drawRect(0f, 0f, 200f, 200f, paint = paint)
-//        canvas.drawCircle(
-//            Offset(
-//                newImageBitmap.width / 2 - 75f,
-//                newImageBitmap.height / 2 + 75f
-//            ), 150.0f, paint
-//        )
-//
-//        Image(bitmap = newImageBitmap, contentDescription = null)
-//    }
+    TutorialText2(text = "Draw over ImageBitmap with Canvas")
+
+    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(
+        LocalContext.current.resources,
+        R.drawable.landscape3
+    )
+
+    val drawLambda: DrawScope.() -> Unit = {
+        drawImage(imageBitmap)
+
+        drawRoundRect(
+            color = Color.Yellow,
+            topLeft = Offset(imageBitmap.width / 4f, imageBitmap.height / 4f),
+            style = Stroke(width = 5f),
+            size = Size(imageBitmap.width / 2f, imageBitmap.height / 2f),
+            cornerRadius = CornerRadius(5f)
+        )
+
+        val paint = android.graphics.Paint().apply {
+            textSize = 50f
+            color = Color.Red.toArgb()
+        }
+
+        // 🔥🔥 There is not a built-in function as of 1.0.0
+        // for drawing text so we get the native canvas to draw text and use a Paint object
+
+        drawContext.canvas.nativeCanvas.drawText(
+            "Android",
+            center.x,
+            center.y,
+            paint
+        )
+    }
+
+
+    // 🔥 We get the exact Dp values using density for width and height of image which is in pixels
+    val (widthInDp, heightInDp) =
+        LocalDensity.current.run { Pair(imageBitmap.width.toDp(), imageBitmap.height.toDp()) }
+
+    // 🔥 Used Stroke, instead of Fill for DrawStyle
+    androidx.compose.foundation.Canvas(
+        modifier = Modifier
+            .background(Color.Green)
+            .width(widthInDp)
+            .height(heightInDp),
+        onDraw = drawLambda
+    )
 }
+
+@Composable
+private fun DrawOnImageBitmapExample() {
+
+    TutorialText2(text = "Draw on ImageBitmap and return it")
+
+    val option = BitmapFactory.Options()
+    option.apply {
+        inPreferredConfig = Bitmap.Config.ARGB_8888
+        inMutable = true
+    }
+
+    val imageBitmap = BitmapFactory.decodeResource(
+        LocalContext.current.resources,
+        R.drawable.landscape3,
+        option
+    ).asImageBitmap()
+
+    // 🔥 This is a function that returns Canvas which can be used to draw on an
+    // ImageBitmap that was sent as param. ImageBitmap that returned can be
+    // be used to display on Image or can be saved to a physical file.
+
+    val canvas: androidx.compose.ui.graphics.Canvas = Canvas(imageBitmap)
+
+    val paint = remember {
+        Paint().apply {
+            style = PaintingStyle.Stroke
+            strokeWidth = 10f
+            color = Color(0xff29B6F6)
+
+        }
+    }
+
+    canvas.drawRect(0f, 0f, 200f, 200f, paint = paint)
+    canvas.drawCircle(
+        Offset(
+            imageBitmap.width / 2 - 75f,
+            imageBitmap.height / 2 + 75f
+        ), 150.0f, paint
+    )
+
+    Image(bitmap = imageBitmap, contentDescription = null)
+
+}
+
 
 @Composable
 private fun ImageShapeAndFilterExample() {
@@ -399,6 +380,83 @@ private fun ImageShapeAndFilterExample() {
 //    }
 //
 //    Image(blendPainter, contentDescription = null)
+}
+
+@Composable
+fun ImageDownloadWithGlideExample() {
+    val url =
+        "https://avatars3.githubusercontent.com/u/35650605?s=400&u=058086fd5c263f50f2fbe98ed24b5fbb7d437a4e&v=4"
+
+    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+    val sizeModifier = Modifier
+        .fillMaxWidth()
+        .width(150.dp)
+    val context = LocalContext.current
+
+    val glide = Glide.with(context)
+
+
+    val target = object : CustomTarget<Bitmap>() {
+        override fun onLoadCleared(placeholder: Drawable?) {
+            imageBitmap = null
+        }
+
+        override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap>?) {
+            imageBitmap = bitmap.asImageBitmap()
+        }
+
+        override fun onLoadFailed(errorDrawable: Drawable?) {
+            super.onLoadFailed(errorDrawable)
+        }
+
+        override fun onLoadStarted(placeholder: Drawable?) {
+            super.onLoadStarted(placeholder)
+        }
+    }
+
+    glide
+        .asBitmap()
+        .load(url)
+        .into(target)
+
+    Column(
+        modifier = sizeModifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        imageBitmap?.let { imgBitmap ->
+            // Image is a pre-defined composable that lays out and draws a given [ImageBitmap].
+            Image(bitmap = imgBitmap, contentDescription = null)
+        }
+    }
+}
+
+@ExperimentalCoilApi
+@Composable
+fun ImageDownloadWithCoilExample() {
+
+    val sizeModifier = Modifier
+        .fillMaxWidth()
+        .width(150.dp)
+
+    val url =
+        "https://avatars3.githubusercontent.com/u/35650605?s=400&u=058086fd5c263f50f2fbe98ed24b5fbb7d437a4e&v=4"
+
+    Column(
+        modifier = sizeModifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Image(
+            painter = rememberImagePainter(
+                data = url,
+            ),
+            contentDescription = null
+        )
+
+    }
 }
 
 
