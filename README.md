@@ -23,7 +23,7 @@ and  Navigation.
 |  |  |
 |<h3>2-2 Button, IconButton, FAB, Chip</h3><br/>Create button with text and/or with image, Floating Action Button  or Chips. Modify properties of buttons including color, text, and click actions.<br><br> • Button<br>• IconButton<br>• FloatingActionButton<br>• Chip<br>|<img src ="/./screenshots/tutorial2-2.jpg" width=320> |
 |  |  |
-|<h3>2-3 TextField</h3><br/>Create TextField component with regular style or outlined. Set error, colors, state, icons, and IME actions.<br><br> • TextField<br>• OutlinedTextField<br>• IME<br>• Regex<br>|<img src ="/./screenshots/tutorial2-3.jpg" width=320> |
+|<h3>2-3 TextField</h3><br/>Create TextField component with regular style or outlined. Set error, colors, state, icons, and IME actions.<br><br> • TextField<br>• OutlinedTextField<br>>• IME<br>• Phone format VisualTransformation<br>• Regex<br>|<img src ="/./screenshots/tutorial2-3.jpg" width=320> |
 |  |  |
 |<h3>2-4 Image</h3><br/>Create Image with image, vector resource or with Painter, set image and Content scales to fit, expand or shrink image. Change shape of Image or apply ColorFilter and PorterDuff modes.<br><br> • Image<br>• Canvas<br>• Drawable<br>• Bitmap<br>|<img src ="/./screenshots/tutorial2-4.gif" width=320> |
 |  |  |

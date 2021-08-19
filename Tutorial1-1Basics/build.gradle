@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.smarttoolfactory.tutorial1_1basics"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -58,7 +58,7 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:$compose_version"
 
-    def nav_compose_version = "2.4.0-alpha05"
+    def nav_compose_version = "2.4.0-alpha07"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
