@@ -30,6 +30,7 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.rotationMatrix
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
@@ -81,21 +82,27 @@ private fun TutorialContent() {
             ImageShapeAndFilterExample()
 
             TutorialText(
-                text = "5) Use Glide library to fetch an image resource from network and " +
+                text = "5-) graphicLayer modifier to apply effects to content, such as scaling (scaleX, scaleY), rotation (rotationX, rotationY, rotationZ), opacity (alpha), shadow (shadowElevation, shape), and clipping (clip, shape)."
+            )
+
+            ImageGraphicLayer()
+
+            TutorialText(
+                text = "6) Use Glide library to fetch an image resource from network and " +
                         "set it to Image component."
             )
 
             ImageDownloadWithGlideExample()
 
             TutorialText(
-                text = "5) Use Coil library to fetch an image resource from network and " +
+                text = "6) Use Coil library to fetch an image resource from network and " +
                         "set it to Image component."
             )
             ImageDownloadWithCoilExample()
 
 
             TutorialText(
-                text = "6-) ContentScale represents a rule to apply to scale a source " +
+                text = "7-) ContentScale represents a rule to apply to scale a source " +
                         "rectangle to be inscribed into a destination."
             )
             ImageContentScaleExample()
@@ -380,6 +387,99 @@ private fun ImageShapeAndFilterExample() {
 //    }
 //
 //    Image(blendPainter, contentDescription = null)
+}
+
+@Composable
+private fun ImageGraphicLayer() {
+
+    val avatarBitmap1: Painter = painterResource(id = R.drawable.avatar_1_raster)
+
+    TutorialText2(text = "Rotate")
+
+    FullWidthRow(
+        modifier = Modifier.height(100.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+
+        Image(
+            modifier = Modifier
+                .graphicsLayer(
+                    rotationX = 45f
+                ),
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+        Image(
+            modifier = Modifier
+                .graphicsLayer(
+                    rotationY = 45f
+                ),
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+        Image(
+            modifier = Modifier
+                .graphicsLayer(
+                    rotationZ = 45f
+                ),
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+
+        Image(
+            modifier = Modifier
+                .graphicsLayer {
+                    rotationX = 45f
+                    rotationY = 45f
+                    rotationZ = 45f
+                },
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+    }
+
+    TutorialText2(text = "Scale, Translate, Camera Distance")
+
+    FullWidthRow(
+        modifier = Modifier.height(100.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+
+        Image(
+            modifier = Modifier
+                .graphicsLayer(
+                    scaleX = .8f
+                ),
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+        Image(
+            modifier = Modifier
+                .graphicsLayer(
+                    scaleY = .8f
+                ),
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+        Image(
+            modifier = Modifier
+                .graphicsLayer(
+                    translationX = 18f,
+                    translationY = 18f
+                ),
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+
+        Image(
+            modifier = Modifier
+                .graphicsLayer {
+                    cameraDistance = .4f
+                },
+            painter = avatarBitmap1,
+            contentDescription = null
+        )
+    }
 }
 
 @Composable
