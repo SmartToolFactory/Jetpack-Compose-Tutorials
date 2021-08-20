@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.components.TutorialText2
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
 fun Tutorial2_1Screen() {

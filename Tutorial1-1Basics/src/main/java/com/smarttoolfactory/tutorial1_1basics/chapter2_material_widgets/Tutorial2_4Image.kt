@@ -30,15 +30,13 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.rotationMatrix
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smarttoolfactory.tutorial1_1basics.R
-import com.smarttoolfactory.tutorial1_1basics.components.*
+import com.smarttoolfactory.tutorial1_1basics.ui.components.*
 
 @Composable
 fun Tutorial2_4Screen() {
@@ -491,7 +489,6 @@ fun ImageDownloadWithGlideExample() {
 
     val sizeModifier = Modifier
         .fillMaxWidth()
-        .width(150.dp)
     val context = LocalContext.current
 
     val glide = Glide.with(context)
@@ -538,7 +535,6 @@ fun ImageDownloadWithCoilExample() {
 
     val sizeModifier = Modifier
         .fillMaxWidth()
-        .width(150.dp)
 
     val url =
         "https://avatars3.githubusercontent.com/u/35650605?s=400&u=058086fd5c263f50f2fbe98ed24b5fbb7d437a4e&v=4"
@@ -550,8 +546,10 @@ fun ImageDownloadWithCoilExample() {
     ) {
 
         Image(
+            modifier = Modifier
+                .height(180.dp),
             painter = rememberImagePainter(
-                data = url,
+                data = url
             ),
             contentDescription = null
         )

@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.components
+package com.smarttoolfactory.tutorial1_1basics.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable

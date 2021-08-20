@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
-import com.smarttoolfactory.tutorial1_1basics.components.*
+import com.smarttoolfactory.tutorial1_1basics.ui.components.*
 
 @Composable
 fun Tutorial2_2Screen() {

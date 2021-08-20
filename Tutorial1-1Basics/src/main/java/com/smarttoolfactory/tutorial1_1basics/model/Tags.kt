@@ -27,13 +27,17 @@ const val TAG_TEXT_FIELD = "TextField"
 const val TAG_OUTLINED_TEXT_FIELD = "Outlined TextField"
 const val TAG_IME = "IME"
 const val TAG_REGEX = "Regex"
-const val TAG_VISUAL_TRANSFORMATION= "Visual Transformation"
+const val TAG_VISUAL_TRANSFORMATION = "Visual Transformation"
 
 // IMAGE
 const val TAG_IMAGE = "Image"
 const val TAG_DRAWABLE = "Drawable"
 const val TAG_VECTOR_DRAWABLE = "Vector Drawable"
 const val TAG_BITMAP = "Bitmap"
+
+// LAZY COLUMN
+const val TAG_LAZY_COLUMN = "Lazy Column"
+// LAZY ROW
 
 // CARD
 
@@ -42,10 +46,6 @@ const val TAG_BITMAP = "Bitmap"
 // TOOLBAR
 
 // BOTTOM NAVIGATION
-
-// LAZY COLUMN
-
-// LAZY ROW
 
 // BOTTOM BAR
 

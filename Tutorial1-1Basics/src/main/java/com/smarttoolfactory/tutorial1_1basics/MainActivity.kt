@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +13,14 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -23,11 +29,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_1Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_2Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_3Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_4Screen
-import com.smarttoolfactory.tutorial1_1basics.components.TutorialSectionCard
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import com.smarttoolfactory.tutorial1_1basics.model.*
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 
@@ -40,7 +43,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 @ExperimentalComposeUiApi
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var tutorialList: List<TutorialSectionModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +61,9 @@ class MainActivity : AppCompatActivity() {
         val navController = rememberNavController()
 
         // Create Tutorial List
-        tutorialList = createTutorialList()
+        val list: SnapshotStateList<TutorialSectionModel> =
+            createTutorialList().toMutableStateList()
+        val tutorialList = remember { list }
 
         // Create Navigation for each Composable Page
         NavHost(
@@ -248,13 +252,26 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        val tutorial2_5 = TutorialSectionModel(
+            title = "2-5 Lazy Column1",
+            description = "LazyColumn is counterpart of vertical RecyclerView in Compose",
+            action = {
+                Tutorial2_5Screen()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_LAZY_COLUMN
+            )
+        )
+
         return listOf(
             tutorial1_1,
             tutorial1_2,
             tutorial2_1,
             tutorial2_2,
             tutorial2_3,
-            tutorial2_4
+            tutorial2_4,
+            tutorial2_5
         )
     }
 }
