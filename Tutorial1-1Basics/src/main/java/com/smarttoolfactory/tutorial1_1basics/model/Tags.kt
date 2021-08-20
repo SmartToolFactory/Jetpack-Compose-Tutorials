@@ -37,6 +37,8 @@ const val TAG_BITMAP = "Bitmap"
 
 // LAZY COLUMN
 const val TAG_LAZY_COLUMN = "Lazy Column"
+const val TAG_LAZY_COLUMN_SCROLL = "Lazy Column Scroll"
+const val TAG_LAZY_COLUMN_DYNAMIC_SIZE = "Lazy Column Dynamic Size"
 // LAZY ROW
 
 // CARD

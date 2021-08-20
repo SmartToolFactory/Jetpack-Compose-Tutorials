@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +12,12 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -252,15 +249,29 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        val tutorial2_5 = TutorialSectionModel(
+        val tutorial2_5_1 = TutorialSectionModel(
             title = "2-5 Lazy Column1",
             description = "LazyColumn is counterpart of vertical RecyclerView in Compose",
             action = {
-                Tutorial2_5Screen()
+                Tutorial2_5Screen1()
             },
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_LAZY_COLUMN
+            )
+        )
+
+        val tutorial2_5_2 = TutorialSectionModel(
+            title = "2-5 Lazy Column2",
+            description = "LazyColumn scroll state and modify dynamic list",
+            action = {
+                Tutorial2_5Screen2()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_LAZY_COLUMN,
+                TAG_LAZY_COLUMN_SCROLL,
+                TAG_LAZY_COLUMN_DYNAMIC_SIZE
             )
         )
 
@@ -271,7 +282,8 @@ class MainActivity : AppCompatActivity() {
             tutorial2_2,
             tutorial2_3,
             tutorial2_4,
-            tutorial2_5
+            tutorial2_5_1,
+            tutorial2_5_2
         )
     }
 }

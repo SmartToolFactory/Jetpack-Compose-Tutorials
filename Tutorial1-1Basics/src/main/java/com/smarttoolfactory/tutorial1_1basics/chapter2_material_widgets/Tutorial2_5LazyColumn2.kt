@@ -1,0 +1,96 @@
+package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.model.Snack
+import com.smarttoolfactory.tutorial1_1basics.model.snacks
+import com.smarttoolfactory.tutorial1_1basics.ui.components.FullWidthRow
+import com.smarttoolfactory.tutorial1_1basics.ui.components.SnackCard
+import kotlinx.coroutines.launch
+
+@Composable
+fun Tutorial2_5Screen2() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+
+    val scrollState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val list = remember { mutableStateListOf<Snack>() }
+
+    Column {
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 8.dp),
+            content = {
+                items(list) { item: Snack ->
+                    SnackCard(snack = item)
+                }
+            })
+
+        FullWidthRow(
+            modifier = Modifier.padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        scrollState.animateScrollToItem(0)
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(text = "Top")
+            }
+
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        scrollState.animateScrollToItem(snacks.size - 1)
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(text = "Bottom")
+            }
+
+            Button(
+                onClick = {
+                    if (list.size < snacks.size) {
+                        list.add(snacks[list.size])
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(text = "Add")
+            }
+
+            Button(
+                onClick = {
+                    if (list.size > 0) {
+                        list.removeLast()
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(text = "Remove")
+            }
+        }
+    }
+}
