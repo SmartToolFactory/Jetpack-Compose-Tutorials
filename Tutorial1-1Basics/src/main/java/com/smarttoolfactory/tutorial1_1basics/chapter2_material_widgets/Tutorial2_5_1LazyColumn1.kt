@@ -1,5 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,7 +20,8 @@ fun Tutorial2_5Screen1() {
 @Composable
 private fun TutorialContent() {
     LazyColumn(
-        modifier = Modifier.padding(top = 8.dp),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         content = {
             items(snacks) { item: Snack ->
                 SnackCard(snack = item)

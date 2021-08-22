@@ -62,12 +62,11 @@ fun PlaceCard(place: Place) {
 fun PlacesToBookComponent(place: Place) {
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 4.dp)
             .wrapContentWidth(),
         elevation = 2.dp,
         shape = RoundedCornerShape(8.dp)
     ) {
-        Row {
+        Row(modifier =  Modifier.clickable { }) {
             PlaceContent(place)
             ImageContent(place)
         }

@@ -3,6 +3,7 @@ package com.smarttoolfactory.tutorial1_1basics
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +38,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
  * * Tutorial navigation is done via [NavController] and ```composable``` extension function
  * for [NavGraphBuilder]
  */
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 class MainActivity : AppCompatActivity() {
 
@@ -250,7 +252,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val tutorial2_5_1 = TutorialSectionModel(
-            title = "2-5 LazyColumn1",
+            title = "2-5-1 LazyColumn1",
             description = "LazyColumn is counterpart of vertical RecyclerView in Compose",
             action = {
                 Tutorial2_5Screen1()
@@ -262,7 +264,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val tutorial2_5_2 = TutorialSectionModel(
-            title = "2-5 LazyColumn2",
+            title = "2-5-2 LazyColumn2",
             description = "LazyColumn scroll state and modify dynamic list",
             action = {
                 Tutorial2_5Screen2()
@@ -276,7 +278,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val tutorial2_5_3 = TutorialSectionModel(
-            title = "2-5 LazyRow",
+            title = "2-5-3 LazyRow",
             description = "LazyColumn is counterpart of horizontal RecyclerView in Compose",
             action = {
                 Tutorial2_5Screen3()
@@ -284,6 +286,19 @@ class MainActivity : AppCompatActivity() {
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_LAZY_ROW
+            )
+        )
+
+        val tutorial2_5_4 = TutorialSectionModel(
+            title = "2-5-4 StickyHeader",
+            description = "LazyColumn with StickyHeaders",
+            action = {
+                Tutorial2_5Screen4()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_LAZY_COLUMN,
+                TAG_LAZY_COLUMN_STICKY_HEADER
             )
         )
 
@@ -296,7 +311,8 @@ class MainActivity : AppCompatActivity() {
             tutorial2_4,
             tutorial2_5_1,
             tutorial2_5_2,
-            tutorial2_5_3
+            tutorial2_5_3,
+            tutorial2_5_4
         )
     }
 }

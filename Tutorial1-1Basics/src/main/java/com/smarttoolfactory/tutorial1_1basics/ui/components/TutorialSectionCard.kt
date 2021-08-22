@@ -42,6 +42,7 @@ private fun TutorialContentComponent(
     model: TutorialSectionModel
 ) {
     Column(Modifier
+        .fillMaxWidth()
         .clickable(
             onClick = { onClick?.invoke(model) }
         )

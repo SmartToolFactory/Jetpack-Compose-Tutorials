@@ -34,10 +34,11 @@ private fun TutorialContent() {
 
     Column {
         LazyColumn(
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             state = scrollState,
             modifier = Modifier
-                .weight(1f)
-                .padding(top = 8.dp),
+                .weight(1f),
             content = {
                 items(list) { item: Snack ->
                     SnackCard(snack = item)

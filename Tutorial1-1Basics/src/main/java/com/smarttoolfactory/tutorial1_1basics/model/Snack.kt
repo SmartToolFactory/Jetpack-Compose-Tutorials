@@ -28,9 +28,7 @@ data class Snack(
     val tags: Set<String> = emptySet()
 )
 
-/**
- * Static data
- */
+
 
 val snacks = listOf(
     Snack(
@@ -224,3 +222,7 @@ val snacks = listOf(
         price = 299
     )
 )
+
+val snacksOrdered = snacks.sortedBy {
+    it.name.first()
+}

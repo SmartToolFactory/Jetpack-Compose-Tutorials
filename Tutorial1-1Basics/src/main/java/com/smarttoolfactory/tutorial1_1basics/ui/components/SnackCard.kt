@@ -40,7 +40,6 @@ fun SnackCard(
     println("🍭 SnackCard() id: ${snack.id}, textColor: $textColor")
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 8.dp)
             .background(Color.White)
             .clickable(
                 onClick = {}

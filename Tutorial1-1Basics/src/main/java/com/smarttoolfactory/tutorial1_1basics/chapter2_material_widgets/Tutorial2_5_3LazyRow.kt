@@ -29,7 +29,9 @@ private fun TutorialContent() {
 
     val scrollState = rememberScrollState()
 
-    LazyColumn(content = {
+    LazyColumn(
+        modifier = Modifier.background(Color(0xffECEFF1)),
+        content = {
 
         item {
             Text(
@@ -88,6 +90,8 @@ private fun TutorialContent() {
 
         item {
             LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+
                 modifier = Modifier.padding(8.dp),
                 content = {
                     items(places) { place: Place ->
