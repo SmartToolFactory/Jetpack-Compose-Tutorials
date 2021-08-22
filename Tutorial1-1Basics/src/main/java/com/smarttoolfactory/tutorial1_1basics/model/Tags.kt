@@ -36,14 +36,13 @@ const val TAG_VECTOR_DRAWABLE = "Vector Drawable"
 const val TAG_BITMAP = "Bitmap"
 
 // LAZY COLUMN
-const val TAG_LAZY_COLUMN = "Lazy Column"
-const val TAG_LAZY_COLUMN_SCROLL = "Lazy Column Scroll"
-const val TAG_LAZY_COLUMN_DYNAMIC_SIZE = "Lazy Column Dynamic Size"
+const val TAG_LAZY_COLUMN = "LazyColumn"
+const val TAG_LAZY_COLUMN_SCROLL = "LazyColumn Scroll"
+const val TAG_LAZY_COLUMN_DYNAMIC_SIZE = "LazyColumn Dynamic Size"
+const val TAG_LAZY_COLUMN_STICKY_HEADER = "LazyColumn Sticky Headers"
+
 // LAZY ROW
-
-// CARD
-
-// SCAFFOLD
+const val TAG_LAZY_ROW = "LazyRow"
 
 // TOOLBAR
 
@@ -51,11 +50,20 @@ const val TAG_LAZY_COLUMN_DYNAMIC_SIZE = "Lazy Column Dynamic Size"
 
 // BOTTOM BAR
 
+// SIDE NAVIGATION
+
+// SCAFFOLD
+
+// BOTTOM SHEET
+
 // ALERT DIALOG
 
 // CHECK BOX
 
 // RADIO
+
+// CARD
+
 
 // Navigation
 const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"

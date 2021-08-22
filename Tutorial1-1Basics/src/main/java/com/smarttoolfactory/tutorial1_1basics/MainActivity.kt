@@ -250,7 +250,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val tutorial2_5_1 = TutorialSectionModel(
-            title = "2-5 Lazy Column1",
+            title = "2-5 LazyColumn1",
             description = "LazyColumn is counterpart of vertical RecyclerView in Compose",
             action = {
                 Tutorial2_5Screen1()
@@ -262,7 +262,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val tutorial2_5_2 = TutorialSectionModel(
-            title = "2-5 Lazy Column2",
+            title = "2-5 LazyColumn2",
             description = "LazyColumn scroll state and modify dynamic list",
             action = {
                 Tutorial2_5Screen2()
@@ -275,6 +275,18 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        val tutorial2_5_3 = TutorialSectionModel(
+            title = "2-5 LazyRow",
+            description = "LazyColumn is counterpart of horizontal RecyclerView in Compose",
+            action = {
+                Tutorial2_5Screen3()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_LAZY_ROW
+            )
+        )
+
         return listOf(
             tutorial1_1,
             tutorial1_2,
@@ -283,7 +295,8 @@ class MainActivity : AppCompatActivity() {
             tutorial2_3,
             tutorial2_4,
             tutorial2_5_1,
-            tutorial2_5_2
+            tutorial2_5_2,
+            tutorial2_5_3
         )
     }
 }
