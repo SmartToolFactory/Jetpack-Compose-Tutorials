@@ -40,7 +40,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
  * It's input component for entering text.
  *
  * ### Note
- * As of 1.0.0-alpha-09 it does not have Assitive Text, Error Text, Character Counter,
+ * As of 1.0.1 it does not have Assistive Text, Error Text, Character Counter,
  * Prefix, and Suffix.
  */
 @ExperimentalComposeUiApi

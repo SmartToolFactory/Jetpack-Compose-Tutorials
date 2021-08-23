@@ -61,8 +61,11 @@ class MainActivity : AppCompatActivity() {
 
         // Create Tutorial List
         val list: SnapshotStateList<TutorialSectionModel> =
-            createTutorialList().toMutableStateList()
-        val tutorialList = remember { list }
+            createTutorialList {
+                navController.navigateUp()
+            }.toMutableStateList()
+
+        val tutorialList: SnapshotStateList<TutorialSectionModel> = remember { list }
 
         // Create Navigation for each Composable Page
         NavHost(
@@ -139,7 +142,7 @@ class MainActivity : AppCompatActivity() {
      * * Tags are for search purposes if there is a Search Component exists.
      */
     @Composable
-    private fun createTutorialList(): List<TutorialSectionModel> {
+    private fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
 
         val tutorial1_1 = TutorialSectionModel(
             title = "1-1 Column, Row, Box, Modifiers",
@@ -319,9 +322,22 @@ class MainActivity : AppCompatActivity() {
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_LAZY_VERTICAL_GRID,
-                TAG_GRID_CELLS,
+                TAG_GRID_CELL,
                 TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
                 TAG_LAZY_COLUMN_CONTENT_PADDING
+            )
+        )
+
+        val tutorial2_6 = TutorialSectionModel(
+            title = "2-6 TopAppbar&Tabs",
+            description = "The top app bar displays information and actions relating to the current screen.",
+            action = {
+                Tutorial2_6Screen(onBack)
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_TOP_APP_BAR,
+                TAG_TOP_APP_BAR_MENU
             )
         )
 
@@ -336,7 +352,8 @@ class MainActivity : AppCompatActivity() {
             tutorial2_5_2,
             tutorial2_5_3,
             tutorial2_5_4,
-            tutorial2_5_5
+//            tutorial2_5_5,
+            tutorial2_6
         )
     }
 }

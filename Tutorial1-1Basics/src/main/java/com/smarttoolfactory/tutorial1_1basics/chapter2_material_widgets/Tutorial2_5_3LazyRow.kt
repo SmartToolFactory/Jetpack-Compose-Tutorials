@@ -27,8 +27,6 @@ fun Tutorial2_5Screen3() {
 @Composable
 private fun TutorialContent() {
 
-    val scrollState = rememberScrollState()
-
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
