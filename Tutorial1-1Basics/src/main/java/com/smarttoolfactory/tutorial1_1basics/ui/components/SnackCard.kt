@@ -137,6 +137,32 @@ fun HorizontalSnackCard(
     }
 }
 
+
+@Composable
+fun GridSnackCard(
+    modifier: Modifier = Modifier,
+    snack: Snack,
+) {
+    Box(contentAlignment = Alignment.TopEnd, modifier = modifier.padding(4.dp)) {
+
+
+        Image(
+            contentScale = ContentScale.None,
+            modifier = modifier
+                .size(120.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { },
+            painter = rememberImagePainter(
+                data = snack.imageUrl,
+                builder = {
+                    placeholder(drawableResId = R.drawable.placeholder)
+                }
+            ),
+            contentDescription = null
+        )
+    }
+}
+
 @Composable
 fun FavoriteButton(
     modifier: Modifier = Modifier,

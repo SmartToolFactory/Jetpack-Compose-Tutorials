@@ -46,6 +46,10 @@ const val TAG_LAZY_COLUMN_STICKY_HEADER = "LazyColumn Sticky Headers"
 // LAZY ROW
 const val TAG_LAZY_ROW = "LazyRow"
 
+// LAZY VERTICAL GRID
+const val TAG_LAZY_VERTICAL_GRID = "LazyVerticalGrid"
+const val TAG_GRID_CELLS = "GridCells"
+
 // TOOLBAR
 
 // BOTTOM NAVIGATION

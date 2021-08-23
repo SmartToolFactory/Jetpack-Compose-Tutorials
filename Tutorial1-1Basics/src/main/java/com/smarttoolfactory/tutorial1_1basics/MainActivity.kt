@@ -310,6 +310,21 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        val tutorial2_5_5 = TutorialSectionModel(
+            title = "2-5-5 LazyVerticalGrid",
+            description = "Grid style item display",
+            action = {
+                Tutorial2_5Screen5()
+            },
+            tags = listOf(
+                TAG_COMPOSE,
+                TAG_LAZY_VERTICAL_GRID,
+                TAG_GRID_CELLS,
+                TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
+                TAG_LAZY_COLUMN_CONTENT_PADDING
+            )
+        )
+
         return listOf(
             tutorial1_1,
             tutorial1_2,
@@ -320,7 +335,8 @@ class MainActivity : AppCompatActivity() {
             tutorial2_5_1,
             tutorial2_5_2,
             tutorial2_5_3,
-            tutorial2_5_4
+            tutorial2_5_4,
+            tutorial2_5_5
         )
     }
 }
