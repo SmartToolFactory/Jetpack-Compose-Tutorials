@@ -30,76 +30,75 @@ private fun TutorialContent() {
     val scrollState = rememberScrollState()
 
     LazyColumn(
-        modifier = Modifier.background(Color(0xffECEFF1)),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(Color(0xffECEFF1)),
         content = {
 
-        item {
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
-                color = Color(0xffE53935),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                text ="Snacks"
-            )
-        }
+            item {
+                Text(
+                    color = Color(0xffE53935),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    text = "Snacks"
+                )
+            }
 
-        item {
-            LazyRow(
-                modifier = Modifier.padding(8.dp),
-                content = {
-                    items(snacks) { snack: Snack ->
-                        HorizontalSnackCard(snack = snack)
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    content = {
+                        items(snacks) { snack: Snack ->
+                            HorizontalSnackCard(snack = snack)
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        item {
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
-                color = Color(0xff4CAF50),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                text ="Places"
-            )
-        }
+            item {
+                Text(
+                    color = Color(0xff4CAF50),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    text = "Places"
+                )
+            }
 
 
-        item {
-            LazyRow(
-                modifier = Modifier.padding(8.dp),
-                content = {
-                    items(places) { place: Place ->
-                        PlaceCard(place = place)
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    content = {
+                        items(places) { place: Place ->
+                            PlaceCard(place = place)
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
 
-        item {
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
-                color = Color(0xff4CAF50),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                text ="Places to Stay"
-            )
-        }
+            item {
+                Text(
+                    color = Color(0xff4CAF50),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    text = "Places to Stay"
+                )
+            }
 
 
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-
-                modifier = Modifier.padding(8.dp),
-                content = {
-                    items(places) { place: Place ->
-                        PlacesToBookComponent(place = place)
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    content = {
+                        items(places) { place: Place ->
+                            PlacesToBookComponent(place = place)
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
-    })
+        })
 }

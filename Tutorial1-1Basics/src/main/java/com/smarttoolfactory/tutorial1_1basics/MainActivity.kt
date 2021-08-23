@@ -259,7 +259,9 @@ class MainActivity : AppCompatActivity() {
             },
             tags = listOf(
                 TAG_COMPOSE,
-                TAG_LAZY_COLUMN
+                TAG_LAZY_COLUMN,
+                TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
+                TAG_LAZY_COLUMN_CONTENT_PADDING
             )
         )
 
@@ -272,6 +274,8 @@ class MainActivity : AppCompatActivity() {
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_LAZY_COLUMN,
+                TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
+                TAG_LAZY_COLUMN_CONTENT_PADDING,
                 TAG_LAZY_COLUMN_SCROLL,
                 TAG_LAZY_COLUMN_DYNAMIC_SIZE
             )
@@ -285,7 +289,9 @@ class MainActivity : AppCompatActivity() {
             },
             tags = listOf(
                 TAG_COMPOSE,
-                TAG_LAZY_ROW
+                TAG_LAZY_ROW,
+                TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
+                TAG_LAZY_COLUMN_CONTENT_PADDING
             )
         )
 
@@ -298,7 +304,9 @@ class MainActivity : AppCompatActivity() {
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_LAZY_COLUMN,
-                TAG_LAZY_COLUMN_STICKY_HEADER
+                TAG_LAZY_COLUMN_STICKY_HEADER,
+                TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
+                TAG_LAZY_COLUMN_CONTENT_PADDING
             )
         )
 

@@ -31,7 +31,6 @@ fun PlaceCard(place: Place) {
     val painter = painterResource(id = place.imgRes)
     Box(contentAlignment = Alignment.BottomStart) {
         Surface(
-            modifier = Modifier.padding(8.dp),
             elevation = 4.dp,
             color = Color.LightGray,
             shape = RoundedCornerShape(8.dp),

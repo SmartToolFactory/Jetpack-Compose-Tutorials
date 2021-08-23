@@ -100,7 +100,7 @@ fun HorizontalSnackCard(
     snack: Snack,
     textColor: Color = remember(snack.id) { randomColor() },
 ) {
-    Box(contentAlignment = Alignment.TopEnd, modifier = modifier.padding(8.dp)) {
+    Box(contentAlignment = Alignment.TopEnd) {
 
         Column {
 

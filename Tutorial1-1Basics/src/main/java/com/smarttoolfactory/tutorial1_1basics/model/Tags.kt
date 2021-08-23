@@ -37,6 +37,8 @@ const val TAG_BITMAP = "Bitmap"
 
 // LAZY COLUMN
 const val TAG_LAZY_COLUMN = "LazyColumn"
+const val TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT = "Vertical Arrangement"
+const val TAG_LAZY_COLUMN_CONTENT_PADDING = "Content Padding"
 const val TAG_LAZY_COLUMN_SCROLL = "LazyColumn Scroll"
 const val TAG_LAZY_COLUMN_DYNAMIC_SIZE = "LazyColumn Dynamic Size"
 const val TAG_LAZY_COLUMN_STICKY_HEADER = "LazyColumn Sticky Headers"
