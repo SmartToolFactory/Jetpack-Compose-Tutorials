@@ -27,3 +27,5 @@ and  Navigation.
 |  |  |
 |<h3>2-4 Image</h3><br/>Create Image with image, vector resource or with Painter, set image and Content scales to fit, expand or shrink image. Change shape of Image or apply ColorFilter and PorterDuff modes.<br><br> • Image<br>• Canvas<br>• Drawable<br>• Bitmap<br>|<img src ="/./screenshots/tutorial2-4.gif" width=320> |
 |  |  |
+|<h3>2-5 LazyColumn/Row/VerticalGrid</h3><br/>Vertical, horizontal grid lists with LazyColumn, LazyRow and LazyVerticalGrid. Use contentPadding set paddings for lists, verticalArrangement or horizontalArrangement for padding between items, rememberLazyListState to manually scroll.<br><br> • LazyColumn(Vertical RecyclerView)<br>• LazyRow(Horizontal RecyclerView<br>• LazyVerticalGrid(Gridlayout)<br>• StickyHeaders<br>|<img src ="/./screenshots/tutorial2-5.gif" width=320> |
+|  |  |

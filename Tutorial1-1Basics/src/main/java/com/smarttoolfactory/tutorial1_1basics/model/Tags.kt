@@ -14,7 +14,7 @@ const val TAG_COMPOSE_CLICKABLE = "Clickable"
 const val TAG_TEXT = "Text"
 const val TAG_FONT_STYLE = "Font Style"
 const val TAG_ANNOTATED_STRING = "Annotated String"
-const val TAG_HYPERLINK = "Hyperink"
+const val TAG_HYPERLINK = "Hyperlink"
 
 // BUTTON
 const val TAG_BUTTON = "Button"
