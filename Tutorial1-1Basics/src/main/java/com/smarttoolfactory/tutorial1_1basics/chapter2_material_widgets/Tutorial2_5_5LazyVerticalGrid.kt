@@ -3,6 +3,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -25,7 +26,9 @@ fun Tutorial2_5Screen5() {
 private fun TutorialContent() {
     LazyVerticalGrid(
         contentPadding = PaddingValues(12.dp),
-        modifier = Modifier.background(Color(0xffECEFF1)),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xffECEFF1)),
         cells = GridCells.Fixed(3),
         content = {
             items(items = snacks, itemContent = { snack: Snack ->
