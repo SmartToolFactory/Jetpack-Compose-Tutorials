@@ -338,7 +338,11 @@ class MainActivity : AppCompatActivity() {
             tags = listOf(
                 TAG_COMPOSE,
                 TAG_TOP_APP_BAR,
-                TAG_TOP_APP_BAR_MENU
+                TAG_TOP_APP_BAR_MENU,
+                TAG_TAB_ROW,
+                TAG_TAB,
+                TAG_TAB_INDICATOR,
+                TAG_TAB_SCROLLABLE
             )
         )
 

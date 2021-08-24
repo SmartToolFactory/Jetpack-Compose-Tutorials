@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemMode
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemSpec
@@ -34,6 +35,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xffECEFF1)),
+        contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         content = {
 
@@ -43,7 +45,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
                 )
             }
             item {
-                ActionTopAppbar(onBack)
+                ActionTopAppbar(onBack, elevation = 8.dp)
             }
             item {
                 TutorialText(
@@ -93,173 +95,28 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             item {
                 CombinedTabComponent2()
             }
+            item {
+                TutorialText(
+                    text = "7-) Scrollable tabs"
+                )
+            }
+            item {
+                ScrollableTextTabComponent()
+            }
+
+            item {
+                TutorialText(
+                    text = "8-) TopAppBar and Tabs"
+                )
+            }
+            item {
+                TopAppBarWithTabComponent(onBack)
+            }
         })
 }
 
 @Composable
-fun TextTabComponent() {
-    var selectedIndex by remember { mutableStateOf(0) }
-
-    val list = listOf("Home", "Map", "Settings")
-
-    TabRow(selectedTabIndex = selectedIndex,
-        indicator = { tabPositions: List<TabPosition> ->
-            Box(
-                modifier = Modifier
-                    .tabIndicatorOffset(tabPositions[selectedIndex])
-                    .height(4.dp)
-                    .background(color = Color.Red)
-            ) {}
-        }) {
-        list.forEachIndexed { index, text ->
-            Tab(selected = selectedIndex == index,
-                onClick = { selectedIndex = index },
-                text = { Text(text = text) }
-            )
-        }
-    }
-}
-
-@Composable
-
-fun IconTabComponent() {
-
-    var selectedIndex by remember { mutableStateOf(0) }
-    val icons = listOf(Icons.Filled.Home, Icons.Filled.Map, Icons.Filled.Settings)
-    TabRow(
-        selectedTabIndex = selectedIndex,
-        backgroundColor = Color(0xff546E7A),
-        contentColor = Color(0xffF06292),
-//            divider = {
-//                TabRowDefaults.Divider(
-//                    thickness = 5.dp,
-//                    color = Color(0xffE0E0E0)
-//                )
-//            },
-        indicator = { tabPositions: List<TabPosition> ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                height = 5.dp,
-                color = Color(0xff8BC34A)
-            )
-        }
-    ) {
-        icons.forEachIndexed { index, imageVector ->
-            Tab(
-                selected = selectedIndex == index,
-                onClick = { selectedIndex = index },
-                icon = {
-                    Icon(imageVector = imageVector, contentDescription = null)
-                })
-        }
-    }
-}
-
-@Composable
-fun CombinedTabComponent() {
-
-    var selectedIndex by remember { mutableStateOf(0) }
-    val tabContents = listOf(
-        "Home" to Icons.Filled.Home,
-        "Map" to Icons.Filled.Map,
-        "Settings" to Icons.Filled.Settings
-    )
-
-    TabRow(
-        selectedTabIndex = selectedIndex,
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onSurface,
-    ) {
-        tabContents.forEachIndexed { index, pair: Pair<String, ImageVector> ->
-            Tab(selected = selectedIndex == index, onClick = { selectedIndex = index },
-                text = { Text(text = pair.first) },
-                icon = { Icon(imageVector = pair.second, contentDescription = null) }
-            )
-        }
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun CombinedTabComponentPreview() {
-    ComposeTutorialsTheme {
-        CombinedTabComponent()
-    }
-}
-
-@Composable
-fun CombinedTabComponent2() {
-
-    var selectedIndex by remember { mutableStateOf(0) }
-    val tabContents = listOf(
-        "Home" to Icons.Filled.Home,
-        "Map" to Icons.Filled.Map,
-        "Settings" to Icons.Filled.Settings
-    )
-
-    TabRow(
-        selectedTabIndex = selectedIndex,
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onSurface,
-    ) {
-
-
-        tabContents.forEachIndexed { index, pair: Pair<String, ImageVector> ->
-            CustomTab(pair.first, pair.second, {
-                selectedIndex = index
-            })
-        }
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun CombinedTab2ComponentPreview() {
-   ComposeTutorialsTheme {
-       CombinedTabComponent2()
-   }
-}
-
-
-@Composable
-private fun CustomTab(
-    title: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .clickable(onClick = onClick)
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = title)
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun CustomTabComponentPreview() {
-   ComposeTutorialsTheme {
-       CustomTab("Home",Icons.Filled.Home,{})
-   }
-}
-
-@Composable
-fun ActionTopAppbar(onBack: (() -> Unit)? = null) {
+fun ActionTopAppbar(onBack: (() -> Unit)? = null, elevation: Dp) {
     TopAppBar(
         title = {
             Text(text = "TopAppBar")
@@ -288,7 +145,6 @@ fun ActionTopAppbar(onBack: (() -> Unit)? = null) {
                 onClick = { /* doSomething() */ }) {
                 Icon(Icons.Filled.Call, contentDescription = null)
             }
-
         }
     )
 }
@@ -322,7 +178,6 @@ fun OverflowTopAppBar() {
     )
 }
 
-
 @Composable
 fun OverflowTopAppBar2() {
     val items = listOf(
@@ -342,6 +197,16 @@ fun OverflowTopAppBar2() {
             ActionMenu(items, defaultIconSpace = 3)
         }
     )
+}
+
+@Composable
+fun TopAppBarWithTabComponent(onBack: (() -> Unit)? = null) {
+    Surface(elevation = 1.dp) {
+        Column {
+            ActionTopAppbar(onBack, elevation = 0.dp)
+            CombinedTabComponent2()
+        }
+    }
 }
 
 
@@ -398,7 +263,7 @@ fun TutorialContentPreview() {
 @Composable
 fun ActionTopAppBarReview() {
     ComposeTutorialsTheme {
-        ActionTopAppbar()
+        ActionTopAppbar(elevation = 8.dp)
     }
 }
 

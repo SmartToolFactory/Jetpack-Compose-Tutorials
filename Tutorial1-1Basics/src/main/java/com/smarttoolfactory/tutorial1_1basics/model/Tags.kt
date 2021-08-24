@@ -53,7 +53,10 @@ const val TAG_GRID_CELL = "GridCell"
 // TOP APPBAR
 const val TAG_TOP_APP_BAR = "TopAppBar"
 const val TAG_TOP_APP_BAR_MENU = "Menu"
-const val TAG_TABS = "Tab"
+const val TAG_TAB_ROW = "TabRow"
+const val TAG_TAB = "Tab"
+const val TAG_TAB_INDICATOR = "Tab Indicator"
+const val TAG_TAB_SCROLLABLE ="Scrollable Tab"
 
 
 // BOTTOM NAVIGATION

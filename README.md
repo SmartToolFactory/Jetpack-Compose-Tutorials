@@ -29,3 +29,5 @@ and  Navigation.
 |  |  |
 |<h3>2-5 LazyColumn/Row/VerticalGrid</h3><br/>Vertical, horizontal grid lists with LazyColumn, LazyRow and LazyVerticalGrid. Use contentPadding set paddings for lists, verticalArrangement or horizontalArrangement for padding between items, rememberLazyListState to manually scroll.<br><br> • LazyColumn(Vertical RecyclerView)<br>• LazyRow(Horizontal RecyclerView<br>• LazyVerticalGrid(Gridlayout)<br>• StickyHeaders<br>|<img src ="/./screenshots/tutorial2-5.gif" width=320> |
 |  |  |
+|<h3>2-6 TopAppbar & Tab</h3><br/>TopAppbar with actions, overflow menus. Tabs with text only, image only and image+text with different background, divider, and indicators.<br><br> • TopAppBar<br>• Overflow menu<br>• TabRow and Tab<br>• Tab Indicator, Divider<br>|<img src ="/./screenshots/tutorial2-6.gif" width=320> |
+|  |  |
