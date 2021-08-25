@@ -31,7 +31,7 @@ and  Navigation.
 |  |  |
 |<h3>2-6 TopAppbar & Tab</h3><br/>TopAppbar with actions, overflow menus. Tabs with text only, image only and image+text with different background, divider, and indicators.<br><br> • TopAppBar<br>• Overflow menu<br>• TabRow and Tab<br>• Tab Indicator, Divider<br>|<img src ="/./screenshots/tutorial2-6.gif" width=320> |
 |  |  |
-|<h3>2-7 BottomNavigation</h3><br/>Bottom navigation bars allow movement between primary destinations in an app. BottomNavigation should contain multiple BottomNavigationItems, each representing a singular destination.<br><br> • BottomNavigation<br>• BottomNavigationItem<br>|<img src ="/./screenshots/tutorial2-7.jpg" width=320> |
+|<h3>2-7 BottomNavigation</h3><br/>Bottom navigation bars allow movement between primary destinations in an app. BottomNavigation should contain multiple BottomNavigationItems, each representing a singular destination.<br><br> • BottomNavigation<br>• BottomNavigationItem<br>|<img src ="/./screenshots/tutorial2-7.jpeg" width=320> |
 |  |  |
-|<h3>2-8 BottomAppBar</h3><br/>A bottom app bar displays navigation and key actions at the bottom of screens.<br><br> • BottomAppBar<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2-8.jpg" width=320> |
+|<h3>2-8 BottomAppBar</h3><br/>A bottom app bar displays navigation and key actions at the bottom of screens.<br><br> • BottomAppBar<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2-8.jpeg" width=320> |
 |  |  |
