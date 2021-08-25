@@ -73,9 +73,16 @@ private fun TutorialContent() {
             )
             BoxShadowAndAlignmentExample()
 
+            TutorialHeader(text = "Spacer")
+
+            TutorialText(
+                text = "7-) Spacer can be used to align elements to end or bottom of screen"
+            )
+            WeightExample()
+
             TutorialHeader(text = "Weight and Spacer")
             TutorialText(
-                text = "7-) Weight determines, based on total weight, how much of the parent's " +
+                text = "8-) Weight determines, based on total weight, how much of the parent's " +
                         "dimensions should be occupied by each child. Spacer is used to create horizontal or vertical " +
                         "space between components."
             )
@@ -339,9 +346,9 @@ fun BoxShadowAndAlignmentExample() {
         Box(
             modifier = Modifier
                 .shadow(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(8.dp)
-            )
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(8.dp)
+                )
         ) {
             // This is the one at the bottom
             Text(
@@ -393,6 +400,53 @@ fun BoxShadowAndAlignmentExample() {
                 color = Color.White
             )
         }
+    }
+}
+
+@Composable
+fun WeightExample() {
+    Column {
+        Row {
+            Text(
+                text = "Row1", modifier = Modifier
+                    .background(Color(0xFFFF9800))
+                    .padding(4.dp)
+            )
+
+            // 🔥 This spacer fills space between Row1 and space other than Row2, and Row3
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "Row2", modifier = Modifier
+                    .background(Color(0xFFFFA726))
+                    .padding(4.dp)
+            )
+            Text(
+                text = "Row3", modifier = Modifier
+                    .background(Color(0xFFFFB74D))
+                    .padding(4.dp)
+            )
+        }
+    }
+
+    Column(modifier = Modifier.height(200.dp)) {
+        Text(
+            text = "Column1", modifier = Modifier
+                .background(Color(0xFF8BC34A))
+                .padding(4.dp)
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = "Column2", modifier = Modifier
+                .background(Color(0xFF9CCC65))
+                .padding(4.dp)
+        )
+        Text(
+            text = "Column3", modifier = Modifier
+                .background(Color(0xFFAED581))
+                .padding(4.dp)
+        )
     }
 }
 
