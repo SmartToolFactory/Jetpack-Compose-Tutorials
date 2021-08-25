@@ -29,6 +29,16 @@ fun Tutorial2_6Screen(onBack: (() -> Unit)? = null) {
     TutorialContent(onBack)
 }
 
+@Preview
+@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun TutorialContentPreview() {
+    ComposeTutorialsTheme {
+        TutorialContent()
+    }
+}
+
 @Composable
 private fun TutorialContent(onBack: (() -> Unit)? = null) {
     LazyColumn(
@@ -41,7 +51,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
 
             item {
                 TutorialText(
-                    text = "1-) TopAppbar with IconButtons as menus in classic Views"
+                    text = "1-) TopAppbar with IconButtons as Toolbar menus in classic Views"
                 )
             }
             item {
@@ -149,6 +159,16 @@ fun ActionTopAppbar(onBack: (() -> Unit)? = null, elevation: Dp) {
     )
 }
 
+@Preview
+@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun ActionTopAppBarReview() {
+    ComposeTutorialsTheme {
+        ActionTopAppbar(elevation = 8.dp)
+    }
+}
+
 @Composable
 fun OverflowTopAppBar() {
 
@@ -178,6 +198,16 @@ fun OverflowTopAppBar() {
     )
 }
 
+@Preview
+@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun OverflowTopAppBarReview() {
+    ComposeTutorialsTheme {
+        OverflowTopAppBar()
+    }
+}
+
 @Composable
 fun OverflowTopAppBar2() {
     val items = listOf(
@@ -199,6 +229,16 @@ fun OverflowTopAppBar2() {
     )
 }
 
+@Preview
+@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun OverflowTopAppBar2Review() {
+    ComposeTutorialsTheme {
+        OverflowTopAppBar2()
+    }
+}
+
 @Composable
 fun TopAppBarWithTabComponent(onBack: (() -> Unit)? = null) {
     Surface(elevation = 1.dp) {
@@ -209,6 +249,15 @@ fun TopAppBarWithTabComponent(onBack: (() -> Unit)? = null) {
     }
 }
 
+@Preview
+@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun TopAppBarWithTabComponentReview() {
+    ComposeTutorialsTheme {
+        TopAppBarWithTabComponent()
+    }
+}
 
 @Composable
 fun ActionMenu(
@@ -242,48 +291,7 @@ fun ActionMenu(
                     }
                 }
             }
-
         }
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun TutorialContentPreview() {
-    ComposeTutorialsTheme {
-        TutorialContent()
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun ActionTopAppBarReview() {
-    ComposeTutorialsTheme {
-        ActionTopAppbar(elevation = 8.dp)
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun OverflowTopAppBarReview() {
-    ComposeTutorialsTheme {
-        OverflowTopAppBar()
-    }
-}
-
-@Preview
-@Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-fun OverflowTopAppBar2Review() {
-    ComposeTutorialsTheme {
-        OverflowTopAppBar2()
     }
 }
 

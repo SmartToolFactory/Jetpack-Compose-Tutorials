@@ -23,7 +23,6 @@ fun TutorialSectionCard(
     onClick: ((TutorialSectionModel) -> Unit)? = null
 ) {
     Card(
-        modifier = Modifier.padding(vertical = 3.dp, horizontal = 8.dp),
         elevation = 1.dp,
         shape = RoundedCornerShape(8.dp)
     ) {

@@ -44,6 +44,16 @@ fun TextTabComponent() {
     }
 }
 
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun TextTabComponentPreview() {
+    ComposeTutorialsTheme {
+        TextTabComponent()
+    }
+}
+
 @Composable
 fun IconTabComponent() {
 
@@ -75,6 +85,16 @@ fun IconTabComponent() {
                     Icon(imageVector = imageVector, contentDescription = null)
                 })
         }
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun IconTabComponentPreview() {
+    ComposeTutorialsTheme {
+        IconTabComponent()
     }
 }
 

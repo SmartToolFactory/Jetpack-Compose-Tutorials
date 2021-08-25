@@ -56,14 +56,17 @@ const val TAG_TOP_APP_BAR_MENU = "Menu"
 const val TAG_TAB_ROW = "TabRow"
 const val TAG_TAB = "Tab"
 const val TAG_TAB_INDICATOR = "Tab Indicator"
-const val TAG_TAB_SCROLLABLE ="Scrollable Tab"
-
+const val TAG_TAB_SCROLLABLE = "Scrollable Tab"
 
 // BOTTOM NAVIGATION
+const val TAG_BOTTOM_NAVIGATION = "BottomNavigation"
+const val TAG_BOTTOM_NAVIGATION_ITEM = "BottomNavigationItem"
 
-// BOTTOM BAR
+// BOTTOM APPBAR
+const val TAG_BOTTOM_APP_BAR = "BottomAppBar"
 
 // SCAFFOLD
+const val TAG_SCAFFOLD = "Scaffold"
 
 // SIDE NAVIGATION
 
