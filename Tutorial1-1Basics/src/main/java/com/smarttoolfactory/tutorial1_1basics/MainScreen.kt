@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,10 +12,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +26,7 @@ import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.model.createTutorialList
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
@@ -68,6 +68,7 @@ fun MainScreen() {
  * the basic material design visual layout structure, and [LazyColumn] which
  * is ```RecyclerView``` counterpart in compose.
  */
+@ExperimentalAnimationApi
 @Composable
 private fun TutorialComponent(
     tutorialList: List<TutorialSectionModel>,
@@ -87,6 +88,7 @@ private fun TutorialComponent(
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun TutorialListContent(
     tutorialList: List<TutorialSectionModel>,
@@ -103,9 +105,19 @@ private fun TutorialListContent(
             content = {
 
                 items(tutorialList) { item: TutorialSectionModel ->
-                    TutorialSectionCard(item) {
-                        navController.navigate(item.title)
-                    }
+
+                    var isExpanded by remember(key1 = item.title) { mutableStateOf(true) }
+
+                    TutorialSectionCard(
+                        model = item,
+                        onClick = {
+                            navController.navigate(item.title)
+                        },
+                        onExpandClicked = {
+                            isExpanded = !isExpanded
+                        },
+                        expanded = isExpanded
+                    )
                 }
             }
         )

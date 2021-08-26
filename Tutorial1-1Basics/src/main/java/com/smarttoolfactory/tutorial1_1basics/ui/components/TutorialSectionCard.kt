@@ -1,5 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,8 +9,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,10 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
+@ExperimentalAnimationApi
 @Composable
 fun TutorialSectionCard(
     model: TutorialSectionModel,
-    onClick: ((TutorialSectionModel) -> Unit)? = null
+    onClick: ((TutorialSectionModel) -> Unit)? = null,
+    onExpandClicked: () -> Unit,
+    expanded: Boolean
 ) {
     Card(
         elevation = 1.dp,
@@ -29,17 +39,21 @@ fun TutorialSectionCard(
         Box(
             contentAlignment = Alignment.BottomStart
         ) {
-            TutorialContentComponent(onClick, model)
+            TutorialContentComponent(onClick, model, onExpandClicked, expanded)
             TutorialTagsComponent(model)
         }
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun TutorialContentComponent(
     onClick: ((TutorialSectionModel) -> Unit)?,
-    model: TutorialSectionModel
+    model: TutorialSectionModel,
+    onExpandClicked: () -> Unit,
+    expanded: Boolean
 ) {
+
     Column(Modifier
         .fillMaxWidth()
         .clickable(
@@ -48,18 +62,35 @@ private fun TutorialContentComponent(
         .padding(16.dp)
     ) {
 
-        Text(
-            text = model.title,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.h6
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = model.title,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.h6
+            )
 
-        // Vertical spacing
-        Spacer(Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-        // Description text
-        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            Text(model.description, style = MaterialTheme.typography.body2)
+            IconButton(onClick = onExpandClicked) {
+                // Change vector drawable to expand more or less based on state of expanded
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.ExpandLess
+                    else Icons.Filled.ExpandMore,
+                    contentDescription = null
+                )
+            }
+        }
+
+        AnimatedVisibility(expanded) {
+            // Vertical spacing
+            Spacer(Modifier.height(8.dp))
+
+            // Description text
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                Text(model.description, style = MaterialTheme.typography.body2)
+            }
         }
         // Vertical spacing
         Spacer(Modifier.height(36.dp))
@@ -81,6 +112,7 @@ private fun TutorialTagsComponent(model: TutorialSectionModel) {
     }
 }
 
+@ExperimentalAnimationApi
 @Preview
 @Composable
 fun TutorialSectionCardPreview() {
@@ -99,18 +131,16 @@ fun TutorialSectionCardPreview() {
                 .padding(top = 16.dp)
 
         ) {
-            TutorialSectionCard(model)
-            TutorialSectionCard(model)
-            TutorialSectionCard(model)
+            TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
+            TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
+            TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
         }
     }
 }
 
 object HexToJetpackColor {
-
     @JvmStatic
     fun getColor(colorString: String): Color {
         return Color(android.graphics.Color.parseColor("#$colorString"))
     }
-
 }
