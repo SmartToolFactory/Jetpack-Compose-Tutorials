@@ -3,6 +3,7 @@ package com.smarttoolfactory.tutorial1_1basics
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
@@ -14,10 +15,10 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
  * * Tutorial navigation is done via [NavController] and ```composable``` extension function
  * for [NavGraphBuilder]
  */
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 class MainActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

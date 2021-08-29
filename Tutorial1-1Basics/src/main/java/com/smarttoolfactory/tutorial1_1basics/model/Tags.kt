@@ -65,22 +65,16 @@ const val TAG_BOTTOM_NAVIGATION_ITEM = "BottomNavigationItem"
 // BOTTOM APPBAR
 const val TAG_BOTTOM_APP_BAR = "BottomAppBar"
 
-// SCAFFOLD
+// SCAFFOLD, SIDE NAVIGATION
 const val TAG_SCAFFOLD = "Scaffold"
-
-// SIDE NAVIGATION
+const val TAG_NAVIGATION_DRAWER = "Side Navigation"
+const val TAG_DRAWER_STATE = "DrawerState"
 
 // BOTTOM SHEET
 
 // ALERT DIALOG
 
-// CHECK BOX
-
-// RADIO
-
-// PROGRESSBAR
-
-
+// CHECK BOX, RADIO, PROGRESSBAR, SNACKBAR
 
 // Navigation
 const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"

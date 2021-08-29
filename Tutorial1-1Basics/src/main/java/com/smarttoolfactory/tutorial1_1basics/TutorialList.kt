@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.model
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.BottomNavigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
@@ -248,6 +247,20 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_9 = TutorialSectionModel(
+        title = "2-9 Side Navigation",
+        description = "Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState",
+        action = {
+            Tutorial2_9Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SCAFFOLD,
+            TAG_NAVIGATION_DRAWER,
+            TAG_DRAWER_STATE
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -262,6 +275,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_5_5,
         tutorial2_6,
         tutorial2_7,
-        tutorial2_8
+        tutorial2_8,
+        tutorial2_9
     )
 }

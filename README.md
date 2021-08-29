@@ -35,3 +35,5 @@ and  Navigation.
 |  |  |
 |<h3>2-8 BottomAppBar</h3><br/>A bottom app bar displays navigation and key actions at the bottom of screens.<br><br> • BottomAppBar<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2-8.jpeg" width=320> |
 |  |  |
+|<h3>2-9 Side Navigation</h3><br/>Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState.<br><br> • Scaffold<br>• Side Navigation<br><br>• DrawerState<br>|<img src ="/./screenshots/tutorial2-9.jpeg" width=320> |
+|  |  |
