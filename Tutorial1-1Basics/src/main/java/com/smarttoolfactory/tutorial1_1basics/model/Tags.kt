@@ -71,7 +71,7 @@ const val TAG_NAVIGATION_DRAWER = "Side Navigation"
 const val TAG_DRAWER_STATE = "DrawerState"
 
 // BOTTOM SHEET
-
+const val TAG_BOTTOM_SHEET = "BottomSheet"
 // ALERT DIALOG
 
 // CHECK BOX, RADIO, PROGRESSBAR, SNACKBAR

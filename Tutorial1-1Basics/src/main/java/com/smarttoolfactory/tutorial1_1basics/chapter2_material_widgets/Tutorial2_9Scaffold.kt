@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,18 +14,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -101,10 +105,7 @@ fun AppDrawer(
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(Modifier.height(24.dp))
         DrawerHeader()
-        Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
-
         DrawerButton(
             icon = Icons.Filled.Home,
             label = "Home",
@@ -131,25 +132,56 @@ fun AppDrawer(
     }
 }
 
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun AppDrawerPreview() {
+    ComposeTutorialsTheme {
+        AppDrawer(
+            currentRoute = Routes.HOME_ROUTE,
+            navigateToHome = {},
+            navigateToSettings = {},
+            closeDrawer = {}
+        )
+    }
+}
+
 @Composable
 private fun DrawerHeader() {
-    Row(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+
+    Box(contentAlignment = Alignment.BottomStart, modifier = Modifier.background(Color.Green)) {
         Image(
-            modifier = Modifier
-                .size(30.dp)
-                .clip(CircleShape),
-            painter = painterResource(id = R.drawable.avatar_1_raster),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.height(160.dp),
+            painter = painterResource(id = R.drawable.drawer_bg2),
             contentDescription = null
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "Header",
-            fontSize = 24.sp,
-            color = Color(0xff2196F3)
-        )
+
+        Column(modifier = Modifier.padding(8.dp)) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Image(
+                modifier = Modifier
+                    .size(70.dp)
+                    .clip(CircleShape),
+                painter = painterResource(id = R.drawable.avatar_1_raster),
+                contentDescription = null
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "Smart Tool Factory", color = Color.White)
+            Text(text = "smarttoolfactory@icloud.com", color = Color.White)
+        }
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun DrawerHeaderPreview() {
+    ComposeTutorialsTheme {
+        DrawerHeader()
     }
 }
 
@@ -212,6 +244,23 @@ private fun DrawerButton(
     }
 }
 
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun DrawerButtonPreview() {
+    ComposeTutorialsTheme {
+        DrawerButton(
+            icon = Icons.Filled.Home,
+            label = "Home",
+            isSelected = true,
+            action = {
+
+            }
+        )
+    }
+}
+
 @Composable
 fun HomeComponent() {
     Box(
@@ -224,6 +273,16 @@ fun HomeComponent() {
     }
 }
 
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun HomeComponentPreview() {
+    ComposeTutorialsTheme {
+        HomeComponent()
+    }
+}
+
 @Composable
 fun SettingsComponent() {
     Box(
@@ -233,6 +292,16 @@ fun SettingsComponent() {
             .background(Color(0xffFF6F00))
     ) {
         Text(color = Color.White, text = "Settings", fontSize = 50.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun SettingsComponentPreview() {
+    ComposeTutorialsTheme {
+        SettingsComponent()
     }
 }
 
