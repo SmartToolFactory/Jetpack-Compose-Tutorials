@@ -2,8 +2,8 @@
 
 ## 🤓 Overview
 
-Series of Tutorials to learn about Jetpack Compose, Material Widgets, State, Animation, 
-and  Navigation.
+Series of Tutorials to learn about Jetpack Compose, Material Widgets, State, Animation, and
+Navigation.
 
 <h2>⚠️ Under Development</h2>
 
@@ -17,6 +17,7 @@ and  Navigation.
 |  |  |
 
 #### Material Widgets
+
 |Tutorial|Preview|
 |-------|-------|
 |<h3>2-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial2-1.jpg" width=320> |
@@ -37,5 +38,5 @@ and  Navigation.
 |  |  |
 |<h3>2-9 Side Navigation</h3><br/>Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState.<br><br> • Scaffold<br>• Side Navigation<br>• DrawerState<br>|<img src ="/./screenshots/tutorial2-9.jpeg" width=320> |
 |  |  |
-|<h3>2-10 Side Navigation</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
+|<h3>2-10 BottomSheet</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
 |  |  |
