@@ -2,7 +2,6 @@ package com.smarttoolfactory.tutorial1_1basics.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -10,12 +9,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,10 +53,11 @@ private fun TutorialContentComponent(
 
     Column(Modifier
         .fillMaxWidth()
+        .wrapContentHeight()
         .clickable(
             onClick = { onClick?.invoke(model) }
         )
-        .padding(16.dp)
+        .padding(start = 12.dp, end = 12.dp, top = 0.dp, bottom = 8.dp)
     ) {
 
         Row(
@@ -84,16 +82,13 @@ private fun TutorialContentComponent(
         }
 
         AnimatedVisibility(expanded) {
-            // Vertical spacing
-            Spacer(Modifier.height(8.dp))
-
             // Description text
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(model.description, style = MaterialTheme.typography.body2)
             }
         }
         // Vertical spacing
-        Spacer(Modifier.height(36.dp))
+        Spacer(Modifier.height(40.dp))
     }
 }
 
@@ -102,13 +97,14 @@ private fun TutorialTagsComponent(model: TutorialSectionModel) {
     Column(Modifier.padding(12.dp)) {
 
         // Horizontal list for tags
-        LazyRow(content = {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            content = {
 
-            items(model.tags) { tag ->
-                TutorialChip(text = tag)
-                Spacer(Modifier.width(8.dp))
-            }
-        })
+                items(model.tags) { tag ->
+                    TutorialChip(text = tag)
+                }
+            })
     }
 }
 
@@ -124,17 +120,7 @@ fun TutorialSectionCardPreview() {
     )
 
     MaterialTheme {
-        Column(
-            modifier = Modifier
-                .background(HexToJetpackColor.getColor("EEEEEE"))
-                .fillMaxHeight()
-                .padding(top = 16.dp)
-
-        ) {
-            TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
-            TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
-            TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
-        }
+        TutorialSectionCard(model, onExpandClicked = {}, expanded = true)
     }
 }
 

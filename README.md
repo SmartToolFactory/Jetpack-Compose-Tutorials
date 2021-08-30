@@ -37,3 +37,5 @@ and  Navigation.
 |  |  |
 |<h3>2-9 Side Navigation</h3><br/>Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState.<br><br> • Scaffold<br>• Side Navigation<br>• DrawerState<br>|<img src ="/./screenshots/tutorial2-9.jpeg" width=320> |
 |  |  |
+|<h3>2-10 Side Navigation</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
+|  |  |

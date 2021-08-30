@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,10 +18,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.Place
+import com.smarttoolfactory.tutorial1_1basics.model.places
+import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import java.text.DecimalFormat
 
 val decimalFormat = DecimalFormat("0.0")
@@ -57,6 +62,16 @@ fun PlaceCard(place: Place) {
     }
 }
 
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun PlaceCardPreview() {
+    ComposeTutorialsTheme {
+        PlaceCard(places.first())
+    }
+}
+
 @Composable
 fun PlacesToBookComponent(place: Place) {
     Card(
@@ -65,12 +80,49 @@ fun PlacesToBookComponent(place: Place) {
         elevation = 2.dp,
         shape = RoundedCornerShape(8.dp)
     ) {
-        Row(modifier =  Modifier.clickable { }) {
+        Row(modifier = Modifier.clickable { }) {
             PlaceContent(place)
             ImageContent(place)
         }
     }
 }
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun PlacesToBookComponentPreview() {
+    ComposeTutorialsTheme {
+        PlacesToBookComponent(places.first())
+    }
+}
+
+@Composable
+fun PlacesToBookVerticalComponent(place: Place) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = 2.dp,
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(modifier = Modifier.clickable { }) {
+            PlaceContent(place)
+            Spacer(modifier = Modifier.weight(1f))
+            ImageContent(place)
+        }
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun PlacesToBookVerticalComponentPreview() {
+    ComposeTutorialsTheme {
+        PlacesToBookVerticalComponent(places.first())
+    }
+}
+
 
 @Composable
 private fun ImageContent(place: Place) {
@@ -94,6 +146,16 @@ private fun ImageContent(place: Place) {
         ) {
             FavoriteButton(modifier = Modifier.padding(8.dp))
         }
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun ImageContentPreview() {
+    ComposeTutorialsTheme {
+        ImageContent(places.first())
     }
 }
 
@@ -172,5 +234,15 @@ private fun PlaceContent(place: Place, modifier: Modifier = Modifier) {
                 .padding(6.dp),
             color = Color(0xff4CAF50)
         )
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+fun PlaceContentPreview() {
+    ComposeTutorialsTheme {
+        PlaceContent(places.first())
     }
 }

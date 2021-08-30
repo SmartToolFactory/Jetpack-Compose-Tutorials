@@ -1,6 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.model
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
@@ -13,6 +15,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
  *
  * * Tags are for search purposes if there is a Search Component exists.
  */
+@ExperimentalAnimationApi
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
@@ -261,6 +265,21 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_10 = TutorialSectionModel(
+        title = "2-10 BottomSheet",
+        description = "Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
+        action = {
+            Tutorial2_10Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SCAFFOLD_BOTTOM_SHEET,
+            TAG_BOTTOM_SHEET,
+            TAG_BOTTOM_SHEET_STATE,
+            TAG_MODAL_BOTTOM_SHEET
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -276,6 +295,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_6,
         tutorial2_7,
         tutorial2_8,
-        tutorial2_9
+        tutorial2_9,
+        tutorial2_10
     )
 }

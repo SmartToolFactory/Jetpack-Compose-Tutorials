@@ -67,11 +67,14 @@ const val TAG_BOTTOM_APP_BAR = "BottomAppBar"
 
 // SCAFFOLD, SIDE NAVIGATION
 const val TAG_SCAFFOLD = "Scaffold"
+const val TAG_SCAFFOLD_BOTTOM_SHEET = "BottomSheetScaffold"
 const val TAG_NAVIGATION_DRAWER = "Side Navigation"
 const val TAG_DRAWER_STATE = "DrawerState"
 
 // BOTTOM SHEET
 const val TAG_BOTTOM_SHEET = "BottomSheet"
+const val TAG_BOTTOM_SHEET_STATE = "BottomSheetState"
+const val TAG_MODAL_BOTTOM_SHEET = "ModalBottomSheetLayout"
 // ALERT DIALOG
 
 // CHECK BOX, RADIO, PROGRESSBAR, SNACKBAR
