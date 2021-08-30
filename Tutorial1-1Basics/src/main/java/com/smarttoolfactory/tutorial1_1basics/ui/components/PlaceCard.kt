@@ -81,7 +81,7 @@ fun PlacesToBookComponent(place: Place) {
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(modifier = Modifier.clickable { }) {
-            PlaceContent(place)
+            PlaceContent(place, Modifier.width(140.dp))
             ImageContent(place)
         }
     }
@@ -106,8 +106,7 @@ fun PlacesToBookVerticalComponent(place: Place) {
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(modifier = Modifier.clickable { }) {
-            PlaceContent(place)
-            Spacer(modifier = Modifier.weight(1f))
+            PlaceContent(place,Modifier.weight(1f))
             ImageContent(place)
         }
     }
@@ -164,26 +163,14 @@ private fun PlaceContent(place: Place, modifier: Modifier = Modifier) {
 
     val rating = place.rating
 
-    val triple = if (rating > 8) {
-        Triple(Color(0xff4CAF50), "Very good", 5)
-    } else if (rating <= 8 && rating > 6) {
-        Triple(Color(0xff2196F3), "Good", 4)
-    } else if (rating > 4 && rating <= 6) {
-        Triple(Color(0xffFFEB3B), "Mediocre", 3)
-
-    } else if (rating > 2 && rating <= 4) {
-        Triple(Color(0xffFF9800), "Bad", 2)
-    } else {
-        Triple(Color(0xffF44336), "Very bad", 1)
-    }
+    val triple = getPlaceProperties(rating)
 
     val color = triple.first
     val text = triple.second
     val startCount = triple.third
 
     Column(
-        modifier = Modifier
-            .width(180.dp)
+        modifier = modifier
             .height(140.dp)
             .padding(8.dp)
     ) {
@@ -227,14 +214,32 @@ private fun PlaceContent(place: Place, modifier: Modifier = Modifier) {
             }
         }
 
-        Text(
-            text = "$${place.price}",
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(6.dp),
-            color = Color(0xff4CAF50)
-        )
+        Row {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "$${place.price}",
+
+                color = Color(0xff4CAF50)
+            )
+        }
     }
+}
+
+@Composable
+private fun getPlaceProperties(rating: Double): Triple<Color, String, Int> {
+    val triple = if (rating > 8) {
+        Triple(Color(0xff4CAF50), "Very good", 5)
+    } else if (rating <= 8 && rating > 6) {
+        Triple(Color(0xff2196F3), "Good", 4)
+    } else if (rating > 4 && rating <= 6) {
+        Triple(Color(0xffFFEB3B), "Mediocre", 3)
+
+    } else if (rating > 2 && rating <= 4) {
+        Triple(Color(0xffFF9800), "Bad", 2)
+    } else {
+        Triple(Color(0xffF44336), "Very bad", 1)
+    }
+    return triple
 }
 
 @Preview
