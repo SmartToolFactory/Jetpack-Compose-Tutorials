@@ -139,13 +139,13 @@ fun CircleCloseButton(modifier: Modifier) {
 
 @Composable
 @Preview
-fun ChipPreview() {
+private fun ChipPreview() {
     Chip(text = "Chip", drawableRes = R.drawable.avatar_1_raster, closable = true)
 }
 
 @Composable
 @Preview
-fun OutlinedChipPreview() {
+private fun OutlinedChipPreview() {
     OutlinedChip(text = "Outlined", drawableRes = R.drawable.avatar_2_raster, closable = true)
 
 }

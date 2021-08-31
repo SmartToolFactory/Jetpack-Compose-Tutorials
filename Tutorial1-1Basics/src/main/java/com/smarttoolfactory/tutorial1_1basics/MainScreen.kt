@@ -106,7 +106,7 @@ private fun TutorialListContent(
 
                 items(tutorialList) { item: TutorialSectionModel ->
 
-                    var isExpanded by remember(key1 = item.title) { mutableStateOf(true) }
+                    var isExpanded by remember(key1 = item.title) { mutableStateOf(false) }
 
                     TutorialSectionCard(
                         model = item,

@@ -496,6 +496,6 @@ fun WeightAndSpacerExample() {
 
 @Preview
 @Composable
-fun Tutorial1_1Preview() {
+private fun Tutorial1_1Preview() {
     TutorialContent()
 }

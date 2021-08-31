@@ -102,7 +102,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     val tutorial2_3 = TutorialSectionModel(
         title = "2-3 TextField",
         description = "Create TextField component with regular style or outlined. Set error," +
-                " colors, state, icons, and IME actions.",
+                " colors, state, icons, VisualTransformations for phone or credit card, and IME actions.",
         action = {
             Tutorial2_3Screen()
         },
@@ -265,18 +265,30 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
-    val tutorial2_10 = TutorialSectionModel(
-        title = "2-10 BottomSheet",
+    val tutorial2_10_1 = TutorialSectionModel(
+        title = "2-10-1 BottomSheet",
         description = "Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
         action = {
-            Tutorial2_10Screen()
+            Tutorial2_10Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_SCAFFOLD_BOTTOM_SHEET,
             TAG_BOTTOM_SHEET,
-            TAG_BOTTOM_SHEET_STATE,
-            TAG_MODAL_BOTTOM_SHEET
+            TAG_BOTTOM_SHEET_STATE
+        )
+    )
+
+    val tutorial2_10_2 = TutorialSectionModel(
+        title = "2-10-2 ModalBottomSheetLayout",
+        description = "Create modal bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
+        action = {
+            Tutorial2_10Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MODAL_BOTTOM_SHEET,
+            TAG_MODAL_BOTTOM_SHEET_VALUE
         )
     )
 
@@ -296,6 +308,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_7,
         tutorial2_8,
         tutorial2_9,
-        tutorial2_10
+        tutorial2_10_1,
+        tutorial2_10_2
     )
 }

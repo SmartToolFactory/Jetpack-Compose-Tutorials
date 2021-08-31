@@ -69,6 +69,6 @@ fun TutorialText2(text: String, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun TutorialTextPreview() {
+private fun TutorialTextPreview() {
     TutorialText("Sample text for demonstrating this text")
 }

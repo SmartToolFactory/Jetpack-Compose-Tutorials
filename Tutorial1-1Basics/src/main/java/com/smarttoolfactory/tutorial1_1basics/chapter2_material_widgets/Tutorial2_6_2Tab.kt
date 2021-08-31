@@ -48,7 +48,7 @@ fun TextTabComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun TextTabComponentPreview() {
+private fun TextTabComponentPreview() {
     ComposeTutorialsTheme {
         TextTabComponent()
     }
@@ -92,7 +92,7 @@ fun IconTabComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun IconTabComponentPreview() {
+private fun IconTabComponentPreview() {
     ComposeTutorialsTheme {
         IconTabComponent()
     }
@@ -126,7 +126,7 @@ fun CombinedTabComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun CombinedTabComponentPreview() {
+private fun CombinedTabComponentPreview() {
     ComposeTutorialsTheme {
         CombinedTabComponent()
     }
@@ -164,7 +164,7 @@ fun CombinedTabComponent2() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun CombinedTab2ComponentPreview() {
+private fun CombinedTab2ComponentPreview() {
     ComposeTutorialsTheme {
         CombinedTabComponent2()
     }
@@ -198,7 +198,7 @@ private fun CustomTab(
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun CustomTabComponentPreview() {
+private fun CustomTabComponentPreview() {
     ComposeTutorialsTheme {
         CustomTab("Home", Icons.Filled.Home, {})
     }
@@ -226,7 +226,7 @@ fun ScrollableTextTabComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun ScrollableTextTabComponentPreview() {
+private fun ScrollableTextTabComponentPreview() {
     ComposeTutorialsTheme {
         ScrollableTextTabComponent()
     }

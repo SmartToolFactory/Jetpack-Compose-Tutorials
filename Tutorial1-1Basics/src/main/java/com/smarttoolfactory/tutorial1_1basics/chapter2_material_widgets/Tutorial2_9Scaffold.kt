@@ -136,7 +136,7 @@ fun AppDrawer(
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun AppDrawerPreview() {
+private fun AppDrawerPreview() {
     ComposeTutorialsTheme {
         AppDrawer(
             currentRoute = Routes.HOME_ROUTE,
@@ -179,7 +179,7 @@ private fun DrawerHeader() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun DrawerHeaderPreview() {
+private fun DrawerHeaderPreview() {
     ComposeTutorialsTheme {
         DrawerHeader()
     }
@@ -248,7 +248,7 @@ private fun DrawerButton(
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun DrawerButtonPreview() {
+private fun DrawerButtonPreview() {
     ComposeTutorialsTheme {
         DrawerButton(
             icon = Icons.Filled.Home,
@@ -277,7 +277,7 @@ fun HomeComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun HomeComponentPreview() {
+private fun HomeComponentPreview() {
     ComposeTutorialsTheme {
         HomeComponent()
     }
@@ -299,7 +299,7 @@ fun SettingsComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun SettingsComponentPreview() {
+private fun SettingsComponentPreview() {
     ComposeTutorialsTheme {
         SettingsComponent()
     }

@@ -2,11 +2,17 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,7 +62,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
 }
 
 @Composable
-private fun BottomAppBarComponent(onBack: (() -> Unit)?=null) {
+private fun BottomAppBarComponent(onBack: (() -> Unit)? = null) {
     BottomAppBar(
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
@@ -84,7 +90,7 @@ private fun BottomAppBarComponent(onBack: (() -> Unit)?=null) {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun BottomAppBarComponentPreview() {
+private fun BottomAppBarComponentPreview() {
     ComposeTutorialsTheme {
         BottomAppBarComponent()
     }

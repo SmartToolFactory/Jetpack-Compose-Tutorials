@@ -33,7 +33,7 @@ fun Tutorial2_6Screen(onBack: (() -> Unit)? = null) {
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun TutorialContentPreview() {
+private fun TutorialContentPreview() {
     ComposeTutorialsTheme {
         TutorialContent()
     }
@@ -163,7 +163,7 @@ fun ActionTopAppbar(onBack: (() -> Unit)? = null, elevation: Dp) {
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun ActionTopAppBarReview() {
+private fun ActionTopAppBarReview() {
     ComposeTutorialsTheme {
         ActionTopAppbar(elevation = 8.dp)
     }
@@ -202,7 +202,7 @@ fun OverflowTopAppBar() {
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun OverflowTopAppBarReview() {
+private fun OverflowTopAppBarReview() {
     ComposeTutorialsTheme {
         OverflowTopAppBar()
     }
@@ -233,7 +233,7 @@ fun OverflowTopAppBar2() {
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun OverflowTopAppBar2Review() {
+private fun OverflowTopAppBar2Review() {
     ComposeTutorialsTheme {
         OverflowTopAppBar2()
     }
@@ -253,7 +253,7 @@ fun TopAppBarWithTabComponent(onBack: (() -> Unit)? = null) {
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun TopAppBarWithTabComponentReview() {
+private fun TopAppBarWithTabComponentReview() {
     ComposeTutorialsTheme {
         TopAppBarWithTabComponent()
     }
@@ -299,7 +299,7 @@ fun ActionMenu(
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun ActionMenuReview() {
+private fun ActionMenuReview() {
     val items = listOf(
         ActionItemSpec("Call", Icons.Default.Call, ActionItemMode.ALWAYS_SHOW) {},
         ActionItemSpec("Send", Icons.Default.Send, ActionItemMode.IF_ROOM) {},

@@ -95,7 +95,7 @@ fun TextBottomNavigationComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun TextBottomNavigationComponentPreview() {
+private fun TextBottomNavigationComponentPreview() {
     ComposeTutorialsTheme {
         TextBottomNavigationComponent()
     }
@@ -131,7 +131,7 @@ fun IconBottomNavigationComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun IconBottomNavigationComponentPreview() {
+private fun IconBottomNavigationComponentPreview() {
     ComposeTutorialsTheme {
         IconBottomNavigationComponent()
     }
@@ -170,7 +170,7 @@ fun BottomNavigationComponent() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun BottomNavigationComponentPreview() {
+private fun BottomNavigationComponentPreview() {
     ComposeTutorialsTheme {
         BottomNavigationComponent()
     }

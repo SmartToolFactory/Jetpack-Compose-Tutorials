@@ -66,7 +66,7 @@ fun PlaceCard(place: Place) {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun PlaceCardPreview() {
+private fun PlaceCardPreview() {
     ComposeTutorialsTheme {
         PlaceCard(places.first())
     }
@@ -91,7 +91,7 @@ fun PlacesToBookComponent(place: Place) {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun PlacesToBookComponentPreview() {
+private fun PlacesToBookComponentPreview() {
     ComposeTutorialsTheme {
         PlacesToBookComponent(places.first())
     }
@@ -106,7 +106,7 @@ fun PlacesToBookVerticalComponent(place: Place) {
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(modifier = Modifier.clickable { }) {
-            PlaceContent(place,Modifier.weight(1f))
+            PlaceContent(place, Modifier.weight(1f))
             ImageContent(place)
         }
     }
@@ -116,7 +116,7 @@ fun PlacesToBookVerticalComponent(place: Place) {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun PlacesToBookVerticalComponentPreview() {
+private fun PlacesToBookVerticalComponentPreview() {
     ComposeTutorialsTheme {
         PlacesToBookVerticalComponent(places.first())
     }
@@ -152,7 +152,7 @@ private fun ImageContent(place: Place) {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun ImageContentPreview() {
+private fun ImageContentPreview() {
     ComposeTutorialsTheme {
         ImageContent(places.first())
     }
@@ -175,6 +175,7 @@ private fun PlaceContent(place: Place, modifier: Modifier = Modifier) {
             .padding(8.dp)
     ) {
 
+        // 🔥 This weight pushes price text to bottom
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = place.description,
@@ -195,7 +196,6 @@ private fun PlaceContent(place: Place, modifier: Modifier = Modifier) {
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
                     shape = RoundedCornerShape(4.dp),
@@ -215,10 +215,10 @@ private fun PlaceContent(place: Place, modifier: Modifier = Modifier) {
         }
 
         Row {
+            // 🔥 This Spacer with weight pushes price tag to most right of this context
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "$${place.price}",
-
                 color = Color(0xff4CAF50)
             )
         }
@@ -246,7 +246,7 @@ private fun getPlaceProperties(rating: Double): Triple<Color, String, Int> {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-fun PlaceContentPreview() {
+private fun PlaceContentPreview() {
     ComposeTutorialsTheme {
         PlaceContent(places.first())
     }

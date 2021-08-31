@@ -75,6 +75,8 @@ const val TAG_DRAWER_STATE = "DrawerState"
 const val TAG_BOTTOM_SHEET = "BottomSheet"
 const val TAG_BOTTOM_SHEET_STATE = "BottomSheetState"
 const val TAG_MODAL_BOTTOM_SHEET = "ModalBottomSheetLayout"
+const val TAG_MODAL_BOTTOM_SHEET_VALUE = "ModalBottomSheetValue"
+
 // ALERT DIALOG
 
 // CHECK BOX, RADIO, PROGRESSBAR, SNACKBAR

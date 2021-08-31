@@ -111,7 +111,7 @@ private fun TutorialTagsComponent(model: TutorialSectionModel) {
 @ExperimentalAnimationApi
 @Preview
 @Composable
-fun TutorialSectionCardPreview() {
+private fun TutorialSectionCardPreview() {
 
     val model = TutorialSectionModel(
         title = "1-1 Column/Row Basics",

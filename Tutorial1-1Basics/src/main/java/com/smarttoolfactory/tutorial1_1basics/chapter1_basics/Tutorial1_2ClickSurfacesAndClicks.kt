@@ -353,6 +353,6 @@ fun SurfaceClickPropagationExample() {
 
 @Preview
 @Composable
-fun Tutorial1_2Preview() {
+private fun Tutorial1_2Preview() {
     TutorialContent()
 }
