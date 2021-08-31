@@ -70,6 +70,8 @@ const val TAG_SCAFFOLD = "Scaffold"
 const val TAG_SCAFFOLD_BOTTOM_SHEET = "BottomSheetScaffold"
 const val TAG_NAVIGATION_DRAWER = "Side Navigation"
 const val TAG_DRAWER_STATE = "DrawerState"
+const val TAG_BACKDROP_SCAFFOLD = "BackdropScaffold"
+
 
 // BOTTOM SHEET
 const val TAG_BOTTOM_SHEET = "BottomSheet"

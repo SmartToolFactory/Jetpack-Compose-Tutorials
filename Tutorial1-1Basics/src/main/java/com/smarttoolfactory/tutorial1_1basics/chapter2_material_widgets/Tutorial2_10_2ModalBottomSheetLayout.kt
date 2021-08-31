@@ -45,6 +45,9 @@ private fun TutorialContent() {
     Scaffold(
         topBar = {
             TopAppBar(
+                elevation = 8.dp,
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = MaterialTheme.colors.onSurface,
                 title = {
                     Text("Modal BottomSheet")
                 },
@@ -66,12 +69,6 @@ private fun TutorialContent() {
         ModalBottomSheetLayout(
             sheetState = modalBottomSheetState,
             sheetElevation = 8.dp,
-            sheetShape = RoundedCornerShape(
-                bottomStart = 0.dp,
-                bottomEnd = 0.dp,
-                topStart = 12.dp,
-                topEnd = 12.dp
-            ),
             sheetContent = {
                 // 🔥 Uncomment to see states on modal bottom sheet content
                 MainContent(modalBottomSheetState, Color(0xff4CAF50))

@@ -36,7 +36,10 @@ Navigation.
 |  |  |
 |<h3>2-8 BottomAppBar</h3><br/>A bottom app bar displays navigation and key actions at the bottom of screens.<br><br> • BottomAppBar<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2-8.jpeg" width=320> |
 |  |  |
-|<h3>2-9 Side Navigation</h3><br/>Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState.<br><br> • Scaffold<br>• Side Navigation<br>• DrawerState<br>|<img src ="/./screenshots/tutorial2-9.jpeg" width=320> |
+|<h3>2-9 Side Navigation</h3><br/>A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.<br><br> • Scaffold<br>• Side Navigation<br>• DrawerState<br>|<img src ="/./screenshots/tutorial2-9.jpeg" width=320> |
 |  |  |
 |<h3>2-10 BottomSheet</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
 |  |  |
+|<h3>2-10-3 BackdropScaffold</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br>BackdropScaffold<br>|<img src ="/./screenshots/tutorial2-10-3.jpeg" width=320> |
+|  |  |
+

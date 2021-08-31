@@ -1,0 +1,170 @@
+package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
+
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.model.places
+import com.smarttoolfactory.tutorial1_1basics.ui.components.PlacesToBookVerticalComponent
+import kotlinx.coroutines.launch
+
+/**
+ * [Backdrop](https://material.io/components/backdrop#behavior)
+ *
+ *
+ * ```backdropScaffoldState.conceal()``` is used to hide, and
+ * ```backdropScaffoldState.reveal()``` to reveal bottom content which is **frontLayerContent**.
+ *
+ * ```headerHeight``` can be used to set **front layer content height** while it's concealed
+ * ```peekHeight``` sets **total height for back layer starting from bottom of appBar**.
+ *
+ */
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@Composable
+fun Tutorial2_10Screen3() {
+    TutorialContent()
+}
+
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@Composable
+private fun TutorialContent() {
+
+    val backdropScaffoldState =
+        rememberBackdropScaffoldState(initialValue = BackdropValue.Revealed)
+    val coroutineScope = rememberCoroutineScope()
+
+    BackdropScaffold(
+        appBar = {
+            TopAppBar(
+                elevation = 8.dp,
+                title = {
+                    Text("BackdropScaffold")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        if (backdropScaffoldState.isRevealed) {
+                            coroutineScope.launch { backdropScaffoldState.conceal() }
+                        } else if (backdropScaffoldState.isConcealed) {
+                            coroutineScope.launch { backdropScaffoldState.reveal() }
+                        }
+                    }) {
+                        Icon(Icons.Default.Menu, null)
+                    }
+                },
+            )
+        },
+        scaffoldState = backdropScaffoldState,
+        // Back layer properties
+        peekHeight = BackdropScaffoldDefaults.PeekHeight,
+        persistentAppBar = true,
+//        backLayerBackgroundColor = MaterialTheme.colors.primary,
+        backLayerContent = {
+            BackLayerContent()
+        },
+        // Front layer properties
+        stickyFrontLayer = true,
+        headerHeight = BackdropScaffoldDefaults.HeaderHeight,
+        frontLayerShape = BackdropScaffoldDefaults.frontLayerShape,
+        frontLayerElevation = BackdropScaffoldDefaults.FrontLayerElevation,
+        // 🔥 Removes transparent white color when backdropScaffoldState in concealed
+        frontLayerScrimColor = Color.Unspecified,
+        frontLayerContent = {
+            FrontLayerContent()
+        }
+    ) {
+
+    }
+}
+
+@Composable
+private fun BackLayerContent() {
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+    ) {
+        Spacer(Modifier.height(16.dp))
+        BackLayerTextField("Search", "Search dummy...", Icons.Default.Search)
+        Spacer(Modifier.height(16.dp))
+        BackLayerTextField("Date", "Date dummy...", Icons.Default.DateRange)
+        Spacer(Modifier.height(16.dp))
+        BackLayerTextField("Place", "Place dummy...", Icons.Default.Place)
+        Spacer(Modifier.height(8.dp))
+
+    }
+}
+
+@Composable
+private fun FrontLayerContent() {
+    Column {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            Text(
+                text = "SubHeader",
+                modifier = Modifier.padding(top = 16.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
+            )
+        }
+        Divider(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .background(Color.LightGray)
+                .height(1.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn(
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(places) { place ->
+                PlacesToBookVerticalComponent(place = place)
+            }
+        }
+    }
+}
+
+@Composable
+private fun BackLayerTextField(
+    label: String,
+    placeHolder: String,
+    imageVector: ImageVector
+) {
+    var textFieldValue by remember { mutableStateOf("") }
+
+    TextField(
+        modifier = Modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .fillMaxWidth(),
+        value = textFieldValue,
+        label = { Text(label) },
+        placeholder = { Text(placeHolder) },
+        onValueChange = { newValue ->
+            textFieldValue = newValue
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color(0xffD1C4E9),
+        ),
+        textStyle = TextStyle(
+            color = MaterialTheme.colors.primary
+        ),
+        leadingIcon = {
+            Icon(imageVector = imageVector, contentDescription = null)
+        }
+    )
+}

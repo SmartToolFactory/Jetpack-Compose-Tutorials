@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -145,10 +147,11 @@ private fun TutorialContent() {
             TutorialText2(text = "Shape")
 
             Surface(
+                // This sets text color for Text if not set in textFieldColors
+                contentColor = Color.White,
+                color = Color(0xffEC407A),
                 modifier = fullWidthModifier,
-                shape = RoundedCornerShape(25),
-                elevation = 2.dp,
-                border = BorderStroke(1.dp, Color.LightGray)
+                shape = RoundedCornerShape(topStart = 16.dp,bottomEnd = 16.dp)
             ) {
                 TextField(
                     value = textFieldValue.value,
@@ -157,10 +160,37 @@ private fun TutorialContent() {
                     },
                     placeholder = { Text("Search") },
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White
+                        // 🔥 Removes bottom indicator line
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
                     )
                 )
             }
+
+            TextField(
+                modifier = fullWidthModifier.clip(CutCornerShape(8.dp)),
+                value = textFieldValue.value,
+                label = { Text("Label") },
+                placeholder = { Text("No Bottom Line") },
+                onValueChange = { newValue ->
+                    textFieldValue.value = newValue
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color(0xff607D8B),
+                    placeholderColor = Color(0xffFFEA00),
+                    unfocusedLabelColor = Color(0xff795548),
+                    focusedLabelColor = Color(0xff66BB6A),
+                    cursorColor = Color(0xffE1F5FE),
+                    // 🔥 Removes bottom indicator line
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
+                textStyle = TextStyle(
+                    color = Color.White
+                )
+            )
 
             TutorialText2(text = "Outlined")
 
@@ -168,6 +198,15 @@ private fun TutorialContent() {
                 modifier = fullWidthModifier,
                 value = textFieldValue.value,
                 label = { Text("Label") },
+                placeholder = { Text("Placeholder") },
+                onValueChange = { newValue ->
+                    textFieldValue.value = newValue
+                }
+            )
+
+            OutlinedTextField(
+                modifier = fullWidthModifier,
+                value = textFieldValue.value,
                 placeholder = { Text("Placeholder") },
                 onValueChange = { newValue ->
                     textFieldValue.value = newValue
@@ -187,10 +226,10 @@ private fun TutorialContent() {
                     textColor = Color.Blue,
                     backgroundColor = Color.Yellow,
                     placeholderColor = Color(0xffFFF176),
-                    unfocusedLabelColor = Color(0xff43A047),
+                    unfocusedLabelColor = Color(0xff795548),
                     focusedLabelColor = Color(0xff66BB6A),
-                    errorLabelColor = Color(0xffFFEB3B),
-                    unfocusedIndicatorColor = Color(0xffFF5722),
+                    errorLabelColor = Color(0xffFF1744),
+                    unfocusedIndicatorColor = Color(0xffEF9A9A),
                     focusedIndicatorColor = Color(0xff1976D2)
                 )
             )

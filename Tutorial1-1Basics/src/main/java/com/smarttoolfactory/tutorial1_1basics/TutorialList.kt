@@ -292,6 +292,18 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_10_3 = TutorialSectionModel(
+        title = "2-10-3 BackdropScaffold",
+        description = "A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.",
+        action = {
+            Tutorial2_10Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BACKDROP_SCAFFOLD
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -309,6 +321,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_8,
         tutorial2_9,
         tutorial2_10_1,
-        tutorial2_10_2
+        tutorial2_10_2,
+        tutorial2_10_3
     )
 }
