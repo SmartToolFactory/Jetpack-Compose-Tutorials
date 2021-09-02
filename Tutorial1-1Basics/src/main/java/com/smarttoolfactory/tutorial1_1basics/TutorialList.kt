@@ -304,6 +304,25 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_11 = TutorialSectionModel(
+        title = "2-11 Other Components",
+        description = "Samples for Snackbar, ProgressIndicator, Slider, CheckBox, RadioButton, Switch, ListItem.",
+        action = {
+            Tutorial2_11Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SNACK_BAR,
+            TAG_LINEAR_PROGRESS_INDICATOR,
+            TAG_CIRCULAR_PROGRESS_INDICATOR,
+            TAG_SLIDER,
+            TAG_CHECKBOX,
+            TAG_RADIO_BUTTON,
+            TAG_SWITCH,
+            TAG_LIST_ITEM
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -322,6 +341,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_9,
         tutorial2_10_1,
         tutorial2_10_2,
-        tutorial2_10_3
+        tutorial2_10_3,
+        tutorial2_11
     )
 }

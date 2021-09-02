@@ -1,0 +1,506 @@
+package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+
+@ExperimentalMaterialApi
+@Composable
+fun Tutorial2_11Screen() {
+    TutorialContent()
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun TutorialContent() {
+
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.Center
+    ) {
+        SnackBarSamples()
+        ProgressIndicatorSamples()
+        CheckboxSamples()
+        SwitchSamples()
+        RadioButtonSamples()
+        SliderSamples()
+        Spacer(modifier=Modifier.height(24.dp))
+    }
+}
+
+
+@Composable
+private fun SnackBarSamples() {
+    TutorialHeader(text = "SnackBar")
+    TutorialText(
+        text = "1-) Snackbar provide brief messages about app processes at the bottom of the screen."
+    )
+
+    TutorialText2(text = "Basic SnackBar")
+    Snackbar(modifier = Modifier.padding(4.dp)) {
+        Text("Basic Snackbar")
+    }
+
+    TutorialText2(text = "Action SnackBar")
+    Snackbar(modifier = Modifier.padding(4.dp),
+        action = {
+            Text("Action")
+        }) {
+        Text("Action Snackbar")
+    }
+
+    TutorialText2(text = "actionOnNewLine SnackBar")
+    Snackbar(modifier = Modifier.padding(4.dp),
+        actionOnNewLine = true,
+        action = {
+            Text("Action", color = Color(0xffCE93D8))
+        }) {
+        Text("Action on new line Snackbar")
+    }
+
+    TutorialText2(text = "Snackbar Style")
+    Snackbar(modifier = Modifier.padding(4.dp),
+        shape = CutCornerShape(topStart = 8.dp),
+        elevation = 2.dp,
+//            backgroundColor = SnackbarDefaults.backgroundColor,
+        backgroundColor = Color(0xffFFC107),
+//            contentColor = MaterialTheme.colors.surface,
+        contentColor = Color(0xffEC407A),
+        action = {
+            Text("Action")
+        }) {
+        Text("Snackbar with custom shape and colors")
+    }
+
+    Snackbar(modifier = Modifier.padding(4.dp),
+        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+        elevation = 1.dp,
+        backgroundColor = Color(0xff4CAF50),
+        contentColor = Color(0xffFFFF00),
+        action = {
+            Text("Action", color = Color(0xffD32F2F), fontWeight = FontWeight.Bold)
+        }) {
+        Text("Snackbar with custom shape and colors")
+    }
+}
+
+@Composable
+private fun ProgressIndicatorSamples() {
+    TutorialHeader(text = "ProgressIndicator")
+    TutorialText(
+        text = "2-) Progress indicators express an unspecified wait time or display the length of a process."
+    )
+
+    TutorialText2("Indeterminate progress")
+    LinearProgressIndicator()
+    Spacer(modifier = Modifier.height(8.dp))
+
+    val progress: Int by progressFlow.collectAsState(initial = 0)
+    LinearProgressIndicator(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp),
+        progress = progress / 100f,
+        backgroundColor = Color(0xff2196F3)
+    )
+
+    TutorialText2("Determinate progress")
+    Spacer(modifier = Modifier.height(8.dp))
+    CircularProgressIndicator()
+    Spacer(modifier = Modifier.height(8.dp))
+
+    CircularProgressIndicator(
+        progress = progress / 100f,
+        strokeWidth = 4.dp,
+        color = Color(0xffF44336)
+    )
+}
+
+@Composable
+private fun CheckboxSamples() {
+    TutorialHeader(text = "Checkbox")
+    TutorialText(
+        text = "2-) Progress indicators express an unspecified wait time or display the length of a process. Tri state can be used to set child checkboxes."
+    )
+
+    TutorialText2("Checkbox")
+    var checkBoxState by remember { mutableStateOf(false) }
+    Checkbox(
+        modifier = Modifier.padding(8.dp),
+        checked = checkBoxState,
+        onCheckedChange = {
+            checkBoxState = it
+        })
+    Spacer(modifier = Modifier.height(8.dp))
+
+    var checkBoxState2 by remember { mutableStateOf(false) }
+
+    CheckBoxWithText("Checkbox with Text", checkBoxState2) {
+        checkBoxState2 = it
+    }
+
+    var checkBoxState3 by remember { mutableStateOf(false) }
+
+    CheckBoxWithTextRippled("Checkbox with Text and ripple", checkBoxState3) {
+        checkBoxState3 = it
+    }
+
+    TutorialText2("TriStateCheckbox")
+
+    // Parent and children checkboxes with TriStateCheckbox
+    Column(modifier = Modifier.padding(8.dp)) {
+        // define dependent checkboxes states
+        val (state, onStateChange) = remember { mutableStateOf(true) }
+        val (state2, onStateChange2) = remember { mutableStateOf(true) }
+
+        // TriStateCheckbox state reflects state of dependent checkboxes
+        val parentState = remember(state, state2) {
+            if (state && state2) ToggleableState.On
+            else if (!state && !state2) ToggleableState.Off
+            else ToggleableState.Indeterminate
+        }
+        // click on TriStateCheckbox can set state for dependent checkboxes
+        val onParentClick = {
+            val s = parentState != ToggleableState.On
+            onStateChange(s)
+            onStateChange2(s)
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+        Row {
+            // 🔥 Tri state
+            TriStateCheckbox(
+                state = parentState,
+                onClick = onParentClick,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colors.primary
+                )
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Additions")
+        }
+        Spacer(Modifier.height(8.dp))
+        Column(Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)) {
+            CheckBoxWithText(label = "Pickles", state = state, onStateChange = onStateChange)
+            Spacer(Modifier.height(8.dp))
+            CheckBoxWithText(label = "Tomato", state = state2, onStateChange = onStateChange2)
+        }
+    }
+}
+
+@Composable
+private fun SwitchSamples() {
+
+    TutorialHeader(text = "Switch")
+    TutorialText(
+        text = "3-) Switches toggle the state of a single item on or off. Enabled flag set to false on the ones in right half."
+    )
+
+    val switchColors = SwitchDefaults.colors(
+        checkedThumbColor = Color(0xffF44336),
+        checkedTrackColor = Color(0xff76FF03),
+        checkedTrackAlpha = 0.54f,
+        uncheckedThumbColor = Color(0xff9C27B0),
+        uncheckedTrackColor = Color(0xff3F51B5),
+        uncheckedTrackAlpha = 0.38f,
+        disabledCheckedThumbColor = Color(0xff212121),
+        disabledCheckedTrackColor = Color(0xff616161),
+        disabledUncheckedThumbColor = Color(0xff607D8B),
+        disabledUncheckedTrackColor = Color(0xff795548)
+    )
+
+    var isSwitched by remember { mutableStateOf(true) }
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Switch(checked = isSwitched, onCheckedChange = { isSwitched = it })
+        Switch(
+            checked = isSwitched,
+            onCheckedChange = { isSwitched = it },
+            colors = switchColors
+        )
+        Switch(
+            enabled = false,
+            colors = switchColors,
+            checked = false,
+            onCheckedChange = { isSwitched = it },
+        )
+
+        Switch(
+            enabled = false,
+            colors = switchColors,
+            checked = true,
+            onCheckedChange = { isSwitched = it },
+        )
+    }
+}
+
+@Composable
+private fun RadioButtonSamples() {
+
+
+    TutorialHeader(text = "RadioButton")
+    TutorialText(
+        text = "4-) Radio buttons allow users to select one option from a set."
+    )
+
+    var isRadioSelected by remember { mutableStateOf(true) }
+
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+
+        // Enabled RadioButtons
+
+        RadioButton(selected = isRadioSelected, onClick = { isRadioSelected = !isRadioSelected })
+        RadioButton(
+            selected = isRadioSelected,
+            onClick = { isRadioSelected = !isRadioSelected },
+            colors = RadioButtonDefaults.colors(
+                selectedColor = Color(0xffE91E63),
+                unselectedColor = Color(0xffFFEB3B),
+                disabledColor = Color(0xff607D8B)
+            )
+        )
+
+        // Disabled RadioButtons
+
+        RadioButton(
+            enabled = false,
+            selected = false,
+            onClick = {},
+            colors = RadioButtonDefaults.colors(
+                disabledColor = Color(0xff607D8B)
+            )
+        )
+
+        RadioButton(
+            enabled = false,
+            selected = true,
+            onClick = {},
+            colors = RadioButtonDefaults.colors(
+                disabledColor = Color(0xff607D8B)
+            )
+        )
+    }
+
+    TutorialText2("Selectable group")
+
+    Spacer(Modifier.height(8.dp))
+
+    // We have two radio buttons and only one can be selected
+    var state by remember { mutableStateOf(true) }
+    // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
+    Row(
+        Modifier
+            .selectableGroup()
+            .padding(8.dp)
+    ) {
+        RadioButton(
+            selected = state,
+            onClick = { state = true }
+        )
+        Spacer(modifier = Modifier.width(24.dp))
+        RadioButton(
+            selected = !state,
+            onClick = { state = false }
+        )
+    }
+
+
+    TutorialText2("Selectable group with text")
+
+    val radioOptions = listOf("Calls", "Missed", "Friends")
+
+    val (selectedOption: String, onOptionSelected: (String) -> Unit) = remember {
+        mutableStateOf(
+            radioOptions[0]
+        )
+    }
+// Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
+    Column(Modifier.selectableGroup()) {
+        radioOptions.forEach { text ->
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .selectable(
+                        selected = (text == selectedOption),
+                        onClick = { onOptionSelected(text) },
+                        role = Role.RadioButton
+                    )
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = (text == selectedOption),
+                    onClick = null // null recommended for accessibility with screenreaders
+                )
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.body1.merge(),
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+        }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun SliderSamples() {
+
+    TutorialHeader(text = "Slider")
+    TutorialText(
+        text = "5-) Sliders reflect a range of values along a bar, from which users may select a single value. They are ideal for adjusting settings such as volume, brightness, or applying image filters."
+    )
+    TutorialText2("Slider")
+
+    val colors = SliderDefaults.colors(
+        thumbColor = Color(0xffF44336),
+        disabledThumbColor = Color(0xff795548),
+        activeTrackColor = Color(0xff009688),
+        inactiveTrackColor = Color(0xffFFEA00),
+        disabledActiveTrackColor = Color(0xffFF9800),
+        disabledInactiveTrackColor = Color(0xff616161),
+        activeTickColor = Color(0xff673AB7),
+        inactiveTickColor = Color(0xff2196F3),
+        disabledActiveTickColor = Color(0xffE0E0E0),
+        disabledInactiveTickColor = Color(0xff607D8B)
+    )
+
+    var sliderPosition by remember { mutableStateOf(0f) }
+    Spacer(Modifier.height(8.dp))
+    Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
+    Spacer(Modifier.height(8.dp))
+    var sliderPosition2 by remember { mutableStateOf(.3f) }
+    Slider(value = sliderPosition2, onValueChange = { sliderPosition2 = it }, colors = colors)
+    Spacer(Modifier.height(8.dp))
+    var sliderPosition3 by remember { mutableStateOf(.4f) }
+    Slider(
+        value = sliderPosition3,
+        onValueChange = { sliderPosition3 = it },
+        enabled = false,
+        colors = colors
+    )
+    Spacer(Modifier.height(8.dp))
+
+    var sliderPosition4 by remember { mutableStateOf(26f) }
+    Text(text = sliderPosition4.toString())
+    Slider(
+        value = sliderPosition4,
+        onValueChange = { sliderPosition4 = it },
+        valueRange = 0f..100f,
+        onValueChangeFinished = {
+
+        },
+        steps = 10,
+        colors = SliderDefaults.colors(
+            thumbColor = MaterialTheme.colors.secondary,
+            activeTrackColor = MaterialTheme.colors.secondary
+        )
+    )
+
+    TutorialText2("RangeSlider")
+    var sliderPosition5 by remember { mutableStateOf(.1f..(.3f)) }
+
+    RangeSlider(
+        values = sliderPosition5,
+        onValueChange = {
+            sliderPosition5 = it
+        },
+        colors = colors
+    )
+
+}
+
+
+@Composable
+private fun CheckBoxWithText(label: String, state: Boolean, onStateChange: (Boolean) -> Unit) {
+
+    // Checkbox with text on right side
+    val interactionSource = remember { MutableInteractionSource() }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .clickable(
+                interactionSource = interactionSource,
+                // This is for removing ripple when Row is clicked
+                indication = null,
+                role = Role.Checkbox,
+                onClick = {
+                    onStateChange(!state)
+                }
+            )
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+
+    ) {
+        Checkbox(
+            checked = state,
+            onCheckedChange = null
+        )
+        Spacer(modifier = Modifier.padding(start = 8.dp))
+        Text(text = label)
+    }
+}
+
+@Composable
+private fun CheckBoxWithTextRippled(
+    label: String,
+    state: Boolean,
+    onStateChange: (Boolean) -> Unit
+) {
+
+    // Checkbox with text on right side
+    val interactionSource = remember { MutableInteractionSource() }
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .height(40.dp)
+        .clickable(
+            role = Role.Checkbox,
+            onClick = {
+                onStateChange(!state)
+            }
+        )
+        .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = state,
+            onCheckedChange = null
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = label)
+    }
+}
+
+private val progressFlow by lazy {
+    flow {
+        repeat(100) {
+            emit(it + 1)
+            delay(50)
+        }
+    }
+}

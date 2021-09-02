@@ -405,7 +405,9 @@ fun BoxShadowAndAlignmentExample() {
 
 @Composable
 fun WeightExample() {
-    Column {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(Color.LightGray)) {
         Row {
             Text(
                 text = "Row1", modifier = Modifier
@@ -427,26 +429,26 @@ fun WeightExample() {
                     .padding(4.dp)
             )
         }
-    }
 
-    Column(modifier = Modifier.height(200.dp)) {
-        Text(
-            text = "Column1", modifier = Modifier
-                .background(Color(0xFF8BC34A))
-                .padding(4.dp)
-        )
+        Column(modifier = Modifier.height(200.dp)) {
+            Text(
+                text = "Column1", modifier = Modifier
+                    .background(Color(0xFF8BC34A))
+                    .padding(4.dp)
+            )
 
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = "Column2", modifier = Modifier
-                .background(Color(0xFF9CCC65))
-                .padding(4.dp)
-        )
-        Text(
-            text = "Column3", modifier = Modifier
-                .background(Color(0xFFAED581))
-                .padding(4.dp)
-        )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "Column2", modifier = Modifier
+                    .background(Color(0xFF9CCC65))
+                    .padding(4.dp)
+            )
+            Text(
+                text = "Column3", modifier = Modifier
+                    .background(Color(0xFFAED581))
+                    .padding(4.dp)
+            )
+        }
     }
 }
 

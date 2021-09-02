@@ -24,7 +24,7 @@ fun TutorialHeader(text: String, modifier: Modifier = Modifier) {
     Text(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
+            .padding(start = 8.dp, end = 8.dp, top = 12.dp, bottom = 6.dp),
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         text = text

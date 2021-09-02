@@ -49,6 +49,7 @@ const val TAG_LAZY_ROW = "LazyRow"
 // LAZY VERTICAL GRID
 const val TAG_LAZY_VERTICAL_GRID = "LazyVerticalGrid"
 const val TAG_GRID_CELL = "GridCell"
+const val TAG_LIST_ITEM = "ListItem"
 
 // TOP APPBAR
 const val TAG_TOP_APP_BAR = "TopAppBar"
@@ -80,8 +81,17 @@ const val TAG_MODAL_BOTTOM_SHEET = "ModalBottomSheetLayout"
 const val TAG_MODAL_BOTTOM_SHEET_VALUE = "ModalBottomSheetValue"
 
 // ALERT DIALOG
+const val TAG_DIALOG = "Dialog"
+const val TAG_ALERT_DIALOG = "Alert Dialog"
 
-// CHECK BOX, RADIO, PROGRESSBAR, SNACKBAR
+// SNACKBAR, PROGRESSBAR, CHECK BOX, SWITCH RADIO BUTTON, SLIDER,
+const val TAG_SNACK_BAR = "Snackbar"
+const val TAG_LINEAR_PROGRESS_INDICATOR = "LinearProgressIndicator"
+const val TAG_CIRCULAR_PROGRESS_INDICATOR = "CircularProgressIndicator"
+const val TAG_CHECKBOX = "Checkbox"
+const val TAG_SWITCH = "Switch"
+const val TAG_RADIO_BUTTON = "RadioButton"
+const val TAG_SLIDER = "Slider"
 
 // Navigation
 const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"
