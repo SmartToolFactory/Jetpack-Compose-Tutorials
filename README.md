@@ -40,9 +40,7 @@ Navigation.
 |  |  |
 |<h3>2-10 BottomSheet</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
 |  |  |
-|<h3>2-10-3 BackdropScaffold</h3><br/>Material Design backdrop.
-A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.
-This component provides an API to put together several material components to construct your screen. For a similar component which implements the basic material design layout strategy with app bars, floating action buttons and navigation drawers, use the standard Scaffold. For similar component that uses a bottom sheet as the centerpiece of the screen, use BottomSheetScaffold.<br>|<img src ="/./screenshots/tutorial2-10-3.jpeg" width=320> |
+|<h3>2-10-3 BackdropScaffold</h3><br/>Material Design backdrop. This component provides an API to put together several material components to construct your screen. For a similar component which implements the basic material design layout strategy with app bars, floating action buttons and navigation drawers, use the standard Scaffold. For similar component that uses a bottom sheet as the centerpiece of the screen, use BottomSheetScaffold.<br>|<img src ="/./screenshots/tutorial2-10-3.jpeg" width=320> |
 |  |  |
 |<h3>2-11 Other Components</h3><br/>Create different Snackbars, checkbox with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-11.gif" width=320> |
 |  |  |
