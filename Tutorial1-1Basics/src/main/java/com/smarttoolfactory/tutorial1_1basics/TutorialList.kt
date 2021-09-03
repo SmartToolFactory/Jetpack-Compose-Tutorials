@@ -214,6 +214,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
             TAG_LIST_ITEM
         )
     )
@@ -263,16 +264,57 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
-    val tutorial2_9 = TutorialSectionModel(
-        title = "2-9 Side Navigation",
+    val tutorial2_9_1 = TutorialSectionModel(
+        title = "2-9-1 Side Navigation",
         description = "Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState",
         action = {
-            Tutorial2_9Screen()
+            Tutorial2_9Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_SCAFFOLD,
             TAG_NAVIGATION_DRAWER,
+            TAG_DRAWER_STATE
+        )
+    )
+
+    val tutorial2_9_2 = TutorialSectionModel(
+        title = "2-9-2 ModalDrawer",
+        description = "Modal navigation drawers block interaction with the rest of an app’s content with a scrim. They are elevated above most of the app’s UI and don’t affect the screen’s layout grid.",
+        action = {
+            Tutorial2_9Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MODAL_DRAWER,
+            TAG_DRAWER_STATE
+        )
+    )
+
+    val tutorial2_9_3 = TutorialSectionModel(
+        title = "2-9-3 ModalDrawer2",
+        description = "ModalDrawer sample with Scaffold. ModalDrawer is inside content Scaffold.",
+        action = {
+            Tutorial2_9Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SCAFFOLD,
+            TAG_MODAL_DRAWER,
+            TAG_DRAWER_STATE
+        )
+    )
+
+    val tutorial2_9_4 = TutorialSectionModel(
+        title = "2-9-4 ModalDrawer3",
+        description = "Another ModalDrawer sample with Scaffold. Scaffold is inside content of ModalDrawer",
+        action = {
+            Tutorial2_9Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SCAFFOLD,
+            TAG_MODAL_DRAWER,
             TAG_DRAWER_STATE
         )
     )
@@ -351,7 +393,10 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_6,
         tutorial2_7,
         tutorial2_8,
-        tutorial2_9,
+        tutorial2_9_1,
+        tutorial2_9_2,
+        tutorial2_9_3,
+        tutorial2_9_4,
         tutorial2_10_1,
         tutorial2_10_2,
         tutorial2_10_3,

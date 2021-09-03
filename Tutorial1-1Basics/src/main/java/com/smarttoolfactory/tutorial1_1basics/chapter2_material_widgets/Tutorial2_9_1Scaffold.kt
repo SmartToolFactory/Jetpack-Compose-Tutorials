@@ -36,7 +36,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun Tutorial2_9Screen() {
+fun Tutorial2_9Screen1() {
     TutorialContent()
 }
 
@@ -136,6 +136,9 @@ private fun TutorialContent() {
     }
 }
 
+/**
+ * Content of side navigation
+ */
 @Composable
 fun AppDrawer(
     currentRoute: String,
