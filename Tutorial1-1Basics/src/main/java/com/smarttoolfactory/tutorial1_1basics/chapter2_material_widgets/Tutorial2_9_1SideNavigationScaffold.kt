@@ -229,7 +229,7 @@ private fun DrawerHeaderPreview() {
 }
 
 @Composable
-private fun DrawerButton(
+fun DrawerButton(
     icon: ImageVector,
     label: String,
     isSelected: Boolean,

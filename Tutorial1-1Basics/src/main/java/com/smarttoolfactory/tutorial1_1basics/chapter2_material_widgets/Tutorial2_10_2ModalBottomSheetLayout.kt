@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Expand
@@ -133,29 +132,10 @@ private fun MainContent(
 @ExperimentalMaterialApi
 @Composable
 private fun SheetContent() {
-    Column() {
-
-        val list = listOf(
-            "User1",
-            "User2",
-            "User3",
-            "User4",
-            "User5",
-            "User6",
-            "User7",
-            "User8",
-            "User9",
-            "User10",
-            "User11",
-            "User12",
-            "User13",
-            "User14",
-            "User15",
-        )
+    Column {
         LazyColumn {
 
-
-            items(list) { item: String ->
+            items(userList) { item: String ->
                 ListItem(
                     icon = {
                         Image(
@@ -176,3 +156,21 @@ private fun SheetContent() {
         }
     }
 }
+
+val userList = listOf(
+    "User1",
+    "User2",
+    "User3",
+    "User4",
+    "User5",
+    "User6",
+    "User7",
+    "User8",
+    "User9",
+    "User10",
+    "User11",
+    "User12",
+    "User13",
+    "User14",
+    "User15",
+)
