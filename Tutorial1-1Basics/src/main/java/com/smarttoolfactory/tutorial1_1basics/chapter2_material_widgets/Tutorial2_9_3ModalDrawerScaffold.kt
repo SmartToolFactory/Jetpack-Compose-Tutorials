@@ -30,7 +30,7 @@ private fun ModalDrawerComponent() {
 
     Scaffold(
         topBar = {
-            ModalDrawerTopbar(openDrawer)
+            ModalDrawerTopAppBar(openDrawer)
         },
 
         ) {

@@ -13,6 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,7 +59,7 @@ private fun ModalDrawerComponent() {
         },
         content = {
             Column(modifier = Modifier.fillMaxSize()) {
-                ModalDrawerTopbar(openDrawer)
+                ModalDrawerTopAppBar(openDrawer)
                 ModalContent(openDrawer)
             }
         }
@@ -64,7 +67,7 @@ private fun ModalDrawerComponent() {
 }
 
 @Composable
-fun ModalDrawerTopbar(openDrawer: () -> Unit) {
+fun ModalDrawerTopAppBar(openDrawer: () -> Unit) {
     TopAppBar(
         title = {
             Text("ModalDrawer")
@@ -119,19 +122,78 @@ fun ModelDrawerContentBody(
     closeDrawer: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        list.forEachIndexed { index, pair ->
+        modalDrawerList.forEachIndexed { index, pair ->
 
             val label = pair.first
             val imageVector = pair.second
-            DrawerButton(
+            ModalDrawerButton(
                 icon = imageVector,
                 label = label,
                 isSelected = selectedIndex == index,
                 action = {
                     onSelected(index)
-                    closeDrawer()
                 }
             )
+        }
+    }
+}
+
+@Composable
+private fun ModalDrawerButton(
+    icon: ImageVector,
+    label: String,
+    isSelected: Boolean,
+    action: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val colors = MaterialTheme.colors
+    val imageAlpha = if (isSelected) {
+        1f
+    } else {
+        0.8f
+    }
+    val textIconColor = if (isSelected) {
+        colors.primary
+    } else {
+        colors.onSurface.copy(alpha = 0.9f)
+    }
+    val backgroundColor = if (isSelected) {
+        colors.primary.copy(alpha = 0.12f)
+    } else {
+        Color.Transparent
+    }
+
+    val surfaceModifier = modifier
+        .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+        .fillMaxWidth()
+    Surface(
+        modifier = surfaceModifier,
+        color = backgroundColor,
+        shape = MaterialTheme.shapes.small
+    ) {
+        TextButton(
+            onClick = action,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    imageVector = icon,
+                    contentDescription = null, // decorative
+                    colorFilter = ColorFilter.tint(textIconColor),
+                    alpha = imageAlpha
+                )
+                Spacer(Modifier.width(16.dp))
+                Text(
+                    fontWeight = FontWeight.Bold,
+                    text = label,
+                    style = MaterialTheme.typography.body2,
+                    color = textIconColor
+                )
+            }
         }
     }
 }
@@ -165,7 +227,7 @@ fun ModalContent(openDrawer: () -> Unit) {
     }
 }
 
-val list = listOf(
+val modalDrawerList = listOf(
     Pair("My Files", Icons.Filled.Folder),
     Pair("Shared with Me", Icons.Filled.People),
     Pair("Starred", Icons.Filled.Star),
