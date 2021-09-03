@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
@@ -70,14 +68,19 @@ private fun BottomAppBarComponent(onBack: (() -> Unit)? = null) {
         cutoutShape = CircleShape
     ) {
 
-        IconButton(
-            onClick = { onBack?.invoke() }) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = null)
-        }
+        // Leading icons should typically have a high content alpha
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+            IconButton(
+                onClick = { onBack?.invoke() }) {
+                Icon(Icons.Filled.ArrowBack, contentDescription = null)
+            }
 
+        }
+        // The actions should be at the end of the BottomAppBar. They use the default medium
+        // content alpha provided by BottomAppBar
         Spacer(modifier = Modifier.weight(1f))
         IconButton(onClick = { }) {
-            Icon(Icons.Filled.MoreVert, contentDescription = null)
+            Icon(Icons.Filled.Favorite, contentDescription = null)
         }
 
         IconButton(onClick = { }) {

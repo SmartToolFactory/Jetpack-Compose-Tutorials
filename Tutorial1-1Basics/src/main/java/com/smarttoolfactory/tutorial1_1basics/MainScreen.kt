@@ -100,7 +100,7 @@ private fun TutorialListContent(
     ) {
         // List of Tutorials
         LazyColumn(
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             content = {
 

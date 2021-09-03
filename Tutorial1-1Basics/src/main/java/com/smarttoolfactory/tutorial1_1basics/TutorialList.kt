@@ -206,6 +206,18 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_5_6 = TutorialSectionModel(
+        title = "2-5-6 ListItem",
+        description = "Create one-line, two-line, three-line or combine other components to build list items using built-in ListItem component",
+        action = {
+            Tutorial2_5Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LIST_ITEM
+        )
+    )
+
     val tutorial2_6 = TutorialSectionModel(
         title = "2-6 TopAppbar&Tabs",
         description = "The top app bar displays information and actions relating to the current screen.",
@@ -305,8 +317,8 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_11 = TutorialSectionModel(
-        title = "2-11 Other Components",
-        description = "Samples for Snackbar, ProgressIndicator, Slider, CheckBox, RadioButton, Switch, ListItem.",
+        title = "2-11 Snack, Progress, Select",
+        description = "Samples for Snackbar, ProgressIndicator, Slider, CheckBox, TriStateCheckBox, RadioButton with groups, and Switch.",
         action = {
             Tutorial2_11Screen()
         },
@@ -335,6 +347,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_5_3,
         tutorial2_5_4,
         tutorial2_5_5,
+        tutorial2_5_6,
         tutorial2_6,
         tutorial2_7,
         tutorial2_8,

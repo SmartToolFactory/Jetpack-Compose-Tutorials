@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 @ExperimentalAnimationApi
@@ -66,7 +67,7 @@ private fun TutorialContentComponent(
             Text(
                 text = model.title,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.h6
+               fontSize = 18.sp
             )
 
             Spacer(modifier = Modifier.weight(1f))

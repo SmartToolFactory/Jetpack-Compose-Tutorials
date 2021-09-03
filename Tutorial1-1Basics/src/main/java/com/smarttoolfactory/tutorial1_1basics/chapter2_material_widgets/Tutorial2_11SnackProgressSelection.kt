@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
@@ -37,23 +39,21 @@ private fun TutorialContent() {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
-            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center
     ) {
-        SnackBarSamples()
-        ProgressIndicatorSamples()
-        CheckboxSamples()
-        SwitchSamples()
-        RadioButtonSamples()
-        SliderSamples()
-        Spacer(modifier=Modifier.height(24.dp))
+        SnackBarExample()
+        ProgressIndicatorExample()
+        CheckboxExample()
+        SwitchExample()
+        RadioButtonExample()
+        SliderExample()
     }
 }
 
-
 @Composable
-private fun SnackBarSamples() {
+private fun SnackBarExample() {
     TutorialHeader(text = "SnackBar")
     TutorialText(
         text = "1-) Snackbar provide brief messages about app processes at the bottom of the screen."
@@ -65,9 +65,14 @@ private fun SnackBarSamples() {
     }
 
     TutorialText2(text = "Action SnackBar")
+    val context = LocalContext.current
     Snackbar(modifier = Modifier.padding(4.dp),
         action = {
-            Text("Action")
+            Text(
+                text = "Action",
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                })
         }) {
         Text("Action Snackbar")
     }
@@ -76,7 +81,12 @@ private fun SnackBarSamples() {
     Snackbar(modifier = Modifier.padding(4.dp),
         actionOnNewLine = true,
         action = {
-            Text("Action", color = Color(0xffCE93D8))
+            Text(text = "Action",
+                color = Color(0xffCE93D8),
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                }
+            )
         }) {
         Text("Action on new line Snackbar")
     }
@@ -90,7 +100,11 @@ private fun SnackBarSamples() {
 //            contentColor = MaterialTheme.colors.surface,
         contentColor = Color(0xffEC407A),
         action = {
-            Text("Action")
+            Text(
+                text = "Action",
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                })
         }) {
         Text("Snackbar with custom shape and colors")
     }
@@ -101,14 +115,20 @@ private fun SnackBarSamples() {
         backgroundColor = Color(0xff4CAF50),
         contentColor = Color(0xffFFFF00),
         action = {
-            Text("Action", color = Color(0xffD32F2F), fontWeight = FontWeight.Bold)
+            Text(
+                text = "Action",
+                color = Color(0xffD32F2F),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                })
         }) {
         Text("Snackbar with custom shape and colors")
     }
 }
 
 @Composable
-private fun ProgressIndicatorSamples() {
+private fun ProgressIndicatorExample() {
     TutorialHeader(text = "ProgressIndicator")
     TutorialText(
         text = "2-) Progress indicators express an unspecified wait time or display the length of a process."
@@ -140,7 +160,7 @@ private fun ProgressIndicatorSamples() {
 }
 
 @Composable
-private fun CheckboxSamples() {
+private fun CheckboxExample() {
     TutorialHeader(text = "Checkbox")
     TutorialText(
         text = "2-) Progress indicators express an unspecified wait time or display the length of a process. Tri state can be used to set child checkboxes."
@@ -213,7 +233,7 @@ private fun CheckboxSamples() {
 }
 
 @Composable
-private fun SwitchSamples() {
+private fun SwitchExample() {
 
     TutorialHeader(text = "Switch")
     TutorialText(
@@ -258,7 +278,7 @@ private fun SwitchSamples() {
 }
 
 @Composable
-private fun RadioButtonSamples() {
+private fun RadioButtonExample() {
 
 
     TutorialHeader(text = "RadioButton")
@@ -327,7 +347,6 @@ private fun RadioButtonSamples() {
         )
     }
 
-
     TutorialText2("Selectable group with text")
 
     val radioOptions = listOf("Calls", "Missed", "Friends")
@@ -368,7 +387,7 @@ private fun RadioButtonSamples() {
 
 @ExperimentalMaterialApi
 @Composable
-private fun SliderSamples() {
+private fun SliderExample() {
 
     TutorialHeader(text = "Slider")
     TutorialText(
@@ -431,9 +450,7 @@ private fun SliderSamples() {
         },
         colors = colors
     )
-
 }
-
 
 @Composable
 private fun CheckBoxWithText(label: String, state: Boolean, onStateChange: (Boolean) -> Unit) {

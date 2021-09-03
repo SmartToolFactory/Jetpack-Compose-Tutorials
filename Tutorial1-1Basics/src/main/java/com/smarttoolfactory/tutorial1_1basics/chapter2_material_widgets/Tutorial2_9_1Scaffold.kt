@@ -1,14 +1,17 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
@@ -45,6 +49,8 @@ private fun TutorialContent() {
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
     val closeDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.close() } }
+
+    val context = LocalContext.current
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -77,8 +83,42 @@ private fun TutorialContent() {
                         )
                     }
                 },
-                actions = {}
+                actions = {
+                    IconButton(onClick = {
+                        // show snackbar as a suspend function
+                        coroutineScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar("Snackbar")
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Message,
+                            contentDescription = null
+                        )
+                    }
+                }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = it) { snackbarData ->
+                Snackbar(modifier = Modifier.padding(4.dp),
+                    action = {
+                        Text(text = "Action",
+                            modifier = Modifier
+                                .clickable {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "Action invoked",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                                .padding(4.dp)
+                        )
+                    }) {
+                    Text(snackbarData.message)
+                }
+            }
         }
     ) {
         NavHost(
