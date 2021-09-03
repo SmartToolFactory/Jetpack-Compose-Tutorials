@@ -38,9 +38,13 @@ Navigation.
 |  |  |
 |<h3>2-9-1 Side Navigation</h3><br/>A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.<br><br> • Scaffold<br>• Side Navigation<br>• DrawerState<br>|<img src ="/./screenshots/tutorial2-9.jpeg" width=320> |
 |  |  |
-|<h3>2-10 BottomSheet</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
+|<h3>2-9-2 ModalDrawer</h3><br/>Modal navigation drawers block interaction with the rest of an app’s content with a scrim. They are elevated above most of the app’s UI and don’t affect the screen’s layout grid.<br><br> • ModalDrawer<br>• DrawerState<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2-9-2.jpeg" width=320> |
 |  |  |
-|<h3>2-10-4 BackdropScaffold</h3><br/>Material Design backdrop. This component provides an API to put together several material components to construct your screen. For a similar component which implements the basic material design layout strategy with app bars, floating action buttons and navigation drawers, use the standard Scaffold. For similar component that uses a bottom sheet as the centerpiece of the screen, use BottomSheetScaffold.<br>|<img src ="/./screenshots/tutorial2-10-3.jpeg" width=320> |
+|<h3>2-10-1 BottomSheet</h3><br/>Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState, create modal bottom sheets.<br><br> • BottomSheetScaffold<br>• BottomSheetState<br>• ModalBottomSheetLayout<br>|<img src ="/./screenshots/tutorial2-10.jpeg" width=320> |
+|  |  |
+|<h3>2-10-4 BottomDrawer</h3><br/>BottomDrawer with BottomAppBar.<br><br> • BottomDrawer<br>• BottomAppBar<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2-10-4.jpeg" width=320> |
+|  |  |
+|<h3>2-10-5 BackdropScaffold</h3><br/>Material Design backdrop. This component provides an API to put together several material components to construct your screen. For a similar component which implements the basic material design layout strategy with app bars, floating action buttons and navigation drawers, use the standard Scaffold. For similar component that uses a bottom sheet as the centerpiece of the screen, use BottomSheetScaffold.<br>|<img src ="/./screenshots/tutorial2-10-5.jpeg" width=320> |
 |  |  |
 |<h3>2-11 Other Components</h3><br/>Create different Snackbars, checkbox with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-11.gif" width=320> |
 |  |  |
