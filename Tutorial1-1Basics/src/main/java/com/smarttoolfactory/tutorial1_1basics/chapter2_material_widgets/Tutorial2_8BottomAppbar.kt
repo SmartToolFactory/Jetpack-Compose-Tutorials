@@ -1,37 +1,45 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
-import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
+import androidx.compose.ui.unit.sp
 
+@ExperimentalMaterialApi
 @Composable
 fun Tutorial2_8Screen(onBack: (() -> Unit)? = null) {
     TutorialContent(onBack)
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun TutorialContent(onBack: (() -> Unit)? = null) {
     Scaffold(
 
         modifier = Modifier.background(Color(0xffECEFF1)),
-        topBar = {
-            TopAppBarWithTabComponent(onBack)
-        },
+
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {},
@@ -49,12 +57,46 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             BottomAppBarComponent(onBack)
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(20.dp)
-        ) {
+        MainContent(it.calculateBottomPadding())
+    }
+}
 
+@ExperimentalMaterialApi
+@Composable
+private fun MainContent(bottomAppBarHeight: Dp) {
+
+    // 🔥 Get BottomAppBar height to set correct bottom padding for LazyColumn
+    LazyColumn(
+        modifier = Modifier.background(Color(0xffECEFF1)),
+        contentPadding = PaddingValues(
+            top = 8.dp,
+            start = 8.dp,
+            end = 8.dp,
+            bottom = bottomAppBarHeight + 8.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+        items(userList) { item: String ->
+            Card(shape = RoundedCornerShape(8.dp)) {
+                ListItem(
+                    modifier = Modifier.clickable {},
+                    icon = {
+                        Image(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape),
+                            painter = painterResource(id = com.smarttoolfactory.tutorial1_1basics.R.drawable.avatar_1_raster),
+                            contentDescription = null
+                        )
+                    },
+                    secondaryText = {
+                        Text(text = "Secondary text")
+                    }
+                ) {
+                    Text(text = item, fontSize = 18.sp)
+                }
+            }
         }
     }
 }
@@ -80,21 +122,21 @@ private fun BottomAppBarComponent(onBack: (() -> Unit)? = null) {
         // content alpha provided by BottomAppBar
         Spacer(modifier = Modifier.weight(1f))
         IconButton(onClick = { }) {
-            Icon(Icons.Filled.Favorite, contentDescription = null)
+            Icon(Icons.Filled.Search, contentDescription = null)
         }
 
         IconButton(onClick = { }) {
-            Icon(Icons.Filled.Search, contentDescription = null)
+            Icon(Icons.Filled.MoreVert, contentDescription = null)
         }
     }
 }
 
-@Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-private fun BottomAppBarComponentPreview() {
-    ComposeTutorialsTheme {
-        BottomAppBarComponent()
-    }
-}
+//@Preview
+//@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Preview(device = Devices.PIXEL_C)
+//@Composable
+//private fun BottomAppBarComponentPreview() {
+//    ComposeTutorialsTheme {
+//        BottomAppBarComponent()
+//    }
+//}

@@ -2,9 +2,11 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -35,7 +37,8 @@ private fun ModalDrawerComponent() {
 
         ) {
         ModalDrawer(
-
+            drawerElevation = 24.dp,
+            drawerShape = CutCornerShape(topEnd = 24.dp),
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerContentHeader()

@@ -62,6 +62,7 @@ const val TAG_TAB_SCROLLABLE = "Scrollable Tab"
 // BOTTOM NAVIGATION
 const val TAG_BOTTOM_NAVIGATION = "BottomNavigation"
 const val TAG_BOTTOM_NAVIGATION_ITEM = "BottomNavigationItem"
+const val TAG_BOTTOM_DRAWER = "BottomDrawer"
 
 // BOTTOM APPBAR
 const val TAG_BOTTOM_APP_BAR = "BottomAppBar"

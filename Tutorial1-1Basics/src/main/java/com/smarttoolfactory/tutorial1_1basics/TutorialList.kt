@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.model
 
+import Tutorial2_10Screen3
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -347,10 +348,35 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_10_3 = TutorialSectionModel(
-        title = "2-10-3 BackdropScaffold",
-        description = "A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.",
+        title = "2-10-3 BottomDrawer",
+        description = "Bottom navigation drawers are modal drawers that are anchored to the bottom of the screen.",
         action = {
             Tutorial2_10Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BOTTOM_DRAWER
+        )
+    )
+
+    val tutorial2_10_4 = TutorialSectionModel(
+        title = "2-10-4 BottomDrawer2",
+        description = "BottomDrawer with BottomAppBar.",
+        action = {
+            Tutorial2_10Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BOTTOM_DRAWER,
+            TAG_BOTTOM_APP_BAR,
+            TAG_SCAFFOLD
+        )
+    )
+    val tutorial2_10_5 = TutorialSectionModel(
+        title = "2-10-5 BackdropScaffold",
+        description = "A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.",
+        action = {
+            Tutorial2_10Screen5()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -400,6 +426,8 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_10_1,
         tutorial2_10_2,
         tutorial2_10_3,
+        tutorial2_10_4,
+        tutorial2_10_5,
         tutorial2_11
     )
 }

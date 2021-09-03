@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
-fun Tutorial2_10Screen3() {
+fun Tutorial2_10Screen5() {
     TutorialContent()
 }
 
@@ -107,7 +107,6 @@ private fun BackLayerContent() {
         Spacer(Modifier.height(16.dp))
         BackLayerTextField("Place", "Place dummy...", Icons.Default.Place)
         Spacer(Modifier.height(8.dp))
-
     }
 }
 
