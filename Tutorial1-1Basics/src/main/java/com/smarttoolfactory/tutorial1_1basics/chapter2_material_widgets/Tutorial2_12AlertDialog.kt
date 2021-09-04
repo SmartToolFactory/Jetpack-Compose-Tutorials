@@ -89,7 +89,10 @@ private fun TutorialContent() {
 
         item {
 
-            TutorialText2(text = "Dialog")
+            TutorialHeader(text = "Dialog")
+            TutorialText(
+                text = "2-) Unlike AlertDialog Dialog does not have slots for dismissButton, confirmButton, or buttons. Allows customization of everything inside it."
+            )
             OutlinedButton(
                 modifier = Modifier.fillMaxSize(),
                 onClick = {

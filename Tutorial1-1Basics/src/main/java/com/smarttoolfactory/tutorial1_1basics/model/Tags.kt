@@ -85,6 +85,7 @@ const val TAG_MODAL_BOTTOM_SHEET_VALUE = "ModalBottomSheetValue"
 // ALERT DIALOG
 const val TAG_DIALOG = "Dialog"
 const val TAG_ALERT_DIALOG = "Alert Dialog"
+const val TAG_DIALOG_PROPERTIES= "DialogProperties"
 
 // SNACKBAR, PROGRESSBAR, CHECK BOX, SWITCH RADIO BUTTON, SLIDER,
 const val TAG_SNACK_BAR = "Snackbar"

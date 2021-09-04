@@ -48,5 +48,5 @@ Navigation.
 |  |  |
 |<h3>2-11 Snackbar, Progress, Selection</h3><br/>Create Snackbars with various layouts and styling, Checkboxes with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-11.gif" width=320> |
 |  |  |
-|<h3>2-12 Dialog, AlertDialog</h3><br/>Create Dialog, and AlertDialogs with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.<br><br>• AlertDialog<br>• Dialog<br>|<img src ="/./screenshots/tutorial2-12.gif" width=320> |
+|<h3>2-12 Dialog, AlertDialog</h3><br/>Create Dialog, and AlertDialog with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.<br><br>• AlertDialog<br>• Dialog<br>• DialogProperties<br>|<img src ="/./screenshots/tutorial2-12.gif" width=320> |
 |  |  |

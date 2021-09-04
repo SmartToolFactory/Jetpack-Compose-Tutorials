@@ -412,7 +412,8 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_DIALOG,
-            TAG_ALERT_DIALOG
+            TAG_ALERT_DIALOG,
+            TAG_DIALOG_PROPERTIES
         )
     )
 
