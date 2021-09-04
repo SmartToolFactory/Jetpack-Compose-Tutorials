@@ -412,9 +412,11 @@ private fun SliderExample() {
     Spacer(Modifier.height(8.dp))
     Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
     Spacer(Modifier.height(8.dp))
+
     var sliderPosition2 by remember { mutableStateOf(.3f) }
     Slider(value = sliderPosition2, onValueChange = { sliderPosition2 = it }, colors = colors)
     Spacer(Modifier.height(8.dp))
+
     var sliderPosition3 by remember { mutableStateOf(.4f) }
     Slider(
         value = sliderPosition3,

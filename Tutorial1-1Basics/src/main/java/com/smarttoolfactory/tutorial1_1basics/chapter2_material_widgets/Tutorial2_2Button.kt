@@ -278,20 +278,6 @@ private fun GradientButtonExample(modifier: Modifier) {
         ) {
             Text(text = "Vertical Gradient")
         }
-
-    }
-
-    FullWidthRow {
-        Button(contentPadding = PaddingValues(0.dp), onClick = {}) {
-            Text(
-                text = "Vertical Gradient",
-                modifier = modifier
-                    .height(ButtonDefaults.MinHeight)
-                    .align(Alignment.CenterVertically)
-                    .background(brush = verticalGradientBrush)
-                    .padding(8.dp)
-            )
-        }
     }
 }
 

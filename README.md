@@ -46,5 +46,7 @@ Navigation.
 |  |  |
 |<h3>2-10-5 BackdropScaffold</h3><br/>Material Design backdrop. This component provides an API to put together several material components to construct your screen. For a similar component which implements the basic material design layout strategy with app bars, floating action buttons and navigation drawers, use the standard Scaffold. For similar component that uses a bottom sheet as the centerpiece of the screen, use BottomSheetScaffold.<br>|<img src ="/./screenshots/tutorial2-10-5.jpeg" width=320> |
 |  |  |
-|<h3>2-11 Other Components</h3><br/>Create different Snackbars, checkbox with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-11.gif" width=320> |
+|<h3>2-11 Snackbar, Progress, Selection</h3><br/>Create Snackbars with various layouts and styling, Checkboxes with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-11.gif" width=320> |
+|  |  |
+|<h3>2-11 Snackbar, Progress, Selection</h3><br/>Create Dialog, and AlertDialogs with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.<br><br>• AlertDialog<br>• Dialog<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-12.gif" width=320> |
 |  |  |

@@ -403,6 +403,19 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_12= TutorialSectionModel(
+        title = "2-12 Dialog",
+        description = "Create Dialog, and AlertDialogs with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.",
+        action = {
+            Tutorial2_12Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_DIALOG,
+            TAG_ALERT_DIALOG
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -428,6 +441,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_10_3,
         tutorial2_10_4,
         tutorial2_10_5,
-        tutorial2_11
+        tutorial2_11,
+        tutorial2_12
     )
 }
