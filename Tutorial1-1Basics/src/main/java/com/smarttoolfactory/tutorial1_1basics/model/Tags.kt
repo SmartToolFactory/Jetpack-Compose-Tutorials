@@ -96,5 +96,7 @@ const val TAG_SWITCH = "Switch"
 const val TAG_RADIO_BUTTON = "RadioButton"
 const val TAG_SLIDER = "Slider"
 
+const val TAG_SWIPE_TO_DISMISS = "SwipeToDismiss"
+
 // Navigation
 const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"

@@ -417,6 +417,18 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
+    val tutorial2_13= TutorialSectionModel(
+        title = "2-13 SwipeToDismiss",
+        description = "Create a composable that can be dismissed by swiping left or right.",
+        action = {
+            Tutorial2_13Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SWIPE_TO_DISMISS
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -443,6 +455,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_10_4,
         tutorial2_10_5,
         tutorial2_11,
-        tutorial2_12
+        tutorial2_12,
+        tutorial2_13
     )
 }
