@@ -64,7 +64,6 @@ private fun TutorialContent() {
                 )
             }
 
-
             item {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -76,16 +75,14 @@ private fun TutorialContent() {
                 )
             }
 
-
             item {
                 Text(
                     color = Color(0xff4CAF50),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    text = "Places to Stay"
+                    text = "Places to Visit"
                 )
             }
-
 
             item {
                 LazyRow(

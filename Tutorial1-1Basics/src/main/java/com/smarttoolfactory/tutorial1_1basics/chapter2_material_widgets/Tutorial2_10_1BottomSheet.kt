@@ -187,7 +187,7 @@ private fun SheetContent() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Places to Stay",
+            text = "Places to Visit",
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             color = Color(0xffFDD835),

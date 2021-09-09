@@ -36,6 +36,8 @@ fun Tutorial2_12Screen() {
 @Composable
 private fun TutorialContent() {
 
+    // To show dialog we set one of the flags to true and set it back to false
+    // in onDismissRequest function of dialog.
     var showAlertDialog by remember { mutableStateOf(false) }
     var showAlertDialogWithStyle by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -262,7 +264,7 @@ private fun DialogExample(onDismiss: () -> Unit) {
             Column(
                 modifier = Modifier
                     .width(400.dp)
-                    .height(300.dp)
+                    .wrapContentHeight()
                     .background(Color.White)
                     .padding(8.dp)
             ) {
@@ -275,10 +277,10 @@ private fun DialogExample(onDismiss: () -> Unit) {
                 )
 
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(dialogText)
+                    Text(dialogText, modifier = Modifier.padding(8.dp))
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(8.dp))
                 DialogButtons(onDismiss)
             }
         }
