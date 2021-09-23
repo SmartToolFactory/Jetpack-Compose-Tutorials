@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Divider
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
@@ -20,13 +21,11 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -130,7 +129,13 @@ private fun TutorialContent() {
             // Draw Spannable example
             SpannableTextExample()
 
+            // Draw Subscript and SuperScript text
+            SubscriptSuperscriptTextExample()
+
+            SelectableTextExample()
             Spacer(modifier = Modifier.padding(bottom = 32.dp))
+
+
         }
     }
 }
@@ -391,6 +396,81 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
                 }
         }
     )
+}
+
+@Composable
+private fun SubscriptSuperscriptTextExample() {
+
+    TutorialText2(text = "Subscript and Superscript")
+    // create a variable superScript
+    // enter the baselineShift to
+    // BaselineShift.Superscript for superscript
+    val superscript = SpanStyle(
+        baselineShift = BaselineShift.Superscript,
+        fontSize = 14.sp, // font size of superscript
+        color = Color.Red // color
+    )
+
+    // create a variable subScript
+    // enter the baselineShift to
+    // BaselineShift.Subscript for subscript
+    val subscript = SpanStyle(
+        baselineShift = BaselineShift.Subscript,
+        fontSize = 14.sp, // font size of subscript
+        color = Color.Blue // color
+    )
+
+    // create first text
+    Text(
+        modifier = Modifier.padding(16.dp),
+        fontSize = 20.sp,
+        text = buildAnnotatedString {
+            // instead of directly passing
+            // string value to text
+            // use append
+            append("E = mc")
+            withStyle(superscript) {
+                append("2")
+            }
+        }
+    )
+
+    // Create second text
+    Text(
+        modifier = Modifier.padding(16.dp),
+        fontSize = 20.sp,
+        text = buildAnnotatedString {
+            // instead of directly passing
+            // string value to text
+            // use append
+            append("CH")
+            withStyle(subscript) {
+                append("4")
+            }
+            append(" + H")
+            withStyle(subscript) {
+                append("2")
+            }
+            append("O = CO + 3H")
+            withStyle(subscript) {
+                append("2")
+            }
+        }
+    )
+}
+
+@Composable
+private fun SelectableTextExample() {
+    TutorialText2(text = "Selectable Text")
+    SelectionContainer {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " +
+                    "when an unknown printer took a galley of type and scrambled " +
+                    "it to make a type specimen book."
+        )
+    }
 }
 
 

@@ -6,6 +6,7 @@ data class TutorialSectionModel(
     val title: String,
     val action: @Composable (() -> Unit)? = null,
     val description: String,
-    val tags: List<String> = listOf()
+    val tags: List<String> = listOf(),
+    var expanded: Boolean = false
 )
 

@@ -1,6 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.content.ContentProvider
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -135,10 +137,21 @@ private fun ProgressIndicatorExample() {
     )
 
     TutorialText2("Indeterminate progress")
+    CircularProgressIndicator()
+    Spacer(modifier = Modifier.height(8.dp))
     LinearProgressIndicator()
     Spacer(modifier = Modifier.height(8.dp))
 
+
+
+    TutorialText2("Determinate progress")
     val progress: Int by progressFlow.collectAsState(initial = 0)
+    CircularProgressIndicator(
+        progress = progress / 100f,
+        strokeWidth = 4.dp,
+        color = Color(0xffF44336)
+    )
+    Spacer(modifier = Modifier.height(8.dp))
     LinearProgressIndicator(
         modifier = Modifier
             .fillMaxWidth()
@@ -147,16 +160,24 @@ private fun ProgressIndicatorExample() {
         backgroundColor = Color(0xff2196F3)
     )
 
-    TutorialText2("Determinate progress")
-    Spacer(modifier = Modifier.height(8.dp))
-    CircularProgressIndicator()
-    Spacer(modifier = Modifier.height(8.dp))
+    TutorialText2("Animated Progress")
+    var progressAnimated by remember { mutableStateOf(0.1f) }
 
-    CircularProgressIndicator(
-        progress = progress / 100f,
-        strokeWidth = 4.dp,
-        color = Color(0xffF44336)
+    val animatedProgress by animateFloatAsState(
+        targetValue = progressAnimated,
+        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
     )
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        OutlinedButton(
+            onClick = {
+                if (progressAnimated < 1f) progressAnimated += 0.1f
+            }
+        ) {
+            Text("Increase")
+        }
+        Spacer(Modifier.requiredWidth(30.dp))
+        LinearProgressIndicator(progress = animatedProgress)
+    }
 }
 
 @Composable

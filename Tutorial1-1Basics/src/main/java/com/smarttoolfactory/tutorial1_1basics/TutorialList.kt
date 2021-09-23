@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.model
+package com.smarttoolfactory.tutorial1_1basics
 
 import Tutorial2_10Screen3
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -9,6 +9,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
+import com.smarttoolfactory.tutorial1_1basics.model.*
 
 /**
  * Create list of tutorials with titles, action that navigates to composable function
@@ -22,6 +23,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 @ExperimentalComposeUiApi
 @Composable
 fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
+    println("🔥 Creating tutorial list...")
 
     val tutorial1_1 = TutorialSectionModel(
         title = "1-1 Column, Row, Box, Modifiers",

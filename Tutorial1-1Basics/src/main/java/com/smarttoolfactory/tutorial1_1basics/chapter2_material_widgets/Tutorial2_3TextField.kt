@@ -16,9 +16,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +47,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 @ExperimentalComposeUiApi
 @Composable
 fun Tutorial2_3Screen() {
+    println("🚀 Tutorial2_3Screen")
     TutorialContent()
 }
 
@@ -151,7 +151,7 @@ private fun TutorialContent() {
                 contentColor = Color.White,
                 color = Color(0xffEC407A),
                 modifier = fullWidthModifier,
-                shape = RoundedCornerShape(topStart = 16.dp,bottomEnd = 16.dp)
+                shape = RoundedCornerShape(topStart = 16.dp, bottomEnd = 16.dp)
             ) {
                 TextField(
                     value = textFieldValue.value,
@@ -310,13 +310,47 @@ private fun TutorialContent() {
                 }
             )
 
+            var searchQuery by remember { mutableStateOf("") }
+
+            Surface(
+                modifier = fullWidthModifier,
+                shape = RoundedCornerShape(percent = 40),
+                border = BorderStroke(1.dp, Color(0xff90A4AE)),
+            ) {
+                TextField(
+                    value = searchQuery,
+                    placeholder = { Text("Search") },
+                    leadingIcon = {
+                        if (searchQuery.isEmpty()) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    onValueChange = { newValue ->
+                        searchQuery = newValue
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color(0xffF5F5F5),
+                        // 🔥 Removes bottom indicator line
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                    ),
+                    singleLine = true,
+                )
+            }
+
+            val emailText2 = remember { mutableStateOf(TextFieldValue("")) }
+
             OutlinedTextField(
                 modifier = fullWidthModifier,
-                value = emailText.value,
+                value = emailText2.value,
                 label = { Text("Email") },
                 placeholder = { Text(text = "") },
                 onValueChange = { newValue ->
-                    emailText.value = newValue
+                    emailText2.value = newValue
                 },
                 leadingIcon = {
                     Icon(

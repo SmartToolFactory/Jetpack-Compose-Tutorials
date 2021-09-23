@@ -26,6 +26,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
 
 @Composable
 fun Tutorial1_2Screen() {
+    println("🚀 Tutorial1_2Screen")
     TutorialContent()
 }
 
