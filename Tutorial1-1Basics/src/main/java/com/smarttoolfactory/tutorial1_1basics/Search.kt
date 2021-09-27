@@ -8,23 +8,46 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 
+/**
+ * This is a stateless TextField for searching with a Hint when query is empty,
+ * and clear and loading [IconButtons]s to clear query or show progress indicator when
+ * a query is in progress.
+ */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar(
+fun SearchTextField(
     query: TextFieldValue,
     onQueryChange: (TextFieldValue) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
     searching: Boolean,
+    removeFocus:Boolean,
     modifier: Modifier = Modifier
 ) {
+
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
+    if (removeFocus) {
+        onClearQuery()
+        focusManager.clearFocus()
+        val keyboardController = LocalSoftwareKeyboardController.current
+        keyboardController?.hide()
+    }
+
 
     Surface(
         modifier = modifier
@@ -32,7 +55,7 @@ fun SearchBar(
                 Modifier
                     .height(56.dp)
                     .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp, start=8.dp, end = 16.dp)
+                    .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 16.dp)
             ),
         color = Color(0xffF5F5F5),
         shape = RoundedCornerShape(percent = 50),
@@ -58,6 +81,7 @@ fun SearchBar(
                             .onFocusChanged {
                                 onSearchFocusChange(it.isFocused)
                             }
+                            .focusRequester(focusRequester)
                             .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
                         singleLine = true
                     )
@@ -132,7 +156,8 @@ class SearchState(
     var suggestions by mutableStateOf(suggestions)
     var searchResults by mutableStateOf(searchResults)
 
-    val searchDisplay: SearchDisplay
+    var searchDisplay: SearchDisplay  = SearchDisplay.InitialResults
+
         get() = when {
             !focused && query.text.isEmpty() -> SearchDisplay.InitialResults
             focused && query.text.isEmpty() -> SearchDisplay.Suggestions
@@ -141,12 +166,11 @@ class SearchState(
         }
 
     override fun toString(): String {
-        return """
-            🚀 State query: $query, focused: $focused, searching: $searching, 
-            suggestions: ${suggestions.size}, 
-            searchResults: ${searchResults.size}, 
-            searchDisplay: $searchDisplay
-        """.trimIndent()
+        return "🚀 State query: $query, focused: $focused, searching: $searching "+
+            "suggestions: ${suggestions.size}, "+
+            "searchResults: ${searchResults.size}, " +
+           " searchDisplay: $searchDisplay"
+
     }
 }
 

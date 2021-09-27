@@ -18,7 +18,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.*
-import com.smarttoolfactory.tutorial1_1basics.SearchBar
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.delay
@@ -46,18 +45,29 @@ fun HomeScreen(
     ) {
         Row(modifier = modifier.fillMaxWidth()) {
 
-          AnimatedVisibility(visible = state.focused) {
-              IconButton(onClick = { /*TODO*/ }) {
-                  Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-              }
-          }
+            var clearFocus by remember {
+                mutableStateOf(false)
+            }
 
-            SearchBar(
+            AnimatedVisibility(visible = state.focused) {
+                IconButton(onClick = {
+                    clearFocus = true
+                    println("‼️ CLEARED: state: $state")
+                }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                }
+            }
+
+            SearchTextField(
                 query = state.query,
                 onQueryChange = { state.query = it },
-                onSearchFocusChange = { state.focused = it },
+                onSearchFocusChange = {
+                    clearFocus = !it
+                    state.focused = it
+                },
                 onClearQuery = { state.query = TextFieldValue("") },
                 searching = state.searching,
+                removeFocus = clearFocus,
                 modifier = modifier.weight(1f)
             )
         }
@@ -70,8 +80,8 @@ fun HomeScreen(
             state.searching = false
         }
 
-        when(state.searchDisplay) {
-            SearchDisplay.InitialResults-> {
+        when (state.searchDisplay) {
+            SearchDisplay.InitialResults -> {
                 HomeContent(tabList, modifier, viewModel.componentTutorialList, navigateToTutorial)
             }
             SearchDisplay.NoResults -> {
@@ -83,12 +93,9 @@ fun HomeScreen(
             }
 
             SearchDisplay.Results -> {
-                HomeContent(tabList, modifier, state.searchResults, navigateToTutorial)
-
+                TutorialListContent(modifier, state.searchResults, navigateToTutorial)
             }
         }
-
-
     }
 }
 

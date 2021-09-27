@@ -14,12 +14,12 @@ class HomeViewModel : ViewModel() {
 
         componentTutorialList.forEach { tutorialSectionModel ->
 
-            if (tutorialSectionModel.description.contains(query)) {
+            if (tutorialSectionModel.description.contains(query, ignoreCase = true)) {
                 filteredList.add(tutorialSectionModel)
             }
 
             tutorialSectionModel.tags.forEach {
-                if (it.contains(query)) {
+                if (it.contains(query, ignoreCase = true)) {
                     filteredList.add(tutorialSectionModel)
                 }
             }
