@@ -3,13 +3,12 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -58,6 +57,7 @@ private fun TutorialContent() {
     LazyColumn(Modifier.fillMaxSize()) {
 
         item {
+
 
 
             val fullWidthModifier =
@@ -458,6 +458,25 @@ private fun TutorialContent() {
                 visualTransformation = PhoneVisualTransformation()
             )
 
+            TutorialText(
+                text = "6-) Basic composable that enables users to edit text via hardware " +
+                        "or software keyboard, but provides no decorations like hint or placeholder."
+            )
+
+            Surface(
+                modifier = fullWidthModifier.padding(8.dp),
+                shape = MaterialTheme.shapes.small,
+                color = Color(0xff90A4AE)
+            ) {
+                var basicText by remember{mutableStateOf("BasicTextField")}
+                BasicTextField(
+                    modifier = Modifier.padding(8.dp),
+                    value = basicText,
+                    onValueChange = {newValue->
+                    basicText =newValue
+                })
+
+            }
             Spacer(modifier = Modifier.padding(bottom = 32.dp))
         }
     }
