@@ -43,38 +43,20 @@ fun HomeScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        Row(modifier = modifier.fillMaxWidth()) {
 
-            var clearFocus by remember {
-                mutableStateOf(false)
-            }
-
-            AnimatedVisibility(visible = state.focused) {
-                IconButton(onClick = {
-                    clearFocus = true
-                    println("‼️ CLEARED: state: $state")
-                }) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-                }
-            }
-
-            SearchTextField(
-                query = state.query,
-                onQueryChange = { state.query = it },
-                onSearchFocusChange = {
-                    clearFocus = !it
-                    state.focused = it
-                },
-                onClearQuery = { state.query = TextFieldValue("") },
-                searching = state.searching,
-                removeFocus = clearFocus,
-                modifier = modifier.weight(1f)
-            )
-        }
+        SearchBar(
+            query = state.query,
+            onQueryChange = { state.query = it },
+            onSearchFocusChange = { state.focused = it },
+            onClearQuery = { state.query = TextFieldValue("") },
+            searching = state.searching,
+            focused = state.focused,
+            modifier = modifier
+        )
 
         LaunchedEffect(state.query.text) {
             state.searching = true
-//            println("⚠️ HomeScreen() LaunchedEffect query: ${state.query.text}, searching: ${state.searching}")
+            println("⚠️ HomeScreen() LaunchedEffect query: ${state.query.text}, searching: ${state.searching}")
             delay(100)
             state.searchResults = viewModel.getTutorials(state.query.text)
             state.searching = false

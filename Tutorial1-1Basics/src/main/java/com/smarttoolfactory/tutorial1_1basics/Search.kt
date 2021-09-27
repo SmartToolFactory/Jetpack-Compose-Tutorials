@@ -1,10 +1,13 @@
 package com.smarttoolfactory.tutorial1_1basics
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,13 +23,55 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
+@ExperimentalAnimationApi
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun SearchBar(
+    query: TextFieldValue,
+    onQueryChange: (TextFieldValue) -> Unit,
+    onSearchFocusChange: (Boolean) -> Unit,
+    onClearQuery: () -> Unit,
+    searching: Boolean,
+    focused: Boolean,
+    modifier: Modifier = Modifier
+) {
+
+    println("🍭 SearchBar() query: $query, searching: $searching, focused: $focused")
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        AnimatedVisibility(visible = focused) {
+            IconButton(onClick = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+                onClearQuery()
+            }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            }
+        }
+
+        SearchTextField(
+            query,
+            onQueryChange,
+            onSearchFocusChange,
+            onClearQuery,
+            searching,
+            modifier.weight(1f)
+        )
+    }
+}
 
 /**
  * This is a stateless TextField for searching with a Hint when query is empty,
  * and clear and loading [IconButtons]s to clear query or show progress indicator when
  * a query is in progress.
  */
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchTextField(
     query: TextFieldValue,
@@ -34,20 +79,10 @@ fun SearchTextField(
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
     searching: Boolean,
-    removeFocus:Boolean,
     modifier: Modifier = Modifier
 ) {
 
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-
-    if (removeFocus) {
-        onClearQuery()
-        focusManager.clearFocus()
-        val keyboardController = LocalSoftwareKeyboardController.current
-        keyboardController?.hide()
-    }
-
 
     Surface(
         modifier = modifier
@@ -79,6 +114,7 @@ fun SearchTextField(
                             .fillMaxHeight()
                             .weight(1f)
                             .onFocusChanged {
+                                println("🍒 SEARCH FOCUS: $it")
                                 onSearchFocusChange(it.isFocused)
                             }
                             .focusRequester(focusRequester)
@@ -156,8 +192,7 @@ class SearchState(
     var suggestions by mutableStateOf(suggestions)
     var searchResults by mutableStateOf(searchResults)
 
-    var searchDisplay: SearchDisplay  = SearchDisplay.InitialResults
-
+    val searchDisplay: SearchDisplay
         get() = when {
             !focused && query.text.isEmpty() -> SearchDisplay.InitialResults
             focused && query.text.isEmpty() -> SearchDisplay.Suggestions
@@ -166,10 +201,10 @@ class SearchState(
         }
 
     override fun toString(): String {
-        return "🚀 State query: $query, focused: $focused, searching: $searching "+
-            "suggestions: ${suggestions.size}, "+
-            "searchResults: ${searchResults.size}, " +
-           " searchDisplay: $searchDisplay"
+        return "🚀 State query: $query, focused: $focused, searching: $searching " +
+                "suggestions: ${suggestions.size}, " +
+                "searchResults: ${searchResults.size}, " +
+                " searchDisplay: $searchDisplay"
 
     }
 }
