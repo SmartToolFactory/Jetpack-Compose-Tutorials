@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
@@ -152,36 +152,75 @@ fun TutorialListContent(
     navigateToTutorial: (String) -> Unit
 ) {
 
-    val scrollState = rememberLazyListState()
-
     Surface(
         modifier = modifier.fillMaxSize(),
         color = Color(0xffEEEEEE)
     ) {
-        // List of Tutorials
-        LazyColumn(
-            state = scrollState,
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            content = {
 
-                items(tutorialList) { item: TutorialSectionModel ->
+        Box {
 
-                    var isExpanded by remember(key1 = item.title) { mutableStateOf(item.expanded) }
+            val scrollState = rememberLazyListState()
 
-                    TutorialSectionCard(
-                        model = item,
-                        onClick = {
-                            navigateToTutorial(item.title)
-                        },
-                        onExpandClicked = {
-                            item.expanded = !item.expanded
-                            isExpanded = item.expanded
-                        },
-                        expanded = isExpanded
+            // List of Tutorials
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                content = {
+
+                    items(tutorialList) { item: TutorialSectionModel ->
+
+                        var isExpanded by remember(key1 = item.title) { mutableStateOf(item.expanded) }
+
+                        TutorialSectionCard(
+                            model = item,
+                            onClick = {
+                                navigateToTutorial(item.title)
+                            },
+                            onExpandClicked = {
+                                item.expanded = !item.expanded
+                                isExpanded = item.expanded
+                            },
+                            expanded = isExpanded
+                        )
+                    }
+                }
+            )
+
+
+            val showButton by remember {
+                derivedStateOf {
+                    scrollState.firstVisibleItemIndex > 0
+                }
+            }
+            if (showButton) {
+                val coroutineScope = rememberCoroutineScope()
+                FloatingActionButton(
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    ),
+                    backgroundColor = Color(0xffFF9800),
+//                    backgroundColor = MaterialTheme.colors.surface,
+//                    contentColor = MaterialTheme.colors.onSurface,
+                    modifier = Modifier
+                        .size(56.dp)
+                        .align(Alignment.BottomEnd)
+                        .navigationBarsPadding()
+                        .padding(bottom = 10.dp, end = 10.dp),
+                    onClick = {
+                        coroutineScope.launch {
+                            scrollState.scrollToItem(0)
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowUpward,
+                        contentDescription = null,
+                        tint = Color.White
                     )
                 }
             }
-        )
+        }
     }
 }

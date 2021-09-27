@@ -89,8 +89,7 @@ fun SearchTextField(
             .then(
                 Modifier
                     .height(56.dp)
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 16.dp)
+                    .padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
             ),
         color = Color(0xffF5F5F5),
         shape = RoundedCornerShape(percent = 50),
