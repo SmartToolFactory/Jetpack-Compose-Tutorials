@@ -21,6 +21,7 @@ import com.google.accompanist.pager.*
 import com.smarttoolfactory.tutorial1_1basics.SearchBar
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 internal val tabList = listOf("Components", "Layout", "State", "Gestures", "Theming")
@@ -33,10 +34,12 @@ internal val tabList = listOf("Components", "Layout", "State", "Gestures", "Them
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    tutorialList: List<TutorialSectionModel>,
+    viewModel: HomeViewModel,
     navigateToTutorial: (String) -> Unit,
     state: SearchState = rememberSearchState()
 ) {
+
+    println("🤔 HomeScreen() state:\n$state")
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -59,56 +62,35 @@ fun HomeScreen(
             )
         }
 
-        HomeContent(tabList, modifier, tutorialList, navigateToTutorial)
-    }
-}
+        LaunchedEffect(state.query.text) {
+            state.searching = true
+//            println("⚠️ HomeScreen() LaunchedEffect query: ${state.query.text}, searching: ${state.searching}")
+            delay(100)
+            state.searchResults = viewModel.getTutorials(state.query.text)
+            state.searching = false
+        }
 
-/*
-
-
-@Composable
-fun Search(
-    onSnackClick: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-    state: SearchState = rememberSearchState()
-) {
-    JetsnackSurface(modifier = modifier.fillMaxSize()) {
-        Column {
-            Spacer(modifier = Modifier.statusBarsPadding())
-            SearchBar(
-                query = state.query,
-                onQueryChange = { state.query = it },
-                searchFocused = state.focused,
-                onSearchFocusChange = { state.focused = it },
-                onClearQuery = { state.query = TextFieldValue("") },
-                searching = state.searching
-            )
-            JetsnackDivider()
-
-            LaunchedEffect(state.query.text) {
-                state.searching = true
-                state.searchResults = SearchRepo.search(state.query.text)
-                state.searching = false
+        when(state.searchDisplay) {
+            SearchDisplay.InitialResults-> {
+                HomeContent(tabList, modifier, viewModel.componentTutorialList, navigateToTutorial)
             }
-            when (state.searchDisplay) {
-                SearchDisplay.Categories -> SearchCategories(state.categories)
-                SearchDisplay.Suggestions -> SearchSuggestions(
-                    suggestions = state.suggestions,
-                    onSuggestionSelect = { suggestion -> state.query = TextFieldValue(suggestion) }
-                )
-                SearchDisplay.Results -> SearchResults(
-                    state.searchResults,
-                    state.filters,
-                    onSnackClick
-                )
-                SearchDisplay.NoResults -> NoResults(state.query.text)
+            SearchDisplay.NoResults -> {
+                Text("No Results")
+            }
+
+            SearchDisplay.Suggestions -> {
+                Text("Suggestions")
+            }
+
+            SearchDisplay.Results -> {
+                HomeContent(tabList, modifier, state.searchResults, navigateToTutorial)
+
             }
         }
+
+
     }
 }
-
-
- */
 
 @ExperimentalPagerApi
 @OptIn(ExperimentalAnimationApi::class)

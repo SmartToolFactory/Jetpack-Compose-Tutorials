@@ -6,6 +6,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,9 +24,15 @@ fun TutorialNavGraph(
     startDestination: String = Destinations.BASICS_START,
 ) {
 
+    val mainViewModel: HomeViewModel = viewModel()
+
     val tutorialList: List<TutorialSectionModel> = createTutorialList {
         navController.navigateUp()
     }
+
+    mainViewModel.componentTutorialList = tutorialList
+
+    println("🍏 TutorialNavGraph(): mainViewModel: mainViewModel, list: ${mainViewModel.componentTutorialList.hashCode()}")
 
     // Create Navigation for each Composable Page
     NavHost(
@@ -37,7 +44,7 @@ fun TutorialNavGraph(
         // BASIC TUTORIALS
         composable(route = Destinations.BASICS_START) { navBackEntryStack ->
             HomeScreen(
-                tutorialList = tutorialList,
+                viewModel = mainViewModel,
                 navigateToTutorial = { tutorialTitle ->
                     navController.navigate(tutorialTitle)
                 }

@@ -75,20 +75,13 @@ fun SearchBar(
                                 Icon(imageVector = Icons.Filled.Cancel, contentDescription = null)
                             }
                         }
-                        else -> {
-//                            Spacer(Modifier.width(IconSize))
-                        }
                     }
-
                 }
             }
         }
 
     }
 }
-
-
-private val IconSize = 48.dp
 
 @Composable
 private fun SearchHint(modifier: Modifier = Modifier) {
@@ -125,7 +118,6 @@ fun rememberSearchState(
     }
 }
 
-
 @Stable
 class SearchState(
     query: TextFieldValue,
@@ -147,6 +139,15 @@ class SearchState(
             searchResults.isEmpty() -> SearchDisplay.NoResults
             else -> SearchDisplay.Results
         }
+
+    override fun toString(): String {
+        return """
+            🚀 State query: $query, focused: $focused, searching: $searching, 
+            suggestions: ${suggestions.size}, 
+            searchResults: ${searchResults.size}, 
+            searchDisplay: $searchDisplay
+        """.trimIndent()
+    }
 }
 
 /**
