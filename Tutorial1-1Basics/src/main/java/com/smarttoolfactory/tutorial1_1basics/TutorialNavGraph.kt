@@ -36,9 +36,12 @@ fun TutorialNavGraph(
 
         // BASIC TUTORIALS
         composable(route = Destinations.BASICS_START) { navBackEntryStack ->
-            HomeScreen(tutorialList = tutorialList) { tutorialTitle ->
-                navController.navigate(tutorialTitle)
-            }
+            HomeScreen(
+                tutorialList = tutorialList,
+                navigateToTutorial = { tutorialTitle ->
+                    navController.navigate(tutorialTitle)
+                }
+            )
         }
 
         // Set navigation route as title of tutorial card

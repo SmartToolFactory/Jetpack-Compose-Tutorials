@@ -1,20 +1,24 @@
 package com.smarttoolfactory.tutorial1_1basics
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.*
+import com.smarttoolfactory.tutorial1_1basics.SearchBar
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.launch
@@ -30,15 +34,81 @@ internal val tabList = listOf("Components", "Layout", "State", "Gestures", "Them
 fun HomeScreen(
     modifier: Modifier = Modifier,
     tutorialList: List<TutorialSectionModel>,
-    navigateToTutorial: (String) -> Unit
+    navigateToTutorial: (String) -> Unit,
+    state: SearchState = rememberSearchState()
 ) {
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        SearchBar(modifier = modifier)
+        Row(modifier = modifier.fillMaxWidth()) {
+
+          AnimatedVisibility(visible = state.focused) {
+              IconButton(onClick = { /*TODO*/ }) {
+                  Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+              }
+          }
+
+            SearchBar(
+                query = state.query,
+                onQueryChange = { state.query = it },
+                onSearchFocusChange = { state.focused = it },
+                onClearQuery = { state.query = TextFieldValue("") },
+                searching = state.searching,
+                modifier = modifier.weight(1f)
+            )
+        }
+
         HomeContent(tabList, modifier, tutorialList, navigateToTutorial)
     }
 }
+
+/*
+
+
+@Composable
+fun Search(
+    onSnackClick: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+    state: SearchState = rememberSearchState()
+) {
+    JetsnackSurface(modifier = modifier.fillMaxSize()) {
+        Column {
+            Spacer(modifier = Modifier.statusBarsPadding())
+            SearchBar(
+                query = state.query,
+                onQueryChange = { state.query = it },
+                searchFocused = state.focused,
+                onSearchFocusChange = { state.focused = it },
+                onClearQuery = { state.query = TextFieldValue("") },
+                searching = state.searching
+            )
+            JetsnackDivider()
+
+            LaunchedEffect(state.query.text) {
+                state.searching = true
+                state.searchResults = SearchRepo.search(state.query.text)
+                state.searching = false
+            }
+            when (state.searchDisplay) {
+                SearchDisplay.Categories -> SearchCategories(state.categories)
+                SearchDisplay.Suggestions -> SearchSuggestions(
+                    suggestions = state.suggestions,
+                    onSuggestionSelect = { suggestion -> state.query = TextFieldValue(suggestion) }
+                )
+                SearchDisplay.Results -> SearchResults(
+                    state.searchResults,
+                    state.filters,
+                    onSnackClick
+                )
+                SearchDisplay.NoResults -> NoResults(state.query.text)
+            }
+        }
+    }
+}
+
+
+ */
 
 @ExperimentalPagerApi
 @OptIn(ExperimentalAnimationApi::class)
