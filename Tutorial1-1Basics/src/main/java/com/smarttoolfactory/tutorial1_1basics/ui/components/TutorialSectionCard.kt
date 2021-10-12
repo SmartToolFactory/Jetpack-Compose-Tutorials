@@ -67,7 +67,7 @@ private fun TutorialContentComponent(
             Text(
                 text = model.title,
                 fontWeight = FontWeight.Bold,
-               fontSize = 18.sp
+                fontSize = 18.sp
             )
 
             Spacer(modifier = Modifier.weight(1f))

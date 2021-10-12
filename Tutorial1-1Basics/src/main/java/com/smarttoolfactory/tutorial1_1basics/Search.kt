@@ -47,7 +47,9 @@ fun SearchBar(
     ) {
 
         AnimatedVisibility(visible = focused) {
-            IconButton(onClick = {
+            IconButton(
+                modifier = Modifier.padding(start =2.dp),
+                onClick = {
                 focusManager.clearFocus()
                 keyboardController?.hide()
                 onClearQuery()
@@ -62,6 +64,7 @@ fun SearchBar(
             onSearchFocusChange,
             onClearQuery,
             searching,
+            focused,
             modifier.weight(1f)
         )
     }
@@ -79,6 +82,7 @@ fun SearchTextField(
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
     searching: Boolean,
+    focused: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -89,7 +93,12 @@ fun SearchTextField(
             .then(
                 Modifier
                     .height(56.dp)
-                    .padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .padding(
+                        top = 8.dp,
+                        bottom = 8.dp,
+                        start = if (!focused) 16.dp else 0.dp,
+                        end = 16.dp
+                    )
             ),
         color = Color(0xffF5F5F5),
         shape = RoundedCornerShape(percent = 50),
