@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,7 +50,7 @@ fun Chip(
     modifier: Modifier = Modifier,
     text: String,
     @DrawableRes drawableRes: Int = -1,
-    closable: Boolean = false
+    cancelable: Boolean = false
 ) {
 
     Surface(
@@ -77,19 +76,19 @@ fun Chip(
                 modifier = Modifier.padding(end = 8.dp)
             )
 
-            if (closable) {
+            if (cancelable) {
                 CircleCloseButton(Modifier.padding(end = 8.dp))
             }
         }
     }
 }
 
-
 @Composable
-fun SuggestionChip(
+fun CancelableChip(
     modifier: Modifier = Modifier,
     suggestion: SuggestionModel,
-    onClose: ((Int) -> Unit)? = null
+    @DrawableRes drawableRes: Int = -1,
+    onCancel: ((Int) -> Unit)? = null
 ) {
 
     Surface(
@@ -101,13 +100,19 @@ fun SuggestionChip(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable {
-                    onClose?.run {
-                        invoke(suggestion.id)
-                    }
-                }
                 .padding(vertical = 8.dp, horizontal = 10.dp)
         ) {
+
+            if (drawableRes != -1) {
+                Image(
+                    painter = painterResource(drawableRes),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(20.dp)
+                        .clip(CircleShape),
+                    contentDescription = null
+                )
+            }
 
             Text(
                 text = suggestion.tag,
@@ -115,7 +120,24 @@ fun SuggestionChip(
                 modifier = Modifier.padding(end = 8.dp)
             )
 
-            CircleCloseButton()
+            Surface(color = Color.DarkGray, modifier = modifier, shape = CircleShape) {
+                IconButton(
+                    onClick = {
+                        onCancel?.run {
+                            invoke(suggestion.id)
+                        }
+                    },
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(1.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        tint = Color(0xFFE0E0E0),
+                        contentDescription = null
+                    )
+                }
+            }
         }
     }
 }
@@ -185,13 +207,22 @@ private fun TutorialChipReview() {
 @Composable
 @Preview
 private fun ChipPreview() {
-    Chip(text = "Chip", drawableRes = R.drawable.avatar_1_raster, closable = true)
+    Chip(text = "Chip", drawableRes = R.drawable.avatar_1_raster, cancelable = true)
 }
 
 @Composable
 @Preview
 private fun SuggestionChipReview() {
-    SuggestionChip(suggestion = SuggestionModel("Suggestion"))
+    CancelableChip(suggestion = SuggestionModel("Suggestion"))
+}
+
+@Composable
+@Preview
+private fun SuggestionChipWithIconReview() {
+    CancelableChip(
+        suggestion = SuggestionModel("Suggestion"),
+        drawableRes = R.drawable.avatar_2_raster
+    )
 }
 
 @Composable

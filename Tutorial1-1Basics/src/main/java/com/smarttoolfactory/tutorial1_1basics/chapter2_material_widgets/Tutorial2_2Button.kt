@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -372,7 +371,7 @@ fun ChipExample(modifier: Modifier) {
             modifier = modifier,
             text = "Chip",
             drawableRes = R.drawable.avatar_1_raster,
-            closable = true
+            cancelable = true
         )
         OutlinedChip(
             modifier = modifier,
