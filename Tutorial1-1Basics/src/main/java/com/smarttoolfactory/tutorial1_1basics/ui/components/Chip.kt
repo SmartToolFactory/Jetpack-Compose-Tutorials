@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -88,7 +89,8 @@ fun CancelableChip(
     modifier: Modifier = Modifier,
     suggestion: SuggestionModel,
     @DrawableRes drawableRes: Int = -1,
-    onCancel: ((Int) -> Unit)? = null
+    onClick: ((SuggestionModel) -> Unit)? = null,
+    onCancel: ((SuggestionModel) -> Unit)? = null
 ) {
 
     Surface(
@@ -100,6 +102,11 @@ fun CancelableChip(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+                .clickable {
+                    onClick?.run {
+                        invoke(suggestion)
+                    }
+                }
                 .padding(vertical = 8.dp, horizontal = 10.dp)
         ) {
 
@@ -120,11 +127,11 @@ fun CancelableChip(
                 modifier = Modifier.padding(end = 8.dp)
             )
 
-            Surface(color = Color.DarkGray, modifier = modifier, shape = CircleShape) {
+            Surface(color = Color.DarkGray, modifier = Modifier, shape = CircleShape) {
                 IconButton(
                     onClick = {
                         onCancel?.run {
-                            invoke(suggestion.id)
+                            invoke(suggestion)
                         }
                     },
                     modifier = Modifier

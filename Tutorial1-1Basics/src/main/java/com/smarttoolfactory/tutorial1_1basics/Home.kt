@@ -21,8 +21,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.*
+import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
+import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.JumpToBottom
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StaggeredGrid
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -100,16 +103,56 @@ fun HomeScreen(
                 HomeContent(modifier, viewModel.tutorialList, navigateToTutorial)
             }
             SearchDisplay.NoResults -> {
-                Text("No Results")
+                Box(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("No Results!", fontSize = 24.sp, color = Color(0xffFF3D00))
+                }
             }
 
             SearchDisplay.Suggestions -> {
-                Text("Suggestions")
+                SuggestionGridLayout(viewModel = viewModel) {
+                    var text = state.query.text
+                    if (text.isEmpty()) text = it else text += " $it"
+                    text.trim()
+                    state.query = TextFieldValue(text)
+                }
             }
 
             SearchDisplay.Results -> {
                 TutorialListContent(modifier, state.searchResults, navigateToTutorial)
             }
+        }
+    }
+}
+
+@Composable
+private fun SuggestionGridLayout(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
+    onSuggestionClick: (String) -> Unit
+) {
+
+    val suggestionState: State<List<SuggestionModel>> =
+        viewModel.suggestionState.collectAsState(initial = suggestionList)
+
+    StaggeredGrid(
+        modifier = modifier.padding(4.dp)
+    ) {
+        suggestionState.value.forEach { suggestionModel ->
+            CancelableChip(
+                modifier = Modifier.padding(4.dp),
+                suggestion = suggestionModel,
+                onClick = {
+                    onSuggestionClick(it.tag)
+                },
+                onCancel = {
+
+                }
+            )
         }
     }
 }
