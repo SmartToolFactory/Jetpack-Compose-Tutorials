@@ -39,9 +39,9 @@ fun JumpToBottom(
     )
     val bottomOffset by transition.animateDp(label = "bottom offset") {
         if (it == Visibility.GONE) {
-            (-32).dp
+            (-28).dp
         } else {
-            32.dp
+            28.dp
         }
     }
     if (bottomOffset > 0.dp) {
@@ -51,7 +51,7 @@ fun JumpToBottom(
                 defaultElevation = 4.dp,
                 pressedElevation = 8.dp
             ),
-            backgroundColor = Color(0xffFF9800),
+            backgroundColor = Color(0xffF06292),
 //                    backgroundColor = MaterialTheme.colors.surface,
 //                    contentColor = MaterialTheme.colors.onSurface,
             modifier = modifier

@@ -1,5 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics
 
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -39,9 +44,37 @@ fun HomeScreen(
 
     println("🤔 HomeScreen() state:\n$state")
 
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+
+        val dispatcher: OnBackPressedDispatcher =
+            LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+        val context = LocalContext.current
+
+        val backCallback = remember {
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (state.query.text.isEmpty()) {
+                        dispatcher.onBackPressed()
+                    } else {
+                        Toast.makeText(context, "Back", Toast.LENGTH_SHORT).show()
+                        state.query = TextFieldValue("")
+                    }
+
+                }
+            }
+        }
+
+        DisposableEffect(dispatcher) { // dispose/relaunch if dispatcher changes
+            dispatcher.addCallback(backCallback)
+            onDispose {
+                Toast.makeText(context, "Disposed", Toast.LENGTH_SHORT).show()
+
+                backCallback.remove() // avoid leaks!
+            }
+        }
 
         SearchBar(
             query = state.query,
@@ -64,7 +97,7 @@ fun HomeScreen(
 
         when (state.searchDisplay) {
             SearchDisplay.InitialResults -> {
-                HomeContent(tabList, modifier, viewModel.tutorialList, navigateToTutorial)
+                HomeContent(modifier, viewModel.tutorialList, navigateToTutorial)
             }
             SearchDisplay.NoResults -> {
                 Text("No Results")
@@ -85,14 +118,13 @@ fun HomeScreen(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun HomeContent(
-    pages: List<String>,
     modifier: Modifier,
     tutorialList: List<List<TutorialSectionModel>>,
     navigateToTutorial: (String) -> Unit
 ) {
 
     val pagerState: PagerState = rememberPagerState(
-        pageCount = pages.size,
+        pageCount = tabList.size,
         initialOffscreenLimit = 2
     )
     val coroutineScope = rememberCoroutineScope()
@@ -111,7 +143,7 @@ private fun HomeContent(
         }
     ) {
         // Add tabs for all of our pages
-        pages.forEachIndexed { index, title ->
+        tabList.forEachIndexed { index, title ->
             Tab(
                 text = { Text(title) },
                 selected = pagerState.currentPage == index,
@@ -125,6 +157,7 @@ private fun HomeContent(
     }
 
     HorizontalPager(state = pagerState) { page: Int ->
+
         when (page) {
             0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
             1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
@@ -187,13 +220,6 @@ fun TutorialListContent(
                     }
                 }
             )
-
-
-            val showButton by remember {
-                derivedStateOf {
-                    scrollState.firstVisibleItemIndex > 0
-                }
-            }
 
             // Jump to bottom button shows up when user scrolls past a threshold.
             // Convert to pixels:

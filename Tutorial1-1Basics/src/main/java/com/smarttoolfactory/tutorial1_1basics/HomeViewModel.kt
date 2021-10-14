@@ -6,6 +6,8 @@ import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 class HomeViewModel : ViewModel() {
 
+    var selectedPage:Int = 0
+
     lateinit var componentTutorialList: List<TutorialSectionModel>
     lateinit var layoutTutorials: List<TutorialSectionModel>
 
@@ -34,6 +36,6 @@ class HomeViewModel : ViewModel() {
 
         println("🤖 ViewModel Query: $query, filteredList: ${filteredList.size}")
 
-        return if (query.isEmpty()) componentTutorialList else filteredList.toList()
+        return if (query.isEmpty()) tutorialList[selectedPage] else filteredList.toList()
     }
 }
