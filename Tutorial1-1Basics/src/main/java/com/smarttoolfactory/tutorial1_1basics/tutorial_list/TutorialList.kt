@@ -6,9 +6,11 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen
 import com.smarttoolfactory.tutorial1_1basics.model.*
 
 /**
@@ -22,11 +24,11 @@ import com.smarttoolfactory.tutorial1_1basics.model.*
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
-fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
-    println("🔥 Creating tutorial list...")
+fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
+    println("🔥 Creating Component tutorial list...")
 
     val tutorial1_1 = TutorialSectionModel(
-        title = "1-1 Column, Row, Box, Modifiers",
+        title = stringResource(R.string.title1_1),
         action = {
             Tutorial1_1Screen()
         },
@@ -42,7 +44,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial1_2 = TutorialSectionModel(
-        title = "1-2 Surface, Shape, Clickable",
+        title = stringResource(R.string.title1_2),
         description = "Create and modify Surface to draw background for Composables," +
                 " add click action to any composable. Set weight or offset modifiers.",
         action = {
@@ -57,21 +59,10 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
 
-    val tutorial1_3 = TutorialSectionModel(
-        title = "1-3 Modifiers",
-        description = "Change modifiers such as padding, dimensions, shadow," +
-                " background, and more.",
-        action = {
-            Tutorial1_2Screen()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_COMPOSE_MODIFIER
-        )
-    )
+
 
     val tutorial2_1 = TutorialSectionModel(
-        title = "2-1 Text",
+        title = stringResource(R.string.title2_1),
         description = "Create Text component with different properties such as " +
                 "color, background, font weight, family, style, spacing and others.",
         action = {
@@ -87,7 +78,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_2 = TutorialSectionModel(
-        title = "2-2 Button",
+        title = stringResource(R.string.title2_2),
         description = "Create Button with text and/or with image, Floating Action Button " +
                 ", or Chips. Modify properties of buttons such as color, text, or state.",
         action = {
@@ -103,7 +94,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_3 = TutorialSectionModel(
-        title = "2-3 TextField",
+        title = stringResource(R.string.title2_3),
         description = "Create TextField component with regular style or outlined. Set error," +
                 " colors, state, icons, VisualTransformations for phone or credit card, and IME actions.",
         action = {
@@ -120,7 +111,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_4 = TutorialSectionModel(
-        title = "2-4 Image",
+        title = stringResource(R.string.title2_4),
         description = "Create Image to display images, set image and crop styles. " +
                 "Change shape of Image or apply ColorFilter and PorterDuff modes.",
         action = {
@@ -136,7 +127,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_5_1 = TutorialSectionModel(
-        title = "2-5-1 LazyColumn1",
+        title = stringResource(R.string.title2_5_1),
         description = "LazyColumn is counterpart of vertical RecyclerView in Compose",
         action = {
             Tutorial2_5Screen1()
@@ -150,7 +141,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_5_2 = TutorialSectionModel(
-        title = "2-5-2 LazyColumn2",
+        title = stringResource(R.string.title2_5_2),
         description = "LazyColumn scroll state and modify dynamic list",
         action = {
             Tutorial2_5Screen2()
@@ -166,7 +157,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_5_3 = TutorialSectionModel(
-        title = "2-5-3 LazyRow",
+        title = stringResource(R.string.title2_5_3),
         description = "LazyColumn is counterpart of horizontal RecyclerView in Compose",
         action = {
             Tutorial2_5Screen3()
@@ -180,7 +171,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_5_4 = TutorialSectionModel(
-        title = "2-5-4 StickyHeader",
+        title = stringResource(R.string.title2_5_4),
         description = "LazyColumn with StickyHeaders",
         action = {
             Tutorial2_5Screen4()
@@ -195,7 +186,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_5_5 = TutorialSectionModel(
-        title = "2-5-5 LazyVerticalGrid",
+        title = stringResource(R.string.title2_5_5),
         description = "Grid style item display",
         action = {
             Tutorial2_5Screen5()
@@ -210,7 +201,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_5_6 = TutorialSectionModel(
-        title = "2-5-6 ListItem",
+        title = stringResource(R.string.title2_5_6),
         description = "Create one-line, two-line, three-line or combine other components to build list items using built-in ListItem component",
         action = {
             Tutorial2_5Screen6()
@@ -223,7 +214,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_6 = TutorialSectionModel(
-        title = "2-6 TopAppbar&Tabs",
+        title = stringResource(R.string.title2_6),
         description = "The top app bar displays information and actions relating to the current screen.",
         action = {
             Tutorial2_6Screen(onBack)
@@ -240,7 +231,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_7 = TutorialSectionModel(
-        title = "2-7 BottomNavigation",
+        title = stringResource(R.string.title2_7),
         description = "Material Design bottom navigation.\n" +
                 "Bottom navigation bars allow movement between primary destinations in an app.\n" +
                 "BottomNavigation should contain multiple BottomNavigationItems, each representing a singular destination.",
@@ -255,7 +246,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_8 = TutorialSectionModel(
-        title = "2-8 BottomAppBar",
+        title = stringResource(R.string.title2_8),
         description = "Material Design bottom app bar.\n" +
                 "A bottom app bar displays navigation and key actions at the bottom of screens.",
         action = {
@@ -268,7 +259,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_9_1 = TutorialSectionModel(
-        title = "2-9-1 Side Navigation",
+        title = stringResource(R.string.title2_9_1),
         description = "Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState",
         action = {
             Tutorial2_9Screen1()
@@ -282,7 +273,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_9_2 = TutorialSectionModel(
-        title = "2-9-2 ModalDrawer",
+        title = stringResource(R.string.title2_9_2),
         description = "Modal navigation drawers block interaction with the rest of an app’s content with a scrim. They are elevated above most of the app’s UI and don’t affect the screen’s layout grid.",
         action = {
             Tutorial2_9Screen2()
@@ -295,7 +286,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_9_3 = TutorialSectionModel(
-        title = "2-9-3 ModalDrawer2",
+        title = stringResource(R.string.title2_9_3),
         description = "ModalDrawer sample with Scaffold. ModalDrawer is inside content Scaffold.",
         action = {
             Tutorial2_9Screen3()
@@ -309,7 +300,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_9_4 = TutorialSectionModel(
-        title = "2-9-4 ModalDrawer3",
+        title = stringResource(R.string.title2_9_4),
         description = "Another ModalDrawer sample with Scaffold. Scaffold is inside content of ModalDrawer",
         action = {
             Tutorial2_9Screen4()
@@ -323,7 +314,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_10_1 = TutorialSectionModel(
-        title = "2-10-1 BottomSheet",
+        title = stringResource(R.string.title2_10_1),
         description = "Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
         action = {
             Tutorial2_10Screen1()
@@ -337,7 +328,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_10_2 = TutorialSectionModel(
-        title = "2-10-2 ModalBottomSheetLayout",
+        title = stringResource(R.string.title2_10_2),
         description = "Create modal bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
         action = {
             Tutorial2_10Screen2()
@@ -350,7 +341,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_10_3 = TutorialSectionModel(
-        title = "2-10-3 BottomDrawer",
+        title = stringResource(R.string.title2_10_3),
         description = "Bottom navigation drawers are modal drawers that are anchored to the bottom of the screen.",
         action = {
             Tutorial2_10Screen3()
@@ -362,7 +353,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_10_4 = TutorialSectionModel(
-        title = "2-10-4 BottomDrawer2",
+        title = stringResource(R.string.title2_10_4),
         description = "BottomDrawer with BottomAppBar.",
         action = {
             Tutorial2_10Screen4()
@@ -375,7 +366,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         )
     )
     val tutorial2_10_5 = TutorialSectionModel(
-        title = "2-10-5 BackdropScaffold",
+        title = stringResource(R.string.title2_10_5),
         description = "A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.",
         action = {
             Tutorial2_10Screen5()
@@ -387,7 +378,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_11 = TutorialSectionModel(
-        title = "2-11 Snack, Progress, Select",
+        title = stringResource(R.string.title2_11),
         description = "Samples for Snackbar, ProgressIndicator, Slider, CheckBox, TriStateCheckBox, RadioButton with groups, and Switch.",
         action = {
             Tutorial2_11Screen()
@@ -406,7 +397,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_12= TutorialSectionModel(
-        title = "2-12 Dialog",
+        title = stringResource(R.string.title2_12),
         description = "Create Dialog, and AlertDialogs with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.",
         action = {
             Tutorial2_12Screen()
@@ -420,7 +411,7 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
     )
 
     val tutorial2_13= TutorialSectionModel(
-        title = "2-13 SwipeToDismiss",
+        title = stringResource(R.string.title2_13),
         description = "Create a composable that can be dismissed by swiping left or right.",
         action = {
             Tutorial2_13Screen()
@@ -459,5 +450,32 @@ fun createTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
         tutorial2_11,
         tutorial2_12,
         tutorial2_13
+    )
+}
+
+@ExperimentalAnimationApi
+@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
+@Composable
+fun createLayoutTutorialList(): List<TutorialSectionModel> {
+    println("🔥 Creating Layout tutorial list...")
+
+    val tutorial3_1 = TutorialSectionModel(
+        title = stringResource(R.string.title3_1),
+        description = "Create custom modifiers using LayoutModifier and ParentDataModifier",
+        action = {
+            Tutorial3_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_MODIFIER,
+            TAG_LAYOUT_MODIFIER,
+            TAG_PARENT_DATA_MODIFIER,
+        )
+    )
+
+    return listOf(
+       tutorial3_1
     )
 }

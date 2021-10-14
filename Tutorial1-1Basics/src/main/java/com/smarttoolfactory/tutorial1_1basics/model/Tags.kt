@@ -100,3 +100,8 @@ const val TAG_SWIPE_TO_DISMISS = "SwipeToDismiss"
 
 // Navigation
 const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"
+
+// Layout
+const val TAG_CUSTOM_MODIFIER = "Custom Modifier"
+const val TAG_LAYOUT_MODIFIER = "LayoutModifier"
+const val TAG_PARENT_DATA_MODIFIER = "ParentDataModifier"

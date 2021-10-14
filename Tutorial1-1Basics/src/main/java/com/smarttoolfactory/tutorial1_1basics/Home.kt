@@ -6,19 +6,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
+import com.smarttoolfactory.tutorial1_1basics.ui.components.JumpToBottom
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 internal val tabList = listOf("Components", "Layout", "State", "Gestures", "Theming")
 
 /**
- * This is Home tab for this tutorials
+ * This is Home Screen that contains Search bar, Tabs, and tutorial pages in Pager
  */
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalAnimationApi
@@ -49,6 +48,7 @@ fun HomeScreen(
             onQueryChange = { state.query = it },
             onSearchFocusChange = { state.focused = it },
             onClearQuery = { state.query = TextFieldValue("") },
+            onBack = { state.query = TextFieldValue("") },
             searching = state.searching,
             focused = state.focused,
             modifier = modifier
@@ -64,7 +64,7 @@ fun HomeScreen(
 
         when (state.searchDisplay) {
             SearchDisplay.InitialResults -> {
-                HomeContent(tabList, modifier, viewModel.componentTutorialList, navigateToTutorial)
+                HomeContent(tabList, modifier, viewModel.tutorialList, navigateToTutorial)
             }
             SearchDisplay.NoResults -> {
                 Text("No Results")
@@ -87,7 +87,7 @@ fun HomeScreen(
 private fun HomeContent(
     pages: List<String>,
     modifier: Modifier,
-    tutorialList: List<TutorialSectionModel>,
+    tutorialList: List<List<TutorialSectionModel>>,
     navigateToTutorial: (String) -> Unit
 ) {
 
@@ -126,7 +126,8 @@ private fun HomeContent(
 
     HorizontalPager(state = pagerState) { page: Int ->
         when (page) {
-            0 -> TutorialListContent(modifier, tutorialList, navigateToTutorial)
+            0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
+            1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
             else -> ComingSoonScreen()
         }
     }
@@ -193,34 +194,33 @@ fun TutorialListContent(
                     scrollState.firstVisibleItemIndex > 0
                 }
             }
-            if (showButton) {
-                val coroutineScope = rememberCoroutineScope()
-                FloatingActionButton(
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 4.dp,
-                        pressedElevation = 8.dp
-                    ),
-                    backgroundColor = Color(0xffFF9800),
-//                    backgroundColor = MaterialTheme.colors.surface,
-//                    contentColor = MaterialTheme.colors.onSurface,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .align(Alignment.BottomEnd)
-                        .navigationBarsPadding()
-                        .padding(bottom = 10.dp, end = 10.dp),
-                    onClick = {
-                        coroutineScope.launch {
-                            scrollState.scrollToItem(0)
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowUpward,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
+
+            // Jump to bottom button shows up when user scrolls past a threshold.
+            // Convert to pixels:
+            val jumpThreshold = with(LocalDensity.current) {
+                56.dp.toPx()
+            }
+
+            // Show the button if the first visible item is not the first one or if the offset is
+            // greater than the threshold.
+            val jumpToBottomButtonEnabled by remember {
+                derivedStateOf {
+                    scrollState.firstVisibleItemIndex != 0 ||
+                            scrollState.firstVisibleItemScrollOffset > jumpThreshold
                 }
             }
+
+            val coroutineScope = rememberCoroutineScope()
+            JumpToBottom(
+                enabled = jumpToBottomButtonEnabled,
+                onClicked = {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
+                    }
+                },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            )
+
         }
     }
 }

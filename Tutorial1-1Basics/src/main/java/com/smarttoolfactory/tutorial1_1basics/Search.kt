@@ -31,6 +31,7 @@ fun SearchBar(
     onQueryChange: (TextFieldValue) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
+    onBack: ()-> Unit,
     searching: Boolean,
     focused: Boolean,
     modifier: Modifier = Modifier
@@ -47,12 +48,13 @@ fun SearchBar(
     ) {
 
         AnimatedVisibility(visible = focused) {
+            // Back button
             IconButton(
                 modifier = Modifier.padding(start =2.dp),
                 onClick = {
                 focusManager.clearFocus()
                 keyboardController?.hide()
-                onClearQuery()
+                    onBack()
             }) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             }
@@ -72,7 +74,7 @@ fun SearchBar(
 
 /**
  * This is a stateless TextField for searching with a Hint when query is empty,
- * and clear and loading [IconButtons]s to clear query or show progress indicator when
+ * and clear and loading [IconButton]s to clear query or show progress indicator when
  * a query is in progress.
  */
 @Composable

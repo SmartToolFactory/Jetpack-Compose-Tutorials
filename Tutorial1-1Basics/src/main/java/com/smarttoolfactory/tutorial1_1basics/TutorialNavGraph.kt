@@ -26,11 +26,19 @@ fun TutorialNavGraph(
 
     val mainViewModel: HomeViewModel = viewModel()
 
-    val tutorialList: List<TutorialSectionModel> = createTutorialList {
+    val componentTutorialList: List<TutorialSectionModel> = createComponentTutorialList {
         navController.navigateUp()
     }
 
-    mainViewModel.componentTutorialList = tutorialList
+    val layoutTutorialList = createLayoutTutorialList()
+
+    mainViewModel.componentTutorialList = componentTutorialList
+    mainViewModel.layoutTutorials = layoutTutorialList
+
+    if (mainViewModel.tutorialList.isEmpty()) {
+        mainViewModel.tutorialList.add(componentTutorialList)
+        mainViewModel.tutorialList.add(layoutTutorialList)
+    }
 
     println("🍏 TutorialNavGraph(): mainViewModel: mainViewModel, list: ${mainViewModel.componentTutorialList.hashCode()}")
 
@@ -53,10 +61,12 @@ fun TutorialNavGraph(
 
         // Set navigation route as title of tutorial card
         // and invoke @Composable inside lambda of this card.
-        tutorialList.forEach { model ->
-            composable(route = model.title) { navBackEntryStack ->
-                // 🔥 These are @Composable screens such as Tutorial2_1Screen()
-                model.action?.invoke()
+        mainViewModel.tutorialList.forEach { list ->
+            list.forEach { model ->
+                composable(route = model.title) { navBackEntryStack ->
+                    // 🔥 These are @Composable screens such as Tutorial2_1Screen()
+                    model.action?.invoke()
+                }
             }
         }
     }

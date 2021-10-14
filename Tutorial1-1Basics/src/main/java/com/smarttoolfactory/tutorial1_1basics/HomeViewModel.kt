@@ -7,23 +7,30 @@ import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 class HomeViewModel : ViewModel() {
 
     lateinit var componentTutorialList: List<TutorialSectionModel>
+    lateinit var layoutTutorials: List<TutorialSectionModel>
+
+    val tutorialList = mutableListOf<List<TutorialSectionModel>>()
+
 
     fun getTutorials(query: String): List<TutorialSectionModel> {
 
         val filteredList = linkedSetOf<TutorialSectionModel>()
 
-        componentTutorialList.forEach { tutorialSectionModel ->
+       tutorialList.forEach { list: List<TutorialSectionModel> ->
 
-            if (tutorialSectionModel.description.contains(query, ignoreCase = true)) {
-                filteredList.add(tutorialSectionModel)
-            }
+           list.forEach { tutorialSectionModel ->
 
-            tutorialSectionModel.tags.forEach {
-                if (it.contains(query, ignoreCase = true)) {
-                    filteredList.add(tutorialSectionModel)
-                }
-            }
-        }
+               if (tutorialSectionModel.description.contains(query, ignoreCase = true)) {
+                   filteredList.add(tutorialSectionModel)
+               }
+
+               tutorialSectionModel.tags.forEach {
+                   if (it.contains(query, ignoreCase = true)) {
+                       filteredList.add(tutorialSectionModel)
+                   }
+               }
+           }
+       }
 
         println("🤖 ViewModel Query: $query, filteredList: ${filteredList.size}")
 

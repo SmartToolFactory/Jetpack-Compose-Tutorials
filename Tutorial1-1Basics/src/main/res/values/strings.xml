@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Tutorial1-1Basics</string>
+    <string name="title1_1">1-1 Column, Row, Box, Modifiers</string>
+    <string name="title1_2">1-2 Surface, Shape, Clickable</string>
+    <string name="title2_1">2-1 Text</string>
+    <string name="title2_2">2-2 Button</string>
+    <string name="title2_3">2-3 TextField</string>
+    <string name="title2_4">2-4 Image</string>
+    <string name="title2_5_1">2-5-1 LazyColumn1</string>
+    <string name="title2_5_2">2-5-2 LazyColumn2</string>
+    <string name="title2_5_3">2-5-3 LazyRow</string>
+    <string name="title2_5_4">2-5-4 StickyHeader</string>
+    <string name="title2_5_5">2-5-5 LazyVerticalGrid</string>
+    <string name="title2_5_6">2-5-6 ListItem</string>
+    <string name="title2_6"><![CDATA[2-6 TopAppbar&Tabs]]></string>
+    <string name="title2_7">2-7 BottomNavigation</string>
+    <string name="title2_8">2-8 BottomAppBar</string>
+    <string name="title2_9_1">2-9-1 Side Navigation</string>
+    <string name="title2_9_2">2-9-2 ModalDrawer</string>
+    <string name="title2_9_3">2-9-3 ModalDrawer2</string>
+    <string name="title2_9_4">2-9-4 ModalDrawer3</string>
+    <string name="title2_10_1">2-10-1 BottomSheet</string>
+    <string name="title2_10_2">2-10-2 ModalBottomSheetLayout</string>
+    <string name="title2_10_3">2-10-3 BottomDrawer</string>
+    <string name="title2_10_4">2-10-4 BottomDrawer2</string>
+    <string name="title2_10_5">2-10-5 BackdropScaffold</string>
+    <string name="title2_11">2-11 Snack, Progress, Select</string>
+    <string name="title2_12">2-12 Dialog</string>
+    <string name="title2_13">2-13 SwipeToDismiss</string>
+    <string name="title3_1">3-1 Custom Modifiers</string>
 </resources>
