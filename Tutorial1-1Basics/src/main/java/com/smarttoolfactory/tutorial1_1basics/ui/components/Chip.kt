@@ -23,7 +23,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 
 @Composable
-fun TutorialChip(modifier: Modifier = Modifier, text: String) {
+fun TutorialChip(modifier: Modifier = Modifier, text: String, color:Color = Color(0xff00BCD4)) {
     Card(
         elevation = 0.dp,
         modifier = modifier,
@@ -38,7 +38,7 @@ fun TutorialChip(modifier: Modifier = Modifier, text: String) {
                 modifier = Modifier
                     .size(8.dp, 8.dp)
                     .clip(CircleShape)
-                    .background(color = MaterialTheme.colors.secondary)
+                    .background(color = color)
             )
             Spacer(Modifier.width(4.dp))
             Text(text = text)

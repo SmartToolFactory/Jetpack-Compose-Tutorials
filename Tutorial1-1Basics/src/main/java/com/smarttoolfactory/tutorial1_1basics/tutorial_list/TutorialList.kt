@@ -6,11 +6,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen
 import com.smarttoolfactory.tutorial1_1basics.model.*
 
 /**
@@ -462,7 +464,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_1),
-        description = "Create custom modifiers using LayoutModifier and ParentDataModifier",
+        description = "Create custom modifiers using layout, Measurable, Constraint, Placeable," +
+                " and LayoutModifier",
         action = {
             Tutorial3_1Screen()
         },
@@ -473,10 +476,27 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE,
             TAG_LAYOUT_MODIFIER
-        )
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
+    val tutorial3_2 = TutorialSectionModel(
+        title = stringResource(R.string.title3_1),
+        description = "Create custom layout using using layout, Measurable, Constraint, Placeable",
+        action = {
+            Tutorial3_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE
+        ),
+        tagColor = Color(0xffFFEB3B)
     )
 
     return listOf(
-        tutorial3_1
+        tutorial3_1,
+        tutorial3_2,
     )
 }

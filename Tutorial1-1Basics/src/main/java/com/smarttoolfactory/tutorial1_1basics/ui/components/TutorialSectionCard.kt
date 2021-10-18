@@ -103,7 +103,7 @@ private fun TutorialTagsComponent(model: TutorialSectionModel) {
             content = {
 
                 items(model.tags) { tag ->
-                    TutorialChip(text = tag)
+                    TutorialChip(text = tag, color = model.tagColor)
                 }
             })
     }
