@@ -64,7 +64,7 @@ fun HomeScreen(
                     if (state.query.text.isEmpty()) {
                         dispatcher.onBackPressed()
                     } else {
-                        Toast.makeText(context, "Back", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context, "Back", Toast.LENGTH_SHORT).show()
                         state.query = TextFieldValue("")
                     }
 
@@ -75,7 +75,7 @@ fun HomeScreen(
         DisposableEffect(dispatcher) { // dispose/relaunch if dispatcher changes
             dispatcher.addCallback(backCallback)
             onDispose {
-                Toast.makeText(context, "Disposed", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Disposed", Toast.LENGTH_SHORT).show()
 
                 backCallback.remove() // avoid leaks!
             }

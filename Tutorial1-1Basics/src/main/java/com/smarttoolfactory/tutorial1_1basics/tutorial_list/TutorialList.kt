@@ -13,6 +13,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen
 import com.smarttoolfactory.tutorial1_1basics.model.*
 
 /**
@@ -27,8 +28,6 @@ import com.smarttoolfactory.tutorial1_1basics.model.*
 @ExperimentalComposeUiApi
 @Composable
 fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> {
-    println("🔥 Creating Component tutorial list...")
-
     val tutorial1_1 = TutorialSectionModel(
         title = stringResource(R.string.title1_1),
         action = {
@@ -460,7 +459,6 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 @ExperimentalComposeUiApi
 @Composable
 fun createLayoutTutorialList(): List<TutorialSectionModel> {
-    println("🔥 Creating Layout tutorial list...")
 
     val tutorial3_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_1),
@@ -481,13 +479,32 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2 = TutorialSectionModel(
-        title = stringResource(R.string.title3_1),
+        title = stringResource(R.string.title3_2),
         description = "Create custom layout using using layout, Measurable, Constraint, Placeable",
         action = {
             Tutorial3_2Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
+    val tutorial3_3 = TutorialSectionModel(
+        title = "Scope and ParentDataModifier",
+        description = "Add custom modifiers to Composable inside a custom layout using it's scope",
+        action = {
+            Tutorial3_3Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SCOPE,
+            TAG_PARENT_DATA_MODIFIER,
             TAG_MEASURABLE,
             TAG_CONSTRAINT,
             TAG_PLACEABLE
@@ -498,5 +515,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     return listOf(
         tutorial3_1,
         tutorial3_2,
+        tutorial3_3,
     )
 }

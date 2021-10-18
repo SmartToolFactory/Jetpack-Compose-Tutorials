@@ -103,8 +103,10 @@ const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"
 
 // Layout
 const val TAG_CUSTOM_MODIFIER = "Custom Modifier"
+const val TAG_CUSTOM_LAYOUT = "Custom Layout"
 const val TAG_MEASURABLE = "Measurable"
 const val TAG_PLACEABLE = "Placeable"
 const val TAG_CONSTRAINT = "Constraint"
 const val TAG_LAYOUT_MODIFIER = "LayoutModifier"
+const val TAG_SCOPE = "Scope"
 const val TAG_PARENT_DATA_MODIFIER = "ParentDataModifier"

@@ -27,5 +27,6 @@
     <string name="title2_11">2-11 Snack, Progress, Select</string>
     <string name="title2_12">2-12 Dialog</string>
     <string name="title2_13">2-13 SwipeToDismiss</string>
-    <string name="title3_1">3-1 Custom Modifiers</string>
+    <string name="title3_1">3-1 Custom Modifier</string>
+    <string name="title3_2">Custom Layout</string>
 </resources>
