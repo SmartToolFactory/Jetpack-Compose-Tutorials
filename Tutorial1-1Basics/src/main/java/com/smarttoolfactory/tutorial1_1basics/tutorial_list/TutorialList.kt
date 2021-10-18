@@ -495,7 +495,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_3 = TutorialSectionModel(
-        title = "Scope and ParentDataModifier",
+        title = stringResource(R.string.title_3_3),
         description = "Add custom modifiers to Composable inside a custom layout using it's scope",
         action = {
             Tutorial3_3Screen()

@@ -28,5 +28,6 @@
     <string name="title2_12">2-12 Dialog</string>
     <string name="title2_13">2-13 SwipeToDismiss</string>
     <string name="title3_1">3-1 Custom Modifier</string>
-    <string name="title3_2">Custom Layout</string>
+    <string name="title3_2">3-2 Custom Layout</string>
+    <string name="title_3_3">3-3 Scope and ParentDataModifier</string>
 </resources>
