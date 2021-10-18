@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 @ExperimentalAnimationApi
 @OptIn(ExperimentalComposeUiApi::class)
@@ -31,7 +30,7 @@ fun SearchBar(
     onQueryChange: (TextFieldValue) -> Unit,
     onSearchFocusChange: (Boolean) -> Unit,
     onClearQuery: () -> Unit,
-    onBack: ()-> Unit,
+    onBack: () -> Unit,
     searching: Boolean,
     focused: Boolean,
     modifier: Modifier = Modifier
@@ -50,12 +49,12 @@ fun SearchBar(
         AnimatedVisibility(visible = focused) {
             // Back button
             IconButton(
-                modifier = Modifier.padding(start =2.dp),
+                modifier = Modifier.padding(start = 2.dp),
                 onClick = {
-                focusManager.clearFocus()
-                keyboardController?.hide()
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
                     onBack()
-            }) {
+                }) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             }
         }
@@ -170,13 +169,13 @@ private fun SearchHint(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun rememberSearchState(
+fun <R, S> rememberSearchState(
     query: TextFieldValue = TextFieldValue(""),
     focused: Boolean = false,
     searching: Boolean = false,
-    suggestions: List<TutorialSectionModel> = emptyList(),
-    searchResults: List<TutorialSectionModel> = emptyList()
-): SearchState {
+    suggestions: List<S> = emptyList(),
+    searchResults: List<R> = emptyList()
+): SearchState<R, S> {
     return remember {
         SearchState(
             query = query,
@@ -189,12 +188,12 @@ fun rememberSearchState(
 }
 
 @Stable
-class SearchState(
+class SearchState<R, S>(
     query: TextFieldValue,
     focused: Boolean,
     searching: Boolean,
-    suggestions: List<TutorialSectionModel>,
-    searchResults: List<TutorialSectionModel>
+    suggestions: List<S>,
+    searchResults: List<R>
 ) {
     var query by mutableStateOf(query)
     var focused by mutableStateOf(focused)

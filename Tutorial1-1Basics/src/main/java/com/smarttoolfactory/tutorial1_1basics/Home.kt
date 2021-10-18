@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -42,11 +43,12 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
     navigateToTutorial: (String) -> Unit,
-    state: SearchState = rememberSearchState()
+    state: SearchState<TutorialSectionModel, SuggestionModel> = rememberSearchState()
 ) {
 
-    println("🤔 HomeScreen() state:\n$state")
+    println("✅ HomeScreen() state:\n$state")
 
+    state.suggestions = viewModel.suggestionState.collectAsState(initial = suggestionList).value
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -79,6 +81,8 @@ fun HomeScreen(
             }
         }
 
+
+
         SearchBar(
             query = state.query,
             onQueryChange = { state.query = it },
@@ -109,16 +113,17 @@ fun HomeScreen(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No Results!", fontSize = 24.sp, color = Color(0xffFF3D00))
+                    Text("❌ No Results!", fontSize = 24.sp, color = Color(0xffDD2C00))
                 }
             }
 
             SearchDisplay.Suggestions -> {
-                SuggestionGridLayout(viewModel = viewModel) {
+                SuggestionGridLayout(suggestions = state.suggestions) {
                     var text = state.query.text
                     if (text.isEmpty()) text = it else text += " $it"
                     text.trim()
-                    state.query = TextFieldValue(text)
+                    // Set text and cursor position to end of text
+                    state.query = TextFieldValue(text, TextRange(text.length))
                 }
             }
 
@@ -132,17 +137,15 @@ fun HomeScreen(
 @Composable
 private fun SuggestionGridLayout(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
+    suggestions: List<SuggestionModel>,
     onSuggestionClick: (String) -> Unit
 ) {
 
-    val suggestionState: State<List<SuggestionModel>> =
-        viewModel.suggestionState.collectAsState(initial = suggestionList)
 
     StaggeredGrid(
         modifier = modifier.padding(4.dp)
     ) {
-        suggestionState.value.forEach { suggestionModel ->
+        suggestions.forEach { suggestionModel ->
             CancelableChip(
                 modifier = Modifier.padding(4.dp),
                 suggestion = suggestionModel,

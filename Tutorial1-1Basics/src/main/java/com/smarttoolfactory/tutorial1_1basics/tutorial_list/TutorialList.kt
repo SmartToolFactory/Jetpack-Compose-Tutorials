@@ -60,7 +60,6 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
     )
 
 
-
     val tutorial2_1 = TutorialSectionModel(
         title = stringResource(R.string.title2_1),
         description = "Create Text component with different properties such as " +
@@ -396,7 +395,7 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         )
     )
 
-    val tutorial2_12= TutorialSectionModel(
+    val tutorial2_12 = TutorialSectionModel(
         title = stringResource(R.string.title2_12),
         description = "Create Dialog, and AlertDialogs with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.",
         action = {
@@ -410,7 +409,7 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         )
     )
 
-    val tutorial2_13= TutorialSectionModel(
+    val tutorial2_13 = TutorialSectionModel(
         title = stringResource(R.string.title2_13),
         description = "Create a composable that can be dismissed by swiping left or right.",
         action = {
@@ -470,12 +469,14 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_CUSTOM_MODIFIER,
-            TAG_LAYOUT_MODIFIER,
-            TAG_PARENT_DATA_MODIFIER,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE,
+            TAG_LAYOUT_MODIFIER
         )
     )
 
     return listOf(
-       tutorial3_1
+        tutorial3_1
     )
 }

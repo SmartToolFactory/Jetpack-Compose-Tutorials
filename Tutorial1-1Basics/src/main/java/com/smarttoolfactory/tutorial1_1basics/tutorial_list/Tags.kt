@@ -85,7 +85,7 @@ const val TAG_MODAL_BOTTOM_SHEET_VALUE = "ModalBottomSheetValue"
 // ALERT DIALOG
 const val TAG_DIALOG = "Dialog"
 const val TAG_ALERT_DIALOG = "Alert Dialog"
-const val TAG_DIALOG_PROPERTIES= "DialogProperties"
+const val TAG_DIALOG_PROPERTIES = "DialogProperties"
 
 // SNACKBAR, PROGRESSBAR, CHECK BOX, SWITCH RADIO BUTTON, SLIDER,
 const val TAG_SNACK_BAR = "Snackbar"
@@ -103,5 +103,8 @@ const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"
 
 // Layout
 const val TAG_CUSTOM_MODIFIER = "Custom Modifier"
+const val TAG_MEASURABLE = "Measurable"
+const val TAG_PLACEABLE = "Placeable"
+const val TAG_CONSTRAINT = "Constraint"
 const val TAG_LAYOUT_MODIFIER = "LayoutModifier"
 const val TAG_PARENT_DATA_MODIFIER = "ParentDataModifier"

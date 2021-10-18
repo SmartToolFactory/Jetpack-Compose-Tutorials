@@ -7,7 +7,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
@@ -30,11 +29,11 @@ class MainActivity : AppCompatActivity() {
 //        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-          ProvideWindowInsets {
-              ComposeTutorialsTheme {
-                  MainScreen()
-              }
-          }
+            ProvideWindowInsets {
+                ComposeTutorialsTheme {
+                    MainScreen()
+                }
+            }
         }
     }
 }
