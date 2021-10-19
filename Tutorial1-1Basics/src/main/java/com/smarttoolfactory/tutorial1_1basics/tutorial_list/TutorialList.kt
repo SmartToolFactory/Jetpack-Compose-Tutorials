@@ -14,7 +14,9 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
 import com.smarttoolfactory.tutorial1_1basics.model.*
+import com.smarttoolfactory.tutorial1_1basics.tutorial_list.*
 
 /**
  * Create list of tutorials with titles, action that navigates to composable function
@@ -512,9 +514,25 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffFFEB3B)
     )
 
+    val tutorial3_4 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_4),
+        description = "BoxWithConstraints is a composable that defines its own content " +
+                "according to the available space, based on the incoming constraints " +
+                "or the current LayoutDirection. ",
+        action = {
+            Tutorial3_4Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BOX_WITH_CONSTRAINTS
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
     return listOf(
         tutorial3_1,
         tutorial3_2,
         tutorial3_3,
+        tutorial3_4,
     )
 }

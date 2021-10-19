@@ -30,4 +30,5 @@
     <string name="title3_1">3-1 Custom Modifier</string>
     <string name="title3_2">3-2 Custom Layout</string>
     <string name="title_3_3">3-3 Scope and ParentDataModifier</string>
+    <string name="title_3_4">3-4 BoxWithConstraints</string>
 </resources>

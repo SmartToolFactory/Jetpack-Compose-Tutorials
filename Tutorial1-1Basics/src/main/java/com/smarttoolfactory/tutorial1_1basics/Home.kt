@@ -54,7 +54,10 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize()
     ) {
 
-        val dispatcher: OnBackPressedDispatcher =
+
+        // FIXME Crashes when back button is pressed before any search
+/*
+         val dispatcher: OnBackPressedDispatcher =
             LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
         val context = LocalContext.current
 
@@ -80,8 +83,7 @@ fun HomeScreen(
                 backCallback.remove() // avoid leaks!
             }
         }
-
-
+*/
 
         SearchBar(
             query = state.query,
