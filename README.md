@@ -3,9 +3,12 @@
 ## 🤓 Overview
 
 Series of Tutorials to learn about Jetpack Compose, Material Widgets, State, Animation, and
-Navigation.
+Navigation. Easy to search in code and in app. Each chapter module contains it's own content in code. SearchBar
+can be used to search with a tag or description available for each tutorial.
 
-<h2>⚠️ Under Development</h2>
+Recommended section is under constructions for now, when finished it will get recommended tags
+using previous searches using a database, domain with ViewModel.
+<img src="/./screenshots/intro.gif" align="right" width="32%"/>
 
 <br/><br/><br/>
 
