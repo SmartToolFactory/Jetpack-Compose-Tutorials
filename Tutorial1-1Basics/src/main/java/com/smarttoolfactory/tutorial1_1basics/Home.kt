@@ -1,9 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics
 
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
@@ -171,10 +166,7 @@ private fun HomeContent(
     navigateToTutorial: (String) -> Unit
 ) {
 
-    val pagerState: PagerState = rememberPagerState(
-        pageCount = tabList.size,
-        initialOffscreenLimit = 2
-    )
+    val pagerState: PagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
 
     ScrollableTabRow(
@@ -204,7 +196,10 @@ private fun HomeContent(
         }
     }
 
-    HorizontalPager(state = pagerState) { page: Int ->
+    HorizontalPager(
+        state = pagerState,
+        count = tabList.size
+    ) { page: Int ->
 
         when (page) {
             0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
