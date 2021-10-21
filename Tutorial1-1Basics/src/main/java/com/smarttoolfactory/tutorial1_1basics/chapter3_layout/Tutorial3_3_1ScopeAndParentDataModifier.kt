@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -32,7 +32,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         TutorialHeader(text = "Scope and ParentDataModifier")
-        TutorialText(
+        StyleableTutorialText(
             text = "1-) Using a scope for a Composable it's possible to add Modifier " +
                     "only available in that scope. **Modifier.horizontalAlign** " +
                     "is only available in **CustomColumnScope**."

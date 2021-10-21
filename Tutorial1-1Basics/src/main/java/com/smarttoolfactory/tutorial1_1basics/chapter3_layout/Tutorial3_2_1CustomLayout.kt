@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.random.Random
 
@@ -38,7 +38,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         TutorialHeader(text = "Custom Layout")
-        TutorialText(
+        StyleableTutorialText(
             text = "1-) Using measurables to get Placeable and placing these placeables inside " +
                     "layout it's possible to create custom layouts."
         )

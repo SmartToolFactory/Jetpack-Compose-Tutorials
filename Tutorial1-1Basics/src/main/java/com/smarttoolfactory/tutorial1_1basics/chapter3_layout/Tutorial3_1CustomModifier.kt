@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -13,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -30,7 +29,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         TutorialHeader(text = "Custom Modifier")
-        TutorialText(
+        StyleableTutorialText(
             text = "1-) To create custom modifier use layout extension function " +
                     "of Modifier which returns a Modifier. " +
                     "Get a placeable measuring with measurable, get width, height of placeable " +
@@ -86,7 +85,7 @@ private fun TutorialContent() {
 
         }
 
-        TutorialText(
+        StyleableTutorialText(
             text = "2-) **LayoutModifier** class and it's **MeasureScope.measure** function can be" +
                     "used to measure a measurable to get a placeable and place it to " +
                     "add padding."

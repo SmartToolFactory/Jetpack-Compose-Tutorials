@@ -25,7 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -54,7 +54,7 @@ private fun TutorialContent() {
         item {
 
             TutorialHeader(text = "AlertDialog")
-            TutorialText(
+            StyleableTutorialText(
                 text = "1-) Alert dialogs interrupt users with urgent information, details, or actions."
             )
 
@@ -92,8 +92,10 @@ private fun TutorialContent() {
         item {
 
             TutorialHeader(text = "Dialog")
-            TutorialText(
-                text = "2-) Unlike AlertDialog Dialog does not have slots for dismissButton, confirmButton, or buttons. Allows customization of everything inside it."
+            StyleableTutorialText(
+                text = "2-) Unlike **AlertDialog**, **Dialog** does not have slots fo " +
+                        "**dismissButton, confirmButton, or buttons**. " +
+                        "Allows customization of everything inside it."
             )
             OutlinedButton(
                 modifier = Modifier.fillMaxSize(),

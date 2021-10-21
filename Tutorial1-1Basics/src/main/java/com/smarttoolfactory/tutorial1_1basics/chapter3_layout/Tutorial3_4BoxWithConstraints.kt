@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -32,7 +32,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         TutorialHeader(text = "BoxWithConstraints")
-        TutorialText(
+        StyleableTutorialText(
             text = "1-) **BoxWithConstraints** is composable that defines its own content according " +
                     "to the available space, based on the incoming " +
                     "constraints or the current LayoutDirection."

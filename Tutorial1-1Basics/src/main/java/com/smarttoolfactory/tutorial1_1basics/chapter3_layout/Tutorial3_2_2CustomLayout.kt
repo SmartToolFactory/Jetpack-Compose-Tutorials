@@ -2,8 +2,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +10,7 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -29,7 +27,7 @@ private fun TutorialContent() {
     ) {
 
         TutorialHeader(text = "Custom Layout")
-        TutorialText(
+        StyleableTutorialText(
             text = "1-) Custom layouts can use an object that implements **MeasurePolicy** interface."
         )
 

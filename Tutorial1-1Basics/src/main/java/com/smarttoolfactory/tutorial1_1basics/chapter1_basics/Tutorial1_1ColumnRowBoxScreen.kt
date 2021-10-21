@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 
@@ -45,45 +45,46 @@ private fun TutorialContent() {
 
         item {
             TutorialHeader(text = "Row")
-            TutorialText(text = "1-) Row is a layout composable that places its children in a horizontal sequence.")
+            StyleableTutorialText(text = "1-) **Row** is a layout composable that places its children in a horizontal sequence.")
             RowExample()
 
             TutorialHeader(text = "Column")
-            TutorialText(text = "2-) Column is a layout composable that places its children in a vertical sequence.")
+            StyleableTutorialText(text = "2-) **Column** is a layout composable that places its children in a vertical sequence.")
             ColumnExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "3-) Padding order determines whether it's padding or margin for that component."
                         + "In example below check out paddings."
             )
             ColumnsAndRowPaddingsExample()
 
-            TutorialText(text = "4-) Shadow can be applied to Column or Row.")
+            StyleableTutorialText(text = "4-) Shadow can be applied to Column or Row.")
             ShadowExample()
 
             TutorialHeader(text = "Box")
-            TutorialText(
-                text = "5-) Box aligns children on top of each other like a Stack. " +
+            StyleableTutorialText(
+                text = "5-) **Box** aligns children on top of each other like a Stack. " +
                         "The one declared last is on top"
             )
             BoxExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "6-) Elements in Box can be aligned with different alignments."
             )
             BoxShadowAndAlignmentExample()
 
             TutorialHeader(text = "Spacer")
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "7-) Spacer can be used to align elements to end or bottom of screen"
             )
             WeightExample()
 
             TutorialHeader(text = "Weight and Spacer")
-            TutorialText(
-                text = "8-) Weight determines, based on total weight, how much of the parent's " +
-                        "dimensions should be occupied by each child. Spacer is used to create horizontal or vertical " +
+            StyleableTutorialText(
+                text = "8-) **Weight** determines, based on total weight, how much of the parent's " +
+                        "dimensions should be occupied by each child. **Spacer** is used to " +
+                        "create horizontal or vertical " +
                         "space between components."
             )
             WeightAndSpacerExample()

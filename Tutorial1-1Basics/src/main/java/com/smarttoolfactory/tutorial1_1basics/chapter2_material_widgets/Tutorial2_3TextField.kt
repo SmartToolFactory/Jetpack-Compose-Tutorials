@@ -3,7 +3,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
@@ -30,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 // TODO Add Filtering and Regex
@@ -67,8 +66,8 @@ private fun TutorialContent() {
 
             TutorialHeader(text = "TextField")
 
-            TutorialText(
-                text = "1-) Text fields let users enter and edit text. remember is " +
+            StyleableTutorialText(
+                text = "1-) **TextField** let users enter and edit text. remember is " +
                         "used with MutableState to store state of text or TextFieldValue"
             )
 
@@ -258,7 +257,7 @@ private fun TutorialContent() {
                 maxLines = 2
             )
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "2-) Keyboard options change the type of TextField. For instance " +
                         "PasswordVisualTransformation" +
                         "transforms that TextField to password input area"
@@ -290,7 +289,7 @@ private fun TutorialContent() {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
             )
 
-            TutorialText(text = "3-) TextField can have leading and trailing icons.")
+            StyleableTutorialText(text = "3-) TextField can have leading and trailing icons.")
             TutorialText2(text = "Leading and Trailing Icons")
 
             val emailText = remember { mutableStateOf(TextFieldValue("")) }
@@ -366,7 +365,7 @@ private fun TutorialContent() {
                 }
             )
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "4-) Changing IME action changes icon/text at bottom right, " +
                         "action to be performed when that button is clicked"
             )
@@ -422,7 +421,7 @@ private fun TutorialContent() {
             )
 
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "5-) With VisualTransformation and Regex it's possible to " +
                         "transform text based on a format such as masked chars, phone " +
                         "or currency."
@@ -458,7 +457,7 @@ private fun TutorialContent() {
                 visualTransformation = PhoneVisualTransformation()
             )
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "6-) Basic composable that enables users to edit text via hardware " +
                         "or software keyboard, but provides no decorations like hint or placeholder."
             )

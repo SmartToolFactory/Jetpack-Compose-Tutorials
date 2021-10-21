@@ -18,7 +18,7 @@ import com.smarttoolfactory.tutorial1_1basics.model.ActionItemMode
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemSpec
 import com.smarttoolfactory.tutorial1_1basics.model.separateIntoActionAndOverflow
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
 fun Tutorial2_6Screen(onBack: (() -> Unit)? = null) {
@@ -46,7 +46,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
         content = {
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "1-) TopAppbar with IconButtons as Toolbar menus in classic Views"
                 )
             }
@@ -54,7 +54,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
                 ActionTopAppbar(onBack, elevation = 8.dp)
             }
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "2-) TopAppbar with Overflow menu"
                 )
             }
@@ -67,8 +67,8 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             }
 
             item {
-                TutorialText(
-                    text = "3-) Fixed tabs only with text. TabRow is our fixed Row with equal size for each tab that contains tabs."
+                StyleableTutorialText(
+                    text = "3-) Fixed tabs only with text. **TabRow** is our fixed Row with equal size for each tab that contains tabs."
                 )
             }
             item {
@@ -76,7 +76,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             }
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "4-) Fixed tabs only with icon"
                 )
             }
@@ -85,7 +85,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             }
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "5-) Fixed tabs with text and icon"
                 )
             }
@@ -94,7 +94,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             }
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "6-) Fixed tabs with horizontally placed text and icon"
                 )
             }
@@ -102,7 +102,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
                 CombinedTabComponent2()
             }
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "7-) Scrollable tabs"
                 )
             }
@@ -111,7 +111,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             }
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "8-) TopAppBar and Tabs"
                 )
             }

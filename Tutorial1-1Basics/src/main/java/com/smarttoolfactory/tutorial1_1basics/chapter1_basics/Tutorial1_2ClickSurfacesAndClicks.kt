@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
 fun Tutorial1_2Screen() {
@@ -37,23 +37,24 @@ private fun TutorialContent() {
 
         item {
             TutorialHeader(text = "Clickable")
-            TutorialText(
+            StyleableTutorialText(
                 text = "1-) Adding clickable to Modifier makes a component clickable." +
-                        "\nPadding before clickable makes clickable area smaller than component's total area."
+                        "\nPadding before clickable makes " +
+                        "**clickable area smaller than component's total area**."
             )
             ClickableModifierExample()
 
             TutorialHeader(text = "Surface")
-            TutorialText(text = "2-) Surface can clips it's children to selected shape.")
+            StyleableTutorialText(text = "2-) Surface can clips it's children to selected shape.")
             SurfaceShapeExample()
 
-            TutorialText(text = "3-) Surface can set Z index and border of it's children.")
+            StyleableTutorialText(text = "3-) Surface can set Z index and border of it's children.")
             SurfaceZIndexExample()
 
-            TutorialText(text = "4-) Surface can set content color for Text and Image.")
+            StyleableTutorialText(text = "4-) Surface can set content color for Text and Image.")
             SurfaceContentColorExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "5-) Components can have offset in both x and y axes. Surface inside" +
                         " another surface gets clipped when it overflows from it's parent."
             )

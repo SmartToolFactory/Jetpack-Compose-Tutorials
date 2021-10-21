@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
-import android.content.ContentProvider
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -23,7 +22,7 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -57,8 +56,8 @@ private fun TutorialContent() {
 @Composable
 private fun SnackBarExample() {
     TutorialHeader(text = "SnackBar")
-    TutorialText(
-        text = "1-) Snackbar provide brief messages about app processes at the bottom of the screen."
+    StyleableTutorialText(
+        text = "1-) **Snackbar** provides brief messages about app processes at the bottom of the screen."
     )
 
     TutorialText2(text = "Basic SnackBar")
@@ -132,7 +131,7 @@ private fun SnackBarExample() {
 @Composable
 private fun ProgressIndicatorExample() {
     TutorialHeader(text = "ProgressIndicator")
-    TutorialText(
+    StyleableTutorialText(
         text = "2-) Progress indicators express an unspecified wait time or display the length of a process."
     )
 
@@ -183,8 +182,9 @@ private fun ProgressIndicatorExample() {
 @Composable
 private fun CheckboxExample() {
     TutorialHeader(text = "Checkbox")
-    TutorialText(
-        text = "2-) Progress indicators express an unspecified wait time or display the length of a process. Tri state can be used to set child checkboxes."
+    StyleableTutorialText(
+        text = "2-) Progress indicators express an unspecified wait time or display the " +
+                "length of a process. **TriStateCheckbox** can be used to set child checkboxes."
     )
 
     TutorialText2("Checkbox")
@@ -257,8 +257,9 @@ private fun CheckboxExample() {
 private fun SwitchExample() {
 
     TutorialHeader(text = "Switch")
-    TutorialText(
-        text = "3-) Switches toggle the state of a single item on or off. Enabled flag set to false on the ones in right half."
+    StyleableTutorialText(
+        text = "3-) **Switch** toggles the state of a single item on or off. " +
+                "**enabled** flag set to false on the ones in right half."
     )
 
     val switchColors = SwitchDefaults.colors(
@@ -303,8 +304,8 @@ private fun RadioButtonExample() {
 
 
     TutorialHeader(text = "RadioButton")
-    TutorialText(
-        text = "4-) Radio buttons allow users to select one option from a set."
+    StyleableTutorialText(
+        text = "4-) **RadioButton** allow users to select one option from a set."
     )
 
     var isRadioSelected by remember { mutableStateOf(true) }
@@ -411,8 +412,10 @@ private fun RadioButtonExample() {
 private fun SliderExample() {
 
     TutorialHeader(text = "Slider")
-    TutorialText(
-        text = "5-) Sliders reflect a range of values along a bar, from which users may select a single value. They are ideal for adjusting settings such as volume, brightness, or applying image filters."
+    StyleableTutorialText(
+        text = "5-) **Slider** reflects a range of values along a bar, " +
+                "from which users may select a single value. They are ideal for adjusting " +
+                "settings such as volume, brightness, or applying image filters."
     )
     TutorialText2("Slider")
 

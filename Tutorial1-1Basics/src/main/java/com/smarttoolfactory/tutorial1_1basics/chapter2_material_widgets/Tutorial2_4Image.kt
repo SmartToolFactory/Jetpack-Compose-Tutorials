@@ -50,7 +50,7 @@ private fun TutorialContent() {
         item {
             TutorialHeader(text = "Image")
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "1-) Image component lays out and draws a given  ImageBitmap, ImageVector," +
                         "or Painter."
             )
@@ -59,14 +59,14 @@ private fun TutorialContent() {
             ImageFromVectorDrawableExample()
             ImageFromImageBitmapExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "2-) With Canvas we can draw on a ImageBitmap and set ImageBitmap to an Image."
             )
 
             DrawOverImageBitmapExample()
             DrawOverImageBitmapExample2()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = """3-) With androidx.compose.ui.graphics.Canvas 
                     we can add a watermark on ImageBitmap and use this ImageBitmap for Image
                     or save it into a file.
@@ -74,32 +74,32 @@ private fun TutorialContent() {
             )
             DrawOnImageBitmapExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "4-) Set shape or/and filter for the Image."
             )
             ImageShapeAndFilterExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "5-) graphicLayer modifier to apply effects to content, such as scaling (scaleX, scaleY), rotation (rotationX, rotationY, rotationZ), opacity (alpha), shadow (shadowElevation, shape), and clipping (clip, shape)."
             )
 
             ImageGraphicLayer()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "6) Use Glide library to fetch an image resource from network and " +
                         "set it to Image component."
             )
 
             ImageDownloadWithGlideExample()
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "6) Use Coil library to fetch an image resource from network and " +
                         "set it to Image component."
             )
             ImageDownloadWithCoilExample()
 
 
-            TutorialText(
+            StyleableTutorialText(
                 text = "7-) ContentScale represents a rule to apply to scale a source " +
                         "rectangle to be inscribed into a destination."
             )

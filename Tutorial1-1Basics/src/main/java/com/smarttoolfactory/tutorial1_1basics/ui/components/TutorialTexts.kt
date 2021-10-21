@@ -38,7 +38,7 @@ fun TutorialHeader(text: String, modifier: Modifier = Modifier) {
  *
  */
 @Composable
-fun TutorialText(text: String, modifier: Modifier = Modifier) {
+fun StyleableTutorialText(text: String, modifier: Modifier = Modifier) {
 
     var results: MatchResult? = boldRegex.find(text)
     val boldIndexes = mutableListOf<Pair<Int, Int>>()
@@ -106,5 +106,5 @@ fun TutorialText2(text: String, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun TutorialTextPreview() {
-    TutorialText("Sample text for demonstrating this text")
+    StyleableTutorialText("Sample text for demonstrating this text")
 }

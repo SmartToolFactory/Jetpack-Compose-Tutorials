@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -16,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
 fun Tutorial2_7Screen() {
@@ -34,7 +33,7 @@ private fun TutorialContent() {
         content = {
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "1-) BottomNavigation only with Text"
                 )
             }
@@ -44,8 +43,10 @@ private fun TutorialContent() {
             }
 
             item {
-                TutorialText(
-                    text = "2-) BottomNavigation only with Icon and content color on BottomNavigation, and selected and unselected colors with BottomNavigationItem"
+                StyleableTutorialText(
+                    text = "2-) BottomNavigation only with Icon and content color on " +
+                            "BottomNavigation, and selected and unselected colors with " +
+                            "BottomNavigationItem"
                 )
             }
 
@@ -54,7 +55,7 @@ private fun TutorialContent() {
             }
 
             item {
-                TutorialText(
+                StyleableTutorialText(
                     text = "3-) BottomNavigation with Icon and Text"
                 )
             }
