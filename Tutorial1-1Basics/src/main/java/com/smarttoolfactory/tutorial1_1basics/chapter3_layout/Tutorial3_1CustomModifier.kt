@@ -34,7 +34,7 @@ private fun TutorialContent() {
             text = "1-) To create custom modifier use layout extension function " +
                     "of Modifier which returns a Modifier. " +
                     "Get a placeable measuring with measurable, get width, height of placeable " +
-                    "and call generic layout function that returns MeasureResult"
+                    "and call generic layout function that returns **MeasureResult**."
         )
 
         TutorialText2(text = "customAlign Modifier")
@@ -76,7 +76,7 @@ private fun TutorialContent() {
                     .padding(top = 32.dp)
             )
 
-            Divider(modifier = Modifier.padding(4.dp))
+
             Text(
                 text = "Baseline 32dp",
                 modifier = Modifier
@@ -87,7 +87,7 @@ private fun TutorialContent() {
         }
 
         TutorialText(
-            text = "2-) LayoutModifier class and it's MeasureScope.measure function can be" +
+            text = "2-) **LayoutModifier** class and it's **MeasureScope.measure** function can be" +
                     "used to measure a measurable to get a placeable and place it to " +
                     "add padding."
         )

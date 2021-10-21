@@ -11,11 +11,9 @@ import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
-import com.smarttoolfactory.tutorial1_1basics.model.*
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
+import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.tutorial_list.*
 
 /**
@@ -480,11 +478,11 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffFFEB3B)
     )
 
-    val tutorial3_2 = TutorialSectionModel(
-        title = stringResource(R.string.title3_2),
+    val tutorial3_2_1 = TutorialSectionModel(
+        title = stringResource(R.string.title3_2_1),
         description = "Create custom layout using using layout, Measurable, Constraint, Placeable",
         action = {
-            Tutorial3_2Screen()
+            Tutorial3_2Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -496,11 +494,30 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffFFEB3B)
     )
 
-    val tutorial3_3 = TutorialSectionModel(
-        title = stringResource(R.string.title_3_3),
+    val tutorial3_2_2 = TutorialSectionModel(
+        title = "3-2-2 Custom Layout",
+        description = "Create custom layout using using MeasurePolicy and use intrinsic dimensions",
+        action = {
+            Tutorial3_2Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MEASURE_POLICY,
+            TAG_INTRINSIC_WIDTH,
+            TAG_INTRINSIC_HEIGHT,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
+    val tutorial3_3_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_3_1),
         description = "Add custom modifiers to Composable inside a custom layout using it's scope",
         action = {
-            Tutorial3_3Screen()
+            Tutorial3_3Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -531,8 +548,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     return listOf(
         tutorial3_1,
-        tutorial3_2,
-        tutorial3_3,
+        tutorial3_2_1,
+        tutorial3_2_2,
+        tutorial3_3_1,
         tutorial3_4,
     )
 }

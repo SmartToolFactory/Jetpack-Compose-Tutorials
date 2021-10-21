@@ -33,7 +33,7 @@ private fun TutorialContent() {
     ) {
         TutorialHeader(text = "BoxWithConstraints")
         TutorialText(
-            text = "1-) BoxWithConstraints is composable that defines its own content according " +
+            text = "1-) **BoxWithConstraints** is composable that defines its own content according " +
                     "to the available space, based on the incoming " +
                     "constraints or the current LayoutDirection."
         )

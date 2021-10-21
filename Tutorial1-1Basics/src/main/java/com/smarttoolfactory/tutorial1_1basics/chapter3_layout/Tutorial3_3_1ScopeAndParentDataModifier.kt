@@ -20,7 +20,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
-fun Tutorial3_3Screen() {
+fun Tutorial3_3Screen1() {
     TutorialContent()
 }
 
@@ -34,8 +34,8 @@ private fun TutorialContent() {
         TutorialHeader(text = "Scope and ParentDataModifier")
         TutorialText(
             text = "1-) Using a scope for a Composable it's possible to add Modifier " +
-                    "only available in that scope. Modifier.horizontalAlign " +
-                    "is only available in CustomColumnScope."
+                    "only available in that scope. **Modifier.horizontalAlign** " +
+                    "is only available in **CustomColumnScope**."
         )
 
         TutorialText2(text = "Custom Column with Scope")

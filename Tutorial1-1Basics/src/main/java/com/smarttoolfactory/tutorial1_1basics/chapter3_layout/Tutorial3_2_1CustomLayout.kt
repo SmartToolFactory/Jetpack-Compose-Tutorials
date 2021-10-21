@@ -26,7 +26,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.random.Random
 
 @Composable
-fun Tutorial3_2Screen() {
+fun Tutorial3_2Screen1() {
     TutorialContent()
 }
 
@@ -40,7 +40,7 @@ private fun TutorialContent() {
         TutorialHeader(text = "Custom Layout")
         TutorialText(
             text = "1-) Using measurables to get Placeable and placing these placeables inside " +
-                    "layout it's possible to create custom layouts"
+                    "layout it's possible to create custom layouts."
         )
 
         TutorialText2(text = "Custom Column")
@@ -89,7 +89,6 @@ private fun TutorialContent() {
         }
     }
 }
-
 
 @Composable
 private fun CustomColumn(

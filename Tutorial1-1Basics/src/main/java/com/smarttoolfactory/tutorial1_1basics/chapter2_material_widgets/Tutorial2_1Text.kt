@@ -353,6 +353,8 @@ private fun SpannableTextExample(modifier: Modifier = Modifier) {
         text = annotatedColorString
     )
 
+    TutorialText2(text = "ClickableText")
+
     val annotatedLinkString: AnnotatedString = buildAnnotatedString {
 
         val str = "Click this link to go to web site"
