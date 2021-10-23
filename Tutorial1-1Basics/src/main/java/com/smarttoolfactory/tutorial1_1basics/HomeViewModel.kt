@@ -58,7 +58,7 @@ class HomeViewModel : ViewModel() {
             }
         }
 
-        println("🤖 ViewModel Query: $query, filteredList: ${filteredList.size}")
+//        println("🤖 ViewModel Query: $query, filteredList: ${filteredList.size}")
 
         return if (query.isEmpty()) tutorialList[selectedPage] else filteredList.toList()
     }

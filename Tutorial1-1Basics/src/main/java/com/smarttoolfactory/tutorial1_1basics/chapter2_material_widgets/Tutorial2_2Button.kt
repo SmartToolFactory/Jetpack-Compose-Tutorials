@@ -4,7 +4,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -301,7 +304,7 @@ private fun IconButtonExample(modifier: Modifier) {
 
             val tint by animateColorAsState(
                 targetValue = if (checked) Color(0xffE91E63) else Color(0xffB0BEC5),
-            animationSpec = tween(durationMillis = 400)
+                animationSpec = tween(durationMillis = 400)
             )
 
             Icon(
@@ -347,7 +350,8 @@ private fun FloatingActionButtonExample(modifier: Modifier) {
         ExtendedFloatingActionButton(
             icon = {
                 Icon(
-                    imageVector = Icons.Filled.Favorite, tint = Color.White,
+                    imageVector = Icons.Filled.Favorite,
+                    tint = Color.White,
                     contentDescription = null
                 )
             },

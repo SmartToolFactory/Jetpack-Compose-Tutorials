@@ -36,7 +36,7 @@ fun SearchBar(
     modifier: Modifier = Modifier
 ) {
 
-    println("🍭 SearchBar() query: $query, searching: $searching, focused: $focused")
+//    println("🍭 SearchBar() query: $query, searching: $searching, focused: $focused")
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -123,7 +123,7 @@ fun SearchTextField(
                             .fillMaxHeight()
                             .weight(1f)
                             .onFocusChanged {
-                                println("🍒 SEARCH FOCUS: $it")
+//                                println("🍒 SEARCH FOCUS: $it")
                                 onSearchFocusChange(it.isFocused)
                             }
                             .focusRequester(focusRequester)

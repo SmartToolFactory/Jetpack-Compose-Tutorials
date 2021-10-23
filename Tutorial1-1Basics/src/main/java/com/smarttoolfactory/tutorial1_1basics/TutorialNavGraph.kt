@@ -40,7 +40,7 @@ fun TutorialNavGraph(
         mainViewModel.tutorialList.add(layoutTutorialList)
     }
 
-    println("🍏 TutorialNavGraph(): mainViewModel: mainViewModel, list: ${mainViewModel.componentTutorialList.hashCode()}")
+//    println("🍏 TutorialNavGraph(): mainViewModel: mainViewModel, list: ${mainViewModel.componentTutorialList.hashCode()}")
 
     // Create Navigation for each Composable Page
     NavHost(

@@ -45,6 +45,14 @@ private fun TutorialContent() {
                 .height(300.dp)
         )
 
+        Spacer(modifier= Modifier.height(16.dp))
+
+        BoxWithConstraintsSample(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        )
+
         TutorialText2(text = "BoxWithConstraints to change layout based on height")
 
         BoxWithConstraintsSample2(
@@ -68,11 +76,11 @@ private fun BoxWithConstraintsSample(modifier: Modifier = Modifier) {
 
     BoxWithConstraints(modifier.background(Color.LightGray)) {
 
+        // The constraints given by the parent layout in pixels.
         val constraints = this.constraints
         val density: Density = LocalDensity.current
 
         val densityValue = density.density
-
 
         val dpValue: Dp = with(density) {
             (constraints.maxHeight * 2 / 3f).toDp()
@@ -86,7 +94,11 @@ private fun BoxWithConstraintsSample(modifier: Modifier = Modifier) {
                 text = "minWidth: ${constraints.minWidth}, maxWidth: ${constraints.maxWidth}, " +
                         "minHeight: ${constraints.minHeight}, maxHeight: ${constraints.maxHeight}, " +
                         "densityValue: $densityValue\n" +
-                        "Covers 2/3 of the available height"
+                        "hasBoundedHeight: ${constraints.hasBoundedHeight}, " +
+                        "hasBoundedHeight: ${constraints.hasBoundedWidth}, " +
+                        "hasFixedWidth: ${constraints.hasFixedWidth}, " +
+                        "hasFixedHeight: ${constraints.hasFixedHeight}, " +
+                        "\nCovers 2/3 of the available height"
             )
 
             val bottomHeight: Dp = with(density) {
@@ -101,7 +113,6 @@ private fun BoxWithConstraintsSample(modifier: Modifier = Modifier) {
                     .height(bottomHeight)
             )
         }
-
     }
 }
 
@@ -109,6 +120,7 @@ private fun BoxWithConstraintsSample(modifier: Modifier = Modifier) {
 private fun BoxWithConstraintsSample2(modifier: Modifier = Modifier) {
     BoxWithConstraints(modifier.background(Color.LightGray)) {
 
+        // The constraints given by the parent layout in pixels.
         val constraints = this.constraints
         val density: Density = LocalDensity.current
 
@@ -140,6 +152,4 @@ private fun BoxWithConstraintsSample2(modifier: Modifier = Modifier) {
             }
         }
     }
-
-
 }

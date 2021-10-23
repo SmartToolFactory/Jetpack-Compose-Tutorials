@@ -68,6 +68,7 @@ dependencies {
     implementation 'com.google.accompanist:accompanist-insets:0.20.0'
     implementation 'com.google.accompanist:accompanist-systemuicontroller:0.20.0'
     implementation 'com.google.accompanist:accompanist-pager:0.20.0'
+    implementation 'com.google.accompanist:accompanist-drawablepainter:0.20.0'
 
     // If using indicators, also depend on
     implementation 'com.google.accompanist:accompanist-pager-indicators:0.20.0'

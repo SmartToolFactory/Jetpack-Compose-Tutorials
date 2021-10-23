@@ -12,7 +12,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.tutorial_list.*
 
@@ -463,7 +462,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     val tutorial3_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_1),
         description = "Create custom modifiers using layout, Measurable, Constraint, Placeable," +
-                " and LayoutModifier",
+                " and LayoutModifier.",
         action = {
             Tutorial3_1Screen()
         },
@@ -480,7 +479,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_2_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_2_1),
-        description = "Create custom layout using using layout, Measurable, Constraint, Placeable",
+        description = "Create custom layout using using layout, Measurable, Constraint, Placeable.",
         action = {
             Tutorial3_2Screen1()
         },
@@ -496,7 +495,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_2_2 = TutorialSectionModel(
         title = "3-2-2 Custom Layout",
-        description = "Create custom layout using using MeasurePolicy and use intrinsic dimensions",
+        description = "Create custom layout using using MeasurePolicy and use intrinsic dimensions.",
         action = {
             Tutorial3_2Screen2()
         },
@@ -535,7 +534,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         title = stringResource(R.string.title_3_4),
         description = "BoxWithConstraints is a composable that defines its own content " +
                 "according to the available space, based on the incoming constraints " +
-                "or the current LayoutDirection. ",
+                "or the current LayoutDirection.",
         action = {
             Tutorial3_4Screen()
         },
@@ -546,11 +545,51 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffFFEB3B)
     )
 
+    val tutorial3_5 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_5),
+        description = "SubcomposeLayout allows to subcompose the actual content during " +
+                "the measuring stage for example to use the values calculated " +
+                "during the measurement as " +
+                "params for the composition of the children.",
+        action = {
+            Tutorial3_5Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SUBCOMPOSE_LAYOUT,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
+    val tutorial3_6_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_6_1),
+        description = "Custom layout like whatsapp chat layout that moves time and message read" +
+                "status layout right or bottom based on message width",
+        action = {
+            Tutorial3_6Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SUBCOMPOSE_LAYOUT,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
     return listOf(
         tutorial3_1,
         tutorial3_2_1,
         tutorial3_2_2,
         tutorial3_3_1,
         tutorial3_4,
+        tutorial3_5,
+        tutorial3_6_1
     )
 }

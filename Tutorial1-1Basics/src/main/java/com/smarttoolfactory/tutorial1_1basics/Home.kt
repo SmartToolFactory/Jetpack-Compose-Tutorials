@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.*
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
@@ -40,8 +41,7 @@ fun HomeScreen(
     navigateToTutorial: (String) -> Unit,
     state: SearchState<TutorialSectionModel, SuggestionModel> = rememberSearchState()
 ) {
-
-    println("✅ HomeScreen() state:\n$state")
+//    println("✅ HomeScreen() state:\n$state")
 
     state.suggestions = viewModel.suggestionState.collectAsState(initial = suggestionList).value
 
@@ -93,7 +93,7 @@ fun HomeScreen(
 
         LaunchedEffect(state.query.text) {
             state.searching = true
-            println("⚠️ HomeScreen() LaunchedEffect query: ${state.query.text}, searching: ${state.searching}")
+//            println("⚠️ HomeScreen() LaunchedEffect query: ${state.query.text}, searching: ${state.searching}")
             delay(100)
             state.searchResults = viewModel.getTutorials(state.query.text)
             state.searching = false
