@@ -1,21 +1,20 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.Call
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.Videocam
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,14 +25,18 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.ChatAppbar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,116 +74,7 @@ private fun TutorialContent() {
             .background(Color(0xffFBE9E7))
     ) {
 
-        TopAppBar(
-            title = {
-
-                Row(
-//                    modifier = Modifier.background(Color.Red)
-                ) {
-
-                    Row(
-                        modifier = Modifier
-                            .padding(vertical = 4.dp)
-                            .clip(RoundedCornerShape(percent = 50))
-                            .clickable { },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-
-                        Surface(
-                            modifier = Modifier.padding(6.dp),
-                            shape = CircleShape,
-                            color = Color.LightGray
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Groups,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .background(Color.LightGray)
-                                    .padding(4.dp)
-                                    .fillMaxHeight()
-                                    .aspectRatio(1f)
-                            )
-                        }
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clickable { },
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(text = "TopAppBar", modifier = Modifier.padding(2.dp))
-                    }
-
-                }
-
-            },
-            elevation = 4.dp,
-            backgroundColor = Color(0xff00897B),
-            contentColor = Color.White,
-//            navigationIcon = {
-//                Row(
-//                    modifier = Modifier
-//                        .clip(RoundedCornerShape(percent = 40))
-//                        .clickable {  }
-//                        .padding(vertical = 4.dp, horizontal = 4.dp),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//
-//                    Icon(
-//                        imageVector = Icons.Filled.ArrowBack,
-//                        contentDescription = null
-//                    )
-//
-//                    Surface(
-//                        shape = CircleShape,
-//                        color = Color.LightGray
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Filled.Groups,
-//                            contentDescription = null,
-//                            modifier = Modifier
-//                                .background(Color.LightGray)
-//                                .padding(8.dp)
-//                                .fillMaxHeight()
-//                                .aspectRatio(1f)
-//                        )
-//                    }
-//                }
-//            },
-            actions = {
-                IconButton(onClick = { /* doSomething() */ }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Videocam,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-
-                IconButton(onClick = { /* doSomething() */ }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Call,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-
-                IconButton(
-                    onClick = { /* doSomething() */ }) {
-                    Icon(
-                        imageVector = Icons.Rounded.MoreVert,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-            }
-        )
+        ChatAppbar()
 
         LazyColumn(
             modifier = Modifier
@@ -208,131 +102,6 @@ private fun TutorialContent() {
         })
     }
 }
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-private fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) -> Unit) {
-
-    var input by remember { mutableStateOf(TextFieldValue("")) }
-    val textEmpty: Boolean by derivedStateOf { input.text.isEmpty() }
-
-    Row(
-        modifier = modifier
-            .padding(8.dp)
-//            .navigationBarsWithImePadding()
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Surface(
-            modifier = Modifier
-                .weight(1f),
-            shape = RoundedCornerShape(50),
-            color = MaterialTheme.colors.surface,
-            elevation = 1.dp
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Mood, contentDescription = "emoji")
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .wrapContentHeight(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-
-                        BasicTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            textStyle = TextStyle(
-                                fontSize = 16.sp
-                            ),
-                            value = input,
-                            onValueChange = {
-                                input = it
-                            },
-                            cursorBrush = SolidColor(Color(0xff00897B)),
-                            decorationBox = { innerTextField ->
-                                if (textEmpty) {
-                                    Text("Message")
-                                }
-                                innerTextField()
-                            }
-                        )
-                    }
-
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            modifier = Modifier.rotate(-45f),
-                            imageVector = Icons.Default.AttachFile,
-                            contentDescription = "attach"
-                        )
-                    }
-                    AnimatedVisibility(visible = textEmpty) {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Filled.CameraAlt,
-                                contentDescription = "camera"
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.width(6.dp))
-
-        FloatingActionButton(
-            modifier = Modifier.size(50.dp),
-            backgroundColor = Color(0xff00897B),
-            onClick = {
-                if (!textEmpty) {
-                    onMessageChange(input.text)
-                    input = TextFieldValue("")
-                }
-            }
-        ) {
-            Icon(
-                tint = Color.White,
-                imageVector = if (textEmpty) Icons.Filled.Mic else Icons.Filled.Send,
-                contentDescription = null
-            )
-        }
-    }
-}
-
-@Composable
-fun MessageRow(
-    text: String,
-    messageTime: String,
-    messageStatus: MessageStatus
-) {
-    Column(
-        horizontalAlignment = Alignment.End,
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(top = 1.dp, bottom = 1.dp)
-            .background(Color.LightGray)
-    ) {
-        ChatFlexBoxLayout(
-
-            modifier = Modifier
-                .padding(start = 60.dp, end = 8.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xffDCF8C6)),
-            text,
-            messageTime,
-            messageStatus
-        )
-    }
-}
-
 
 @Composable
 private fun ChatFlexBoxLayout(
@@ -434,10 +203,7 @@ private fun MessageTimeText(
 ) {
 
     Row(
-        modifier = modifier
-            .padding(end = 6.dp)
-//            .background(Color.Red)
-        ,
+        modifier = modifier.padding(end = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -472,3 +238,204 @@ enum class MessageStatus {
 }
 
 data class ChatMessage(val id: Long, var message: String, var date: Long)
+
+@Composable
+fun MessageRow(
+    text: String,
+    messageTime: String,
+    messageStatus: MessageStatus
+) {
+    Column(
+        horizontalAlignment = Alignment.End,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(top = 1.dp, bottom = 1.dp)
+            .background(Color.LightGray)
+    ) {
+        ChatFlexBoxLayout(
+
+            modifier = Modifier
+                .padding(start = 60.dp, end = 8.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color(0xffDCF8C6)),
+            text,
+            messageTime,
+            messageStatus
+        )
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) -> Unit) {
+
+    var input by remember { mutableStateOf(TextFieldValue("")) }
+    val textEmpty: Boolean by derivedStateOf { input.text.isEmpty() }
+
+    Row(
+        modifier = modifier
+            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.Bottom
+    ) {
+
+        ChatTextField(
+            modifier = modifier.weight(1f),
+            input = input,
+            empty = textEmpty,
+            onValueChange = {
+                input = it
+            }
+        )
+
+        Spacer(modifier = Modifier.width(6.dp))
+
+        FloatingActionButton(
+            modifier = Modifier.size(48.dp),
+            backgroundColor = Color(0xff00897B),
+            onClick = {
+                if (!textEmpty) {
+                    onMessageChange(input.text)
+                    input = TextFieldValue("")
+                }
+            }
+        ) {
+            Icon(
+                tint = Color.White,
+                imageVector = if (textEmpty) Icons.Filled.Mic else Icons.Filled.Send,
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun ChatTextField(
+    modifier: Modifier = Modifier,
+    input: TextFieldValue,
+    empty: Boolean,
+    onValueChange: (TextFieldValue) -> Unit
+) {
+
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colors.surface,
+        elevation = 1.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(2.dp),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+
+                CustomIconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.then(Modifier.size(circleButtonSize))
+                ) {
+                    Icon(imageVector = Icons.Default.Mood, contentDescription = "emoji")
+                }
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = circleButtonSize),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+
+                    BasicTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        textStyle = TextStyle(
+                            fontSize = 18.sp
+                        ),
+                        value = input,
+                        onValueChange = onValueChange,
+                        cursorBrush = SolidColor(Color(0xff00897B)),
+                        decorationBox = { innerTextField ->
+                            if (empty) {
+                                Text("Message", fontSize = 18.sp)
+                            }
+                            innerTextField()
+                        }
+                    )
+                }
+
+                CustomIconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.then(Modifier.size(circleButtonSize))
+                ) {
+                    Icon(
+                        modifier = Modifier.rotate(-45f),
+                        imageVector = Icons.Default.AttachFile,
+                        contentDescription = "attach"
+                    )
+                }
+                AnimatedVisibility(visible = empty) {
+                    CustomIconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.then(Modifier.size(circleButtonSize))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.CameraAlt,
+                            contentDescription = "camera"
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+val circleButtonSize = 44.dp
+
+@Composable
+private fun CustomIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    content: @Composable () -> Unit
+) {
+
+    Box(
+        modifier = modifier
+            .clickable(
+                onClick = onClick,
+                enabled = enabled,
+                role = Role.Button,
+                interactionSource = interactionSource,
+                indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        val contentAlpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
+        CompositionLocalProvider(LocalContentAlpha provides contentAlpha, content = content)
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun CustomIconButtonPreview() {
+    CustomIconButton(onClick = {}) {
+        Icon(
+            imageVector = Icons.Filled.CameraAlt,
+            contentDescription = "camera"
+        )
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun ChatInputPreview() {
+    ChatInput() {}
+}
+
