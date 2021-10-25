@@ -4,10 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +14,7 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
 import com.smarttoolfactory.tutorial1_1basics.ui.components.*
 
 @Composable
@@ -51,6 +50,9 @@ private fun TutorialContent() {
 
             TutorialText2(text = "Icon Button")
             IconButtonExample(paddingModifier)
+
+            TutorialText2(text = "Custom Ripple Icon Button")
+            CustomIconButtonExample(paddingModifier)
 
             TutorialHeader(text = "Floating Action Button")
             FloatingActionButtonExample(paddingModifier)
@@ -310,6 +312,85 @@ private fun IconButtonExample(modifier: Modifier) {
             Icon(
                 Icons.Filled.Favorite, tint = tint,
                 contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+private fun CustomIconButtonExample(modifier: Modifier) {
+
+    // rememberRipple of this custom button defines ripple radius, color and if it will be bounded
+
+    FullWidthRow(modifier.padding(horizontal = 30.dp)) {
+        IndicatingIconButton(
+            onClick = { /*TODO*/ },
+            indication = rememberRipple(
+                bounded = false,
+                radius = 40.dp,
+                color = Color(
+                    0xff42A5F5
+                )
+            )
+        ) {
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = null,
+                tint = Color(0xffE91E63)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(40.dp))
+
+        IndicatingIconButton(
+            onClick = { /*TODO*/ },
+            indication = rememberRipple(
+                bounded = false,
+                radius = 30.dp,
+                color = Color(0xffBF360C)
+            )
+        ) {
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = null,
+                tint = Color(0xffE91E63)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(40.dp))
+
+        // this one's ripple is bounded
+        IndicatingIconButton(
+            onClick = { /*TODO*/ },
+            indication = rememberRipple(
+                bounded = true,
+                radius = 30.dp,
+                color = Color(0xff311B92)
+            )
+        ) {
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = null,
+                tint = Color(0xffE91E63),
+                modifier = Modifier.size(36.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(40.dp))
+
+        IndicatingIconButton(
+            onClick = { /*TODO*/ },
+            indication = rememberRipple(
+                bounded = false,
+                radius = 50.dp,
+                color = Color(0xff43A047)
+            )
+        ) {
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = null,
+                tint = Color(0xffE91E63),
+                modifier = Modifier.size(36.dp)
             )
         }
     }

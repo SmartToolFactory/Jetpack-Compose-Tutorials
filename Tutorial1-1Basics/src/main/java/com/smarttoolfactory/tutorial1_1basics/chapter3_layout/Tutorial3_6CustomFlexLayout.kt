@@ -4,8 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,7 +23,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -37,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.ChatAppbar
+import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -332,9 +330,10 @@ private fun ChatTextField(
         ) {
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
 
-                CustomIconButton(
+                IndicatingIconButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.then(Modifier.size(circleButtonSize))
+                    modifier = Modifier.then(Modifier.size(circleButtonSize)),
+                    indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
                 ) {
                     Icon(imageVector = Icons.Default.Mood, contentDescription = "emoji")
                 }
@@ -365,9 +364,10 @@ private fun ChatTextField(
                     )
                 }
 
-                CustomIconButton(
+                IndicatingIconButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.then(Modifier.size(circleButtonSize))
+                    modifier = Modifier.then(Modifier.size(circleButtonSize)),
+                    indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
                 ) {
                     Icon(
                         modifier = Modifier.rotate(-45f),
@@ -376,9 +376,10 @@ private fun ChatTextField(
                     )
                 }
                 AnimatedVisibility(visible = empty) {
-                    CustomIconButton(
+                    IndicatingIconButton(
                         onClick = { /*TODO*/ },
-                        modifier = Modifier.then(Modifier.size(circleButtonSize))
+                        modifier = Modifier.then(Modifier.size(circleButtonSize)),
+                        indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.CameraAlt,
@@ -393,37 +394,12 @@ private fun ChatTextField(
 
 val circleButtonSize = 44.dp
 
-@Composable
-private fun CustomIconButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable () -> Unit
-) {
-
-    Box(
-        modifier = modifier
-            .clickable(
-                onClick = onClick,
-                enabled = enabled,
-                role = Role.Button,
-                interactionSource = interactionSource,
-                indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        val contentAlpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
-        CompositionLocalProvider(LocalContentAlpha provides contentAlpha, content = content)
-    }
-}
-
 @Preview
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 @Composable
-private fun CustomIconButtonPreview() {
-    CustomIconButton(onClick = {}) {
+private fun IndicatingIconButtonPreview() {
+    IndicatingIconButton(onClick = {}) {
         Icon(
             imageVector = Icons.Filled.CameraAlt,
             contentDescription = "camera"

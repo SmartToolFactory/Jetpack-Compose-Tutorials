@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Videocam
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,10 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.circleButtonSize
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemMode
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemSpec
 import com.smarttoolfactory.tutorial1_1basics.model.separateIntoActionAndOverflow
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
+import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
@@ -346,7 +349,7 @@ fun ChatAppbar(onBack: (() -> Unit)? = null) {
                     .padding(vertical = 4.dp)
                     .clip(RoundedCornerShape(percent = 50))
                     .clickable {
-                               onBack?.invoke()
+                        onBack?.invoke()
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -418,7 +421,11 @@ private fun ChatAppbarActions(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { /* doSomething() */ }) {
+        IndicatingIconButton(
+            onClick = { /* doSomething() */ },
+            indication = rememberRipple(bounded = false, radius = 22.dp),
+            modifier = Modifier.then(Modifier.size(44.dp))
+            ) {
             Icon(
                 imageVector = Icons.Rounded.Videocam,
                 contentDescription = null,
@@ -426,7 +433,11 @@ private fun ChatAppbarActions(
             )
         }
 
-        IconButton(onClick = { /* doSomething() */ }) {
+        IndicatingIconButton(
+            onClick = { /* doSomething() */ },
+            indication = rememberRipple(bounded = false, radius = 22.dp),
+            modifier = Modifier.then(Modifier.size(44.dp))
+        ) {
             Icon(
                 imageVector = Icons.Rounded.Call,
                 contentDescription = null,
@@ -434,8 +445,11 @@ private fun ChatAppbarActions(
             )
         }
 
-        IconButton(
-            onClick = { /* doSomething() */ }) {
+        IndicatingIconButton(
+            onClick = { /* doSomething() */ },
+            indication = rememberRipple(bounded = false, radius = 22.dp),
+            modifier = Modifier.then(Modifier.size(44.dp))
+        ) {
             Icon(
                 imageVector = Icons.Rounded.MoreVert,
                 contentDescription = null,
