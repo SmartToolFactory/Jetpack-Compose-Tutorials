@@ -109,13 +109,24 @@ private fun ChatFlexBoxLayout(
     messageStatus: MessageStatus
 ) {
 
-    var lineCount = 1
+    var lineCount = 0
+    var lastLineWidth = 0f
 
     val content = @Composable {
-        Message(text) { textLayoutResult ->
-            lineCount = textLayoutResult.lineCount
-        }
-        MessageTimeText(messageTime = messageTime, messageStatus = messageStatus)
+        Message(
+            modifier = Modifier,
+            text = text,
+            onTextLayout = { textLayoutResult ->
+                lineCount = textLayoutResult.lineCount
+                lastLineWidth = textLayoutResult.getLineRight(lineCount - 1)
+            }
+        )
+
+        MessageTimeText(
+            modifier = Modifier,
+            messageTime = messageTime,
+            messageStatus = messageStatus
+        )
     }
 
     Layout(
@@ -133,59 +144,41 @@ private fun ChatFlexBoxLayout(
             measurable.measure(constraints)
         }
 
-        val totalSize = placeables.fold(IntSize.Zero) { totalSize: IntSize, placeable: Placeable ->
-
-            val intSize = IntSize(
-                width = totalSize.width + placeable.width,
-                height = totalSize.height + placeable.height
-            )
-
-            println(
-                "🍏 ChatFlexBoxLayout placeable " +
-                        "width: ${placeable.width}, " +
-                        "height: ${placeable.height}, " +
-                        "intSize: $intSize"
-            )
-
-            intSize
-        }
+        val message = placeables.first()
+        val status = placeables.last()
 
         val width: Int
         val height: Int
-        var selection = 0
 
-        // Message + time layout is smaller than component so layout them side by side
-        if (parentWidth > totalSize.width) {
-            width = totalSize.width
-            height = placeables.maxOf { it.height }
-            selection = 0
+        if (lineCount > 1 && lastLineWidth + status.measuredWidth < message.measuredWidth) {
+            width = message.measuredWidth
+            height = message.measuredHeight
+        } else if (lineCount > 1 && lastLineWidth + status.measuredWidth >= parentWidth) {
+            width = message.measuredWidth
+            height = message.measuredHeight + status.measuredHeight
+        } else if (lineCount == 1 && message.width + status.measuredWidth >= parentWidth) {
+            width = message.measuredWidth
+            height = message.measuredHeight + status.measuredHeight
         } else {
-            width = parentWidth
-            height = totalSize.height
-            selection = 1
+            width = message.measuredWidth + status.measuredWidth
+            height = message.measuredHeight
         }
 
-        println("🍒 ChatFlexBoxLayout parentWidth: $parentWidth, maxSize: $totalSize, lineCount: $lineCount, selection: $selection, width: $width, height: $height")
-
         layout(width = width, height = height) {
-
-            if (selection == 0) {
-                placeables.first().placeRelative(0, 0)
-                placeables.last()
-                    .placeRelative(placeables.first().width, height - placeables.last().height)
-            } else {
-                placeables.first().placeRelative(0, 0)
-                placeables.last()
-                    .placeRelative(width - placeables.last().width, placeables.first().height)
-            }
+            message.placeRelative(0, 0)
+            status.placeRelative(width - status.width, height - status.height)
         }
     }
 }
 
 @Composable
-private fun Message(text: String, onTextLayout: (TextLayoutResult) -> Unit) {
+private fun Message(
+    modifier: Modifier = Modifier,
+    text: String,
+    onTextLayout: (TextLayoutResult) -> Unit
+) {
     Text(
-        modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
+        modifier = modifier.padding(horizontal = 6.dp, vertical = 6.dp),
         fontSize = 16.sp,
         lineHeight = 18.sp,
         text = text,

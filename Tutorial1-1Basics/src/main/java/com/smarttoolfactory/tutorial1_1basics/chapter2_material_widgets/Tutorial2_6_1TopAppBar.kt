@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.circleButtonSize
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemMode
 import com.smarttoolfactory.tutorial1_1basics.model.ActionItemSpec
 import com.smarttoolfactory.tutorial1_1basics.model.separateIntoActionAndOverflow
