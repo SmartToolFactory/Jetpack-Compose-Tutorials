@@ -58,13 +58,13 @@ using previous searches using a database, domain with ViewModel.
 
 |Tutorial|Preview|
 |:-------|-------|
-|<h3>3-1 Custom Modifier</h3><br/>Create custom layout using using layout, Measurable, Constraint, Placeable.<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_1.png" width=320> |
+|<h3>3-1 Custom Modifier</h3><br/>Create custom layout using using layout, Measurable, Constraint, Placeable.<br><br>• Custom Modifier<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_1.png" width=320> |
 |  |  |
-|<h3>3-2-1 Custom Layout</h3><br/>Create custom layout using using MeasurePolicy and use intrinsic dimensions.<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_2_1.png" width=320> |
+|<h3>3-2-1 Custom Layout</h3><br/>Create custom layout using using MeasurePolicy and use intrinsic dimensions.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_2_1.png" width=320> |
 |  |  |
-|<h3>3-3-1 Scope&ParenDataModifier</h3><br/>Add custom modifiers to Composable inside a custom layout using it's scope.<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_3_1.png" width=320> |
+|<h3>3-3-1 Scope&ParenDataModifier</h3><br/>Add custom modifiers to Composable inside a custom layout using it's scope.<br><br>• Custom Layout<br>• Scope<br>• ParentDataModifier<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_3_1.png" width=320> |
 |  |  |
-|<h3>3-4 BoxWithConstraints</h3><br/>BoxWithConstraints is a composable that defines its own content according to the available space, based on the incoming constraints or the current LayoutDirection.<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_4.png" width=320> |
+|<h3>3-4 BoxWithConstraints</h3><br/>BoxWithConstraints is a composable that defines its own content according to the available space, based on the incoming constraints or the current LayoutDirection.<br><br>• BoxWithConstraints<br>• Constraint<br>|<img src ="/./screenshots/tutorial3_4.png" width=320> |
 |  |  |
-|<h3>3-6 Custom Chat Layouts</h3><br/>Custom layout like whatsapp chat layout that moves time and message read status layout right or bottom based on message width.<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_6.gif" width=320> |
+|<h3>3-6 Custom Chat Layouts</h3><br/>Custom layout like whatsapp chat layout that moves time and message read status layout right or bottom based on message width.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6.gif" width=320> |
 |  |  |
