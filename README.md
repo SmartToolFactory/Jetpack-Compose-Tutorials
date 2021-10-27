@@ -22,7 +22,7 @@ using previous searches using a database, domain with ViewModel.
 #### Material Widgets
 
 |Tutorial|Preview|
-|-------|-------|
+|:-------|-------|
 |<h3>2-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial2-1.jpg" width=320> |
 |  |  |
 |<h3>2-2 Button, IconButton, FAB, Chip</h3><br/>Create button with text and/or with image, Floating Action Button  or Chips. Modify properties of buttons including color, text, and click actions.<br><br> • Button<br>• IconButton<br>• FloatingActionButton<br>• Chip<br>|<img src ="/./screenshots/tutorial2-2.jpg" width=320> |
@@ -52,4 +52,19 @@ using previous searches using a database, domain with ViewModel.
 |<h3>2-11 Snackbar, Progress, Selection</h3><br/>Create Snackbars with various layouts and styling, Checkboxes with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2-11.gif" width=320> |
 |  |  |
 |<h3>2-12 Dialog, AlertDialog</h3><br/>Create Dialog, and AlertDialog with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.<br><br>• AlertDialog<br>• Dialog<br>• DialogProperties<br>|<img src ="/./screenshots/tutorial2-12.gif" width=320> |
+|  |  |
+
+#### Layout
+
+|Tutorial|Preview|
+|:-------|-------|
+|<h3>3-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3-1.png" width=320> |
+|  |  |
+|<h3>3-2-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_2_1.png" width=320> |
+|  |  |
+|<h3>3-3-1 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_3_1.png" width=320> |
+|  |  |
+|<h3>3-4 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_4.png" width=320> |
+|  |  |
+|<h3>3-6 Text</h3><br/>Create Text component with different properties such as color, background, font weight, family, style, spacing and others<br><br> • Text<br>• Row<br>• FontStyle<br>• Annotated String Hyperlink<br>|<img src ="/./screenshots/tutorial3_6.gif" width=320> |
 |  |  |

@@ -49,6 +49,7 @@ private fun TutorialContent() {
             topStart = 12.dp,
             topEnd = 12.dp
         ),
+        sheetGesturesEnabled = true,
         sheetContent = {
             SheetContent()
         },
