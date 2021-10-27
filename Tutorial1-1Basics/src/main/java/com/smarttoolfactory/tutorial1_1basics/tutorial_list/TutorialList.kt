@@ -514,7 +514,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_3_1 = TutorialSectionModel(
         title = stringResource(R.string.title_3_3_1),
-        description = "Add custom modifiers to Composable inside a custom layout using it's scope",
+        description = "Add custom modifiers to Composable inside a custom layout using it's scope.",
         action = {
             Tutorial3_3Screen1()
         },
@@ -567,14 +567,13 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_6_1 = TutorialSectionModel(
         title = stringResource(R.string.title_3_6_1),
-        description = "Custom layout like whatsapp chat layout that moves time and message read" +
-                "status layout right or bottom based on message width",
+        description = "Custom layout like whatsapp chat layout that moves time and message read " +
+                "status layout right or bottom based on message width.",
         action = {
             Tutorial3_6Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_SUBCOMPOSE_LAYOUT,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
             TAG_CONSTRAINT,
