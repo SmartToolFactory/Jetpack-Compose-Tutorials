@@ -129,21 +129,21 @@ private fun TutorialContent() {
                 "Align Top",
                 modifier = Modifier
                     .background(Color(0xffF44336))
-                    .verticalALign(VerticalAlignment.Top),
+                    .verticalAlign(VerticalAlignment.Top),
                 color = Color.White
             )
             Text(
                 "Align Center",
                 modifier = Modifier
                     .background(Color(0xff9C27B0))
-                    .verticalALign(VerticalAlignment.Center),
+                    .verticalAlign(VerticalAlignment.Center),
                 color = Color.White
             )
             Text(
                 "Align Bottom",
                 modifier = Modifier
                     .background(Color(0xff2196F3))
-                    .verticalALign(VerticalAlignment.Bottom),
+                    .verticalAlign(VerticalAlignment.Bottom),
                 color = Color.White
             )
         }
@@ -335,7 +335,7 @@ that implements ParentDataModifier interface
 interface CustomRowScope {
 
     @Stable
-    fun Modifier.verticalALign(align: VerticalAlignment) = this.then(
+    fun Modifier.verticalAlign(align: VerticalAlignment) = this.then(
         CustomRowData(align)
     )
 
@@ -407,7 +407,6 @@ fun CustomRowWithScope(
 
         // Track the x co-ord we have placed children up to
         var xPosition = 0
-
 
         // Set the size of the layout as big as it can
         layout(totalWidth, maxHeight) {

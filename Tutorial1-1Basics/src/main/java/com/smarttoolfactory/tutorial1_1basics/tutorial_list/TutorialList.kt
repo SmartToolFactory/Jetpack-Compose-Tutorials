@@ -592,3 +592,29 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_6_1
     )
 }
+
+@Composable
+fun createStateTutorialList(): List<TutorialSectionModel> {
+
+    val tutorial4_1 = TutorialSectionModel(
+        title = stringResource(R.string.title3_1),
+        description = "Create custom modifiers using layout, Measurable, Constraint, Placeable," +
+                " and LayoutModifier.",
+        action = {
+            Tutorial3_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_MODIFIER,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE,
+            TAG_LAYOUT_MODIFIER
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
+    return listOf(
+        tutorial4_1
+    )
+}

@@ -119,3 +119,8 @@ const val TAG_MEASURE_POLICY = "MeasurePolicy"
 const val TAG_INTRINSIC_WIDTH = "IntrinsicWidth"
 const val TAG_INTRINSIC_HEIGHT = "IntrinsicHeight"
 const val TAG_SUBCOMPOSE_LAYOUT = "SubcomposeLayout"
+
+/*
+    STATE
+ */
+const val TAG_REMEMBER= "Remember"

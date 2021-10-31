@@ -116,6 +116,7 @@ private fun CustomLayoutWithMeasurePolicy(
 // We build a layout that will occupy twice as much space as its children,
 // and will position them to be bottom right aligned.
     val measurePolicy = object : MeasurePolicy {
+
         override fun MeasureScope.measure(
             measurables: List<Measurable>,
             constraints: Constraints
