@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -29,6 +28,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
@@ -81,27 +82,33 @@ private fun TutorialContent() {
             ImageShapeAndFilterExample()
 
             StyleableTutorialText(
-                text = "5-) graphicLayer modifier to apply effects to content, such as scaling (scaleX, scaleY), rotation (rotationX, rotationY, rotationZ), opacity (alpha), shadow (shadowElevation, shape), and clipping (clip, shape)."
+                text = "5-) **graphicLayer** modifier to apply effects to content, such as scaling (scaleX, scaleY), rotation (rotationX, rotationY, rotationZ), opacity (alpha), shadow (shadowElevation, shape), and clipping (clip, shape)."
             )
-
             ImageGraphicLayer()
 
             StyleableTutorialText(
-                text = "6) Use Glide library to fetch an image resource from network and " +
+                text = "6-) **graphicLayer** alpha set to .99 and **blendMode** set on **drawImage** can be used to " +
+                        "apply Porter Duff Modes to src and dst images"
+            )
+            ImageFromBlendMode()
+
+
+            StyleableTutorialText(
+                text = "7) Use Glide library to fetch an image resource from network and " +
                         "set it to Image component."
             )
 
             ImageDownloadWithGlideExample()
 
             StyleableTutorialText(
-                text = "6) Use Coil library to fetch an image resource from network and " +
+                text = "8) Use Coil library to fetch an image resource from network and " +
                         "set it to Image component."
             )
             ImageDownloadWithCoilExample()
 
 
             StyleableTutorialText(
-                text = "7-) ContentScale represents a rule to apply to scale a source " +
+                text = "9-) ContentScale represents a rule to apply to scale a source " +
                         "rectangle to be inscribed into a destination."
             )
             ImageContentScaleExample()
@@ -356,36 +363,57 @@ private fun ImageShapeAndFilterExample() {
             contentDescription = null
         )
     }
+}
 
-    // TODO PorterDuff mode is not working properly, or i couldn't figure it out yet
-    // Check out https://stackoverflow.com/questions/65653560/jetpack-compose-applying-porterduffmode-to-image
-//    val imageBitmapSrc: ImageBitmap = imageFromResource(
-//        LocalContext.current.resources,
-//        R.drawable.composite_src
-//    )
-//    val imageBitmapDst: ImageBitmap = imageFromResource(
-//        LocalContext.current.resources,
-//        R.drawable.composite_dst
-//    )
-//
-//    val size = Size(imageBitmapSrc.width.toFloat() * 2, imageBitmapSrc.height.toFloat() * 2)
-//
-//    val blendPainter = remember {
-//        object : Painter() {
-//
-//            override val intrinsicSize: Size
-//                get() = size
-//
-//            override fun DrawScope.onDraw() {
-//
-//                drawRect(color = Color.Green, blendMode = BlendMode.Clear)
-//                drawImage(image = imageBitmapDst)
-//                drawImage(image =imageBitmapDst, blendMode = BlendMode.Lighten)
-//            }
-//        }
-//    }
-//
-//    Image(blendPainter, contentDescription = null)
+@Composable
+private fun ImageFromBlendMode() {
+    val imageBitmapSrc = ImageBitmap.imageResource(
+        LocalContext.current.resources,
+        R.drawable.composite_src
+    )
+    val imageBitmapDst = ImageBitmap.imageResource(
+        LocalContext.current.resources,
+        R.drawable.composite_dst
+    )
+
+
+    androidx.compose.foundation.Canvas(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+            // Provide a slight opacity to for compositing into an
+            // offscreen buffer to ensure blend modes are applied to empty pixel information
+            // By default any alpha != 1.0f will use a compositing layer by default
+            .graphicsLayer(alpha = 0.99f)
+    ) {
+
+
+        val dimension = (size.height.coerceAtMost(size.width) *.9f).toInt()
+
+        // Images on left
+        drawImage(
+            image = imageBitmapDst,
+            dstSize = IntSize(dimension, dimension)
+        )
+        drawImage(
+            image = imageBitmapSrc,
+            dstSize = IntSize(dimension, dimension),
+            blendMode = BlendMode.SrcOut
+        )
+
+        // Images on right
+        drawImage(
+            image = imageBitmapDst,
+            dstOffset = IntOffset((size.width / 2f).toInt(), 0),
+            dstSize = IntSize(dimension, dimension)
+        )
+        drawImage(
+            image = imageBitmapSrc,
+            dstOffset = IntOffset((size.width / 2f).toInt(), 0),
+            dstSize = IntSize(dimension, dimension),
+            blendMode = BlendMode.DstOut
+        )
+    }
 }
 
 @Composable
