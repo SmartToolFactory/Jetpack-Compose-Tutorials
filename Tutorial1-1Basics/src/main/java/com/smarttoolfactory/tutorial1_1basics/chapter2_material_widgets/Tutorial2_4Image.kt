@@ -387,7 +387,6 @@ private fun ImageFromBlendMode() {
             .graphicsLayer(alpha = 0.99f)
     ) {
 
-
         val dimension = (size.height.coerceAtMost(size.width) *.9f).toInt()
 
         // Images on left

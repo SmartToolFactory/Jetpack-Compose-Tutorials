@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics
+package com.smarttoolfactory.tutorial1_1basics.tutorial_list
 
 import Tutorial2_10Screen3
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -8,12 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
-import com.smarttoolfactory.tutorial1_1basics.tutorial_list.*
 
 /**
  * Create list of tutorials with titles, action that navigates to composable function
@@ -597,21 +598,17 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_1 = TutorialSectionModel(
-        title = stringResource(R.string.title3_1),
-        description = "Create custom modifiers using layout, Measurable, Constraint, Placeable," +
-                " and LayoutModifier.",
+        title = stringResource(R.string.title_4_1),
+        description = "Remember and mutableState",
         action = {
-            Tutorial3_1Screen()
+            Tutorial4_1Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_CUSTOM_MODIFIER,
-            TAG_MEASURABLE,
-            TAG_CONSTRAINT,
-            TAG_PLACEABLE,
-            TAG_LAYOUT_MODIFIER
+            TAG_REMEMBER,
+            TAG_STATE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = Color(0xffE91E63)
     )
 
     return listOf(

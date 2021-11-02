@@ -23,9 +23,6 @@ class HomeViewModel : ViewModel() {
 
     var selectedPage: Int = 0
 
-    lateinit var componentTutorialList: List<TutorialSectionModel>
-    lateinit var layoutTutorials: List<TutorialSectionModel>
-
     val tutorialList = mutableListOf<List<TutorialSectionModel>>()
 
     private val _suggestionState = MutableStateFlow<List<SuggestionModel>>(suggestionList)

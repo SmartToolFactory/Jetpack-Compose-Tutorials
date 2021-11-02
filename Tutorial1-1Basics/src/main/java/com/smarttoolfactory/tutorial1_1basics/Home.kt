@@ -204,6 +204,7 @@ private fun HomeContent(
         when (page) {
             0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
             1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
+            2 -> TutorialListContent(modifier, tutorialList[2], navigateToTutorial)
             else -> ComingSoonScreen()
         }
     }
