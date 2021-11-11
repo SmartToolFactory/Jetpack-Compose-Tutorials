@@ -123,5 +123,6 @@ const val TAG_SUBCOMPOSE_LAYOUT = "SubcomposeLayout"
 /*
     STATE
  */
+const val TAG_RECOMPOSITION= "Recomposition"
 const val TAG_REMEMBER = "Remember"
 const val TAG_STATE = "State"

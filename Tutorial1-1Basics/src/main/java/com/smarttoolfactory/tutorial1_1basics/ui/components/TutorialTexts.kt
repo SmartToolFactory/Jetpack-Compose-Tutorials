@@ -38,7 +38,7 @@ fun TutorialHeader(text: String, modifier: Modifier = Modifier) {
  *
  */
 @Composable
-fun StyleableTutorialText(text: String, modifier: Modifier = Modifier) {
+fun StyleableTutorialText(text: String, modifier: Modifier = Modifier, bullets:Boolean = true) {
 
     var results: MatchResult? = boldRegex.find(text)
     val boldIndexes = mutableListOf<Pair<Int, Int>>()
@@ -59,8 +59,12 @@ fun StyleableTutorialText(text: String, modifier: Modifier = Modifier) {
     }
 
     val annotatedString = buildAnnotatedString {
+
         append(finalText)
-        addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 3)
+
+       if (bullets) {
+           addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 3)
+       }
 
         // Add bold style to keywords that has to be bold
         boldIndexes.forEach {

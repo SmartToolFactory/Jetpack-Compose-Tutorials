@@ -599,12 +599,14 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_1),
-        description = "Remember and mutableState",
+        description = "This tutorial shows how recomposition happens for flat or hierarchical " +
+                "designs when Composables are in separate functions or stacked together.",
         action = {
             Tutorial4_1Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_RECOMPOSITION,
             TAG_REMEMBER,
             TAG_STATE
         ),
