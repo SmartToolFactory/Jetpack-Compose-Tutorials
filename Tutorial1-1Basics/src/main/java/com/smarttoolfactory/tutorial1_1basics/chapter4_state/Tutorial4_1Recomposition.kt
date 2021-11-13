@@ -10,10 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -36,9 +33,6 @@ var update1 by mutableStateOf(0)
 var update2 by mutableStateOf(0)
 var update3 by mutableStateOf(0)
 
-var recomposeButton1 = 0
-var recomposeButton2 = 0
-var recomposeButton3 = 0
 
 /*
     Flat design
@@ -58,9 +52,9 @@ var recomposeHierarchical1 = 0
 var recomposeHierarchical2 = 0
 var recomposeHierarchical3 = 0
 
-var recomposeHierarchicalTop = 0
-var recomposeHierarchicalMiddle = 0
-var recomposeHierarchicalBottom = 0
+var recomposeHierarchicalOuter = 0
+var recomposeHierarchicalCenter = 0
+var recomposeHierarchicalInner = 0
 
 @Composable
 fun Tutorial4_1Screen() {
@@ -259,11 +253,11 @@ private fun HierarchicalCombined() {
 
 @Composable
 private fun HierarchicalSeparated() {
-    HierarchicalTopLayer()
+    HierarchicalOuterLayer()
 }
 
 @Composable
-private fun HierarchicalTopLayer() {
+private fun HierarchicalOuterLayer() {
     Column(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -272,19 +266,19 @@ private fun HierarchicalTopLayer() {
             .background(color = orange400)
     ) {
 
-        recomposeHierarchicalTop++
+        recomposeHierarchicalOuter++
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Recompose: $recomposeHierarchicalTop; Update: $update1",
+            text = "Recompose: $recomposeHierarchicalOuter; Update: $update1",
             textAlign = TextAlign.Center
         )
 
-        HierarchicalMiddleLayer()
+        HierarchicalCenterLayer()
     }
 }
 
 @Composable
-private fun HierarchicalMiddleLayer() {
+private fun HierarchicalCenterLayer() {
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -294,19 +288,19 @@ private fun HierarchicalMiddleLayer() {
 
     ) {
 
-        recomposeHierarchicalMiddle++
+        recomposeHierarchicalCenter++
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Recompose: $recomposeHierarchicalMiddle; Update: $update2",
+            text = "Recompose: $recomposeHierarchicalCenter; Update: $update2",
             textAlign = TextAlign.Center
         )
 
-        HierarchicalBottomLayer()
+        HierarchicalInnerLayer()
     }
 }
 
 @Composable
-private fun HierarchicalBottomLayer() {
+private fun HierarchicalInnerLayer() {
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -315,10 +309,10 @@ private fun HierarchicalBottomLayer() {
             .background(color = pink400)
     ) {
 
-        recomposeHierarchicalBottom++
+        recomposeHierarchicalInner++
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Recompose: $recomposeHierarchicalBottom; Update: $update3",
+            text = "Recompose: $recomposeHierarchicalInner; Update: $update3",
             textAlign = TextAlign.Center
         )
     }
@@ -337,7 +331,7 @@ private fun UpdateButtons() {
             shape = RoundedCornerShape(5.dp)
         ) {
             Text(
-                text = "Recompose: $recomposeButton1; Update: $update1",
+                text = "Update: $update1",
                 textAlign = TextAlign.Center
             )
         }
@@ -351,7 +345,7 @@ private fun UpdateButtons() {
             shape = RoundedCornerShape(5.dp)
         ) {
             Text(
-                text = "Recompose: $recomposeButton2 Update: $update2",
+                text = "Update: $update2",
                 textAlign = TextAlign.Center
             )
         }
@@ -365,7 +359,7 @@ private fun UpdateButtons() {
             shape = RoundedCornerShape(5.dp)
         ) {
             Text(
-                text = "Recompose: $recomposeButton3; Update: $update3",
+                text = "Update: $update3",
                 textAlign = TextAlign.Center
             )
         }

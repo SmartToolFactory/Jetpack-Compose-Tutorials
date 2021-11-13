@@ -14,6 +14,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 /**
@@ -607,6 +608,20 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_RECOMPOSITION,
+            TAG_STATE
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
+    val tutorial4_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_2),
+        description = "Remember produce and remember a new value by calling calculation when " +
+                "key(s) are updated. Update calculations with buttons.",
+        action = {
+            Tutorial4_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
             TAG_REMEMBER,
             TAG_STATE
         ),
@@ -614,6 +629,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
     )
 
     return listOf(
-        tutorial4_1
+        tutorial4_1,
+        tutorial4_2
     )
 }
