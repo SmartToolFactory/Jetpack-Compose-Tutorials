@@ -15,6 +15,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 /**
@@ -628,8 +629,25 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffE91E63)
     )
 
+    val tutorial4_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_3),
+        description = "Create a custom remember and custom component to have badge that changes " +
+                "it's shape based on it's properties.",
+        action = {
+            Tutorial4_3Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_STATE,
+            TAG_CUSTOM_LAYOUT
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
     return listOf(
         tutorial4_1,
-        tutorial4_2
+        tutorial4_2,
+        tutorial4_3
     )
 }

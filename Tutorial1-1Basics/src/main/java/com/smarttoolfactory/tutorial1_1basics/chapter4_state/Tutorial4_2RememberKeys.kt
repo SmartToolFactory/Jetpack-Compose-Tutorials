@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
@@ -111,7 +112,7 @@ private fun RememberMultipleKeysExample() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row() {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(text = "Counter: $counter", modifier = Modifier.weight(1f))
             IconButton(onClick = { counter++ }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")

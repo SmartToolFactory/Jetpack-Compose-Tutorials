@@ -34,5 +34,6 @@
     <string name="title_3_5">3-5 SubcomposeLayout</string>
     <string name="title_3_6_1">3-6-1 Custom Layout Samples</string>
     <string name="title_4_1">4-1 Recomposition</string>
-    <string name="title_4_2"><![CDATA[Remember&State]]></string>
+    <string name="title_4_2"><![CDATA[4-2 Remember&State]]></string>
+    <string name="title_4_3">4-3 Custom Remember</string>
 </resources>
