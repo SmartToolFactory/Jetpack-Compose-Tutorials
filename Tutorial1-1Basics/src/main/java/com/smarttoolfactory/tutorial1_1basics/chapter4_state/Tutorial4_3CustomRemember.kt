@@ -1,22 +1,18 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.BadgedBox
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import kotlinx.coroutines.delay
 
 @Composable
 fun Tutorial4_3Screen() {
@@ -28,42 +24,120 @@ private fun TutorialContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(8.dp)
     ) {
 
-    BadgeComponent()
-//        var size = IntSize(0,0)
-//        Surface(
-//            shape = CircleShape,
-//            contentColor = Color.White,
-//            color = Color.Red,
-//            elevation = 12.dp,
-//            modifier = Modifier.then(
-//                if (size.width > 0 || size.height > 0) {
-//
-//                    val density: Density = LocalDensity.current
-//
-//
-//                val newSize =    with(density) {
-//                        size.width.coerceAtLeast(size.height).toDp()
-//                    }
-//
-//                    Modifier.size(newSize)
-//                }else {
-//                    Modifier
-//                }
-//            )
-//        ) {
-//            Text(
-//                text = "0",
-//                fontSize = 34.sp,
-//                onTextLayout = {textLayoutResult ->
-//                   println("🔥 textLayoutResult: $textLayoutResult")
-//                    size = textLayoutResult.size
-//                },
-//                modifier = Modifier.padding(4.dp),
-//                textAlign = TextAlign.Center
-//            )
-//        }
+        StyleableTutorialText(
+            text = "Custom rememberable, **rememberBadgeState**, is used to set properties of" +
+                    " custom badges. Badge component uses **BadgeState** to " +
+                    "draw different types of badges with various properties.",
+            bullets = false
+        )
+
+        val badge1 = rememberBadgeState(
+            elevation = 2.dp
+        )
+        Badge(badgeState = badge1)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge2 = rememberBadgeState(
+            fontSize = 12.sp,
+            elevation = 2.dp
+        )
+        Badge(badgeState = badge2)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge3 = rememberBadgeState(
+            fontSize = 14.sp,
+            circleShapeThreshold = 2,
+            textColor = Color(0xffB2DFDB),
+            backgroundColor = Color(0xff00897B)
+        )
+        Badge(badgeState = badge3)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge4 = rememberBadgeState(
+            fontSize = 18.sp,
+            borderStroke = BorderStroke(2.dp, Color(0xff29B6F6)),
+            elevation = (.4).dp
+        )
+        Badge(badgeState = badge4)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge5 = rememberBadgeState(
+            backgroundColor = Color.Transparent,
+            textColor = Color(0xffF57C00),
+            borderStroke = BorderStroke(2.dp, Color(0xffF57C00))
+
+        )
+        Badge(badgeState = badge5)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge6 = rememberBadgeState(
+
+        )
+        Badge(badgeState = badge6)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge7 = rememberBadgeState(
+            fontSize = 40.sp,
+            textColor = Color.White,
+            backgroundColor = Color(0xff795548)
+        )
+        Badge(badgeState = badge7)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge8 = rememberBadgeState(
+            fontSize = 40.sp,
+            horizontalPadding = 24.dp,
+            textColor = Color.White,
+            backgroundColor = Color(0xff3F51B5)
+        )
+        Badge(badgeState = badge8)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge9 = rememberBadgeState(
+            fontSize = 64.sp,
+            textColor = Color.White,
+            backgroundColor = Color(0xffD81B60),
+            roundedRadiusPercent = 20,
+            elevation = 2.dp,
+            shadowColor = Color(0xff795548)
+        )
+        Badge(badgeState = badge9)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val badge10 = rememberBadgeState(
+            maxNumber = 49,
+            circleShapeThreshold = 2,
+            fontSize = 64.sp,
+            textColor = Color.White,
+            backgroundColor = Color(0xff607D8B),
+            roundedRadiusPercent = 70
+        )
+        Badge(badgeState = badge10)
+
+        val badgeStateList = listOf(
+            badge1,
+            badge2,
+            badge3,
+            badge4,
+            badge5,
+            badge6,
+            badge7,
+            badge8,
+            badge9,
+            badge10
+        )
+
+        LaunchedEffect(Unit) {
+            repeat(101) {
+                delay(100)
+                badgeStateList.forEach { badgeState ->
+                    badgeState.setBadgeCount(it)
+                }
+            }
+        }
     }
 }
 

@@ -20,4 +20,27 @@ fun MainScreen() {
 //        println("🤔 MainScreen() paddingValues: $paddingValues")
         TutorialNavGraph(modifier = Modifier.padding(paddingValues))
     }
+
+//    val state  =  rememberBadgeState(
+//        fontSize = 64.sp,
+//        backgroundColor = Color.Red,
+//        circleShapeThreshold = 2,
+//        horizontalPadding = 12.dp
+//    )
+//
+//    Badge(
+//       badgeState = state
+//    )
+
+//    LaunchedEffect(Unit) {
+//        delay(1500)
+//        state.setBadgeCount(24)
+//    }
+
+//    LaunchedEffect(Unit) {
+//        repeat(101) {
+//            delay(200)
+//            state.setBadgeCount(it)
+//        }
+//    }
 }

@@ -5,15 +5,18 @@ import androidx.annotation.IntRange
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +33,8 @@ fun Badge(
 @Composable
 private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier) {
 
+    val density = LocalDensity.current
+
     val text = badgeState.text
     val circleThreshold = badgeState.circleShapeThreshold
     val isCircleShape = text.length <= circleThreshold
@@ -39,6 +44,35 @@ private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier
 
     val badgeModifier = modifier
         .then(
+
+            if (badgeState.elevation > 0.dp) {
+                modifier.drawBehind {
+
+                    val elevationInPx = with(density) {
+                        badgeState.elevation.toPx()
+                    }
+
+                    val center = Offset(center.x + elevationInPx, center.y + elevationInPx)
+                    if (isCircleShape) {
+                        drawCircle(color = badgeState.shadowColor, this.size.width / 2f, center)
+                    } else {
+                        drawRoundRect(
+                            color = badgeState.shadowColor,
+                            alpha = .7f,
+                            size = this.size,
+                            topLeft = Offset(elevationInPx, elevationInPx),
+                            cornerRadius = CornerRadius(
+                                size.height * badgeState.roundedRadiusPercent / 100,
+                                size.height * badgeState.roundedRadiusPercent / 100
+                            )
+                        )
+                    }
+                }
+            } else {
+                modifier
+            }
+        )
+        .then(
             badgeState.borderStroke?.let { borderStroke ->
                 modifier.border(borderStroke, shape = shape)
             } ?: modifier
@@ -47,20 +81,30 @@ private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier
             badgeState.backgroundColor,
             shape = shape
         )
-        .padding(badgeState.horizontalPadding)
 
-    var size = IntSize(0, 0)
+
+    var textSize = IntSize(0, 0)
+    var textHeight = 0
+
+    // TODO Just a question: Why does this not survive recompositions?
+    var badgeHeight = remember { 0 }
+
+    println("✅ BadgeComponent: text: $text, textHeight: $textHeight, badgeHeight: $badgeHeight")
 
     val content = @Composable {
 
         println("🔥 BadgeComponent() Text Composable called")
         Text(
+//            modifier = Modifier.background(Color.Blue),
             text = badgeState.text,
             color = badgeState.textColor,
             fontSize = badgeState.fontSize,
             lineHeight = badgeState.fontSize,
             onTextLayout = { textLayoutResult: TextLayoutResult ->
-                size = textLayoutResult.size
+                textSize = textLayoutResult.size
+                // 🔥🔥 This is text height without padding, result size returns height with font padding
+                textHeight = textLayoutResult.firstBaseline.toInt()
+                println("✏️ BadgeComponent textHeight: $textHeight")
             },
         )
     }
@@ -73,18 +117,41 @@ private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier
         val placeables = measurables.map { measurable ->
             measurable.measure(constraints)
         }
+        if (badgeHeight == 0) {
 
-        println("🤔 BadgeComponent() Layout text: $text, isCircleShape: $isCircleShape, size: $size")
+            // Space above and below text, this is drawing area + empty space
+            val verticalSpaceAroundText = with(density) {
+                textHeight * .12f + 6 + badgeState.verticalPadding.toPx()
+            }
+
+            badgeHeight = (textHeight + 2 * verticalSpaceAroundText).toInt()
+            println("⚠️ Calculated badge HEIGHT: $badgeHeight")
+        }
+
+        println(
+            "🤔 BadgeComponent() Layout text: $text, isCircleShape: $isCircleShape, " +
+                    "textHeight: $textHeight, badgeHeight: $badgeHeight, " +
+                    "placeable width: ${placeables.first().width}, size:$textSize"
+        )
 
         if (isCircleShape) {
-            val circleRadius = size.width.coerceAtLeast(size.height)
-            layout(width = circleRadius, height = circleRadius) {
-                placeables.first().placeRelative((circleRadius - size.width) / 2, 0)
+            badgeHeight = textSize.width.coerceAtLeast(badgeHeight)
+
+            layout(width = badgeHeight, height = badgeHeight) {
+                placeables.first()
+                    .placeRelative((badgeHeight - textSize.width) / 2, (badgeHeight - textSize.height) / 2)
             }
         } else {
-            val width = placeables.first().width + size.width / 2
-            layout(width = width, height = placeables.first().height) {
-                placeables.first().placeRelative((width - size.width) / 2, 0)
+
+            // Space left and right of the text, this is drawing area + empty space
+            val horizontalSpaceAroundText = with(density) {
+                textHeight * .12f + 6 + badgeState.horizontalPadding.toPx()
+            }
+            val width = (textSize.width + 2 * horizontalSpaceAroundText).toInt()
+
+            layout(width = width, height = badgeHeight) {
+                placeables.first()
+                    .placeRelative((width - textSize.width) / 2, (-textSize.height + badgeHeight) / 2)
             }
         }
     }
@@ -101,7 +168,8 @@ fun rememberBadgeState(
     textColor: Color = Color.White,
     fontSize: TextUnit = 14.sp,
     elevation: Dp = 0.dp,
-    borderStroke: BorderStroke? = null
+    shadowColor: Color = Color(0x55000000),
+    borderStroke: BorderStroke? = null,
 ): BadgeState {
     return remember {
         BadgeState(
@@ -114,6 +182,7 @@ fun rememberBadgeState(
             textColor,
             fontSize,
             elevation,
+            shadowColor,
             borderStroke
         )
     }
@@ -129,13 +198,13 @@ class BadgeState(
     textColor: Color,
     fontSize: TextUnit,
     elevation: Dp,
-    borderStroke: BorderStroke? = null
+    var shadowColor: Color = Color(0x55000000),
+    var borderStroke: BorderStroke? = null
 ) {
     var backgroundColor by mutableStateOf(backgroundColor)
     var textColor by mutableStateOf(textColor)
     var elevation by mutableStateOf(elevation)
     var fontSize by mutableStateOf(fontSize)
-    var borderStroke by mutableStateOf(borderStroke)
 
     /**
      * This is them maximum number to be displayed
@@ -174,7 +243,7 @@ class BadgeState(
     }
 
 
-    fun setBadgeCount(count: Int, showWhenZero: Boolean = false) {
+    fun setBadgeCount(count: Int, showWhenZero: Boolean = true) {
         this.badgeCount = count
 
         when {
