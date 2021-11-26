@@ -19,8 +19,7 @@ fun rememberBadgeState(
     verticalPadding: Dp = 0.dp,
     textColor: Color = Color.White,
     fontSize: TextUnit = 14.sp,
-    elevation: Dp = 0.dp,
-    shadowColor: Color = Color(0x55000000),
+    shadow: MaterialShadow? = null,
     borderStroke: BorderStroke? = null,
 ): BadgeState {
     return remember {
@@ -33,8 +32,7 @@ fun rememberBadgeState(
             verticalPadding,
             textColor,
             fontSize,
-            elevation,
-            shadowColor,
+            shadow,
             borderStroke
         )
     }
@@ -49,13 +47,11 @@ class BadgeState(
     var verticalPadding: Dp = 0.dp,
     textColor: Color,
     fontSize: TextUnit,
-    elevation: Dp,
-    var shadowColor: Color = Color(0x55000000),
+    var shadow: MaterialShadow? = null,
     var borderStroke: BorderStroke? = null
 ) {
     var backgroundColor by mutableStateOf(backgroundColor)
     var textColor by mutableStateOf(textColor)
-    var elevation by mutableStateOf(elevation)
     var fontSize by mutableStateOf(fontSize)
 
     /**

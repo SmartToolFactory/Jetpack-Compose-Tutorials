@@ -35,14 +35,14 @@ private fun TutorialContent() {
         )
 
         val badge1 = rememberBadgeState(
-            elevation = 1.dp
+            shadow = MaterialShadow()
         )
         Badge(badgeState = badge1)
         Spacer(modifier = Modifier.height(4.dp))
 
         val badge2 = rememberBadgeState(
             fontSize = 12.sp,
-            elevation = 4.dp
+            shadow = MaterialShadow(elevation = 4.dp)
         )
         Badge(badgeState = badge2)
         Spacer(modifier = Modifier.height(4.dp))
@@ -59,7 +59,7 @@ private fun TutorialContent() {
         val badge4 = rememberBadgeState(
             fontSize = 18.sp,
             borderStroke = BorderStroke(2.dp, Color(0xff29B6F6)),
-            elevation = (.4).dp
+            shadow = MaterialShadow(elevation = 4.dp)
         )
         Badge(badgeState = badge4)
         Spacer(modifier = Modifier.height(4.dp))
@@ -101,8 +101,10 @@ private fun TutorialContent() {
             textColor = Color.White,
             backgroundColor = Color(0xffD81B60),
             roundedRadiusPercent = 20,
-            elevation = 5.dp,
-            shadowColor = Color(0xffD32F2F)
+            shadow = MaterialShadow(
+                elevation = 5.dp,
+                color = Color(0xffD32F2F)
+            )
         )
         Badge(badgeState = badge9)
         Spacer(modifier = Modifier.height(6.dp))
