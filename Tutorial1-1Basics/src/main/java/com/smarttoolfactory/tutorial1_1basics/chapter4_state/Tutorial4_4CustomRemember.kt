@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import kotlinx.coroutines.delay
@@ -24,7 +23,6 @@ fun Tutorial4_4Screen() {
     TutorialContent()
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun TutorialContent() {
 
@@ -52,7 +50,7 @@ private fun TutorialPage() {
         val badge1 = rememberBadgeState(
             shadow = MaterialShadow()
         )
-        2
+
         Badge(badgeState = badge1)
         Spacer(modifier = Modifier.height(4.dp))
 
