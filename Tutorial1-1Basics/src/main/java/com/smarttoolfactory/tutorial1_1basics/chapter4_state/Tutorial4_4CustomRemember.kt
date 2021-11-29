@@ -3,24 +3,39 @@ package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import kotlinx.coroutines.delay
 
 @Composable
-fun Tutorial4_3Screen() {
+fun Tutorial4_4Screen() {
     TutorialContent()
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun TutorialContent() {
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppbar()
+        TutorialPage()
+    }
+}
+
+@Composable
+private fun TutorialPage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,6 +52,7 @@ private fun TutorialContent() {
         val badge1 = rememberBadgeState(
             shadow = MaterialShadow()
         )
+        2
         Badge(badgeState = badge1)
         Spacer(modifier = Modifier.height(4.dp))
 
@@ -139,6 +155,112 @@ private fun TutorialContent() {
                     badgeState.setBadgeCount(it)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TopAppbar() {
+    Surface(elevation = 4.dp) {
+        Column {
+            var selectedIndex by remember { mutableStateOf(0) }
+
+            TopAppBar(
+                title = {
+                    Text(text = "Custom Remember", color = Color.White)
+                },
+                backgroundColor = Color(0xff00897B),
+                elevation = 8.dp
+            )
+
+            val list = listOf(
+                "CHATS",
+                "STATUS",
+                "CALLS"
+            )
+            val badgeChats = rememberBadgeState(
+                backgroundColor = Color.White,
+                textColor = Color(0xff00897B),
+                fontSize = 12.sp,
+                horizontalPadding = 2.dp
+            )
+            badgeChats.setBadgeCount(9)
+
+            val badgeStatus = rememberBadgeState(
+                backgroundColor = Color.White,
+                textColor = Color(0xff00897B),
+                fontSize = 12.sp,
+                horizontalPadding = 2.dp
+            )
+            badgeStatus.setBadgeCount(80)
+
+            val badgeCalls = rememberBadgeState(
+                backgroundColor = Color.White,
+                textColor = Color(0xff00897B),
+                fontSize = 12.sp,
+                horizontalPadding = 2.dp,
+                showBadgeThreshold = 1
+            )
+
+            val badgeStates = listOf(
+                badgeChats,
+                badgeStatus,
+                badgeCalls,
+            )
+
+            LaunchedEffect(key1 = Unit) {
+                delay(2000)
+                badgeStatus.setBadgeCount(100)
+                delay(1000)
+                badgeCalls.setBadgeCount(5)
+                delay(1000)
+                badgeCalls.setBadgeCount(42)
+            }
+
+            TabRow(
+                selectedTabIndex = selectedIndex,
+                backgroundColor = Color(0xff00897B),
+                indicator = { tabPositions: List<TabPosition> ->
+                    TabRowDefaults.Indicator(
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+                        height = 3.dp,
+                        color = Color.White
+                    )
+                }
+            ) {
+                list.forEachIndexed { index, text ->
+                    Tab(selected = selectedIndex == index,
+                        onClick = { selectedIndex = index },
+                        selectedContentColor = Color.White,
+                        unselectedContentColor = Color(0xff77a9a0),
+                        text = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = text,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Badge(badgeState = badgeStates[index])
+                            }
+                        }
+                    )
+                }
+            }
+
+            val systemUiController = rememberSystemUiController()
+
+            DisposableEffect(key1 = true, effect = {
+
+                systemUiController.setStatusBarColor(
+                    color = Color(0xff00897B)
+                )
+                onDispose {
+                    systemUiController.setStatusBarColor(
+                        color = Color.Transparent
+                    )
+                }
+            })
         }
     }
 }

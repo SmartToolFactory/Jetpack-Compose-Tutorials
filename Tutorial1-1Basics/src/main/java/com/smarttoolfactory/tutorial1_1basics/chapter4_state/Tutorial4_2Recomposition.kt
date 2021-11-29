@@ -10,7 +10,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -22,9 +25,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
     This tutorial uses references from this medium article. Check it out.
     https://medium.com/mobile-app-development-publication/android-jetpack-compose-recomposition-made-easy-527ecc9bcbaf
  */
-val orange400 = Color(0xffFFA726)
-val blue400 = Color(0xff42A5F5)
-val pink400 = Color(0xffEC407A)
 
 /*
     Buttons
@@ -57,7 +57,7 @@ var recomposeHierarchicalCenter = 0
 var recomposeHierarchicalInner = 0
 
 @Composable
-fun Tutorial4_1Screen() {
+fun Tutorial4_2Screen() {
     TutorialContent()
 }
 

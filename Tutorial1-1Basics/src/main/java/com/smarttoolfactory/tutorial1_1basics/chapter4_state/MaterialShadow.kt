@@ -1,8 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -13,7 +11,16 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-
+/**
+ * Creates a colorable shadow instance.
+ *
+ * @param color Color of the shadow
+ * @param alpha of the color of the shadow
+ * @param useSoftwareLayer use software layer to draw shadow with blur
+ * @param dX x offset of shadow blur
+ * @param dY y offset of shadow blur
+ * @param shadowRadius radius of shadow blur if useSoftwareLayer is set to true
+ */
 fun MaterialShadow(
     color: Color,
     alpha: Float,
@@ -23,10 +30,24 @@ fun MaterialShadow(
     shadowRadius: Dp = 1.dp,
 ): MaterialShadow {
     return MaterialShadow(
-        color, alpha, dX, dY, shadowRadius, useSoftwareLayer
+        color,
+        alpha,
+        dX,
+        dY,
+        shadowRadius,
+        useSoftwareLayer
     )
 }
 
+/**
+ * Creates a colorable shadow instance.
+ *
+ * @param color Color of the shadow
+ * @param alpha of the color of the shadow
+ * @param useSoftwareLayer use software layer to draw shadow with blur
+ * @param elevation elevation of the badge with shadow. Sets dx, dy,
+ * and shadowRadius if software layer is used
+ */
 fun MaterialShadow(
     color: Color = Color(0x55000000),
     alpha: Float = .7f,
@@ -57,9 +78,7 @@ fun Modifier.materialShadow(badgeState: BadgeState) = this.then(
     if (badgeState.shadow != null) {
 
         val shadow: MaterialShadow = badgeState.shadow!!
-        val text = badgeState.text
-        val circleThreshold = badgeState.circleShapeThreshold
-        val isCircleShape = text.length <= circleThreshold
+        val isCircleShape = badgeState.isCircleShape
 
         drawBehind {
 
@@ -73,7 +92,7 @@ fun Modifier.materialShadow(badgeState: BadgeState) = this.then(
 
                     val paint = Paint()
                     val shadowColor = color
-                        .copy(alpha = .7f)
+                        .copy(alpha = shadow.alpha)
                         .toArgb()
                     val transparent = color
                         .copy(alpha = 0f)
@@ -119,7 +138,7 @@ fun Modifier.materialShadow(badgeState: BadgeState) = this.then(
                 } else {
                     drawRoundRect(
                         color = shadow.color,
-                        alpha = .7f,
+                        alpha = shadow.alpha,
                         size = this.size,
                         topLeft = Offset(dx, dy),
                         cornerRadius = CornerRadius(
@@ -134,46 +153,3 @@ fun Modifier.materialShadow(badgeState: BadgeState) = this.then(
         this
     }
 )
-
-fun Modifier.coloredShadow(
-    color: Color,
-    alpha: Float = 0.2f,
-    borderRadius: Dp = 0.dp,
-    shadowRadius: Dp = 20.dp,
-    offsetY: Dp = 0.dp,
-    offsetX: Dp = 0.dp
-) = composed {
-
-
-    val shadowColor = color.copy(alpha = alpha).toArgb()
-    val transparent = color.copy(alpha = 0f).toArgb()
-
-    this
-        .padding(horizontal = offsetX, vertical = offsetY)
-        .drawBehind {
-
-            this.drawIntoCanvas {
-                val paint = Paint()
-
-                val frameworkPaint = paint.asFrameworkPaint()
-                frameworkPaint.color = transparent
-
-                frameworkPaint.setShadowLayer(
-                    shadowRadius.toPx(),
-                    offsetX.toPx(),
-                    offsetY.toPx(),
-                    shadowColor
-                )
-
-                it.drawRoundRect(
-                    0f,
-                    0f,
-                    this.size.width,
-                    this.size.height,
-                    borderRadius.toPx(),
-                    borderRadius.toPx(),
-                    paint
-                )
-            }
-        }
-}

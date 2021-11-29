@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
-fun Tutorial4_2Screen() {
+fun Tutorial4_3Screen() {
     TutorialContent()
 }
 

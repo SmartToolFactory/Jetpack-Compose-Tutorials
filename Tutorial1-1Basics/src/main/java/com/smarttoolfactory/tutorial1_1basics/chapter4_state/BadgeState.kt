@@ -9,6 +9,24 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Creates a BadgeState that is remembered across compositions.
+ *
+ * @param maxNumber after this number it's displayed with maxNumber+ such as 99+
+ * @param circleShapeThreshold number of digits that this will badge will be drawn as circle
+ * @param roundedRadiusPercent corner radius ratio when badge has rounded rectangle shape
+ * @param backgroundColor background color for badge
+ * @param horizontalPadding horizontal padding for rounded rectangle shape
+ * @param verticalPadding for rounded rectangle or general padding for circle shape
+ * @param textColor color of the text
+ * @param fontSize size of the font used for Text
+ * @param shadow nullable shadow for badge
+ * @param borderStroke nullable border stroke around badge
+ * @param showBadgeThreshold for count to display badge. If badge count is below this
+ * threshold don't display a badge. For instance don't display badge number of notification is
+ * zero.
+ *
+ */
 @Composable
 fun rememberBadgeState(
     maxNumber: Int = 99,
@@ -21,6 +39,7 @@ fun rememberBadgeState(
     fontSize: TextUnit = 14.sp,
     shadow: MaterialShadow? = null,
     borderStroke: BorderStroke? = null,
+    showBadgeThreshold: Int = Int.MIN_VALUE,
 ): BadgeState {
     return remember {
         BadgeState(
@@ -33,83 +52,110 @@ fun rememberBadgeState(
             textColor,
             fontSize,
             shadow,
-            borderStroke
+            borderStroke,
+            showBadgeThreshold
         )
     }
 }
 
+/**
+ * Creates a BadgeState that is remembered across compositions.
+ *
+ * @param maxNumber after this number it's displayed with maxNumber+ such as 99+
+ * @param circleShapeThreshold number of digits that this will badge will be drawn as circle
+ * @param roundedRadiusPercent corner radius ratio when badge has rounded rectangle shape
+ * @param backgroundColor background color for badge
+ * @param horizontalPadding horizontal padding for rounded rectangle shape
+ * @param verticalPadding for rounded rectangle or general padding for circle shape
+ * @param textColor color of the text
+ * @param fontSize size of the font used for Text
+ * @param shadow nullable shadow for badge
+ * @param borderStroke nullable border stroke around badge
+ * @param showBadgeThreshold for count to display badge. If badge count is below this
+ * threshold don't display a badge. For instance don't display badge number of notification is
+ * zero.
+ *
+ */
 class BadgeState(
-    maxNumber: Int = 99,
-    circleShapeThreshold: Int = 1,
-    @IntRange(from = 0, to = 99) roundedRadiusPercent: Int = 50,
+    var maxNumber: Int = 99,
+    var circleShapeThreshold: Int = 1,
+    @IntRange(from = 0, to = 99) var roundedRadiusPercent: Int = 50,
     backgroundColor: Color,
     var horizontalPadding: Dp = 4.dp,
     var verticalPadding: Dp = 0.dp,
     textColor: Color,
-    fontSize: TextUnit,
+    var fontSize: TextUnit,
     var shadow: MaterialShadow? = null,
-    var borderStroke: BorderStroke? = null
+    var borderStroke: BorderStroke? = null,
+    showBadgeThreshold: Int = Int.MIN_VALUE,
 ) {
     var backgroundColor by mutableStateOf(backgroundColor)
     var textColor by mutableStateOf(textColor)
-    var fontSize by mutableStateOf(fontSize)
+    var text by mutableStateOf("0")
+        private set
+
+    var numberOnBadge by mutableStateOf(0)
+        private set
+
+    var showBadgeThreshold by mutableStateOf(showBadgeThreshold)
 
     /**
-     * This is them maximum number to be displayed
-     * Any number above this will be showed as **MAX_NUMBER+**
+     * Badge has circle or rounded corner rectangle shape
      */
-    var maxNumber = maxNumber
+    val isCircleShape: Boolean
+        get() = text.length <= circleShapeThreshold
+
 
     /**
-     * After how many digits should start drawing rectangle shape
+     * Set number to be displayed on Badge. If this value cannot be parsed to Int it won't update
+     * badge.
      *
-     * Setting threshold to 2 will draw circle when badge count is less or equal to 2
+     * Set text of badge to have custom text
      */
-    var circleShapeThreshold by mutableStateOf(circleShapeThreshold)
-
-    /**
-     * Radius for drawing rounded rect background.
-     *
-     * It's 50% of the smaller dimension by default
-     */
-    var roundedRadiusPercent = roundedRadiusPercent
-
-
-    private var badgeCount = -1
-    internal var text by mutableStateOf("0")
-
-    /**
-     * Set number to be displayed in Badge.
-     */
-    fun setBadgeCount(count: String, showWhenZero: Boolean = true) {
+    fun setBadgeCount(count: String) {
 
         val badgeCount = count.toIntOrNull()
 
         badgeCount?.let {
-            if (it > 0 || (it == 0 && showWhenZero)) {
-                setBadgeCount(it, showWhenZero)
-            }
-
+            setBadgeCount(it)
         }
     }
 
+    /**
+     * Set number to be displayed on Badge.
+     */
+    fun setBadgeCount(count: Int) {
 
-    fun setBadgeCount(count: Int, showWhenZero: Boolean = true) {
+        this.numberOnBadge = count
 
-        if (count > 0 || (count == 0 && showWhenZero)) {
-            this.badgeCount = count
-
-            when {
-                count in 1..maxNumber -> {
-                    text = count.toString()
-                }
-                count > maxNumber -> {
-                    text = "$maxNumber+"
-                }
-                count <= 0 -> {
-                    text = "0"
-                }
+        when {
+            count in 1..maxNumber -> {
+                text = count.toString()
+            }
+            count > maxNumber -> {
+                text = "$maxNumber+"
+            }
+            count <= 0 -> {
+                text = "0"
             }
         }
+
+    }
+
+    override fun toString(): String {
+        return "Badge() text: $text, " +
+                "numberOnBadge: $numberOnBadge, " +
+                "maxNumber: $maxNumber, " +
+                "circleShapeThreshold: $circleShapeThreshold, " +
+                "roundedRadiusPercent: $roundedRadiusPercent, " +
+                "horizontalPadding: $horizontalPadding, " +
+                "verticalPadding: $verticalPadding, " +
+                "fontSize: $fontSize, " +
+                "shadow: $shadow, " +
+                "borderStroke: $borderStroke, " +
+                "backgroundColor: $backgroundColor, " +
+                "isCircleShape: $isCircleShape, " +
+                "circleShapeThreshold: $circleShapeThreshold, " +
+                "showBadgeThreshold: $showBadgeThreshold"
     }
 }

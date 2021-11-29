@@ -16,6 +16,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 /**
@@ -601,8 +602,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_1),
-        description = "This tutorial shows how recomposition happens for flat or hierarchical " +
-                "designs when Composables are in separate functions or stacked together.",
+        description = "This tutorial shows how remember and mutableState effect recomposition and states.",
         action = {
             Tutorial4_1Screen()
         },
@@ -616,10 +616,25 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_2 = TutorialSectionModel(
         title = stringResource(R.string.title_4_2),
+        description = "This tutorial shows how recomposition happens for flat or hierarchical " +
+                "designs when Composables are in separate functions or stacked together.",
+        action = {
+            Tutorial4_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_RECOMPOSITION,
+            TAG_STATE
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
+    val tutorial4_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_3),
         description = "Remember produce and remember a new value by calling calculation when " +
                 "key(s) are updated. Update calculations with buttons.",
         action = {
-            Tutorial4_2Screen()
+            Tutorial4_3Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -629,12 +644,12 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffE91E63)
     )
 
-    val tutorial4_3 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_3),
+    val tutorial4_4 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_4),
         description = "Create a custom remember and custom component to have badge that changes " +
                 "it's shape based on it's properties.",
         action = {
-            Tutorial4_3Screen()
+            Tutorial4_4Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -648,6 +663,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
     return listOf(
         tutorial4_1,
         tutorial4_2,
-        tutorial4_3
+        tutorial4_3,
+        tutorial4_4
     )
 }
