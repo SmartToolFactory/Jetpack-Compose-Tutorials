@@ -1,6 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -73,83 +75,102 @@ class MaterialShadow internal constructor(
     val useSoftwareLayer: Boolean = true
 )
 
-fun Modifier.materialShadow(badgeState: BadgeState) = this.then(
+/**
+ *
+ * Draws customizable shadow behind badge using software layer to have blurred shadow
+ * or solid shapes only..
+ *
+ * With **composed** we can use `remember` and instantiate Paint objects only once
+ * for each element. Modifier is **stateful**.
+ */
+fun Modifier.materialShadow(badgeState: BadgeState) = composed(
+    inspectorInfo = {
+        name = "shadow"
+        value = badgeState.shadow
+    },
+    factory = {
+        if (badgeState.shadow != null) {
+            val shadow: MaterialShadow = badgeState.shadow!!
+            val isCircleShape = badgeState.isCircleShape
 
-    if (badgeState.shadow != null) {
+            val paint = remember(badgeState) {
+                Paint()
+            }
 
-        val shadow: MaterialShadow = badgeState.shadow!!
-        val isCircleShape = badgeState.isCircleShape
+            val frameworkPaint = remember(badgeState) {
+                paint.asFrameworkPaint()
+            }
 
-        drawBehind {
+            drawBehind {
 
-            if (shadow.useSoftwareLayer) {
-                this.drawIntoCanvas {
+                if (shadow.useSoftwareLayer) {
+                    this.drawIntoCanvas {
 
-                    val color = shadow.color
+                        val color = shadow.color
+                        val dx = shadow.offsetX.toPx()
+                        val dy = shadow.offsetY.toPx()
+                        val radius = shadow.shadowRadius.toPx()
+
+
+                        val shadowColor = color
+                            .copy(alpha = shadow.alpha)
+                            .toArgb()
+                        val transparent = color
+                            .copy(alpha = 0f)
+                            .toArgb()
+
+                        frameworkPaint.color = transparent
+
+                        frameworkPaint.setShadowLayer(
+                            dx,
+                            dy,
+                            radius,
+                            shadowColor
+                        )
+
+                        if (isCircleShape) {
+                            it.drawCircle(
+                                center = Offset(center.x, center.y),
+                                radius = this.size.width / 2f,
+                                paint = paint
+                            )
+                        } else {
+                            it.drawRoundRect(
+                                left = 0f,
+                                top = 0f,
+                                right = this.size.width,
+                                bottom = this.size.height,
+                                radiusX = size.height * badgeState.roundedRadiusPercent / 100,
+                                radiusY = size.height * badgeState.roundedRadiusPercent / 100,
+                                paint = paint
+                            )
+                        }
+
+                    }
+                } else {
+
                     val dx = shadow.offsetX.toPx()
                     val dy = shadow.offsetY.toPx()
-                    val radius = shadow.shadowRadius.toPx()
 
-                    val paint = Paint()
-                    val shadowColor = color
-                        .copy(alpha = shadow.alpha)
-                        .toArgb()
-                    val transparent = color
-                        .copy(alpha = 0f)
-                        .toArgb()
-
-                    val frameworkPaint = paint.asFrameworkPaint()
-                    frameworkPaint.color = transparent
-
-                    frameworkPaint.setShadowLayer(
-                        dx,
-                        dy,
-                        radius,
-                        shadowColor
-                    )
-
+                    val center = Offset(center.x + dx, center.y + dy)
                     if (isCircleShape) {
-                        it.drawCircle(
-                            center = Offset(center.x, center.y),
-                            radius = this.size.width / 2f,
-                            paint = paint
-                        )
+                        drawCircle(color = shadow.color, this.size.width / 2f, center)
                     } else {
-                        it.drawRoundRect(
-                            left = 0f,
-                            top = 0f,
-                            right = this.size.width,
-                            bottom = this.size.height,
-                            radiusX = size.height * badgeState.roundedRadiusPercent / 100,
-                            radiusY = size.height * badgeState.roundedRadiusPercent / 100,
-                            paint = paint
+                        drawRoundRect(
+                            color = shadow.color,
+                            alpha = shadow.alpha,
+                            size = this.size,
+                            topLeft = Offset(dx, dy),
+                            cornerRadius = CornerRadius(
+                                size.height * badgeState.roundedRadiusPercent / 100,
+                                size.height * badgeState.roundedRadiusPercent / 100
+                            )
                         )
                     }
-
-                }
-            } else {
-
-                val dx = shadow.offsetX.toPx()
-                val dy = shadow.offsetY.toPx()
-
-                val center = Offset(center.x + dx, center.y + dy)
-                if (isCircleShape) {
-                    drawCircle(color = shadow.color, this.size.width / 2f, center)
-                } else {
-                    drawRoundRect(
-                        color = shadow.color,
-                        alpha = shadow.alpha,
-                        size = this.size,
-                        topLeft = Offset(dx, dy),
-                        cornerRadius = CornerRadius(
-                            size.height * badgeState.roundedRadiusPercent / 100,
-                            size.height * badgeState.roundedRadiusPercent / 100
-                        )
-                    )
                 }
             }
+        } else {
+            this
         }
-    } else {
-        this
     }
 )

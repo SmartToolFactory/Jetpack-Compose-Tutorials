@@ -180,7 +180,7 @@ private fun TopAppbar() {
                 backgroundColor = Color.White,
                 textColor = Color(0xff00897B),
                 fontSize = 12.sp,
-                horizontalPadding = 2.dp
+                horizontalPadding = 2.dp,
             )
             badgeChats.setBadgeCount(9)
 
