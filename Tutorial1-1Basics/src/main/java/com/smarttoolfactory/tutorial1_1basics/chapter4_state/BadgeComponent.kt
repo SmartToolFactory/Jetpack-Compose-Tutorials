@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.IntSize
 
 class BadgeData(var textHeight: Int = 0, var badgeHeight: Int = 0, var textSize: IntSize? = null) {
 
-
     override fun toString(): String {
         return "BadgeData() textHeight: $textHeight, dimension: $textSize"
     }
@@ -41,7 +40,6 @@ fun Badge(
     }
 
     if (showBadge.value) {
-        println("💬 Badge() $badgeState")
         BadgeComponent(badgeState = badgeState, modifier = modifier)
     }
 }
@@ -52,23 +50,13 @@ private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier
     val badgeData = remember { BadgeData() }
 
     val density = LocalDensity.current
-    val text = badgeState.text
     val isCircleShape = badgeState.isCircleShape
 
     val shape =
         if (isCircleShape) CircleShape else RoundedCornerShape(badgeState.roundedRadiusPercent)
 
-    println(
-        "✅ BadgeComponent: text: $text, " +
-                "isCircleShape: $isCircleShape, " +
-                "badgeData: $badgeData"
-    )
-
     val content = @Composable {
-
-        println("🔥 BadgeComponent() Text Composable called")
         Text(
-//            modifier = Modifier.background(Color.Blue),
             text = badgeState.text,
             color = badgeState.textColor,
             fontSize = badgeState.fontSize,
@@ -77,7 +65,6 @@ private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier
                 // 🔥🔥 This is text height without padding, result size returns height with font padding
                 badgeData.textHeight = textLayoutResult.firstBaseline.toInt()
                 badgeData.textSize = textLayoutResult.size
-                println("✏️ BadgeComponent Text onTextLayout()-> badgeData: $badgeData")
             }
         )
     }
