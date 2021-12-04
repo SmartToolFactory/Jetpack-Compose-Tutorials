@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import kotlin.random.Random
 
 @Composable
 fun Tutorial3_1Screen() {
@@ -92,7 +93,7 @@ private fun TutorialContent() {
         }
 
         StyleableTutorialText(
-            text = "2-) **LayoutModifier** class and it's **MeasureScope.measure** function can be" +
+            text = "2-) **LayoutModifier**  and it's **MeasureScope.measure** function can be" +
                     "used to measure a measurable to get a placeable and place it to " +
                     "add padding."
         )
@@ -101,8 +102,49 @@ private fun TutorialContent() {
             text = "Custom Padding",
             modifier = Modifier
                 .background(Color(0xFF8BC34A))
-                .customPadding(all = 32.dp)
+                .customPadding(all = 4.dp)
         )
+
+        StyleableTutorialText(
+            text = "3-) **Modifier.composed** composition of a Modifier that will be " +
+                    "composed for each element it."
+        )
+
+
+        // 🔥 composedBackground uses remember to retain initial calculation of color by
+        // using a key with remember
+
+        Column(modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth()) {
+            var counter by remember { mutableStateOf(0) }
+
+            Button(onClick = { counter++ }, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Increase")
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .composedBackground(150.dp, 50.dp, 0)
+                        .width(150.dp)
+                ) {
+                    Text(text = "Recomposed $counter")
+                }
+
+                Box(
+                    modifier = Modifier
+                        .composedBackground(150.dp, 50.dp, 1)
+                        .width(150.dp)
+                ) {
+                    Text(text = "Recomposed $counter")
+                }
+            }
+        }
     }
 }
 
@@ -230,7 +272,7 @@ private class PaddingModifier(
 }
 
 // let's create you own custom stateful modifier with multiple arguments
-fun Modifier.myModifier(width: Dp, height: Dp, color: Color) = composed(
+fun Modifier.composedBackground(width: Dp, height: Dp, index: Int) = composed(
     // pass inspector information for debug
     inspectorInfo = debugInspectorInfo {
         // name should match the name of the modifier
@@ -238,13 +280,31 @@ fun Modifier.myModifier(width: Dp, height: Dp, color: Color) = composed(
         // add name and value of each argument
         properties["width"] = width
         properties["height"] = height
-        properties["color"] = color
+        properties["index"] = index
     },
     // pass your modifier implementation that resolved per modified element
 
     factory = {
 
         val density = LocalDensity.current
+
+        val color: Color = remember(index) {
+            Color(
+                red = Random.nextInt(256),
+                green = Random.nextInt(256),
+                blue = Random.nextInt(256),
+                alpha = 255
+            )
+        }
+
+        // 🔥 Without remember this color is created every time item using this modifier composed
+//        val color: Color = Color(
+//            red = Random.nextInt(256),
+//            green = Random.nextInt(256),
+//            blue = Random.nextInt(256),
+//            alpha = 255
+//        )
+
 
         // add your modifier implementation here
         Modifier.drawBehind {

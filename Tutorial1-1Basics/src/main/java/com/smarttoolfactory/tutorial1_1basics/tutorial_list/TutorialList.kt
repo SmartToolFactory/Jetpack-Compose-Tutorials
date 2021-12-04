@@ -13,10 +13,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 
 /**
@@ -660,10 +657,30 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffE91E63)
     )
 
+    val tutorial4_5_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_5_1),
+        description = "Use remember functions like rememberCoroutineScope, " +
+                "and rememberUpdatedState and side-effect functions such as " +
+                "LaunchedEffect and DisposableEffect",
+        action = {
+            Tutorial4_5_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_COROUTINE_SCOPE,
+            TAG_REMEMBER_UPDATED,
+            TAG_LAUNCHED_EFFECT,
+            TAG_DISPOSABLE_EFFECT
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
     return listOf(
         tutorial4_1,
         tutorial4_2,
         tutorial4_3,
-        tutorial4_4
+        tutorial4_4,
+        tutorial4_5_1
     )
 }
