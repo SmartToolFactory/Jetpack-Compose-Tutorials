@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -25,8 +26,14 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.Place
 import com.smarttoolfactory.tutorial1_1basics.model.places
-import com.smarttoolfactory.tutorial1_1basics.ui.components.PlaceCard
+import com.smarttoolfactory.tutorial1_1basics.ui.components.PlacesToBookComponent
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -38,17 +45,40 @@ fun Tutorial4_5_2Screen() {
 @Composable
 private fun TutorialContent() {
 
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
+
+        StyleableTutorialText(
+            text = "1-) **SideEffect** function is triggered every time a recomposition occurs"
+        )
         SideEffectSample()
+
+        StyleableTutorialText(
+            text = "2-) **produceState** launches a coroutine scoped to the Composition that " +
+                    "can push values into a returned State."
+        )
         ProduceStateSampleButton()
+
+        val lazyListState: LazyListState = rememberLazyListState()
+        StyleableTutorialText(
+            text = "3-) Use **derivedStateOf** when a certain state is calculated " +
+                    "or derived from other state objects."
+        )
+
+        TutorialText2(text = "derivedStateOf with Int")
         DerivedStateOfSample()
-        DerivedStateOfSample2()
+        TutorialText2(text = "derivedStateOf with LazyListState")
+        DerivedStateOfSample2(lazyListState)
+
+        StyleableTutorialText(
+            text = "4-) Use **snapshotFlow** to convert **State<T>** objects into a **cold Flow**. " +
+                    "snapshotFlow runs its block when collected and emits the result of the " +
+                    "State objects read in it."
+        )
+        SnapshotFlowSample(lazyListState)
     }
 }
 
@@ -132,6 +162,7 @@ private fun SideEffectSample() {
     }
 }
 
+
 @Composable
 private fun ProduceStateSampleButton() {
 
@@ -158,6 +189,19 @@ private fun ProduceStateSampleButton() {
     }
 }
 
+/**
+ * produceState launches a coroutine scoped to the Composition that can push values into
+ * a returned State. Use it to convert non-Compose state into Compose state,
+ * for example bringing external subscription-driven
+ * state such as Flow, LiveData, or RxJava into the Composition.
+ *
+ * The producer is launched when produceState enters the Composition,
+ * and will be cancelled when it leaves the Composition. The returned State conflates;
+ * setting the same value won't trigger a recomposition.
+ * Even though produceState creates a coroutine, it can also be used to observe
+ * non-suspending sources of data. To remove the subscription to that source,
+ * use the awaitDispose function.
+ */
 @Composable
 private fun ProduceStateSample() {
     val context = LocalContext.current
@@ -293,10 +337,11 @@ private fun DerivedStateOfSample() {
             }
         }
 
-        println("🤔 COMPOSING..." +
-                "numberOfItems: $numberOfItems, " +
-                "derivedStateMax: $derivedStateMax, " +
-                "derivedStateMin: $derivedStateMin"
+        println(
+            "🤔 COMPOSING..." +
+                    "numberOfItems: $numberOfItems, " +
+                    "derivedStateMax: $derivedStateMax, " +
+                    "derivedStateMin: $derivedStateMin"
         )
         if (derivedStateMax) {
             Text("You cannot buy more than 5 items", color = Color(0xffE53935))
@@ -305,9 +350,8 @@ private fun DerivedStateOfSample() {
 }
 
 @Composable
-private fun DerivedStateOfSample2() {
+private fun DerivedStateOfSample2(scrollState: LazyListState) {
 
-    val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     val firstItemVisible by remember {
@@ -320,7 +364,7 @@ private fun DerivedStateOfSample2() {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             content = {
                 items(places) { place: Place ->
-                    PlaceCard(place = place)
+                    PlacesToBookComponent(place = place)
                 }
             }
         )
@@ -333,7 +377,7 @@ private fun DerivedStateOfSample2() {
                     }
                 },
                 modifier = Modifier.align(Alignment.BottomEnd),
-                backgroundColor = Color(0x99000000)
+                backgroundColor = Color(0xffE53935)
             ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
@@ -342,5 +386,29 @@ private fun DerivedStateOfSample2() {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SnapshotFlowSample(scrollState: LazyListState) {
+
+    var sentLogCount by remember { mutableStateOf(0) }
+
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.firstVisibleItemIndex }
+            .map { index -> index > 0 }
+            .distinctUntilChanged()
+            .filter { it }
+            .collect {
+                sentLogCount++
+            }
+    }
+
+    if (sentLogCount > 0) {
+        StyleableTutorialText(
+            text = "💗 SnapshotFlowSample collect called **$sentLogCount** times " +
+                    "after firstVisibleItemIndex > map threshold",
+            bullets = false
+        )
     }
 }
