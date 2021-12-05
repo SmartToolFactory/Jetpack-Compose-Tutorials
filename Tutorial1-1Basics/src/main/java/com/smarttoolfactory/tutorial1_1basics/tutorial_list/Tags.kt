@@ -133,4 +133,5 @@ const val TAG_PRODUCE_STATE = "produceStateOf"
 const val TAG_LAUNCHED_EFFECT = "LaunchedEffect"
 const val TAG_SIDE_EFFECT = "SideEffect"
 const val TAG_DISPOSABLE_EFFECT = "DisposableEffect"
+const val TAG_SNAPSHOT_FLOW= "snapshowFlow"
 

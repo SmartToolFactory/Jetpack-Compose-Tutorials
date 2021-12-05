@@ -676,11 +676,29 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffE91E63)
     )
 
+    val tutorial4_5_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_5_2),
+        description = "Use SideEffect, derivedStateOf, produceState and snapshotFlow.",
+        action = {
+            Tutorial4_5_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_SIDE_EFFECT,
+            TAG_DERIVED_STATE,
+            TAG_PRODUCE_STATE,
+            TAG_SNAPSHOT_FLOW,
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
     return listOf(
         tutorial4_1,
         tutorial4_2,
         tutorial4_3,
         tutorial4_4,
-        tutorial4_5_1
+        tutorial4_5_1,
+        tutorial4_5_2
     )
 }

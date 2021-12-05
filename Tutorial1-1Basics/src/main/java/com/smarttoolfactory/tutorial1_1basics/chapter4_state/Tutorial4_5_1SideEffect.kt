@@ -20,9 +20,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @Composable
 fun Tutorial4_5_1Screen() {
@@ -100,7 +100,7 @@ private fun LaunchedEffectSample(scaffoldState: ScaffoldState) {
     }
 
     // This button increase counter that will trigger LaunchedEffect
-    Button(
+    OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
@@ -123,7 +123,7 @@ private fun CoroutineScopeSample(
     // This button increase counter that will trigger CoroutineScope
     var counter by remember { mutableStateOf(0) }
 
-    Button(
+    OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
@@ -147,7 +147,7 @@ private fun UpdatedRememberSample() {
         mutableStateOf(0)
     }
 
-    Button(
+    OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
@@ -176,7 +176,7 @@ private fun UpdatedRememberSample() {
 @Composable
 private fun Calculation(input: Int) {
     val rememberUpdatedStateInput by rememberUpdatedState(input)
-    val rememberedInput by remember { mutableStateOf(input) }
+    val rememberedInput = remember { input }
     Text("updatedInput: $rememberUpdatedStateInput, rememberedInput: $rememberedInput")
 }
 
@@ -236,7 +236,7 @@ private fun RememberUpdatedStateSample2() {
                 showCalculation = false
                 Toast.makeText(
                     context,
-                    "Calculation2 result: $selectedOption",
+                    "Calculation2 $it result: $selectedOption",
                     Toast.LENGTH_SHORT
                 )
                     .show()
@@ -245,26 +245,32 @@ private fun RememberUpdatedStateSample2() {
     }
 }
 
+/**
+ * LaunchedEffect restarts when one of the key parameters changes.
+ * However, in some situations you might want to capture a value in your effect that,
+ * if it changes, you do not want the effect to restart.
+ * In order to do this, it is required to use rememberUpdatedState to create a reference
+ * to this value which can be captured and updated. This approach is helpful for effects that
+ * contain long-lived operations that may be expensive or prohibitive to recreate and restart.
+ */
 @Composable
-private fun Calculation2(operation: () -> Unit) {
+private fun Calculation2(operation: (String) -> Unit) {
 
     println("🤔 Calculation2(): operation: $operation")
     // This returns the updated operation if we recompose with new operation
     val currentOperation by rememberUpdatedState(newValue = operation)
     // This one returns the initial operation this composable enters composition
-    val rememberedOperation by rememberUpdatedState(newValue = operation)
+    val rememberedOperation = remember { operation }
 
+    // 🔥 This LaunchedEffect block only gets called once, not called on each recomposition
     LaunchedEffect(key1 = true, block = {
         delay(4000)
-        currentOperation()
+        currentOperation("rememberUpdatedState")
+        rememberedOperation("remember")
     })
 
     Row(verticalAlignment = Alignment.CenterVertically) {
-        CircularProgressIndicator(color = Color(
-            red = Random.nextInt(256),
-            green = Random.nextInt(256),
-            blue = Random.nextInt(256),
-        ))
+        CircularProgressIndicator(color = getRandomColor())
     }
 }
 
@@ -275,7 +281,7 @@ private fun Calculation2(operation: () -> Unit) {
 @Composable
 private fun DisposableEffectButton() {
     var showDisposableEffectSample by remember { mutableStateOf(false) }
-    Button(
+    OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
@@ -340,7 +346,7 @@ private fun DisposableEffectSample() {
 @Composable
 private fun DisposableEffectLifecycleButton() {
     var showDisposableEffectLifeCycle by remember { mutableStateOf(false) }
-    Button(
+    OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
