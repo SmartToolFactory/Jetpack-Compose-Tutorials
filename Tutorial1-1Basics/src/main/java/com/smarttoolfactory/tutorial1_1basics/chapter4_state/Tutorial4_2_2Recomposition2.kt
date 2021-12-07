@@ -36,8 +36,8 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "Only text in bottom is recomposed when we update mutableState since " +
-                    "Text on top does not observe.",
+            text = "Only text in bottom is recomposed when we update **mutableState** since " +
+                    "**Text** on top does not observe.",
             bullets = false
         )
         Sample1()
@@ -48,20 +48,22 @@ private fun TutorialContent() {
         Sample2()
         StyleableTutorialText(
             text = "**update1** mutableState causes whole Composable to be recomposed because " +
-                    "it's observed by Text at the bottom. Only SomeComposableFunction" +
-                    " is not updated",
+                    "it's observed by **Text** with 🔥. Only **SomeComposable with no args** " +
+                    "is not recomposed.",
             bullets = false
         )
         Sample3()
         StyleableTutorialText(
             text = "**update1** mutableState causes whole Composable to be recomposed because " +
-                    "it's observed by Text at the bottom. SomeComposableFunction is updated " +
-                    "with **update2* causing composable to be updated except other functions",
+                    "it's observed by **Text** with 🔥. **SomeComposable** that takes " +
+                    "**update2** as arg causing whpşe composable to be recomposed. " +
+                    "SomeComposable that has no args is not recomposed.",
             bullets = false
         )
         Sample4()
         StyleableTutorialText(
-            text = "Only separate composables that are not update by this function are not recomposed.",
+            text = "Only separate composables, **SomeComposable with no args**, that are not " +
+                    "updated by this Composable are not recomposed. And seperat composables trigger recomposition when the mutableState they have as arg is updated.",
             bullets = false
         )
         Sample5()
@@ -498,9 +500,10 @@ private fun SomeComposable(update: Int = 0) {
 
     println("🚀 SomeComposable() Composable")
 
+    val text = if(update == 0 ) "no args" else "update: $update"
     Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = "SomeComposable update: $update",
+        modifier = Modifier.fillMaxWidth().background(getRandomColor()),
+        text = "SomeComposable $text",
         textAlign = TextAlign.Center,
         color = getRandomColor()
     )
@@ -512,6 +515,8 @@ private fun AnotherComposable(update: Int) {
 
     println(" AnotherComposable() First Column")
 
+    val text = if(update == 0 ) "no args" else "update: $update"
+
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -521,7 +526,7 @@ private fun AnotherComposable(update: Int) {
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "AnotherComposable: update: $update",
+            text = "AnotherComposable $text ",
             textAlign = TextAlign.Center,
             color = getRandomColor()
         )
@@ -534,7 +539,7 @@ private fun AnotherComposable(update: Int) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "AnotherComposable",
+                text = "AnotherComposable bottom inner text",
                 textAlign = TextAlign.Center,
                 color = getRandomColor()
             )

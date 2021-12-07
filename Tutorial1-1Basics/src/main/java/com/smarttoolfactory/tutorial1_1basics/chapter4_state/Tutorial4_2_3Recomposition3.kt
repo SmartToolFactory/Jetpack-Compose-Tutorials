@@ -232,9 +232,11 @@ private fun SomeComposable(update: Int = 0) {
 
     println("🚀 SomeComposable() Composable")
 
+    val text = if(update == 0 ) "no args" else "update: $update"
+
     Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = "SomeComposable update: $update",
+        modifier = Modifier.fillMaxWidth().background(getRandomColor()),
+        text = "SomeComposable $text",
         textAlign = TextAlign.Center,
         color = getRandomColor()
     )
@@ -246,18 +248,19 @@ private fun SomeComposable(update: Int = 0) {
 private fun AnotherComposable(update: Int) {
 
     println(" AnotherComposable() First Column")
+    val text = if(update == 0 ) "no args" else "update: $update"
 
     RandomColorColumn {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "AnotherComposable: update: $update",
+            text = "AnotherComposable $text",
             textAlign = TextAlign.Center,
             color = getRandomColor()
         )
         RandomColorColumn {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "AnotherComposable",
+                text = "AnotherComposable bottom inner text",
                 textAlign = TextAlign.Center,
                 color = getRandomColor()
             )
