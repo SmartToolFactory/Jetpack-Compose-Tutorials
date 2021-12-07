@@ -124,7 +124,7 @@ const val TAG_SUBCOMPOSE_LAYOUT = "SubcomposeLayout"
     STATE
  */
 const val TAG_RECOMPOSITION= "Recomposition"
-const val TAG_STATE = "state"
+const val TAG_STATE = "State"
 const val TAG_REMEMBER = "remember"
 const val TAG_COROUTINE_SCOPE = "rememberCoroutineScope"
 const val TAG_REMEMBER_UPDATED = "rememberUpdatedState"
@@ -133,5 +133,5 @@ const val TAG_PRODUCE_STATE = "produceStateOf"
 const val TAG_LAUNCHED_EFFECT = "LaunchedEffect"
 const val TAG_SIDE_EFFECT = "SideEffect"
 const val TAG_DISPOSABLE_EFFECT = "DisposableEffect"
-const val TAG_SNAPSHOT_FLOW= "snapshowFlow"
+const val TAG_SNAPSHOT_FLOW= "snapshotFlow"
 

@@ -605,6 +605,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_REMEMBER,
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
@@ -675,7 +676,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
     val tutorial4_4 = TutorialSectionModel(
         title = stringResource(R.string.title_4_4),
         description = "Create a custom remember and custom component to have badge that changes " +
-                "it's shape based on it's properties.",
+                "its shape based on properties set by custom rememberable.",
         action = {
             Tutorial4_4Screen()
         },
