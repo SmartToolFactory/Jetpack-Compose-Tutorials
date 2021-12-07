@@ -68,3 +68,21 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>3-6 Custom Chat Layouts</h3><br/>Custom layout like whatsapp chat layout that moves time and message read status layout right or bottom based on message width.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6.gif" width=320> |
 |  |  |
+
+#### State
+
+|Tutorial|Preview|
+|:-------|-------|
+|<h3>4-1 Remember&MutableState</h3><br/>Remember and mutableState effect recomposition and states.<br><br>• Custom Modifier<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial4_1.png" width=320> |
+|  |  |
+|<h3>4-2-1 Recomposition</h3><br/>How recomposition happens for flat or hierarchical designs when Composables are in separate functions or stacked together
+.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial4_2_1.png" width=320> |
+|  |  |
+|<h3>4-2-2 Recomposition2</h3><br/>How hierarchy of Composables effects Smart Composition.<br><br>• Custom Layout<br>• Scope<br>• ParentDataModifier<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial4_2_2.png" width=320> |
+|  |  |
+|<h3>4-4 Custom Remember</h3><br/>Remember produce and remember a new value by calling calculation when key(s) are updated. Update calculations with buttons.<br><br>• BoxWithConstraints<br>• Constraint<br>|<img src ="/./screenshots/tutorial4_4.gif" width=320> |
+|  |  |
+|<h3>4-5-1 SideEffect1</h3><br/>Use remember functions like rememberCoroutineScope, and rememberUpdatedState and side-effect functions such as LaunchedEffect and DisposableEffect.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial4_5_1.png" width=320> |
+|  |  |
+|<h3>4-5-2 SideEffect2</h3><br/>Use SideEffect, derivedStateOf, produceState and snapshotFlow.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial4_5_2.png" width=320> |
+|  |  |

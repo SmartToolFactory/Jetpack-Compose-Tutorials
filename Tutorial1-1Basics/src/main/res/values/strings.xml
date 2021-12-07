@@ -33,8 +33,10 @@
     <string name="title_3_4">3-4 BoxWithConstraints</string>
     <string name="title_3_5">3-5 SubcomposeLayout</string>
     <string name="title_3_6_1">3-6-1 Custom Layout Samples</string>
-    <string name="title_4_1"><![CDATA[Remember&MutableState]]></string>
-    <string name="title_4_2">4-2 Recomposition</string>
+    <string name="title_4_1"><![CDATA[4-1 Remember&MutableState]]></string>
+    <string name="title_4_2_1">4-2-1 Recomposition</string>
+    <string name="title_4_2_2">4-2-2 Recomposition2</string>
+    <string name="title_4_2_3">4-2-3 Recomposition3</string>
     <string name="title_4_3"><![CDATA[4-3 Remember&State]]></string>
     <string name="title_4_4">4-4 Custom Remember</string>
     <string name="title_4_5_1">4-5-1 SideEffect1</string>

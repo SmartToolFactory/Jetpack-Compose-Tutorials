@@ -611,12 +611,43 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffE91E63)
     )
 
-    val tutorial4_2 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_2),
+    val tutorial4_2_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_2_1),
         description = "This tutorial shows how recomposition happens for flat or hierarchical " +
                 "designs when Composables are in separate functions or stacked together.",
         action = {
-            Tutorial4_2Screen()
+            Tutorial4_2_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_RECOMPOSITION,
+            TAG_STATE
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
+    val tutorial4_2_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_2_2),
+        description = "This tutorial show how hierarchy of Composables effect Smart Composition",
+        action = {
+            Tutorial4_2_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_RECOMPOSITION,
+            TAG_STATE
+        ),
+        tagColor = Color(0xffE91E63)
+    )
+
+    val tutorial4_2_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_2_3),
+        description = "This tutorial show how hierarchy of Composable effects Smart Composition. " +
+                "Same example as previous one but Text, Button, and Columns with random color are " +
+                "in their own functions",
+
+        action = {
+            Tutorial4_2_3Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -695,7 +726,9 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     return listOf(
         tutorial4_1,
-        tutorial4_2,
+        tutorial4_2_1,
+        tutorial4_2_2,
+        tutorial4_2_3,
         tutorial4_3,
         tutorial4_4,
         tutorial4_5_1,

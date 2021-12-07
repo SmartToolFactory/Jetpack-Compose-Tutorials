@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
@@ -57,7 +56,7 @@ var recomposeHierarchicalCenter = 0
 var recomposeHierarchicalInner = 0
 
 @Composable
-fun Tutorial4_2Screen() {
+fun Tutorial4_2_1Screen() {
     TutorialContent()
 }
 
@@ -95,7 +94,7 @@ private fun TutorialContent() {
 }
 
 @Composable
-fun FlatSeparated() {
+private fun FlatSeparated() {
     Column(Modifier.padding(horizontal = 8.dp)) {
         FlatTopLayer()
         FlatMiddleLayer()
@@ -155,7 +154,7 @@ private fun FlatBottomLayer() {
 }
 
 @Composable
-fun FlatCombined() {
+private fun FlatCombined() {
     Column(
         modifier = Modifier.padding(horizontal = 8.dp)
     ) {
