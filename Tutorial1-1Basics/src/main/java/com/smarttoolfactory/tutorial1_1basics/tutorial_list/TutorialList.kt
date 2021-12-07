@@ -621,6 +621,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_REMEMBER,
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
@@ -635,6 +636,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_REMEMBER,
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
@@ -652,6 +654,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_REMEMBER,
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
