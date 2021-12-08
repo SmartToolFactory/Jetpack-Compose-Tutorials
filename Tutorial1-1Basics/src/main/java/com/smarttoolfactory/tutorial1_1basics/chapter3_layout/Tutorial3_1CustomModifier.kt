@@ -106,23 +106,29 @@ private fun TutorialContent() {
         )
 
         StyleableTutorialText(
-            text = "3-) **Modifier.composed** composition of a Modifier that will be " +
-                    "composed for each element it."
+            text = "3-) **Modifier.composed** allows modifier to have remember or SideEffects " +
+                    "to have memory or state for each element it has been used with."
         )
 
 
         // 🔥 composedBackground uses remember to retain initial calculation of color by
         // using a key with remember
 
-        Column(modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth()
+        ) {
             var counter by remember { mutableStateOf(0) }
 
-            Button(onClick = { counter++ }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Increase")
+            Button(
+                onClick = { counter++ },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Increase $counter")
             }
 
+            TutorialText2(text = "Modifier.composed")
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -130,7 +136,7 @@ private fun TutorialContent() {
 
                 Box(
                     modifier = Modifier
-                        .composedBackground(150.dp, 50.dp, 0)
+                        .composedBackground(150.dp, 20.dp, 0)
                         .width(150.dp)
                 ) {
                     Text(text = "Recomposed $counter")
@@ -138,7 +144,30 @@ private fun TutorialContent() {
 
                 Box(
                     modifier = Modifier
-                        .composedBackground(150.dp, 50.dp, 1)
+                        .composedBackground(150.dp, 20.dp, 1)
+                        .width(150.dp)
+                ) {
+                    Text(text = "Recomposed $counter")
+                }
+            }
+
+            TutorialText2(text = "Modifier that is not composed")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .nonComposedBackground(150.dp, 20.dp, 0)
+                        .width(150.dp)
+                ) {
+                    Text(text = "Recomposed $counter")
+                }
+
+                Box(
+                    modifier = Modifier
+                        .nonComposedBackground(150.dp, 20.dp, 1)
                         .width(150.dp)
                 ) {
                     Text(text = "Recomposed $counter")
@@ -305,7 +334,6 @@ fun Modifier.composedBackground(width: Dp, height: Dp, index: Int) = composed(
 //            alpha = 255
 //        )
 
-
         // add your modifier implementation here
         Modifier.drawBehind {
 
@@ -314,5 +342,25 @@ fun Modifier.composedBackground(width: Dp, height: Dp, index: Int) = composed(
 
             drawRect(color = color, topLeft = Offset.Zero, size = Size(widthInPx, heightInPx))
         }
+    }
+)
+
+fun Modifier.nonComposedBackground(width: Dp, height: Dp, index: Int) = this.then(
+
+    // add your modifier implementation here
+    Modifier.drawBehind {
+
+        // 🔥 Without remember this color is created every time item using this modifier composed
+        val color: Color = Color(
+            red = Random.nextInt(256),
+            green = Random.nextInt(256),
+            blue = Random.nextInt(256),
+            alpha = 255
+        )
+
+        val widthInPx = width.toPx()
+        val heightInPx = height.toPx()
+
+        drawRect(color = color, topLeft = Offset.Zero, size = Size(widthInPx, heightInPx))
     }
 )
