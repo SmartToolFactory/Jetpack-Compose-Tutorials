@@ -44,6 +44,10 @@ private fun TutorialContent() {
         Spacer(modifier = Modifier.height(12.dp))
         Sample3()
         Spacer(modifier = Modifier.height(12.dp))
+        StyleableTutorialText(
+            text = "",
+            bullets = false
+        )
         Sample4()
         Spacer(modifier = Modifier.height(12.dp))
         Sample5()
@@ -89,7 +93,7 @@ private fun Sample2() {
 
             RandomColorButton(onClick = { update3++ }) {
                 println("✅ Button 3")
-                RandomColorText( text = "Update2: $update2, Update3: $update3")
+                RandomColorText(text = "Update2: $update2, Update3: $update3")
             }
 
             RandomColorColumn {
@@ -130,9 +134,6 @@ private fun Sample3() {
             }
             RandomColorColumn {
                 println("☕️ Bottom Column")
-                /*
-                    🔥🔥 Observing update(mutableState) causes entire composable to recompose
-                 */
                 RandomColorText(text = "Update1: $update1")
             }
         }
@@ -158,7 +159,7 @@ private fun Sample4() {
             onClick = { update2++ }
         ) {
             println("🍏 Button 2")
-            RandomColorText( text = "Update2: $update2")
+            RandomColorText(text = "Update2: $update2")
         }
 
         RandomColorColumn {
@@ -171,9 +172,6 @@ private fun Sample4() {
             }
             RandomColorColumn {
                 println("☕️ Bottom Column")
-                /*
-                    🔥🔥 Observing update(mutableState) causes entire composable to recompose
-                 */
                 RandomColorText(text = "Update1: $update1")
                 // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
                 SomeComposable()
@@ -182,7 +180,13 @@ private fun Sample4() {
 
         // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
         SomeComposable()
+        Text(
+            "⚠️ SomeComposable below that observes update2 causes entire composable " +
+                    "to be recomposed because it's at same level. Wrap it with RandomColorColumn to prevent this",
+            color = getRandomColor()
+        )
         // 🔥🔥 It's updated since we sent an argument to it
+        // 🔥🔥⚠️ This causes whole composable to RECOMPOSED but not RandomColumn or RandomButton
         SomeComposable(update2)
     }
 }
@@ -211,9 +215,6 @@ private fun Sample5() {
             println("🚀 Inner Column")
             RandomColorColumn {
                 println("☕️ Bottom Column")
-                /*
-                    🔥🔥 Observing update(mutableState) causes entire composable to recompose
-                 */
                 RandomColorText(text = "Update1: $update1")
             }
             // 🔥🔥 It's updated since we sent an argument to it
@@ -222,7 +223,13 @@ private fun Sample5() {
 
         // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
         SomeComposable()
+        Text(
+            "⚠️ AnotherComposable below that observes update2 causes entire composable " +
+                    "to be recomposed because it's at same level. Wrap it with RandomColorColumn to prevent this",
+            color = getRandomColor()
+        )
         // 🔥🔥 It's updated since we sent an argument to it
+        // 🔥🔥⚠️ This causes whole composable to RECOMPOSED but not RandomColumn or RandomButton
         AnotherComposable(update2)
     }
 }
@@ -232,10 +239,12 @@ private fun SomeComposable(update: Int = 0) {
 
     println("🚀 SomeComposable() Composable")
 
-    val text = if(update == 0 ) "no args" else "update: $update"
+    val text = if (update == 0) "no args" else "update: $update"
 
     Text(
-        modifier = Modifier.fillMaxWidth().background(getRandomColor()),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(getRandomColor()),
         text = "SomeComposable $text",
         textAlign = TextAlign.Center,
         color = getRandomColor()
@@ -243,12 +252,11 @@ private fun SomeComposable(update: Int = 0) {
 }
 
 
-
 @Composable
 private fun AnotherComposable(update: Int) {
 
     println(" AnotherComposable() First Column")
-    val text = if(update == 0 ) "no args" else "update: $update"
+    val text = if (update == 0) "no args" else "update: $update"
 
     RandomColorColumn {
         Text(
@@ -269,7 +277,7 @@ private fun AnotherComposable(update: Int) {
 }
 
 @Composable
-fun RandomColorText(text:String) {
+fun RandomColorText(text: String) {
     Text(
         text = text,
         textAlign = TextAlign.Center,
@@ -278,7 +286,9 @@ fun RandomColorText(text:String) {
 }
 
 @Composable
-private fun RandomColorColumn(content: @Composable () -> Unit) {
+fun RandomColorColumn(content: @Composable () -> Unit) {
+
+    println("📌 RandomColumn COMPOSABLE: $content")
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -292,6 +302,9 @@ private fun RandomColorColumn(content: @Composable () -> Unit) {
 
 @Composable
 private fun RandomColorButton(onClick: () -> Unit, content: @Composable () -> Unit) {
+
+    println("💬 RandomColorButton COMPOSABLE: $content")
+
     Button(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(backgroundColor = getRandomColor()),
