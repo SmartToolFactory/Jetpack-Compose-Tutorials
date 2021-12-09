@@ -4,6 +4,11 @@ import androidx.annotation.IntRange
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -20,6 +25,10 @@ import androidx.compose.ui.unit.sp
  * @param verticalPadding for rounded rectangle or general padding for circle shape
  * @param textColor color of the text
  * @param fontSize size of the font used for Text
+ * @param fontWeight The typeface thickness to use when painting the text (e.g., [FontWeight.Bold]).
+ * @param fontFamily The font family to be used when rendering the text. See [TextStyle.fontFamily].
+ * @param textDecoration The decorations to paint on the text (e.g., an underline).
+ * @param fontStyle  The typeface variant to use when drawing the letters (e.g., italic).
  * @param shadow nullable shadow for badge
  * @param borderStroke nullable border stroke around badge
  * @param showBadgeThreshold for count to display badge. If badge count is below this
@@ -37,6 +46,10 @@ fun rememberBadgeState(
     verticalPadding: Dp = 0.dp,
     textColor: Color = Color.White,
     fontSize: TextUnit = 14.sp,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    fontStyle: FontStyle? = null,
+    textDecoration: TextDecoration? = null,
     shadow: MaterialShadow? = null,
     borderStroke: BorderStroke? = null,
     showBadgeThreshold: Int = Int.MIN_VALUE,
@@ -51,6 +64,10 @@ fun rememberBadgeState(
             verticalPadding,
             textColor,
             fontSize,
+            fontWeight,
+            fontFamily,
+            fontStyle,
+            textDecoration,
             shadow,
             borderStroke,
             showBadgeThreshold
@@ -69,6 +86,10 @@ fun rememberBadgeState(
  * @param verticalPadding for rounded rectangle or general padding for circle shape
  * @param textColor color of the text
  * @param fontSize size of the font used for Text
+ * @param fontWeight The typeface thickness to use when painting the text (e.g., [FontWeight.Bold]).
+ * @param fontFamily The font family to be used when rendering the text. See [TextStyle.fontFamily].
+ * @param textDecoration The decorations to paint on the text (e.g., an underline).
+ * @param fontStyle  The typeface variant to use when drawing the letters (e.g., italic).
  * @param shadow nullable shadow for badge
  * @param borderStroke nullable border stroke around badge
  * @param showBadgeThreshold for count to display badge. If badge count is below this
@@ -85,12 +106,21 @@ class BadgeState(
     var verticalPadding: Dp = 0.dp,
     textColor: Color,
     var fontSize: TextUnit,
+    var fontWeight: FontWeight? = null,
+    var fontFamily: FontFamily? = null,
+    var fontStyle: FontStyle? = null,
+    var textDecoration: TextDecoration? = null,
     var shadow: MaterialShadow? = null,
     var borderStroke: BorderStroke? = null,
     showBadgeThreshold: Int = Int.MIN_VALUE,
 ) {
+
+    /*
+        Properties that trigger recomposition when set
+     */
     var backgroundColor by mutableStateOf(backgroundColor)
     var textColor by mutableStateOf(textColor)
+
     var text by mutableStateOf("0")
         private set
 

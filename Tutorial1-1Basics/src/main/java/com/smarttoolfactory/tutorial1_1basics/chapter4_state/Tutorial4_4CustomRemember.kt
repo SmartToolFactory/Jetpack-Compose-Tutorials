@@ -3,13 +3,17 @@ package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +40,7 @@ private fun TutorialContent() {
 private fun TutorialPage() {
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(8.dp)
     ) {
@@ -121,7 +126,7 @@ private fun TutorialPage() {
             )
         )
         Badge(badgeState = badge9)
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         val badge10 = rememberBadgeState(
             maxNumber = 49,
@@ -133,6 +138,56 @@ private fun TutorialPage() {
         )
         Badge(badgeState = badge10)
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        val badge11 = rememberBadgeState(
+            fontSize = 40.sp,
+            textColor = Color.White,
+            horizontalPadding = 12.dp,
+            fontStyle = FontStyle.Italic,
+            shadow = MaterialShadow(
+                Color.DarkGray,
+                alpha = 0.8f,
+                dX = 6.dp,
+                dY = 3.dp,
+                shadowRadius = 9.dp
+            )
+        )
+        Badge(badgeState = badge11)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        val badge12 = rememberBadgeState(
+            fontSize = 40.sp,
+            textColor = Color.White,
+            horizontalPadding = 12.dp,
+            fontWeight = FontWeight.ExtraBold,
+            shadow = MaterialShadow(
+                Color.DarkGray,
+                alpha = 0.6f,
+                dX = 5.dp,
+                dY = 5.dp,
+                shadowRadius = 1.dp
+            )
+        )
+        Badge(badgeState = badge12)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        val badge13 = rememberBadgeState(
+            fontSize = 40.sp,
+            textColor = Color.White,
+            horizontalPadding = 12.dp,
+            textDecoration = TextDecoration.Underline,
+            shadow = MaterialShadow(
+                Color.DarkGray,
+                alpha = 0.9f,
+                dX = 2.dp,
+                dY = 2.dp,
+                shadowRadius = 6.dp
+            )
+        )
+        Badge(badgeState = badge13)
+        Spacer(modifier = Modifier.height(10.dp))
+
         val badgeStateList = listOf(
             badge1,
             badge2,
@@ -143,7 +198,10 @@ private fun TutorialPage() {
             badge7,
             badge8,
             badge9,
-            badge10
+            badge10,
+            badge11,
+            badge12,
+            badge13
         )
 
         LaunchedEffect(Unit) {

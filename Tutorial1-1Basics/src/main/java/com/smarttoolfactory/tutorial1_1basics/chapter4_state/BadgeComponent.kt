@@ -61,6 +61,11 @@ private fun BadgeComponent(badgeState: BadgeState, modifier: Modifier = Modifier
             color = badgeState.textColor,
             fontSize = badgeState.fontSize,
             lineHeight = badgeState.fontSize,
+            fontWeight = badgeState.fontWeight,
+            fontFamily = badgeState.fontFamily,
+            textDecoration = badgeState.textDecoration,
+            fontStyle = badgeState.fontStyle,
+            maxLines = 1,
             onTextLayout = { textLayoutResult: TextLayoutResult ->
                 // 🔥🔥 This is text height without padding, result size returns height with font padding
                 badgeData.textHeight = textLayoutResult.firstBaseline.toInt()
