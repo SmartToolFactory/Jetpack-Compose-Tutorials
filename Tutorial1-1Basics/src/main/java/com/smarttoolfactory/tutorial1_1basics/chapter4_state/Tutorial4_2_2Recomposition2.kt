@@ -284,21 +284,6 @@ private fun Sample3() {
         )
         // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
         SomeComposable()
-
-
-//        Column(
-//            modifier = Modifier.background(getRandomColor()).padding(4.dp)
-//        ) {
-//            println("☕️ Bottom Column")
-//            /*
-//                🔥🔥 Observing update(mutableState) causes entire composable to recompose
-//             */
-//            Text(
-//                text = "Update1 $update1",
-//                textAlign = TextAlign.Center,
-//                color = getRandomColor()
-//            )
-//        }
     }
 }
 

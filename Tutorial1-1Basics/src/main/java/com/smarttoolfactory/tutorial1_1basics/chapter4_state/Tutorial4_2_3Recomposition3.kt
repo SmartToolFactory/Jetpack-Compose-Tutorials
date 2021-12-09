@@ -33,9 +33,9 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "Since we are using separate composables for Button, Column that have modifiers " +
-                    "compositions are smart compositions, not all of the tree is recomposed, " +
-                    "only **Text** are recomposed with updated values.",
+            text = "Since we are using separate composables for Button, Column that have " +
+                    "modifiers compositions are smart compositions, not all of the tree is " +
+                    "recomposed, only **Text** are recomposed with updated values.",
             bullets = false
         )
         Sample1()
@@ -45,7 +45,7 @@ private fun TutorialContent() {
         Sample3()
         Spacer(modifier = Modifier.height(12.dp))
         StyleableTutorialText(
-            text = "",
+            text = "***SomeComposable* that observes **update2** causes entire composable to be recomposed",
             bullets = false
         )
         Sample4()
@@ -65,7 +65,6 @@ private fun Sample1() {
         }
     }
 }
-
 
 @Composable
 private fun Sample2() {
@@ -103,7 +102,6 @@ private fun Sample2() {
         }
     }
 }
-
 
 @Composable
 private fun Sample3() {
@@ -191,7 +189,6 @@ private fun Sample4() {
     }
 }
 
-
 @Composable
 private fun Sample5() {
     RandomColorColumn {
@@ -250,7 +247,6 @@ private fun SomeComposable(update: Int = 0) {
         color = getRandomColor()
     )
 }
-
 
 @Composable
 private fun AnotherComposable(update: Int) {
