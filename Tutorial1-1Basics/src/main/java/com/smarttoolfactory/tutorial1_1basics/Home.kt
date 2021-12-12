@@ -17,7 +17,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.*
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
@@ -27,7 +26,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-internal val tabList = listOf("Components", "Layout", "State", "Gestures", "Theming")
+internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Theming")
 
 /**
  * This is Home Screen that contains Search bar, Tabs, and tutorial pages in Pager

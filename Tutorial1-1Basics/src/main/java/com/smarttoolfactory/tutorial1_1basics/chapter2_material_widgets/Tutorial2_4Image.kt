@@ -287,7 +287,6 @@ private fun DrawOnImageBitmapExample() {
 
 }
 
-
 @Composable
 private fun ImageShapeAndFilterExample() {
 
@@ -353,13 +352,16 @@ private fun ImageShapeAndFilterExample() {
 
         Image(
             painter = avatarBitmap1,
-            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.DstOver),
+            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.Difference),
             contentDescription = null
         )
 
         Image(
             painter = avatarBitmap1,
-            colorFilter = ColorFilter.tint(color = Color.Green, blendMode = BlendMode.Color),
+            colorFilter = ColorFilter.tint(
+                color = Color(0xffEEEEEE),
+                blendMode = BlendMode.Saturation
+            ),
             contentDescription = null
         )
     }
@@ -387,7 +389,7 @@ private fun ImageFromBlendMode() {
             .graphicsLayer(alpha = 0.99f)
     ) {
 
-        val dimension = (size.height.coerceAtMost(size.width) *.9f).toInt()
+        val dimension = (size.height.coerceAtMost(size.width) * .9f).toInt()
 
         // Images on left
         drawImage(

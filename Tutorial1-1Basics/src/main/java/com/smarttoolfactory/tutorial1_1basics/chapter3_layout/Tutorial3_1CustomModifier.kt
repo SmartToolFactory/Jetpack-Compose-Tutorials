@@ -10,9 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
@@ -364,3 +366,14 @@ fun Modifier.nonComposedBackground(width: Dp, height: Dp, index: Int) = this.the
         drawRect(color = color, topLeft = Offset.Zero, size = Size(widthInPx, heightInPx))
     }
 )
+
+/**
+ * Modifier for applying blend mode(Porter Duff mode)
+ */
+fun Modifier.drawOffscreen(): Modifier = this.drawWithContent {
+    with(drawContext.canvas.nativeCanvas) {
+        val checkPoint = saveLayer(null, null)
+        drawContent()
+        restoreToCount(checkPoint)
+    }
+}
