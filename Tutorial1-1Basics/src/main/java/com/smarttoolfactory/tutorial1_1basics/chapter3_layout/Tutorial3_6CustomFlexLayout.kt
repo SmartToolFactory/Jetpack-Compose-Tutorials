@@ -43,6 +43,7 @@ fun Tutorial3_6Screen() {
 
     val systemUiController = rememberSystemUiController()
 
+    // Check out Tutorial4_5_1 for DisposableEffect
     DisposableEffect(key1 = true, effect = {
 
         systemUiController.setStatusBarColor(
@@ -119,6 +120,7 @@ private fun ChatFlexBoxLayout(
             onTextLayout = { textLayoutResult ->
                 lineCount = textLayoutResult.lineCount
                 lastLineWidth = textLayoutResult.getLineRight(lineCount - 1)
+                println("📌 lineCount: $lineCount, lastLineWidth: $lastLineWidth")
             }
         )
 
@@ -153,15 +155,27 @@ private fun ChatFlexBoxLayout(
         if (lineCount > 1 && lastLineWidth + status.measuredWidth < message.measuredWidth) {
             width = message.measuredWidth
             height = message.measuredHeight
+            println("🔥 TEXT: $text, parentWidth: $parentWidth,  " +
+                    "lastLineWidth: $lastLineWidth\n" +
+                    "message.width: ${message.width}, status.measuredWidth: ${status.measuredWidth}")
         } else if (lineCount > 1 && lastLineWidth + status.measuredWidth >= parentWidth) {
             width = message.measuredWidth
             height = message.measuredHeight + status.measuredHeight
+            println("🤔 TEXT: $text, parentWidth: $parentWidth\n" +
+                    "lastLineWidth: $lastLineWidth, " +
+                    "message.width: ${message.width}, status.measuredWidth: ${status.measuredWidth}")
         } else if (lineCount == 1 && message.width + status.measuredWidth >= parentWidth) {
             width = message.measuredWidth
             height = message.measuredHeight + status.measuredHeight
+            println("🎃 TEXT: $text, parentWidth: $parentWidth\n" +
+                    "lastLineWidth: $lastLineWidth, " +
+                    "message.width: ${message.width}, status.measuredWidth: ${status.measuredWidth}")
         } else {
             width = message.measuredWidth + status.measuredWidth
             height = message.measuredHeight
+            println("🚀 TEXT: $text, parentWidth: $parentWidth\n" +
+                    "lastLineWidth: $lastLineWidth, " +
+                    "message.width: ${message.width}, status.measuredWidth: ${status.measuredWidth}")
         }
 
         layout(width = width, height = height) {

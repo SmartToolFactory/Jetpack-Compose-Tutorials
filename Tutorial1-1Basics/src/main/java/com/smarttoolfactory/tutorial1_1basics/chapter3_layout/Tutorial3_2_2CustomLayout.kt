@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -56,7 +56,7 @@ private fun TutorialContent() {
                     color = Color.White
                 )
                 Text(
-                    "Thir Text",
+                    "Third Text",
                     modifier = Modifier
                         .background(Color(0xff2196F3)),
                     color = Color.White
