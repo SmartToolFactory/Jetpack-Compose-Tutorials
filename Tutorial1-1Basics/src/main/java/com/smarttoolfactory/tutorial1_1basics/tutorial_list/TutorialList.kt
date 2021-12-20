@@ -571,7 +571,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         description = "Custom layout like whatsapp chat layout that moves time and message read " +
                 "status layout right or bottom based on message width.",
         action = {
-            Tutorial3_6Screen()
+            Tutorial3_6Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,

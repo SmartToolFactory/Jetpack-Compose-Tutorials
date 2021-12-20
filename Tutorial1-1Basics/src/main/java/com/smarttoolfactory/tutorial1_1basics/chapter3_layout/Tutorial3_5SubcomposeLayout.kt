@@ -17,11 +17,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.blue400
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.green400
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.orange400
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
 fun Tutorial3_5Screen() {
@@ -31,7 +32,6 @@ fun Tutorial3_5Screen() {
 @Composable
 private fun TutorialContent() {
 
-    val density = LocalDensity.current.density
 
     Column(
         modifier = Modifier
@@ -45,41 +45,7 @@ private fun TutorialContent() {
                     "as params for the composition of the children.\n" +
                     "In this sample below we get main size to add his height as padding to second one."
         )
-        SubComponent(
-            modifier = Modifier
-                .padding(8.dp)
-                .background(Color.LightGray)
-                .padding(4.dp),
-            mainContent = {
-
-                println("🤘 SubComponent-> MainContent {}")
-                Text(
-                    "MainContent",
-                    modifier = Modifier
-                        .background(Color(0xffF44336))
-                        .height(60.dp),
-                    color = Color.White
-                )
-            },
-            dependentContent = { size: IntSize ->
-
-                println("🤘 SubComponent-> DependentContent {} Dependent size: $size")
-
-                val paddingTop = with(density) {
-                    size.height / this
-                }.dp
-
-                Column(modifier = Modifier.padding(top = paddingTop)) {
-
-                    Text(
-                        "Dependent Content",
-                        modifier = Modifier
-                            .background(Color(0xff9C27B0)),
-                        color = Color.White
-                    )
-                }
-            }
-        )
+        SubComposeLayoutSample1()
 
         StyleableTutorialText(
             text = "2-) It's possible to **remeasure a composable** using a **SubcomposeLayout**. " +
@@ -88,104 +54,294 @@ private fun TutorialContent() {
                     "one it remeasures main component** to match dependent component."
         )
 
-        var mainText by remember { mutableStateOf(TextFieldValue("Main Component")) }
-        var dependentText by remember { mutableStateOf(TextFieldValue("Dependent Component")) }
-
-        var maxWidthOf by remember { mutableStateOf(0.dp) }
-
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .fillMaxWidth(),
-            value = mainText,
-            label = { Text("Main") },
-            placeholder = { Text("Set text to change main width") },
-            onValueChange = { newValue: TextFieldValue ->
-                mainText = newValue
-            }
-        )
-
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .fillMaxWidth(),
-            value = dependentText,
-            label = { Text("Dependent") },
-            placeholder = { Text("Set text to change dependent width") },
-            onValueChange = { newValue ->
-                dependentText = newValue
-            }
-        )
-
-        DynamicWidthLayout(
-            modifier = Modifier
-                .padding(8.dp)
-                .background(Color.LightGray)
-                .padding(8.dp),
-            mainContent = {
-
-                println("🍏 DynamicWidthLayout-> MainContent {} composed")
-
-                Column(
-                    modifier = Modifier
-                        .background(orange400)
-                        .padding(4.dp)
-                ) {
-                    Text(
-                        text = mainText.text,
-                        modifier = Modifier
-                            .background(blue400)
-                            .height(40.dp),
-                        color = Color.White
-                    )
-                }
-            },
-            dependentContent = { size: IntSize ->
+        TutorialText2(text = "SubComposeColumn with 2 children and result")
+        SubcomposeLayoutSample2()
+        TutorialText2(text = "SubComposeColumn with multiple children")
+        SubcomposeLayoutSample3()
 
 
-                // 🔥 Measure max width of main component in dp  retrieved
-                // by subCompose of dependent component from IntSize
-                val maxWidth = with(density) {
-                    size.width / this
-                }.dp
 
-                maxWidthOf = maxWidth
-
-                println(
-                    "🍎 DynamicWidthLayout-> DependentContent composed " +
-                            "Dependent size: $size, "
-                            + "maxWidth: $maxWidth"
-                )
-
-                Column(
-                    modifier = Modifier
-                        .background(pink400)
-                        .padding(4.dp)
-                ) {
-
-                    Text(
-                        text = dependentText.text,
-                        modifier = Modifier
-                            .background(green400),
-                        color = Color.White
-                    )
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        Text("This is width of main component")
-        Text(
-            "Max width from subCompose(): $maxWidthOf dp",
-            modifier = Modifier
-                .width(maxWidthOf)
-                .background(Color(0xff8D6E63)),
-            color = Color.White
-        )
     }
 }
+
+@Composable
+private fun SubComposeLayoutSample1() {
+
+    val density = LocalDensity.current.density
+
+    SubComponent(
+        modifier = Modifier
+            .padding(8.dp)
+            .background(Color.LightGray)
+            .padding(4.dp),
+        mainContent = {
+
+            println("🤘 SubComponent-> MainContent {}")
+            Text(
+                "MainContent",
+                modifier = Modifier
+                    .background(Color(0xffF44336))
+                    .height(60.dp),
+                color = Color.White
+            )
+        },
+        dependentContent = { size: IntSize ->
+
+            println("🤘 SubComponent-> DependentContent {} Dependent size: $size")
+
+            val paddingTop = with(density) {
+                size.height / this
+            }.dp
+
+            Column(modifier = Modifier.padding(top = paddingTop)) {
+
+                Text(
+                    "Dependent Content",
+                    modifier = Modifier
+                        .background(Color(0xff9C27B0)),
+                    color = Color.White
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun SubcomposeLayoutSample2() {
+    var mainText by remember { mutableStateOf(TextFieldValue("Main Component")) }
+    var dependentText by remember { mutableStateOf(TextFieldValue("Dependent Component")) }
+
+    var maxWidthOf by remember { mutableStateOf(0.dp) }
+
+    SubcomposeColumn(
+        modifier = Modifier
+            .padding(8.dp)
+            .background(Color.LightGray)
+            .padding(8.dp),
+        mainContent = {
+
+            println("🍏 SubcomposeColumn-> MainContent {} composed")
+
+            Column(
+                modifier = Modifier
+                    .background(Orange400)
+                    .padding(4.dp)
+            ) {
+                Text(
+                    text = mainText.text,
+                    modifier = Modifier
+                        .background(Blue400)
+                        .height(40.dp),
+                    color = Color.White
+                )
+            }
+
+//            Column(
+//                modifier = Modifier
+//                    .background(Orange400)
+//                    .padding(4.dp)
+//            ) {
+//                Text(
+//                    text = "Second text",
+//                    modifier = Modifier
+//                        .background(Blue400),
+//                    color = Color.White
+//                )
+//            }
+        }, dependentContent = { size: IntSize ->
+
+            val density = LocalDensity.current.density
+
+            // 🔥 Measure max width of main component in dp  retrieved
+            // by subcompose of dependent component from IntSize
+            val maxWidth = with(density) {
+                size.width / this
+            }.dp
+
+            maxWidthOf = maxWidth
+
+            println(
+                "🍎 SubcomposeColumn-> DependentContent composed " +
+                        "Dependent size: $size, "
+                        + "maxWidth: $maxWidth"
+            )
+
+            Column(
+                modifier = Modifier
+                    .background(Pink400)
+                    .padding(4.dp)
+            ) {
+
+                Text(
+                    text = dependentText.text,
+                    modifier = Modifier
+                        .background(Green400),
+                    color = Color.White
+                )
+            }
+        }
+    )
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = mainText,
+        label = { Text("Main") },
+        placeholder = { Text("Set text to change main width") },
+        onValueChange = { newValue: TextFieldValue ->
+            mainText = newValue
+        }
+    )
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = dependentText,
+        label = { Text("Dependent") },
+        placeholder = { Text("Set text to change dependent width") },
+        onValueChange = { newValue ->
+            dependentText = newValue
+        }
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Text(
+        text = "Width of main component",
+        modifier = Modifier
+            .padding(12.dp)
+    )
+    Text(
+        text = "Max width from subCompose(): $maxWidthOf",
+        modifier = Modifier
+            .padding(12.dp)
+            .width(maxWidthOf)
+            .background(Color(0xff8D6E63)),
+        color = Color.White
+    )
+}
+
+@Composable
+private fun SubcomposeLayoutSample3() {
+    var text1 by remember { mutableStateOf(TextFieldValue("Text1 context")) }
+    var text2 by remember { mutableStateOf(TextFieldValue("Text2 context")) }
+    var text3 by remember { mutableStateOf(TextFieldValue("Text3 context")) }
+    var text4 by remember { mutableStateOf(TextFieldValue("Text4 context")) }
+
+
+    SubcomposeColumn(
+        modifier = Modifier
+            .padding(8.dp)
+            .background(Color.LightGray)
+            .padding(8.dp),
+        content = {
+
+            Column(
+                modifier = Modifier
+                    .background(Orange400)
+                    .padding(4.dp)
+            ) {
+                Text(
+                    text = text1.text,
+                    modifier = Modifier.background(Blue400),
+                    color = Color.White
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .background(Pink400)
+                    .padding(4.dp)
+            ) {
+
+                Text(
+                    text = text2.text,
+                    modifier = Modifier.background(Green400),
+                    color = Color.White
+                )
+            }
+
+
+            Column(
+                modifier = Modifier
+                    .background(Blue400)
+                    .padding(4.dp)
+            ) {
+
+                Text(
+                    text = text3.text,
+                    modifier = Modifier.background(Pink400),
+                    color = Color.White
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .background(Green400)
+                    .padding(4.dp)
+            ) {
+
+                Text(
+                    text = text4.text,
+                    modifier = Modifier.background(Orange400),
+                    color = Color.White
+                )
+            }
+        }
+    )
+
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = text1,
+        label = { Text("Text1") },
+        placeholder = { Text("Set text to change main width") },
+        onValueChange = { newValue: TextFieldValue ->
+            text1 = newValue
+        }
+    )
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = text2,
+        label = { Text("Text2") },
+        placeholder = { Text("Set text to change main width") },
+        onValueChange = { newValue: TextFieldValue ->
+            text2 = newValue
+        }
+    )
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = text3,
+        label = { Text("Text3") },
+        placeholder = { Text("Set text to change main width") },
+        onValueChange = { newValue: TextFieldValue ->
+            text3 = newValue
+        }
+    )
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = text4,
+        label = { Text("Text4") },
+        placeholder = { Text("Set text to change main width") },
+        onValueChange = { newValue: TextFieldValue ->
+            text4 = newValue
+        }
+    )
+}
+
 
 @Composable
 private fun SubComponent(
@@ -223,17 +379,64 @@ private fun SubComponent(
     }
 }
 
+/**
+ * Column that resizes its children to width of the longest child
+ */
 @Composable
-private fun DynamicWidthLayout(
+fun SubcomposeColumn(
     modifier: Modifier = Modifier,
-    mainContent: @Composable () -> Unit,
+    content: @Composable () -> Unit = {},
+) {
+
+    SubcomposeLayout(modifier = modifier) { constraints ->
+
+        var recompositionIndex = 0
+
+        var placeables: List<Placeable> = subcompose(recompositionIndex++, content).map {
+            it.measure(constraints)
+        }
+
+        val maxSize =
+            placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
+                IntSize(
+                    width = maxOf(currentMax.width, placeable.width),
+                    height = currentMax.height + placeable.height
+                )
+            }
+
+        // Remeasure every element using width of longest item as minWidth of Constraint
+        if (!placeables.isNullOrEmpty() && placeables.size > 1) {
+            placeables = subcompose(recompositionIndex, content).map { measurable: Measurable ->
+                measurable.measure(Constraints(maxSize.width, constraints.maxWidth))
+            }
+        }
+
+        layout(maxSize.width, maxSize.height) {
+            var yPos = 0
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, yPos)
+                yPos += placeable.height
+            }
+
+        }
+    }
+}
+
+/**
+ * Column that resizes its children to width of the longest child
+ */
+@Composable
+fun SubcomposeColumn(
+    modifier: Modifier = Modifier,
+    mainContent: @Composable () -> Unit = {},
     dependentContent: @Composable (IntSize) -> Unit
 ) {
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
+        var recompositionIndex = 0
 
-        var mainPlaceables: List<Placeable> = subcompose(SlotsEnum.Main, mainContent).map {
+        var mainPlaceables: List<Placeable> = subcompose(recompositionIndex++, mainContent).map {
             it.measure(constraints)
         }
 
@@ -241,11 +444,11 @@ private fun DynamicWidthLayout(
             mainPlaceables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
                 IntSize(
                     width = maxOf(currentMax.width, placeable.width),
-                    height = maxOf(currentMax.height, placeable.height)
+                    height = currentMax.height + placeable.height
                 )
             }
 
-        val dependentMeasurables: List<Measurable> = subcompose(SlotsEnum.Dependent) {
+        val dependentMeasurables: List<Measurable> = subcompose(recompositionIndex++) {
             // 🔥🔥 Send maxSize of mainComponent to
             // dependent composable in case it might be used
             dependentContent(maxSize)
@@ -253,51 +456,66 @@ private fun DynamicWidthLayout(
 
         val dependentPlaceables: List<Placeable> = dependentMeasurables
             .map { measurable: Measurable ->
+                // dependent components width should be at least width of main one
                 measurable.measure(Constraints(maxSize.width, constraints.maxWidth))
             }
 
         // Get maximum width of dependent composable
-        val maxWidth = dependentPlaceables.maxOf { it.width }
+        val maxWidth = if (!dependentPlaceables.isNullOrEmpty()) {
+            dependentPlaceables.maxOf { it.width }
+        } else maxSize.width
 
-
-        println("🔥 DynamicWidthLayout-> maxSize width: ${maxSize.width}, height: ${maxSize.height}")
+        println("✏️ SubcomposeColumn() maxSize " +
+                "width: ${maxSize.width}, height: ${maxSize.height}, maxWidth: $maxWidth")
 
         // If width of dependent composable is longer than main one, remeasure main one
-        // with dependent composable's width using it as minimumWidthConstraint
-        if (maxWidth > maxSize.width) {
+        // with dependent composable's width using it as minWidth of Constraint
+        if (!mainPlaceables.isNullOrEmpty() && maxWidth > maxSize.width) {
 
-            println("🚀 DynamicWidthLayout REMEASURE MAIN COMPONENT")
-
-            // !!! 🔥🤔 CANNOT use SlotsEnum.Main here why?
-            mainPlaceables = subcompose(2, mainContent).map {
+            println(
+                "✏️✏️ SubcomposeColumn() REMEASURE MAIN COMPONENT " +
+                        "maxWidth: $maxWidth, maxSize width: ${maxSize.width}"
+            )
+            mainPlaceables = subcompose(recompositionIndex, mainContent).map {
                 it.measure(Constraints(maxWidth, constraints.maxWidth))
             }
         }
 
         // Our final maxSize is longest width and total height of main and dependent composables
-        maxSize = IntSize(
-            maxSize.width.coerceAtLeast(maxWidth),
-            maxSize.height + dependentPlaceables.maxOf { it.height }
-        )
-
+        if (!dependentPlaceables.isNullOrEmpty()) {
+            maxSize = IntSize(
+                maxSize.width.coerceAtLeast(maxWidth),
+                maxSize.height + dependentPlaceables.sumOf { it.height }
+            )
+        }
 
         layout(maxSize.width, maxSize.height) {
 
             println(
-                "🔥🔥 DynamicWidthLayout-> layout()-> " +
+                "✏️✏️✏️️ SubcomposeColumn() layout()-> " +
                         "maxSize width: ${maxSize.width}, height: ${maxSize.height}, " +
                         "maxWidth: $maxWidth"
             )
 
+            var posY = 0
+
             // Place layouts
-            mainPlaceables.forEach { it.placeRelative(0, 0) }
-            dependentPlaceables.forEach {
-                it.placeRelative(0, mainPlaceables.maxOf { it.height })
+            if (!mainPlaceables.isNullOrEmpty()) {
+                mainPlaceables.forEach {
+                    it.placeRelative(0, posY)
+                    posY += it.height
+                }
+
+            }
+            if (!dependentPlaceables.isNullOrEmpty()) {
+                dependentPlaceables.forEach {
+                    it.placeRelative(0, posY)
+                    posY += it.height
+                }
             }
         }
     }
 }
-
 
 enum class SlotsEnum { Main, Dependent }
 
