@@ -66,11 +66,9 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>3-4 BoxWithConstraints</h3><br/>BoxWithConstraints is a composable that defines its own content according to the available space, based on the incoming constraints or the current LayoutDirection.<br><br>• BoxWithConstraints<br>• Constraint<br>|<img src ="/./screenshots/tutorial3_4.png" width=320> |
 |  |  |
-|<h3>3-5 SubcomposeLayout</h3><br/>Subcompose layout which allows to subcompose the actual content during the measuring stage
-* for example to use the values calculated during the measurement as params for the composition
-* of the children. In this example we create a layout that finds longest child and remeasures and updates others to match longest one.<br><br>• SubcomposeLayout<br>• Constraint<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_5.gif" width=320> |
+|<h3>3-5 SubcomposeLayout</h3><br/>Subcompose layout which allows to subcompose the actual content during the measuring stage for example to use the values calculated during the measurement as params for the composition of the children.<br><br>• SubcomposeLayout<br>• Constraint<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_5.gif" width=320> |
 |  |  |
-|<h3>3-6 Custom Chat Layouts</h3><br/>Custom layout like whatsapp chat layout that moves time and message read status layout right or bottom based on message width.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6.gif" width=320> |
+|<h3>3-6-1 Custom Chat Layouts1</h3><br/>Custom layout like whatsapp chat layout that moves time and message read status layout right or bottom based on message width.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6_1.gif" width=320> |
 |  |  |
 
 #### State

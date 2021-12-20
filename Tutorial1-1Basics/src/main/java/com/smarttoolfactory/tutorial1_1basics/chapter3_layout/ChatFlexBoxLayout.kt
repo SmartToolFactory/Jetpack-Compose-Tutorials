@@ -135,7 +135,7 @@ fun ChatFlexBoxLayout(
     val content = @Composable {
 
         Message(
-            modifier = modifier
+            modifier = Modifier
                 .padding(horizontal = 6.dp, vertical = 6.dp)
                 .wrapContentSize(),
             text = text,

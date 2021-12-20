@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,7 @@ private fun TutorialContent() {
 
     val description = "Flexible chat rows that position message and status " +
             "based on text width, line, last width line and parent width.\n" +
-            "Create and post messages with varying in size and line numbers."
+            "Create messages with varying in size and line numbers to see how they are displayed."
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +88,7 @@ private fun TutorialContent() {
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .padding(top = 2.dp, bottom = 2.dp)
-                        .background(Color.LightGray)
+//                        .background(Color.LightGray)
                         .padding(start = 60.dp, end = 8.dp, top = 2.dp, bottom = 2.dp)
 
                 ) {
@@ -121,11 +122,12 @@ private fun MessageRow(
     messageStatus: MessageStatus
 ) {
     var color by remember {
-        mutableStateOf(Blue400)
+        mutableStateOf(Orange400)
     }
 
     ChatFlexBoxLayout(
         modifier = Modifier
+            .shadow(2.dp, shape = RoundedCornerShape(8.dp))
             .background(color, shape = RoundedCornerShape(8.dp))
             .padding(start = 2.dp, top = 2.dp, end = 4.dp, bottom = 2.dp),
         text = text,
@@ -142,9 +144,9 @@ private fun MessageRow(
         onMeasure = { chatRowData ->
             color = when (chatRowData.measuredType) {
                 0 -> Orange400
-                1 -> Pink400
+                1 -> Blue400
                 2 -> Green400
-                else -> Blue400
+                else -> Pink400
             }
         }
     )
