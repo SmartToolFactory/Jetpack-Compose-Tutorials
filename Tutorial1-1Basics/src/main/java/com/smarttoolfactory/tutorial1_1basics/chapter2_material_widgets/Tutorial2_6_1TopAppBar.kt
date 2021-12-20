@@ -138,7 +138,11 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
                 )
             }
             item {
-                ChatAppbar(onBack)
+                ChatAppbar(
+                    title = "Custom Chat",
+                    description = "Alice, Brook, Jack, Jason, Brad, No Name User",
+                    onBack = onBack
+                )
             }
         })
 }
@@ -331,7 +335,12 @@ private fun ActionMenuReview() {
 }
 
 @Composable
-fun ChatAppbar(onBack: (() -> Unit)? = null) {
+fun ChatAppbar(
+    title: String = "Title",
+    description: String = "Description",
+    onClick: (() -> Unit)? = null,
+    onBack: (() -> Unit)? = null
+) {
     TopAppBar(
         elevation = 4.dp,
         backgroundColor = Color(0xff00897B),
@@ -379,12 +388,12 @@ fun ChatAppbar(onBack: (() -> Unit)? = null) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clickable { }
+                    .clickable { onClick?.invoke()}
                     .padding(2.dp),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "Custom Chat",
+                    text = title,
                     fontSize = 16.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
@@ -393,7 +402,7 @@ fun ChatAppbar(onBack: (() -> Unit)? = null) {
                 )
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(
-                        "Alice, Brook, Jack, Jason, Brad, No Name User",
+                        description,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -424,7 +433,7 @@ private fun ChatAppbarActions(
             onClick = { /* doSomething() */ },
             indication = rememberRipple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
-            ) {
+        ) {
             Icon(
                 imageVector = Icons.Rounded.Videocam,
                 contentDescription = null,
