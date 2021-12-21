@@ -583,6 +583,24 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = Color(0xffFFEB3B)
     )
 
+    val tutorial3_6_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_6_2),
+        description = "Custom layout like whatsapp chat. Added quote and name tag resized to longest " +
+                "sibling using SubcomposeColumn from previous examples to have whole layout.",
+        action = {
+            Tutorial3_6Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SUBCOMPOSE_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINT,
+            TAG_PLACEABLE
+        ),
+        tagColor = Color(0xffFFEB3B)
+    )
+
     return listOf(
         tutorial3_1,
         tutorial3_2_1,
@@ -590,7 +608,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_3_1,
         tutorial3_4,
         tutorial3_5,
-        tutorial3_6_1
+        tutorial3_6_1,
+        tutorial3_6_2
     )
 }
 

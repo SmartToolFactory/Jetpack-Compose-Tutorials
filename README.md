@@ -16,7 +16,7 @@ using previous searches using a database, domain with ViewModel.
 |:-----|---------|
 |<h3>1-1 Column, Row, Box, Modifiers</h3><br/>Create Row that adds elements in horizontal order, and Column that adds elements in vertical order.<br><br> • Column<br>• Row<br>• Box<br>• Modifier<br>|<img src ="/./screenshots/tutorial1_1.jpg" width=320> |
 |  |  |
-|<h3>1-2 Surface, Shape, Clickable</h3><br/>Create and modify Surface to draw background for Composables, add click action to any composable. Set weight or offset modifiers.<br><br> • Surface<br>• Shape<br>• Clickable<br>|<img src ="/./screenshots/tutorial1-2.jpg" width=320> |
+|<h3>1-2 Surface, Shape, Clickable</h3><br/>Create and modify Surface to draw background for Composables, add click action to any composable. Set weight or offset modifiers.<br><br> • Surface<br>• Shape<br>• Clickable<br>|<img src ="/./screenshots/tutorial1_2.jpg" width=320> |
 |  |  |
 
 #### Material Widgets
@@ -70,7 +70,8 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>3-6-1 Custom Chat Layouts1</h3><br/>Custom layout like whatsapp chat layout that moves time and message read status layout right or bottom based on message width.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6_1.gif" width=320> |
 |  |  |
-
+|<h3>3-6-2 Custom Chat SubcomposeLayout</h3><br/>Custom layout like whatsapp chat. Added quote and name tag resized to longest sibling using SubcomposeColumn from previous examples to have whole layout.<br><br>• Custom Layout<br>• SubcomposeLayout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6_2.gif" width=320> |
+|  |  |
 #### State
 
 |Tutorial|Preview|
