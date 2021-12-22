@@ -6,7 +6,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
@@ -14,7 +13,11 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
+import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
+import com.smarttoolfactory.tutorial1_1basics.ui.LayoutListColor
+import com.smarttoolfactory.tutorial1_1basics.ui.StateListColor
 
 /**
  * Create list of tutorials with titles, action that navigates to composable function
@@ -475,7 +478,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_PLACEABLE,
             TAG_LAYOUT_MODIFIER
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_2_1 = TutorialSectionModel(
@@ -491,7 +494,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_2_2 = TutorialSectionModel(
@@ -510,7 +513,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_3_1 = TutorialSectionModel(
@@ -528,7 +531,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_4 = TutorialSectionModel(
@@ -543,7 +546,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_BOX_WITH_CONSTRAINTS
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_5 = TutorialSectionModel(
@@ -563,7 +566,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_6_1 = TutorialSectionModel(
@@ -580,7 +583,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     val tutorial3_6_2 = TutorialSectionModel(
@@ -598,7 +601,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINT,
             TAG_PLACEABLE
         ),
-        tagColor = Color(0xffFFEB3B)
+        tagColor = LayoutListColor
     )
 
     return listOf(
@@ -628,7 +631,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_2_1 = TutorialSectionModel(
@@ -644,7 +647,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_2_2 = TutorialSectionModel(
@@ -659,7 +662,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_2_3 = TutorialSectionModel(
@@ -677,7 +680,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_RECOMPOSITION,
             TAG_STATE
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_3 = TutorialSectionModel(
@@ -692,7 +695,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_REMEMBER,
             TAG_STATE
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_4 = TutorialSectionModel(
@@ -708,7 +711,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_STATE,
             TAG_CUSTOM_LAYOUT
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_5_1 = TutorialSectionModel(
@@ -727,7 +730,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_LAUNCHED_EFFECT,
             TAG_DISPOSABLE_EFFECT
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     val tutorial4_5_2 = TutorialSectionModel(
@@ -744,7 +747,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_PRODUCE_STATE,
             TAG_SNAPSHOT_FLOW,
         ),
-        tagColor = Color(0xffE91E63)
+        tagColor = StateListColor
     )
 
     return listOf(
@@ -756,5 +759,28 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_4,
         tutorial4_5_1,
         tutorial4_5_2
+    )
+}
+
+@Composable
+fun createGestureTutorialList(): List<TutorialSectionModel> {
+
+    val tutorial5_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_5_1),
+        description = "Tutorial about tapping and pressing gestures.",
+        action = {
+            Tutorial5_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_RECOMPOSITION,
+            TAG_STATE
+        ),
+        tagColor = GestureListColor
+    )
+
+    return listOf(
+        tutorial5_1,
     )
 }

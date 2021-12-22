@@ -14,9 +14,11 @@ val suggestionList = listOf(
     SuggestionModel("BottomSheet"),
     SuggestionModel("Dialog"),
     SuggestionModel("Checkbox"),
-    SuggestionModel("Switch"),
-    SuggestionModel("ModalDrawer"),
-    SuggestionModel("TopAppBar"),
+    SuggestionModel("Layout"),
+    SuggestionModel("Modifier"),
+    SuggestionModel("SubcomposeLayout"),
+    SuggestionModel("Recomposition"),
+    SuggestionModel("SideEffect")
 )
 
 class HomeViewModel : ViewModel() {

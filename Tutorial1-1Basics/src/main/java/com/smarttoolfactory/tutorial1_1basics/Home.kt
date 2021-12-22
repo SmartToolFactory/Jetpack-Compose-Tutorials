@@ -26,7 +26,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Theming")
+internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Graphics", "Theming")
 
 /**
  * This is Home Screen that contains Search bar, Tabs, and tutorial pages in Pager
@@ -204,6 +204,7 @@ private fun HomeContent(
             0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
             1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
             2 -> TutorialListContent(modifier, tutorialList[2], navigateToTutorial)
+            3 -> TutorialListContent(modifier, tutorialList[3], navigateToTutorial)
             else -> ComingSoonScreen()
         }
     }

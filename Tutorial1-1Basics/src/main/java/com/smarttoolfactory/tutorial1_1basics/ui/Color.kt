@@ -14,10 +14,13 @@ val Blue400 = Color(0xff42A5F5)
 val Pink400 = Color(0xffEC407A)
 val Green400 = Color(0xff66BB6A)
 
+val DefaultListColor = Color(0xff00BCD4)
+val LayoutListColor = Color(0xffFFEB3B)
+val StateListColor = Color(0xffE91E63)
+val GestureListColor = Color(0xff8BC34A)
+
 val SentMessageColor = Color(0xffE7FFDB)
 val SentQuoteColor = Color(0xffDEF6D3)
-
 val ReceivedQuoteColor = Color(0xffECEFF1)
 val QuoteTextColor = Color(0xff757575)
-
 val RecipientAltNameColor = Color(0xff757575)
