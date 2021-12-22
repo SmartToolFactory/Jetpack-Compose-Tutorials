@@ -17,5 +17,7 @@ val Green400 = Color(0xff66BB6A)
 val SentMessageColor = Color(0xffE7FFDB)
 val SentQuoteColor = Color(0xffDEF6D3)
 
-val QuotedMessageColor = Color(0xffECEFF1)
+val ReceivedQuoteColor = Color(0xffECEFF1)
 val QuoteTextColor = Color(0xff757575)
+
+val RecipientAltNameColor = Color(0xff757575)

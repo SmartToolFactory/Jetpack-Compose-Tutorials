@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
+package com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -69,4 +69,8 @@ enum class MessageStatus {
     PENDING, RECEIVED, READ
 }
 
-data class ChatMessage(val id: Long, var message: String, var date: Long)
+data class ChatMessage(
+    val id: Long,
+    var message: String,
+    var date: Long
+)

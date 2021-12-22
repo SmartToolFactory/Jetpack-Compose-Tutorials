@@ -15,6 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.ChatAppbar
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.ChatInput
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.ChatMessage
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageStatus
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageTimeText
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.ChatFlexBoxLayout
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400

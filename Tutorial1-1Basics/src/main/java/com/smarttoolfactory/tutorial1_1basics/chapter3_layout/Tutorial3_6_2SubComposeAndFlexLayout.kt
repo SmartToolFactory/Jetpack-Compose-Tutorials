@@ -2,30 +2,22 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.ChatAppbar
-import com.smarttoolfactory.tutorial1_1basics.ui.QuotedMessageColor
-import com.smarttoolfactory.tutorial1_1basics.ui.SentMessageColor
-import com.smarttoolfactory.tutorial1_1basics.ui.SentQuoteColor
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -92,17 +84,40 @@ private fun TutorialContent() {
                 val messageStatus = remember { MessageStatus.values()[Random.nextInt(3)] }
 
                 // Toggle between sent and received message
-                if (message.id.toInt() % 2 == 1) {
-                    SentMessageRow(
-                        text = message.message,
-                        messageTime = sdf.format(message.date),
-                        messageStatus = messageStatus
-                    )
-                } else {
-                    ReceivedMessageRow(
-                        text = message.message,
-                        messageTime = sdf.format(message.date)
-                    )
+                when (message.id.toInt() % 4) {
+                    1 -> {
+                        SentMessageRowAlt(
+                            text = message.message,
+                            quotedMessage = "Quote message",
+                            messageTime = sdf.format(System.currentTimeMillis()),
+                            messageStatus = messageStatus
+                        )
+
+                    }
+                    2 -> {
+                        ReceivedMessageRowAlt(
+                            text = message.message,
+                            quotedMessage = "Quote",
+                            messageTime = sdf.format(System.currentTimeMillis()),
+                        )
+
+                    }
+                    3 -> {
+                        SentMessageRowAlt(
+                            text = message.message,
+                            quotedImage = R.drawable.landscape1,
+                            messageTime = sdf.format(System.currentTimeMillis()),
+                            messageStatus = messageStatus
+                        )
+
+                    }
+                    else -> {
+                        ReceivedMessageRowAlt(
+                            text = message.message,
+                            quotedImage = R.drawable.landscape2,
+                            messageTime = sdf.format(System.currentTimeMillis()),
+                        )
+                    }
                 }
             }
         }
@@ -123,131 +138,5 @@ private fun TutorialContent() {
 
             }
         )
-    }
-}
-
-@Composable
-private fun SentMessageRow(
-    text: String,
-    messageTime: String,
-    messageStatus: MessageStatus
-) {
-    // Whole column that contains chat bubble and padding on start or end
-    Column(
-        horizontalAlignment = Alignment.End,
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(top = 2.dp, bottom = 2.dp)
-//            .background(Color.LightGray)
-            .padding(start = 60.dp, end = 8.dp)
-
-    ) {
-
-
-        // This is chat bubble
-        SubcomposeColumn(
-            modifier = Modifier
-                .shadow(1.dp, RoundedCornerShape(8.dp))
-                .clip(RoundedCornerShape(8.dp))
-                .background(SentMessageColor)
-                .clickable { },
-
-            mainContent = {
-                // 💬 Quoted message
-                QuotedMessage(
-                    modifier = Modifier
-                        .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-                        // 🔥 This is required to set Surface height before text is set
-                        .height(IntrinsicSize.Min)
-                        .background(SentQuoteColor, shape = RoundedCornerShape(8.dp))
-                        .clip(shape = RoundedCornerShape(8.dp))
-                        .clickable {
-
-                        },
-                    quotedMessage = "Quoted long message"
-                )
-            }
-        ) {
-
-            println(
-                "📝 SentMessageRow() in dependent()"
-                        + " IntSize: $it"
-            )
-
-            ChatFlexBoxLayout(
-                modifier = Modifier
-                    .padding(start = 2.dp, top = 2.dp, end = 4.dp, bottom = 2.dp),
-                text = text,
-                messageStat = {
-                    MessageTimeText(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .padding(end = 6.dp),
-                        messageTime = messageTime,
-                        messageStatus = messageStatus
-                    )
-                }
-            )
-        }
-    }
-}
-
-@Composable
-private fun ReceivedMessageRow(text: String, messageTime: String) {
-    // Whole column that contains chat bubble and padding on start or end
-    Column(
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(top = 2.dp, bottom = 2.dp)
-//            .background(Color.LightGray)
-            .padding(start = 8.dp, end = 60.dp)
-
-    ) {
-
-        // This is chat bubble
-        SubcomposeColumn(
-            modifier = Modifier
-                .shadow(1.dp, RoundedCornerShape(8.dp))
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.White)
-                .clickable { },
-
-            mainContent = {
-                // 💬 Quoted message
-                QuotedMessage(
-                    modifier = Modifier
-                        .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-                        // 🔥 This is required to set Surface height before text is set
-                        .height(IntrinsicSize.Min)
-                        .background(QuotedMessageColor, shape = RoundedCornerShape(8.dp))
-                        .clip(shape = RoundedCornerShape(8.dp))
-                        .clickable {
-
-                        },
-                    quotedImage = R.drawable.landscape1
-                )
-            }
-        ) {
-
-            println("📝 ReceivedMessageRow() in dependent() IntSize: $it")
-
-            ChatFlexBoxLayout(
-                modifier = Modifier
-                    .padding(start = 2.dp, top = 2.dp, end = 4.dp, bottom = 2.dp),
-                text = text,
-                messageStat = {
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(
-                            modifier = Modifier.padding(top = 1.dp, bottom = 1.dp, end = 4.dp),
-                            text = messageTime,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            )
-        }
     }
 }

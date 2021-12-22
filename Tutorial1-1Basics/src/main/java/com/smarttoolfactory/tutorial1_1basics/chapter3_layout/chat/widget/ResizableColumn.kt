@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
+package com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ fun SubcomposeColumn(
             it.measure(constraints)
         }
 
-        val maxSize =
+        val columnSize =
             placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
                 IntSize(
                     width = maxOf(currentMax.width, placeable.width),
@@ -33,14 +33,33 @@ fun SubcomposeColumn(
                 )
             }
 
+//        println(
+//            "✏️ SubcomposeColumn() columnSize " +
+//                    "width: ${columnSize.width}, height: ${columnSize.height}, " +
+//                    "placeable size: ${placeables.size} CONSTRAINTS: $constraints"
+//        )
+
         // Remeasure every element using width of longest item as minWidth of Constraint
         if (!placeables.isNullOrEmpty() && placeables.size > 1) {
+
+//            println(
+//                "✏️✏️ SubcomposeColumn() REMEASURE MAIN COMPONENT " +
+//                        "columnSize columnSize"
+//            )
+
             placeables = subcompose(recompositionIndex, content).map { measurable: Measurable ->
-                measurable.measure(Constraints(maxSize.width, constraints.maxWidth))
+                measurable.measure(Constraints(columnSize.width, constraints.maxWidth))
             }
         }
 
-        layout(maxSize.width, maxSize.height) {
+        layout(columnSize.width, columnSize.height) {
+
+//            println(
+//                "✏️✏️✏️️ SubcomposeColumn() layout()-> " +
+//                        "columnSize width: ${columnSize.width}, height: ${columnSize.height}, " +
+//                        "CONSTRAINTS: $constraints"
+//            )
+
             var yPos = 0
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, yPos)
@@ -69,7 +88,7 @@ fun SubcomposeColumn(
             it.measure(constraints)
         }
 
-        var maxSize =
+        var columnSize =
             mainPlaceables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
                 IntSize(
                     width = maxOf(currentMax.width, placeable.width),
@@ -78,53 +97,56 @@ fun SubcomposeColumn(
             }
 
         val dependentMeasurables: List<Measurable> = subcompose(recompositionIndex++) {
-            // 🔥🔥 Send maxSize of mainComponent to
+            // 🔥🔥 Send columnSize of mainComponent to
             // dependent composable in case it might be used
-            dependentContent(maxSize)
+            dependentContent(columnSize)
         }
 
         val dependentPlaceables: List<Placeable> = dependentMeasurables
             .map { measurable: Measurable ->
                 // dependent components width should be at least width of main one
-                measurable.measure(Constraints(maxSize.width, constraints.maxWidth))
+                measurable.measure(Constraints(columnSize.width, constraints.maxWidth))
             }
 
         // Get maximum width of dependent composable
         val maxWidth = if (!dependentPlaceables.isNullOrEmpty()) {
             dependentPlaceables.maxOf { it.width }
-        } else maxSize.width
+        } else columnSize.width
 
-        println("✏️ SubcomposeColumn() maxSize " +
-                "width: ${maxSize.width}, height: ${maxSize.height}, maxWidth: $maxWidth")
+//        println(
+//            "✏️ SubcomposeColumn() columnSize " +
+//                    "width: ${columnSize.width}, height: ${columnSize.height}, maxWidth: $maxWidth, " +
+//                    "CONSTRAINTS: $constraints"
+//        )
 
         // If width of dependent composable is longer than main one, remeasure main one
         // with dependent composable's width using it as minWidth of Constraint
-        if (!mainPlaceables.isNullOrEmpty() && maxWidth > maxSize.width) {
+        if (!mainPlaceables.isNullOrEmpty() && maxWidth > columnSize.width) {
 
-            println(
-                "✏️✏️ SubcomposeColumn() REMEASURE MAIN COMPONENT " +
-                        "maxWidth: $maxWidth, maxSize width: ${maxSize.width}"
-            )
+//            println(
+//                "✏️✏️ SubcomposeColumn() REMEASURE MAIN COMPONENT " +
+//                        "maxWidth: $maxWidth, columnSize width: ${columnSize.width}"
+//            )
             mainPlaceables = subcompose(recompositionIndex, mainContent).map {
                 it.measure(Constraints(maxWidth, constraints.maxWidth))
             }
         }
 
-        // Our final maxSize is longest width and total height of main and dependent composables
+        // Our final columnSize is longest width and total height of main and dependent composables
         if (!dependentPlaceables.isNullOrEmpty()) {
-            maxSize = IntSize(
-                maxSize.width.coerceAtLeast(maxWidth),
-                maxSize.height + dependentPlaceables.sumOf { it.height }
+            columnSize = IntSize(
+                columnSize.width.coerceAtLeast(maxWidth),
+                columnSize.height + dependentPlaceables.sumOf { it.height }
             )
         }
 
-        layout(maxSize.width, maxSize.height) {
+        layout(columnSize.width, columnSize.height) {
 
-            println(
-                "✏️✏️✏️️ SubcomposeColumn() layout()-> " +
-                        "maxSize width: ${maxSize.width}, height: ${maxSize.height}, " +
-                        "maxWidth: $maxWidth"
-            )
+//            println(
+//                "✏️✏️✏️️ SubcomposeColumn() layout()-> " +
+//                        "columnSize width: ${columnSize.width}, height: ${columnSize.height}, " +
+//                        "maxWidth: $maxWidth"
+//            )
 
             var posY = 0
 

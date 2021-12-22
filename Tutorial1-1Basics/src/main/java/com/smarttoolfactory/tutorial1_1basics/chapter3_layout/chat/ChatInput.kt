@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
+package com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -24,14 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
 
-
-/**
- * Rounded rectangle [TextField] like Whatsapp has with animation to hid camera button
- * and with [FloatingActionButton] to send message
- */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) -> Unit) {
+internal fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) -> Unit) {
 
     var input by remember { mutableStateOf(TextFieldValue("")) }
     val textEmpty: Boolean by derivedStateOf { input.text.isEmpty() }
@@ -157,6 +152,21 @@ private fun ChatTextField(
     }
 }
 
+val circleButtonSize = 44.dp
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun IndicatingIconButtonPreview() {
+    IndicatingIconButton(onClick = {}) {
+        Icon(
+            imageVector = Icons.Filled.CameraAlt,
+            contentDescription = "camera"
+        )
+    }
+}
+
 @Preview
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
@@ -164,5 +174,3 @@ private fun ChatTextField(
 private fun ChatInputPreview() {
     ChatInput() {}
 }
-
-val circleButtonSize = 44.dp
