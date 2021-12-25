@@ -77,8 +77,7 @@ fun ReceivedMessageRowAlt(
                 }
 
                 ChatFlexBoxLayout(
-                    modifier = Modifier
-                        .padding(start = 2.dp, top = 2.dp, end = 4.dp, bottom = 2.dp),
+                    modifier = Modifier.padding(start = 2.dp,  end = 4.dp),
                     text = text,
                     messageStat = {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {

@@ -289,7 +289,7 @@ private fun Message(
     maxLines: Int = Int.MAX_VALUE,
 ) {
     Text(
-        modifier = modifier,
+        modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
         text = text,
         onTextLayout = onTextLayout,
         color = color,

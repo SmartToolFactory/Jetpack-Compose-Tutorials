@@ -32,7 +32,7 @@ fun RecipientName(
         verticalAlignment = Alignment.Top
     ) {
         Text(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             text = name,
             color = color,
             fontSize = 15.sp,
