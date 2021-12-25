@@ -54,7 +54,7 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "1-) **SideEffect** function is triggered every time a recomposition occurs"
         )
-        SideEffectSample()
+        SideEffectExample()
 
         StyleableTutorialText(
             text = "2-) **produceState** launches a coroutine scoped to the Composition that " +
@@ -69,7 +69,7 @@ private fun TutorialContent() {
         )
 
         TutorialText2(text = "derivedStateOf with Int")
-        DerivedStateOfSample()
+        DerivedStateOfExample()
         TutorialText2(text = "derivedStateOf with LazyListState")
         DerivedStateOfSample2(lazyListState)
 
@@ -78,7 +78,7 @@ private fun TutorialContent() {
                     "snapshotFlow runs its block when collected and emits the result of the " +
                     "State objects read in it."
         )
-        SnapshotFlowSample(lazyListState)
+        SnapshotFlowExample(lazyListState)
     }
 }
 
@@ -90,7 +90,7 @@ private fun TutorialContent() {
  * in an inconsistent state if the current composition operation fails.
  */
 @Composable
-private fun SideEffectSample() {
+private fun SideEffectExample() {
 
     val context = LocalContext.current
 
@@ -101,7 +101,7 @@ private fun SideEffectSample() {
 
     // only runs first time SideEffectSample is called
     SideEffect {
-        Toast.makeText(context, "SideEffectSample()", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "SideEffectExample()", Toast.LENGTH_SHORT).show()
     }
     Column(
         Modifier
@@ -113,7 +113,7 @@ private fun SideEffectSample() {
         SideEffect {
             Toast.makeText(
                 context,
-                "SideEffectSample() OUTER",
+                "SideEffectExample() OUTER",
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -122,7 +122,7 @@ private fun SideEffectSample() {
             SideEffect {
                 Toast.makeText(
                     context,
-                    "SideEffectSample() Button OUTER",
+                    "SideEffectExample() Button OUTER",
                     Toast.LENGTH_SHORT
                 )
                     .show()
@@ -139,7 +139,7 @@ private fun SideEffectSample() {
             SideEffect {
                 Toast.makeText(
                     context,
-                    "SideEffectSample() INNER",
+                    "SideEffectExample() INNER",
                     Toast.LENGTH_SHORT
                 )
                     .show()
@@ -150,7 +150,7 @@ private fun SideEffectSample() {
                 SideEffect {
                     Toast.makeText(
                         context,
-                        "SideEffectSample() Button INNER",
+                        "SideEffectExample() Button INNER",
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -184,7 +184,7 @@ private fun ProduceStateSampleButton() {
         }
 
         if (loadImage) {
-            ProduceStateSample()
+            ProduceStateExample()
         }
     }
 }
@@ -203,7 +203,7 @@ private fun ProduceStateSampleButton() {
  * use the awaitDispose function.
  */
 @Composable
-private fun ProduceStateSample() {
+private fun ProduceStateExample() {
     val context = LocalContext.current
 
     val url = "www.example.com"
@@ -213,23 +213,23 @@ private fun ProduceStateSample() {
 
     when (imageState.value) {
         is Result.Loading -> {
-            println("🔥 ProduceStateSample() Result.Loading")
-            Toast.makeText(context, "🔥 ProduceStateSample() Result.Loading", Toast.LENGTH_SHORT)
+            println("🔥 ProduceStateExample() Result.Loading")
+            Toast.makeText(context, "🔥 ProduceStateExample() Result.Loading", Toast.LENGTH_SHORT)
                 .show()
             CircularProgressIndicator()
         }
 
         is Result.Error -> {
-            println("❌ ProduceStateSample() Result.Error")
-            Toast.makeText(context, "❌ ProduceStateSample() Result.Error", Toast.LENGTH_SHORT)
+            println("❌ ProduceStateExample() Result.Error")
+            Toast.makeText(context, "❌ ProduceStateExample() Result.Error", Toast.LENGTH_SHORT)
                 .show()
 
             Image(imageVector = Icons.Default.Error, contentDescription = null)
         }
 
         is Result.Success -> {
-            println("✅ ProduceStateSample() Result.Success")
-            Toast.makeText(context, "✅ ProduceStateSample() Result.Success", Toast.LENGTH_SHORT)
+            println("✅ ProduceStateExample() Result.Success")
+            Toast.makeText(context, "✅ ProduceStateExample() Result.Success", Toast.LENGTH_SHORT)
                 .show()
 
             val image = (imageState!!.value as Result.Success).image
@@ -304,7 +304,7 @@ class ImageRepository() {
 }
 
 @Composable
-private fun DerivedStateOfSample() {
+private fun DerivedStateOfExample() {
 
     var numberOfItems by remember {
         mutableStateOf(0)
@@ -390,7 +390,7 @@ private fun DerivedStateOfSample2(scrollState: LazyListState) {
 }
 
 @Composable
-private fun SnapshotFlowSample(scrollState: LazyListState) {
+private fun SnapshotFlowExample(scrollState: LazyListState) {
 
     var sentLogCount by remember { mutableStateOf(0) }
 

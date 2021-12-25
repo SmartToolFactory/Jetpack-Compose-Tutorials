@@ -14,8 +14,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -39,7 +39,7 @@ private fun TutorialContent() {
         )
 
         TutorialText2(text = "BoxWithConstraints to divide available space")
-        BoxWithConstraintsSample(
+        BoxWithConstraintsExample(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
@@ -47,7 +47,7 @@ private fun TutorialContent() {
 
         Spacer(modifier= Modifier.height(16.dp))
 
-        BoxWithConstraintsSample(
+        BoxWithConstraintsExample(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -72,7 +72,7 @@ private fun TutorialContent() {
 }
 
 @Composable
-private fun BoxWithConstraintsSample(modifier: Modifier = Modifier) {
+private fun BoxWithConstraintsExample(modifier: Modifier = Modifier) {
 
     BoxWithConstraints(modifier.background(Color.LightGray)) {
 

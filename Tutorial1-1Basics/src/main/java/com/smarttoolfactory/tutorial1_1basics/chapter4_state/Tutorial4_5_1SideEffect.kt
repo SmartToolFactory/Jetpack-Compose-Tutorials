@@ -52,9 +52,9 @@ private fun TutorialContent() {
                         "cancelled if LaunchedEffect leaves the composition.",
                 bullets = false
             )
-            LaunchedEffectSample(scaffoldState)
+            LaunchedEffectExample(scaffoldState)
 
-            CoroutineScopeSample(scaffoldState)
+            CoroutineScopeExample(scaffoldState)
 
             /*
                 rememberUpdatedState
@@ -64,7 +64,7 @@ private fun TutorialContent() {
                         " when a composable is recomposed.",
                 bullets = false
             )
-            UpdatedRememberSample()
+            UpdatedRememberExample()
             RememberUpdatedStateSample2()
             /*
                 DisposableEffect samples
@@ -83,7 +83,7 @@ private fun TutorialContent() {
 
 
 @Composable
-private fun LaunchedEffectSample(scaffoldState: ScaffoldState) {
+private fun LaunchedEffectExample(scaffoldState: ScaffoldState) {
 
     var counter by remember { mutableStateOf(0) }
 
@@ -113,7 +113,7 @@ private fun LaunchedEffectSample(scaffoldState: ScaffoldState) {
 }
 
 @Composable
-private fun CoroutineScopeSample(
+private fun CoroutineScopeExample(
     scaffoldState: ScaffoldState
 ) {
 
@@ -142,7 +142,7 @@ private fun CoroutineScopeSample(
 }
 
 @Composable
-private fun UpdatedRememberSample() {
+private fun UpdatedRememberExample() {
     var myInput by remember {
         mutableStateOf(0)
     }
@@ -294,7 +294,7 @@ private fun DisposableEffectButton() {
     }
 
     if (showDisposableEffectSample) {
-        DisposableEffectSample()
+        DisposableEffectExample()
     }
 }
 
@@ -304,7 +304,7 @@ private fun DisposableEffectButton() {
  * function of `DisposableEffect` is called
  */
 @Composable
-private fun DisposableEffectSample() {
+private fun DisposableEffectExample() {
 
     val context = LocalContext.current
 
