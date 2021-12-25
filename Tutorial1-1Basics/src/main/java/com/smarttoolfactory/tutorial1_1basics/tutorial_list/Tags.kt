@@ -135,3 +135,10 @@ const val TAG_SIDE_EFFECT = "SideEffect"
 const val TAG_DISPOSABLE_EFFECT = "DisposableEffect"
 const val TAG_SNAPSHOT_FLOW= "snapshotFlow"
 
+/*
+    GESTURE
+ */
+const val TAG_CLICKABLE = "clickable"
+const val TAG_INDICATION = "Indication"
+const val TAG_REMEMBER_RIPPLE = "rememberRipple"
+const val TAG_INTERACTION_SOURCE = "InteractionSource"

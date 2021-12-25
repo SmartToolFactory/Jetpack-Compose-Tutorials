@@ -767,15 +767,16 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_1 = TutorialSectionModel(
         title = stringResource(R.string.title_5_1),
-        description = "Tutorial about tapping and pressing gestures.",
+        description = "Tutorial about clickable modifier, Indication and InteractionSource",
         action = {
             Tutorial5_1Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_REMEMBER,
-            TAG_RECOMPOSITION,
-            TAG_STATE
+            TAG_CLICKABLE,
+            TAG_REMEMBER_RIPPLE,
+            TAG_INDICATION,
+            TAG_INTERACTION_SOURCE
         ),
         tagColor = GestureListColor
     )
