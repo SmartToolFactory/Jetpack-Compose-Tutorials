@@ -14,6 +14,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_2Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.LayoutListColor
@@ -767,7 +768,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_1 = TutorialSectionModel(
         title = stringResource(R.string.title_5_1),
-        description = "Tutorial about clickable modifier, Indication and InteractionSource",
+        description = "Tutorial about clickable modifier, Indication and InteractionSource.",
         action = {
             Tutorial5_1Screen()
         },
@@ -781,7 +782,27 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_2 = TutorialSectionModel(
+        title = "PointerInput",
+        description = "Tutorial about PointerInput, press, tap, long press and other gestures.",
+        action = {
+            Tutorial5_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_DETECT_TAP_GESTURES,
+            TAG_DETECT_DRAG_GESTURES,
+            TAG_ON_PRESS,
+            TAG_ON_DOUBLE_TAP,
+            TAG_ON_LONG_PRESS,
+            TAG_ON_TAP
+        ),
+        tagColor = GestureListColor
+    )
+
     return listOf(
         tutorial5_1,
+        tutorial5_2
     )
 }

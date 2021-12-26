@@ -410,7 +410,7 @@ private fun DiscreteInteractionSourceExample() {
                     }
 
                     Toast
-                        .makeText(context, "First one clicked", Toast.LENGTH_SHORT)
+                        .makeText(context, "Outer one is clicked", Toast.LENGTH_SHORT)
                         .show()
 
                 }
@@ -431,7 +431,7 @@ private fun DiscreteInteractionSourceExample() {
                         indication = rememberRipple(),
                         onClick = {
                             Toast
-                                .makeText(context, "🔥 Second one clicked", Toast.LENGTH_SHORT)
+                                .makeText(context, "🔥 Inner one is clicked", Toast.LENGTH_SHORT)
                                 .show()
                         }
                     )
@@ -493,6 +493,7 @@ private fun DiscreteInteractionSourceFLowExample() {
         block = {
             interactionSourceSentRow.interactions
                 .onEach { interaction: Interaction ->
+                    // Quote emits same interaction row had when row is clicked or released
                     interactionSourceSentQuote.emit(interaction)
                 }
                 .launchIn(this)
@@ -502,6 +503,7 @@ private fun DiscreteInteractionSourceFLowExample() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color.LightGray)
             .padding(8.dp)
     ) {
         SubcomposeColumn(
@@ -569,7 +571,12 @@ private fun DiscreteInteractionSourceFLowExample() {
     )
 
 
-    Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .padding(8.dp)
+    ) {
         // This is chat bubble
         SubcomposeColumn(
             modifier = Modifier
@@ -588,24 +595,24 @@ private fun DiscreteInteractionSourceFLowExample() {
                     altName = recipientOriginalName
                 )
 
-                    // 💬 Quoted message
-                    QuotedMessageAlt(
-                        modifier = Modifier
-                            .padding(top = 4.dp, start = 4.dp, end = 4.dp)
-                            // 🔥 This is required to set Surface height before text is set
-                            .height(IntrinsicSize.Min)
-                            .background(ReceivedQuoteColor, shape = RoundedCornerShape(8.dp))
-                            .clip(shape = RoundedCornerShape(8.dp))
-                            .clickable(
-                                interactionSource = interactionSourceReceivedQuote,
-                                indication = rememberRipple(),
-                                onClick = {}
-                            ),
-                        quotedMessage = "quotedMessage",
-                    )
+                // 💬 Quoted message
+                QuotedMessageAlt(
+                    modifier = Modifier
+                        .padding(top = 4.dp, start = 4.dp, end = 4.dp)
+                        // 🔥 This is required to set Surface height before text is set
+                        .height(IntrinsicSize.Min)
+                        .background(ReceivedQuoteColor, shape = RoundedCornerShape(8.dp))
+                        .clip(shape = RoundedCornerShape(8.dp))
+                        .clickable(
+                            interactionSource = interactionSourceReceivedQuote,
+                            indication = rememberRipple(),
+                            onClick = {}
+                        ),
+                    quotedMessage = "quotedMessage",
+                )
 
                 ChatFlexBoxLayout(
-                    modifier = Modifier.padding(start = 2.dp,  end = 4.dp),
+                    modifier = Modifier.padding(start = 2.dp, end = 4.dp),
                     text = "Message",
                     messageStat = {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
