@@ -6,8 +6,11 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
@@ -33,9 +36,11 @@ private fun TutorialContent() {
         )
         Counter1()
         Spacer(modifier = Modifier.height(8.dp))
-        StyleableTutorialText(text ="In counter 2 and 3 **myVal is always 0** because " +
-                "it's initial value is remembered in outer composable" ,
-            bullets= false)
+        StyleableTutorialText(
+            text = "In counter 2 and 3 **myVal is always 0** because " +
+                    "it's initial value is remembered in outer composable",
+            bullets = false
+        )
         Counter2()
         Spacer(modifier = Modifier.height(8.dp))
         Counter3()
@@ -55,7 +60,7 @@ private fun Counter1() {
 
     Column(
         modifier = Modifier
-            .background(orange400)
+            .background(Orange400)
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -88,7 +93,7 @@ private fun Counter2() {
 
     Column(
         modifier = Modifier
-            .background(blue400)
+            .background(Blue400)
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -119,7 +124,7 @@ private fun Counter3() {
 
     Column(
         modifier = Modifier
-            .background(pink400)
+            .background(Pink400)
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -150,7 +155,7 @@ private fun Counter4() {
 
     Column(
         modifier = Modifier
-            .background(green400)
+            .background(Green400)
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -180,7 +185,3 @@ private fun Counter4() {
 
 class MyData(var value: Int = 0)
 
-val orange400 = Color(0xffFFA726)
-val blue400 = Color(0xff42A5F5)
-val pink400 = Color(0xffEC407A)
-val green400 = Color(0xff66BB6A)

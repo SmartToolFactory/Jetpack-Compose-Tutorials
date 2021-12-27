@@ -783,8 +783,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_2 = TutorialSectionModel(
-        title = "PointerInput",
-        description = "Tutorial about PointerInput, press, tap, long press and other gestures.",
+        title = "Detect Tap or Drag",
+        description = "Tutorial about PointerInput, press, tap, long press and drag gestures.",
         action = {
             Tutorial5_2Screen()
         },

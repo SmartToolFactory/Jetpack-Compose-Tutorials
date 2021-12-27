@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 /*
@@ -107,7 +110,7 @@ private fun FlatTopLayer() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = orange400)
+            .background(color = Orange400)
     ) {
 
         recomposeFlatTop++
@@ -124,7 +127,7 @@ private fun FlatMiddleLayer() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = blue400)
+            .background(color = Blue400)
     ) {
 
         recomposeFlatMiddle++
@@ -141,7 +144,7 @@ private fun FlatBottomLayer() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = pink400)
+            .background(color = Pink400)
     ) {
 
         recomposeFlatBottom++
@@ -159,7 +162,7 @@ private fun FlatCombined() {
         modifier = Modifier.padding(horizontal = 8.dp)
     ) {
 
-        Column(Modifier.background(color = orange400)) {
+        Column(Modifier.background(color = Orange400)) {
             recomposeFlatCombined1++
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -173,7 +176,7 @@ private fun FlatCombined() {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = blue400),
+                    .background(color = Blue400),
                 text = "Recompose: $recomposeFlatCombined2; Update: $update2",
                 textAlign = TextAlign.Center
             )
@@ -184,7 +187,7 @@ private fun FlatCombined() {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = pink400),
+                    .background(color = Pink400),
                 text = "Recompose: $recomposeFlatCombined3; Update: $update3",
                 textAlign = TextAlign.Center
             )
@@ -202,7 +205,7 @@ private fun HierarchicalCombined() {
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
             .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-            .background(color = orange400)
+            .background(color = Orange400)
 
 
     ) {
@@ -218,7 +221,7 @@ private fun HierarchicalCombined() {
                 .padding(8.dp)
                 .fillMaxWidth()
                 .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-                .background(color = blue400)
+                .background(color = Blue400)
         ) {
 
             recomposeHierarchical2++
@@ -233,8 +236,7 @@ private fun HierarchicalCombined() {
                     .padding(8.dp)
                     .fillMaxWidth()
                     .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-                    .background(color = pink400)
-
+                    .background(color = Pink400)
 
 
             ) {
@@ -262,7 +264,7 @@ private fun HierarchicalOuterLayer() {
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
             .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-            .background(color = orange400)
+            .background(color = Orange400)
     ) {
 
         recomposeHierarchicalOuter++
@@ -283,7 +285,7 @@ private fun HierarchicalCenterLayer() {
             .padding(8.dp)
             .fillMaxWidth()
             .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-            .background(color = blue400)
+            .background(color = Blue400)
 
     ) {
 
@@ -305,7 +307,7 @@ private fun HierarchicalInnerLayer() {
             .padding(8.dp)
             .fillMaxWidth()
             .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-            .background(color = pink400)
+            .background(color = Pink400)
     ) {
 
         recomposeHierarchicalInner++
@@ -322,7 +324,7 @@ private fun UpdateButtons() {
     Column {
 
         Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = orange400),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Orange400),
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, top = 4.dp)
                 .fillMaxWidth(),
@@ -336,7 +338,7 @@ private fun UpdateButtons() {
         }
 
         Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = blue400),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Blue400),
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, top = 2.dp)
                 .fillMaxWidth(),
@@ -350,7 +352,7 @@ private fun UpdateButtons() {
         }
 
         Button(
-            colors = ButtonDefaults.buttonColors(backgroundColor = pink400),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Pink400),
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, top = 2.dp)
                 .fillMaxWidth(),

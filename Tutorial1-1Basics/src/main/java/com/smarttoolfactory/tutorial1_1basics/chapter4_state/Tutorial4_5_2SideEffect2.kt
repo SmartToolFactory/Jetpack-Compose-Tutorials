@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.Place
 import com.smarttoolfactory.tutorial1_1basics.model.places
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.PlacesToBookComponent
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -105,7 +107,7 @@ private fun SideEffectExample() {
     }
     Column(
         Modifier
-            .background(orange400)
+            .background(Orange400)
             .padding(8.dp)
     ) {
 
@@ -132,7 +134,7 @@ private fun SideEffectExample() {
         Column(
             Modifier
                 .fillMaxWidth()
-                .background(blue400)
+                .background(Blue400)
                 .padding(8.dp)
         ) {
 

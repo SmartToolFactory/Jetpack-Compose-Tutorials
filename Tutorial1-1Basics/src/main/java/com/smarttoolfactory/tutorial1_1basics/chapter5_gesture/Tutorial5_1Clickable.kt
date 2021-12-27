@@ -33,11 +33,8 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.ChatFlexBoxLayout
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.SubcomposeColumn
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.blue400
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.orange400
-import com.smarttoolfactory.tutorial1_1basics.ui.ReceivedQuoteColor
-import com.smarttoolfactory.tutorial1_1basics.ui.SentMessageColor
-import com.smarttoolfactory.tutorial1_1basics.ui.SentQuoteColor
+import com.smarttoolfactory.tutorial1_1basics.ui.*
+
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -394,7 +391,7 @@ private fun DiscreteInteractionSourceExample() {
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-                .background(color = orange400)
+                .background(color = Orange400)
                 .clickable {
 
                     coroutineScope.launch {
@@ -425,7 +422,7 @@ private fun DiscreteInteractionSourceExample() {
                     .padding(8.dp)
                     .fillMaxWidth()
                     .shadow(2.dp, RoundedCornerShape(8.dp), clip = true)
-                    .background(color = blue400)
+                    .background(color = Blue400)
                     .clickable(
                         interactionSource = interactionSource,
                         indication = rememberRipple(),

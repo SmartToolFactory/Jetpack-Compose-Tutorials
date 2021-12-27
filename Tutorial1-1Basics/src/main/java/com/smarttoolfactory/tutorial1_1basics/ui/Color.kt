@@ -11,6 +11,12 @@ val Orange400 = Color(0xffFFA726)
 val Blue400 = Color(0xff42A5F5)
 val Pink400 = Color(0xffEC407A)
 val Green400 = Color(0xff66BB6A)
+val Red400 = Color(0xffEF5350)
+val Yellow400 = Color(0xffFFEE58)
+val Purple400 = Color(0xffAB47BC)
+val Brown400 = Color(0xff8D6E63)
+val BlueGrey400 = Color(0xff78909C)
+
 
 val DefaultListColor = Color(0xff00BCD4)
 val LayoutListColor = Color(0xffFFEB3B)
@@ -22,3 +28,4 @@ val SentQuoteColor = Color(0xffDEF6D3)
 val ReceivedQuoteColor = Color(0xffECEFF1)
 val QuoteTextColor = Color(0xff757575)
 val RecipientAltNameColor = Color(0xff757575)
+
