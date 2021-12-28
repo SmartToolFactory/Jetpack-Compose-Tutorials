@@ -15,6 +15,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_3Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.LayoutListColor
@@ -768,7 +769,9 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_1 = TutorialSectionModel(
         title = stringResource(R.string.title_5_1),
-        description = "Tutorial about clickable modifier, Indication and InteractionSource.",
+        description = "Tutorial about clickable modifier, Indication and InteractionSource." +
+                "Indication to clip ripples, or create custom ripple effects. Interaction source to listen for click state" +
+                "or set state of other composable.",
         action = {
             Tutorial5_1Screen()
         },
@@ -783,14 +786,18 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_2 = TutorialSectionModel(
-        title = "Detect Tap or Drag",
-        description = "Tutorial about PointerInput, press, tap, long press and drag gestures.",
+        title = "Tap&Drag Gestures",
+        description = "Use PointerInput to listen press, tap, long press, drag gestures. " +
+                "detectTapGestures is used for listening for tap, longPress, doubleYap, and press gestures.\n" +
+                "detectDragGestures, detectDragAfterLongPress, detectHorizontalDrag, and detectVerticalDrag" +
+                "for listening drag gestures.",
         action = {
             Tutorial5_2Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_POINTER_INPUT,
+            TAG_POINTER_INTEROP_FILTER,
             TAG_DETECT_TAP_GESTURES,
             TAG_DETECT_DRAG_GESTURES,
             TAG_ON_PRESS,
@@ -801,8 +808,27 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_3 = TutorialSectionModel(
+        title = "Transform Gestures",
+        description = "Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.",
+        action = {
+            Tutorial5_3Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_DETECT_TRANSFORM_GESTURES,
+            TAG_TRANSFORM_CENTROID,
+            TAG_TRANSFORM_PAN,
+            TAG_TRANSFORM_ZOOM,
+            TAG_TRANSFORM_ROTATE
+        ),
+        tagColor = GestureListColor
+    )
+
     return listOf(
         tutorial5_1,
-        tutorial5_2
+        tutorial5_2,
+        tutorial5_3
     )
 }

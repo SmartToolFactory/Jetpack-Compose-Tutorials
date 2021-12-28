@@ -499,9 +499,11 @@ private fun DiscreteInteractionSourceFLowExample() {
 
     Column(
         modifier = Modifier
+            .padding(bottom= 10.dp)
             .fillMaxWidth()
             .background(Color.LightGray)
-            .padding(8.dp)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.End
     ) {
         SubcomposeColumn(
             modifier = Modifier
@@ -570,9 +572,11 @@ private fun DiscreteInteractionSourceFLowExample() {
 
     Column(
         modifier = Modifier
+            .padding(bottom= 10.dp)
             .fillMaxWidth()
             .background(Color.LightGray)
-            .padding(8.dp)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.Start
     ) {
         // This is chat bubble
         SubcomposeColumn(
