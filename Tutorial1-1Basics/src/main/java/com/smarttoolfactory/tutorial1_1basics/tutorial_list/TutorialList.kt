@@ -769,7 +769,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_1 = TutorialSectionModel(
         title = stringResource(R.string.title_5_1),
-        description = "Tutorial about clickable modifier, Indication and InteractionSource." +
+        description = "Use clickable modifier, Indication and InteractionSource." +
                 "Indication to clip ripples, or create custom ripple effects. Interaction source to listen for click state" +
                 "or set state of other composable.",
         action = {
