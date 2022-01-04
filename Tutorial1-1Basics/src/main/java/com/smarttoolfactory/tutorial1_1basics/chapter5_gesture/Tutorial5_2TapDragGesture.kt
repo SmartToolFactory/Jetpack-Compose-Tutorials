@@ -132,7 +132,7 @@ private fun DetectPressAwaitExample() {
 
                     if (released) {
                         gestureText = "onPress Released"
-                        gestureColor = Blue400
+                        gestureColor = Green400
 
                         Toast
                             .makeText(context, "ACTION_UP", Toast.LENGTH_SHORT)
@@ -515,7 +515,7 @@ private fun VerticalDragGestureExample() {
 }
 
 @Composable
-private fun GestureDisplayBox(
+fun GestureDisplayBox(
     modifier: Modifier,
     gestureText: String
 ) {

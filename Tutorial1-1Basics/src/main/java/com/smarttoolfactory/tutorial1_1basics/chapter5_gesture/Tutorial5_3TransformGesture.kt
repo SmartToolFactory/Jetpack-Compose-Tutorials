@@ -40,6 +40,7 @@ private fun TutorialContent() {
 
     Column(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -65,7 +66,6 @@ private fun TutorialContent() {
             modifier = Modifier.padding(top = 20.dp)
         )
         TransformGesturesExample3()
-
     }
 }
 
@@ -106,32 +106,7 @@ private fun TransformGesturesExample() {
             scaleY = zoom
         }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .clipToBounds()
-            .background(Color.LightGray),
-        contentAlignment = Alignment.Center
-    ) {
-
-        Image(
-            painter = painterResource(id = R.drawable.landscape1),
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.Crop
-        )
-
-        Text(
-            text = transformDetailText,
-            color = Blue400,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0x66000000))
-                .padding(vertical = 2.dp)
-                .align(Alignment.BottomStart)
-        )
-    }
+    ImageBox(modifier, R.drawable.landscape1, transformDetailText, Blue400)
 }
 
 @Composable
@@ -183,33 +158,7 @@ private fun TransformGesturesExample2() {
             scaleY = zoom
         }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .clipToBounds()
-            .background(Color.LightGray),
-        contentAlignment = Alignment.Center
-    ) {
-
-        Image(
-            painter = painterResource(id = R.drawable.landscape2),
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.Crop
-        )
-
-        Text(
-            text = transformDetailText,
-            color = Green400,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0x66000000))
-                .padding(vertical = 2.dp)
-                .align(Alignment.BottomStart)
-        )
-
-    }
+    ImageBox(modifier, R.drawable.landscape2, transformDetailText, Green400)
 }
 
 
@@ -269,6 +218,12 @@ private fun TransformGesturesExample3() {
             TransformOrigin(0f, 0f).also { transformOrigin = it }
         }
 
+    ImageBox(modifier, R.drawable.landscape3, transformDetailText)
+
+}
+
+@Composable
+fun ImageBox(modifier: Modifier, imageRes: Int, text: String, color: Color = Orange400) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -277,26 +232,22 @@ private fun TransformGesturesExample3() {
             .background(Color.LightGray),
         contentAlignment = Alignment.Center
     ) {
-
         Image(
-            painter = painterResource(id = R.drawable.landscape3),
+            painter = painterResource(id = imageRes),
             contentDescription = null,
             modifier = modifier,
             contentScale = ContentScale.Crop
         )
-
         Text(
-            text = transformDetailText,
-            color = Orange400,
+            text = text,
+            color = color,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0x66000000))
                 .padding(vertical = 2.dp)
                 .align(Alignment.BottomStart)
         )
-
     }
-
 }
 
 /**

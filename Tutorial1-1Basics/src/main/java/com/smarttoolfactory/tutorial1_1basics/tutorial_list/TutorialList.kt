@@ -16,6 +16,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.LayoutListColor
@@ -826,9 +827,24 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_4 = TutorialSectionModel(
+        title = "AwaitPointerEventScope",
+        description = "Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.",
+        action = {
+            Tutorial5_4Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+
+        ),
+        tagColor = GestureListColor
+    )
+
     return listOf(
         tutorial5_1,
         tutorial5_2,
-        tutorial5_3
+        tutorial5_3,
+        tutorial5_4,
     )
 }
