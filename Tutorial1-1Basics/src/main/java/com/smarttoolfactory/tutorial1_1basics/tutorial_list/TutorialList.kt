@@ -16,7 +16,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_3Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen1
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.LayoutListColor
@@ -787,7 +787,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_2 = TutorialSectionModel(
-        title = "Tap&Drag Gestures",
+        title = "5-2 Tap&Drag Gestures",
         description = "Use PointerInput to listen press, tap, long press, drag gestures. " +
                 "detectTapGestures is used for listening for tap, longPress, doubleYap, and press gestures.\n" +
                 "detectDragGestures, detectDragAfterLongPress, detectHorizontalDrag, and detectVerticalDrag" +
@@ -810,7 +810,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_3 = TutorialSectionModel(
-        title = "Transform Gestures",
+        title = "5-3 Transform Gestures",
         description = "Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.",
         action = {
             Tutorial5_3Screen()
@@ -827,16 +827,24 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_4 = TutorialSectionModel(
-        title = "AwaitPointerEventScope",
-        description = "Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.",
+    val tutorial5_4_1 = TutorialSectionModel(
+        title = "5-4-1 AwaitPointerEventScope1",
+        description = "Use AwaitPointerEventScope to get awaitFirstDown for down events, " +
+                "waitForUpOrCancellation for up events, and awaitPointerEvent for move events with pointers.\n" +
+                "awaitTouchSlopOrCancellation to check whether pointer crosses touch slap threshold to start drag motion",
         action = {
-            Tutorial5_4Screen()
+            Tutorial5_4Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_POINTER_INPUT,
-
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_WAIT_UP_OR_CANCELLATION,
+            TAG_AWAIT_POINTER_EVENT,
+            TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
+            TAG_AWAIT_DRAG_OR_CANCELLATION
         ),
         tagColor = GestureListColor
     )
@@ -845,6 +853,6 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_1,
         tutorial5_2,
         tutorial5_3,
-        tutorial5_4,
+        tutorial5_4_1,
     )
 }

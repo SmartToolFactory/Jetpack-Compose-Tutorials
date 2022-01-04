@@ -123,7 +123,7 @@ const val TAG_SUBCOMPOSE_LAYOUT = "SubcomposeLayout"
 /*
     STATE
  */
-const val TAG_RECOMPOSITION= "Recomposition"
+const val TAG_RECOMPOSITION = "Recomposition"
 const val TAG_STATE = "State"
 const val TAG_REMEMBER = "remember"
 const val TAG_COROUTINE_SCOPE = "rememberCoroutineScope"
@@ -133,7 +133,7 @@ const val TAG_PRODUCE_STATE = "produceStateOf"
 const val TAG_LAUNCHED_EFFECT = "LaunchedEffect"
 const val TAG_SIDE_EFFECT = "SideEffect"
 const val TAG_DISPOSABLE_EFFECT = "DisposableEffect"
-const val TAG_SNAPSHOT_FLOW= "snapshotFlow"
+const val TAG_SNAPSHOT_FLOW = "snapshotFlow"
 
 /*
     GESTURE
@@ -144,16 +144,26 @@ const val TAG_REMEMBER_RIPPLE = "rememberRipple"
 const val TAG_INTERACTION_SOURCE = "InteractionSource"
 const val TAG_POINTER_INPUT = "pointerInput"
 const val TAG_POINTER_INTEROP_FILTER = "pointerInteropFilter"
+
 const val TAG_DETECT_TAP_GESTURES = "detectTapGestures"
 const val TAG_DETECT_DRAG_GESTURES = "detectTapGestures"
 const val TAG_ON_PRESS = "onPress"
 const val TAG_ON_DOUBLE_TAP = "onDoubleTap"
-const val TAG_ON_LONG_PRESS= "onLongPress"
-const val TAG_ON_TAP= "onTap"
-const val TAG_DETECT_TRANSFORM_GESTURES= "detectTransformGestures"
+const val TAG_ON_LONG_PRESS = "onLongPress"
+const val TAG_ON_TAP = "onTap"
+const val TAG_DETECT_TRANSFORM_GESTURES = "detectTransformGestures"
+
 const val TAG_TRANSFORM_CENTROID = "centroid"
 const val TAG_TRANSFORM_PAN = "pan"
 const val TAG_TRANSFORM_ZOOM = "zoom"
 const val TAG_TRANSFORM_ROTATE = "rotate"
+
+const val TAG_AWAIT_POINTER_EVENT_SCOPE = "AwaitPointerEventScope"
+const val TAG_POINTER_INPUT_CHANGE = "PointerInputChange"
+const val TAG_AWAIT_FIRST_DOWN = "awaitFirstDown"
+const val TAG_WAIT_UP_OR_CANCELLATION = "waitForUpOrCancellation"
+const val TAG_AWAIT_POINTER_EVENT = "awaitPointerEvent"
+const val TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION = "awaitTouchSlopOrCancellation"
+const val TAG_AWAIT_DRAG_OR_CANCELLATION = "awaitDragOrCancellation"
 
 

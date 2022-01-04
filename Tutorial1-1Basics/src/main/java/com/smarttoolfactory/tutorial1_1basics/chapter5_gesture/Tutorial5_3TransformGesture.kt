@@ -46,11 +46,9 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "**detectTransformGestures** listens for centroid, center of touch pointers, " +
+            text = "1-) **detectTransformGestures** listens for centroid, center of touch pointers, " +
                     "zoom, pan and rotate gestures. Using these gestures in each step " +
-                    "we add different actions to image to zoom, translate or rotate it.",
-            bullets = false
-        )
+                    "we add different actions to image to zoom, translate or rotate it.")
         TutorialText2(
             text = "Transform scale",
             modifier = Modifier.padding(top = 8.dp)
