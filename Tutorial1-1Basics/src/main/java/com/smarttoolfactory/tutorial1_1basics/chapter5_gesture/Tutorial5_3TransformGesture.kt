@@ -35,6 +35,12 @@ fun Tutorial5_3Screen() {
     TutorialContent()
 }
 
+ val boxModifier = Modifier
+    .fillMaxWidth()
+    .height(250.dp)
+    .clipToBounds()
+    .background(Color.LightGray)
+
 @Composable
 private fun TutorialContent() {
 
@@ -48,7 +54,8 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "1-) **detectTransformGestures** listens for centroid, center of touch pointers, " +
                     "zoom, pan and rotate gestures. Using these gestures in each step " +
-                    "we add different actions to image to zoom, translate or rotate it.")
+                    "we add different actions to image to zoom, translate or rotate it."
+        )
         TutorialText2(
             text = "Transform scale",
             modifier = Modifier.padding(top = 8.dp)
@@ -81,7 +88,7 @@ private fun TransformGesturesExample() {
         )
     }
 
-    val modifier = Modifier
+    val imageModifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
             detectTransformGestures(
@@ -104,7 +111,7 @@ private fun TransformGesturesExample() {
             scaleY = zoom
         }
 
-    ImageBox(modifier, R.drawable.landscape1, transformDetailText, Blue400)
+    ImageBox(boxModifier, imageModifier, R.drawable.landscape1, transformDetailText, Blue400)
 }
 
 @Composable
@@ -120,7 +127,7 @@ private fun TransformGesturesExample2() {
         mutableStateOf("Use pinch gesture to zoom, and move image with single finger.")
     }
 
-    val modifier = Modifier
+    val imageModifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
             detectTransformGestures(
@@ -156,7 +163,7 @@ private fun TransformGesturesExample2() {
             scaleY = zoom
         }
 
-    ImageBox(modifier, R.drawable.landscape2, transformDetailText, Green400)
+    ImageBox(boxModifier, imageModifier, R.drawable.landscape2, transformDetailText, Green400)
 }
 
 
@@ -176,7 +183,7 @@ private fun TransformGesturesExample3() {
                     "Rotate image using two fingers with twisting gesture."
         )
     }
-    val modifier = Modifier
+    val imageModifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
             detectTransformGestures(
@@ -216,24 +223,26 @@ private fun TransformGesturesExample3() {
             TransformOrigin(0f, 0f).also { transformOrigin = it }
         }
 
-    ImageBox(modifier, R.drawable.landscape3, transformDetailText)
+    ImageBox(boxModifier, imageModifier, R.drawable.landscape3, transformDetailText)
 
 }
 
 @Composable
-fun ImageBox(modifier: Modifier, imageRes: Int, text: String, color: Color = Orange400) {
+fun ImageBox(
+    modifier: Modifier,
+    imageModifier: Modifier,
+    imageRes: Int,
+    text: String,
+    color: Color = Orange400
+) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .clipToBounds()
-            .background(Color.LightGray),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = imageRes),
             contentDescription = null,
-            modifier = modifier,
+            modifier = imageModifier,
             contentScale = ContentScale.Crop
         )
         Text(

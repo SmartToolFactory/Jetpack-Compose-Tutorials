@@ -13,10 +13,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_2Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_3Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.*
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.LayoutListColor
@@ -819,10 +816,10 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_POINTER_INPUT,
             TAG_DETECT_TRANSFORM_GESTURES,
-            TAG_TRANSFORM_CENTROID,
-            TAG_TRANSFORM_PAN,
-            TAG_TRANSFORM_ZOOM,
-            TAG_TRANSFORM_ROTATE
+            TAG_CENTROID,
+            TAG_PAN,
+            TAG_ZOOM,
+            TAG_ROTATE
         ),
         tagColor = GestureListColor
     )
@@ -849,10 +846,28 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_4_2 = TutorialSectionModel(
+        title = "5-4-2 Centroid, Zoom, Pan, Rotation",
+        description = "Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.",
+        action = {
+            Tutorial5_4Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_CENTROID,
+            TAG_PAN,
+            TAG_ZOOM,
+            TAG_ROTATE
+        ),
+        tagColor = GestureListColor
+    )
+
     return listOf(
         tutorial5_1,
         tutorial5_2,
         tutorial5_3,
         tutorial5_4_1,
+        tutorial5_4_2
     )
 }
