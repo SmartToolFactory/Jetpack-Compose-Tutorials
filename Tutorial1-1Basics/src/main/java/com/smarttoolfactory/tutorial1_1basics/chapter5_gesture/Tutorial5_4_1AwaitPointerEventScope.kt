@@ -49,10 +49,12 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "1-) **awaitFirstDown()** Reads events until the first down is received")
+            text = "1-) **awaitFirstDown()** Reads events until the first down is received"
+        )
         AwaitFirstDownExample()
         StyleableTutorialText(
-            text = "2-) **awaitPointerEvent()**  returns pointer and event details")
+            text = "2-) **awaitPointerEvent()**  returns pointer and event details"
+        )
         AwaitPointerEventExample()
 
         StyleableTutorialText(
@@ -194,9 +196,9 @@ private fun AwaitTouchSlopOrCancellationExample() {
         )
     }
 
-    val modifier =      Modifier
+    val modifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-        .size(50.dp)
+        .size(80.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .background(Yellow400)
@@ -206,7 +208,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
 
                     val down: PointerInputChange = awaitFirstDown()
                     gestureColor = Orange400
-                    text = "awaitFirstDown()"
+                    text = "awaitFirstDown() id: ${down.id}"
 
                     var change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
@@ -215,15 +217,18 @@ private fun AwaitTouchSlopOrCancellationExample() {
                             val summed = original + over
 
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 50.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 50.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
 
                             change.consumePositionChange()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
+
                             gestureColor = Brown400
-                            text = "awaitTouchSlopOrCancellation() newValue: $newValue"
+                            text =
+                                "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
+                                        "\nnewValue: $newValue"
 
                         }
 
@@ -243,14 +248,16 @@ private fun AwaitTouchSlopOrCancellationExample() {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + change.positionChange()
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 50.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 50.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
                             change.consumePositionChange()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
 
-                            text = "awaitDragOrCancellation()\nnewValue: $newValue"
+                            text =
+                                "awaitDragOrCancellation() down.id: ${down.id} change.id: ${change.id}" +
+                                        "\nnewValue: $newValue"
                         }
                     }
 
@@ -275,7 +282,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
             color = Color.White
         )
 
-        Box(modifier=modifier)
+        Box(modifier = modifier)
     }
 }
 
@@ -295,7 +302,7 @@ private fun AwaitDragOrCancellationExample() {
 
     val modifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-        .size(50.dp)
+        .size(80.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
@@ -305,7 +312,7 @@ private fun AwaitDragOrCancellationExample() {
                     var down: PointerInputChange? = awaitFirstDown()
 
                     gestureColor = Orange400
-                    text = "awaitFirstDown()"
+                    text = "awaitFirstDown() id: ${down?.id}"
 
                     while (down != null && down.pressed) {
 
@@ -322,21 +329,22 @@ private fun AwaitDragOrCancellationExample() {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + down.positionChange()
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 50.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 50.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
                             down.consumePositionChange()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
 
                             gestureColor = Blue400
-                            text = "awaitDragOrCancellation()\nnewValue: $newValue"
+                            text = "awaitDragOrCancellation()  down.id: ${down.id}" +
+                                    "\nnewValue: $newValue"
                         }
                     }
-                }
 
-                if (gestureColor != Red400) {
-                    gestureColor = Color.LightGray
+                    if (gestureColor != Red400) {
+                        gestureColor = Color.LightGray
+                    }
                 }
             }
         }

@@ -847,10 +847,31 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_4_2 = TutorialSectionModel(
-        title = "5-4-2 Centroid, Zoom, Pan, Rotation",
-        description = "Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.",
+        title = "5-4-2 AwaitPointerEventScope2",
+        description = "Use AwaitPointerEventScope to get ",
         action = {
             Tutorial5_4Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_DRAG,
+            TAG_HORIZONTAL_DRAG,
+            TAG_VERTICAL_DRAG,
+            TAG_AWAIT_HORIZONTAL_TOUCH_SLOP_OR_CANCELLATION,
+            TAG_AWAIT_VERTICAL_TOUCH_SLOP_OR_CANCELLATION,
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_4_3 = TutorialSectionModel(
+        title = "5-4-3 Centroid, Zoom, Pan, Rotation",
+        description = "Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.",
+        action = {
+            Tutorial5_4Screen3()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -868,6 +889,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_2,
         tutorial5_3,
         tutorial5_4_1,
-        tutorial5_4_2
+        tutorial5_4_2,
+        tutorial5_4_3
     )
 }

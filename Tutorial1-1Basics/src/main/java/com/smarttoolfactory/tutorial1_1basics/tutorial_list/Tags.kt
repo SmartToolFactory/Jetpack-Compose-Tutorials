@@ -166,4 +166,10 @@ const val TAG_AWAIT_POINTER_EVENT = "awaitPointerEvent"
 const val TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION = "awaitTouchSlopOrCancellation"
 const val TAG_AWAIT_DRAG_OR_CANCELLATION = "awaitDragOrCancellation"
 
+const val TAG_DRAG = "drag"
+const val TAG_HORIZONTAL_DRAG = "horizontalDrag"
+const val TAG_VERTICAL_DRAG = "verticalDrag"
+const val TAG_AWAIT_HORIZONTAL_TOUCH_SLOP_OR_CANCELLATION = "awaitHorizontalTouchSlopOrCancellation"
+const val TAG_AWAIT_VERTICAL_TOUCH_SLOP_OR_CANCELLATION = "awaitVerticalTouchSlopOrCancellation"
+
 

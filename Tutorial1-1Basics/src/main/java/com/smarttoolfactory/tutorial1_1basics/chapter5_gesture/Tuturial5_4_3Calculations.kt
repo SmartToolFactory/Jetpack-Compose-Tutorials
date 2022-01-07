@@ -19,13 +19,14 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
 @Composable
-fun Tutorial5_4Screen2() {
+fun Tutorial5_4Screen3() {
     TutorialContent()
 }
 
@@ -41,6 +42,14 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
+
+        StyleableTutorialText(
+            text =
+            "1-) Use **awaitPointerEventScope** functions to calculate centroid " +
+                    "size and position, zoom, pan, and rotation.\n" +
+                    "In this example scrollState interferes with **awaitPointerEventScope** " +
+                    "because of this a callback is used for calling **scrollState.stop()**"
+        )
 
         TutorialText2(
             text = "Calculate Centroid",
@@ -148,7 +157,7 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
     // 🔥 This outer box uses clipToBounds() to clip circle if it's out of box bounds
     Box(
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 12.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth()
             .height(250.dp)
             .clipToBounds()
