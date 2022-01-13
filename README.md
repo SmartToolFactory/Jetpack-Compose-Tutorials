@@ -88,3 +88,18 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>4-5-2 SideEffect2</h3><br/>Use SideEffect, derivedStateOf, produceState and snapshotFlow.<br><br>• remember<br>• SideEffect<br>• derivedStateOf<br>• produceStateOf<br>• snapshotFlow<br>|<img src ="/./screenshots/tutorial4_5_2.png" width=320> |
 |  |  |
+
+#### Gesture
+
+|Tutorial|Preview|
+|:-------|-------|
+|<h3>5-1 Clickable&InteractionSource</h3><br/>Use clickable modifier, Indication and InteractionSource.Indication to clip ripples, or create custom ripple effects.<br><br>• clickable<br>• Indication<br>• rememberRipple<br>• InteractionSource<br>• pointerInput<br>• pointerInteropFilter<br>|<img src ="/./screenshots/tutorial5_1.png" width=320> |
+|  |  |
+|<h3>5-2 Tap&Drag Gesture</h3><br/>Use PointerInput to listen press, tap, long press, drag gestures. detectTapGestures is used for listening for tap, longPress, doubleYap, and press gestures.<br><br>• pointerInput<br>• pointerInteropFilter<br>• detectTapGestures<br>• detectDragGestures<br>• onPress<br>• onDoubleTap<br>|<img src ="/./screenshots/tutorial5_2.png" width=320> |
+|  |  |
+|<h3>5-3 Transform Gestures</h3><br/>Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.<br><br>• pointerInput<br>• detectTransformGestures<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_3.png" width=320> |
+|  |  |
+|<h3>5-4-1 AwaitPointerEventScope1</h3><br/>Use AwaitPointerEventScope to get awaitFirstDown for down events, waitForUpOrCancellation for up events, and awaitPointerEvent for move events with pointers.<br><br>• AwaitPointerEventScope<br>• PointerInputChange<br>• awaitFirstDown<br>• waitForUpOrCancellation<br>• awaitPointerEvent<br>• awaitTouchSlopOrCancellation<br>• awaitDragOrCancellation<br>|<img src ="/./screenshots/tutorial5_4_1.gif" width=320> |
+|  |  |
+|<h3>5-4-3 Centroid, Zoom, Pan, Rotation</h3><br/>Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.<br><br>• AwaitPointerEventScope<br><br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_4_3.png" width=320> |
+|  |  |

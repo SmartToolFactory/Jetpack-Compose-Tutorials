@@ -146,7 +146,7 @@ const val TAG_POINTER_INPUT = "pointerInput"
 const val TAG_POINTER_INTEROP_FILTER = "pointerInteropFilter"
 
 const val TAG_DETECT_TAP_GESTURES = "detectTapGestures"
-const val TAG_DETECT_DRAG_GESTURES = "detectTapGestures"
+const val TAG_DETECT_DRAG_GESTURES = "detectDragGestures"
 const val TAG_ON_PRESS = "onPress"
 const val TAG_ON_DOUBLE_TAP = "onDoubleTap"
 const val TAG_ON_LONG_PRESS = "onLongPress"
