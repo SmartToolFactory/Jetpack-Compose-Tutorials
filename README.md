@@ -19,7 +19,7 @@ using previous searches using a database, domain with ViewModel.
 |<h3>1-2 Surface, Shape, Clickable</h3><br/>Create and modify Surface to draw background for Composables, add click action to any composable. Set weight or offset modifiers.<br><br> • Surface<br>• Shape<br>• Clickable<br>|<img src ="/./screenshots/tutorial1_2.jpg" width=320> |
 |  |  |
 
-#### Material Widgets
+### Material Widgets
 
 |Tutorial|Preview|
 |:-------|-------|
@@ -54,7 +54,7 @@ using previous searches using a database, domain with ViewModel.
 |<h3>2-12 Dialog, AlertDialog</h3><br/>Create Dialog, and AlertDialog with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.<br><br>• AlertDialog<br>• Dialog<br>• DialogProperties<br>|<img src ="/./screenshots/tutorial2_12.gif" width=320> |
 |  |  |
 
-#### Layout
+### Layout
 
 |Tutorial|Preview|
 |:-------|-------|
@@ -72,7 +72,7 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>3-6-2 Custom Chat SubcomposeLayout</h3><br/>Custom layout like whatsapp chat. Added quote and name tag resized to longest sibling using SubcomposeColumn from previous examples to have whole layout.<br><br>• Custom Layout<br>• SubcomposeLayout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_6_2.gif" width=320> |
 |  |  |
-#### State
+### State
 
 |Tutorial|Preview|
 |:-------|-------|
@@ -89,7 +89,7 @@ using previous searches using a database, domain with ViewModel.
 |<h3>4-5-2 SideEffect2</h3><br/>Use SideEffect, derivedStateOf, produceState and snapshotFlow.<br><br>• remember<br>• SideEffect<br>• derivedStateOf<br>• produceStateOf<br>• snapshotFlow<br>|<img src ="/./screenshots/tutorial4_5_2.png" width=320> |
 |  |  |
 
-#### Gesture
+### Gesture
 
 |Tutorial|Preview|
 |:-------|-------|
