@@ -104,7 +104,7 @@ private fun TutorialContent() {
             text = "Custom Padding",
             modifier = Modifier
                 .background(Color(0xFF8BC34A))
-                .customPadding(all = 4.dp)
+                .paddingNoOffsetNoConstrain(all = 4.dp)
         )
 
         StyleableTutorialText(
@@ -251,56 +251,6 @@ fun Modifier.firstBaselineToTop(
         }
     }
 )
-
-/**
- * This modifier is similar to **padding** modifier
- */
-/**
- * This modifier is similar to **padding** modifier
- */
-@Stable
-fun Modifier.customPadding(all: Dp) =
-    this.then(
-        PaddingModifier(start = all, top = all, end = all, bottom = all, rtlAware = true)
-    )
-
-// Implementation detail
-private class PaddingModifier(
-    val start: Dp = 0.dp,
-    val top: Dp = 0.dp,
-    val end: Dp = 0.dp,
-    val bottom: Dp = 0.dp,
-    val rtlAware: Boolean,
-) : LayoutModifier {
-
-    override fun MeasureScope.measure(
-        measurable: Measurable,
-        constraints: Constraints
-    ): MeasureResult {
-
-        val horizontal = start.roundToPx() + end.roundToPx()
-        val vertical = top.roundToPx() + bottom.roundToPx()
-
-        val placeable = measurable.measure(constraints.offset(-horizontal, -vertical))
-
-        val width = constraints.constrainWidth(placeable.width + horizontal)
-        val height = constraints.constrainHeight(placeable.height + vertical)
-
-        println(
-            "😁 PaddingModifier() " +
-                    "horizontal: $horizontal, " +
-                    "vertical: $vertical, placeable width: ${placeable.width}"
-        )
-
-        return layout(width, height) {
-            if (rtlAware) {
-                placeable.placeRelative(start.roundToPx(), top.roundToPx())
-            } else {
-                placeable.place(start.roundToPx(), top.roundToPx())
-            }
-        }
-    }
-}
 
 // let's create you own custom stateful modifier with multiple arguments
 fun Modifier.composedBackground(width: Dp, height: Dp, index: Int) = composed(
