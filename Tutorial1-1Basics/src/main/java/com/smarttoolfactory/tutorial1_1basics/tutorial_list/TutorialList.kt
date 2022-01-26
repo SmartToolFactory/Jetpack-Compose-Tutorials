@@ -474,7 +474,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CUSTOM_MODIFIER,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE,
             TAG_LAYOUT_MODIFIER
         ),
@@ -491,7 +491,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
@@ -510,7 +510,25 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_INTRINSIC_HEIGHT,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_2_3 = TutorialSectionModel(
+        title = "3-2-3 Constraints",
+        description = "Constraints to measure measurables with Constraints.offset and " +
+                "Constraints.constrainWidth to limit maximum width or available " +
+                "space for Placeable",
+        action = {
+            Tutorial3_2Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
@@ -528,7 +546,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_SCOPE,
             TAG_PARENT_DATA_MODIFIER,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
@@ -563,7 +581,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_SUBCOMPOSE_LAYOUT,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
@@ -580,7 +598,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
@@ -598,7 +616,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CUSTOM_LAYOUT,
             TAG_SUBCOMPOSE_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINT,
+            TAG_CONSTRAINTS,
             TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
@@ -608,6 +626,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_1,
         tutorial3_2_1,
         tutorial3_2_2,
+        tutorial3_2_3,
         tutorial3_3_1,
         tutorial3_4,
         tutorial3_5,
