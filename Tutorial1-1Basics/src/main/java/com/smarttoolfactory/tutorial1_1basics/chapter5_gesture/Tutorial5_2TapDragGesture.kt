@@ -105,7 +105,7 @@ private fun DetectTapGesturesExample() {
                 },
                 onLongPress = {
                     gestureText = "onLongPress offset: $it"
-                    gestureColor = Green400
+                    gestureColor = Brown400
                 }
             )
         }
@@ -341,8 +341,6 @@ private fun DetectGesturesExample2() {
 
                             dragDetailText =
                                 "dragAmount: $dragAmount\noriginal: $original\nsummed: $summed"
-
-
                         }
                     )
                 }
