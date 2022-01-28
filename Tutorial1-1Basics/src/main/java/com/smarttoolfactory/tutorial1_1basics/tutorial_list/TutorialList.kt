@@ -903,12 +903,27 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_5 = TutorialSectionModel(
+        title = "5-5 Combined Gesture Events",
+        description = "Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.",
+        action = {
+            Tutorial5_5Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+
+        ),
+        tagColor = GestureListColor
+    )
+
     return listOf(
         tutorial5_1,
         tutorial5_2,
         tutorial5_3,
         tutorial5_4_1,
         tutorial5_4_2,
-        tutorial5_4_3
+        tutorial5_4_3,
+        tutorial5_5,
     )
 }

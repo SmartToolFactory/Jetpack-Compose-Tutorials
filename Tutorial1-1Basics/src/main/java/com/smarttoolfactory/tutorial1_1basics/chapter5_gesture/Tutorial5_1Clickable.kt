@@ -499,7 +499,7 @@ private fun DiscreteInteractionSourceFLowExample() {
 
     Column(
         modifier = Modifier
-            .padding(bottom= 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth()
             .background(Color.LightGray)
             .padding(8.dp),
@@ -572,7 +572,7 @@ private fun DiscreteInteractionSourceFLowExample() {
 
     Column(
         modifier = Modifier
-            .padding(bottom= 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth()
             .background(Color.LightGray)
             .padding(8.dp),
