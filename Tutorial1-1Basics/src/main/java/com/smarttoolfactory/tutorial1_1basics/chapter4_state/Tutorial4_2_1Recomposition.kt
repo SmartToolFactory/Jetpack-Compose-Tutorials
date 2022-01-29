@@ -79,7 +79,7 @@ private fun TutorialContent() {
         )
         FlatCombined()
         StyleableTutorialText(
-            text = "**FlatSeparated:** Composables are sibling. **Only suitable Composable** gets recomposed.",
+            text = "**FlatSeparated:** Composables are sibling. **Only required Composable** gets recomposed.",
             bullets = false
         )
         FlatSeparated()
@@ -89,7 +89,7 @@ private fun TutorialContent() {
         )
         HierarchicalCombined()
         StyleableTutorialText(
-            text = "**HierarchicalSeparated:**  Composables are parent and children. **Only suitable Composable** gets recomposed.",
+            text = "**HierarchicalSeparated:**  Composables are parent and children. **Only required Composable** gets recomposed.",
             bullets = false
         )
         HierarchicalSeparated()
