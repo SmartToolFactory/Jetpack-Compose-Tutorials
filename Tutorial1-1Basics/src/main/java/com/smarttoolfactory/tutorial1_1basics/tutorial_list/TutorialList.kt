@@ -686,9 +686,10 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_2_3 = TutorialSectionModel(
         title = stringResource(R.string.title_4_2_3),
-        description = "This tutorial show how hierarchy of Composable effects Smart Composition. " +
-                "Same example as previous one but Text, Button, and Columns with random color are " +
-                "in their own functions",
+        description = "This tutorial shows how scopes(lambda functions) or hierarchy of Composables " +
+                "effects Smart Composition. " +
+                "Uses separate functions for Text, Button, and Columns with random colors are " +
+                "applied at (re)composition.",
 
         action = {
             Tutorial4_2_3Screen()
@@ -918,6 +919,21 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_6 = TutorialSectionModel(
+        title = "5-6 Ripple Gesture Events",
+        description = "",
+        action = {
+            Tutorial5_6Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_INDICATION,
+            TAG_INTERACTION_SOURCE
+            ),
+        tagColor = GestureListColor
+    )
+
     return listOf(
         tutorial5_1,
         tutorial5_2,
@@ -926,5 +942,6 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_4_2,
         tutorial5_4_3,
         tutorial5_5_1,
+        tutorial5_6
     )
 }

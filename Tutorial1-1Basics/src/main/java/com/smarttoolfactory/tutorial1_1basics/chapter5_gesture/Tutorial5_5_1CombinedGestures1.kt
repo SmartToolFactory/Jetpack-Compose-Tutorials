@@ -54,7 +54,7 @@ private fun TutorialContent() {
 @Composable
 private fun CombinedDragTapGestureSample() {
 
-    var gestureText by remember { mutableStateOf("Drag pointer") }
+    var gestureText by remember { mutableStateOf("Tap, press or long press gestures") }
     var gestureColor by remember { mutableStateOf(Color(0xffBDBDBD)) }
 
     val context = LocalContext.current

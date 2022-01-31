@@ -33,7 +33,8 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "Since we are using separate composables(**Scope**) for Button, Column that have " +
+            text = "Since we are using separate composables(lambda functions or **Scope**) " +
+                    "for Button, Column that have " +
                     "modifiers compositions are smart compositions, not all of the tree is " +
                     "recomposed, only **Text** are recomposed with updated values.",
             bullets = false
@@ -284,7 +285,7 @@ fun RandomColorText(text: String) {
 @Composable
 fun RandomColorColumn(content: @Composable () -> Unit) {
 
-    println("📌 RandomColumn COMPOSABLE: $content")
+    println("📌 RandomColumn() COMPOSABLE: $content")
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -292,6 +293,7 @@ fun RandomColorColumn(content: @Composable () -> Unit) {
             .background(getRandomColor())
             .padding(4.dp)
     ) {
+        println("📌📌 RandomColumn() SCOPE")
         content()
     }
 }
@@ -307,6 +309,7 @@ private fun RandomColorButton(onClick: () -> Unit, content: @Composable () -> Un
         onClick = onClick,
         shape = RoundedCornerShape(5.dp)
     ) {
+        println("💬💬 RandomColorButton() SCOPE")
         content()
     }
 }
