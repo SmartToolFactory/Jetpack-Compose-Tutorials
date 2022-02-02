@@ -12,10 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
-import com.smarttoolfactory.tutorial1_1basics.tutorial_list.createComponentTutorialList
-import com.smarttoolfactory.tutorial1_1basics.tutorial_list.createGestureTutorialList
-import com.smarttoolfactory.tutorial1_1basics.tutorial_list.createLayoutTutorialList
-import com.smarttoolfactory.tutorial1_1basics.tutorial_list.createStateTutorialList
+import com.smarttoolfactory.tutorial1_1basics.tutorial_list.*
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -36,12 +33,14 @@ fun TutorialNavGraph(
     val layoutTutorialList = createLayoutTutorialList()
     val stateTutorialList = createStateTutorialList()
     val gestureTutorialList = createGestureTutorialList()
+    val graphicsTutorialList = createGraphicsTutorialList()
 
     if (mainViewModel.tutorialList.isEmpty()) {
         mainViewModel.tutorialList.add(componentTutorialList)
         mainViewModel.tutorialList.add(layoutTutorialList)
         mainViewModel.tutorialList.add(stateTutorialList)
         mainViewModel.tutorialList.add(gestureTutorialList)
+        mainViewModel.tutorialList.add(graphicsTutorialList)
     }
 
 //    println("🍏 TutorialNavGraph(): mainViewModel: mainViewModel, list: ${mainViewModel.componentTutorialList.hashCode()}")

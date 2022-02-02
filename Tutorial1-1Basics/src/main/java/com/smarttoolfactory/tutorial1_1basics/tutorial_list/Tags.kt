@@ -172,4 +172,8 @@ const val TAG_VERTICAL_DRAG = "verticalDrag"
 const val TAG_AWAIT_HORIZONTAL_TOUCH_SLOP_OR_CANCELLATION = "awaitHorizontalTouchSlopOrCancellation"
 const val TAG_AWAIT_VERTICAL_TOUCH_SLOP_OR_CANCELLATION = "awaitVerticalTouchSlopOrCancellation"
 
-
+/*
+    GRAPHICS
+ */
+const val TAG_CANVAS = "Canvas"
+const val TAG_DRAW_SCOPE = "DrawScope"

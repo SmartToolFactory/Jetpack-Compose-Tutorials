@@ -22,6 +22,7 @@ val DefaultListColor = Color(0xff00BCD4)
 val LayoutListColor = Color(0xffFFEB3B)
 val StateListColor = Color(0xffE91E63)
 val GestureListColor = Color(0xff8BC34A)
+val GraphicsListColor = Color(0xffFF9800)
 
 val SentMessageColor = Color(0xffE7FFDB)
 val SentQuoteColor = Color(0xffDEF6D3)

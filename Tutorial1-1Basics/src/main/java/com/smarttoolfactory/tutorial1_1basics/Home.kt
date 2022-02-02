@@ -205,6 +205,7 @@ private fun HomeContent(
             1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
             2 -> TutorialListContent(modifier, tutorialList[2], navigateToTutorial)
             3 -> TutorialListContent(modifier, tutorialList[3], navigateToTutorial)
+            4 -> TutorialListContent(modifier, tutorialList[4], navigateToTutorial)
             else -> ComingSoonScreen()
         }
     }
