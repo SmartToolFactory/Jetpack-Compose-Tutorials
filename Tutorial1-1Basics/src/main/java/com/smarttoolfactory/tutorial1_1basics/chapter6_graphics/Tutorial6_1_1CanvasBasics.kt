@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import java.lang.Math.PI
+import kotlin.math.sin
 
 @Composable
 fun Tutorial6_1Screen1() {
@@ -50,6 +52,12 @@ private fun TutorialContent() {
             bullets = false
         )
         DrawRectangleExample()
+        StyleableTutorialText(
+            modifier = Modifier.padding(top = 10.dp),
+            text = "Draw Points",
+            bullets = false
+        )
+        DrawPointsExample()
     }
 }
 
@@ -109,7 +117,7 @@ private fun DrawLineExample() {
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "brush")
+    TutorialText2(text = "Brush")
     Canvas(modifier = canvasModifier) {
 
         drawLine(
@@ -340,7 +348,59 @@ private fun DrawCircleExample() {
             center = Offset(canvasWidth - space - radius, canvasHeight / 2)
         )
     }
+    Spacer(modifier = Modifier.height(10.dp))
+    Canvas(modifier = canvasModifier2) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val radius = canvasHeight / 2
+        val space = (canvasWidth - 6 * radius) / 4
 
+        drawCircle(
+            brush = Brush.sweepGradient(
+                colors = listOf(
+                    Color.Green,
+                    Color.Red,
+                    Color.Blue
+                ),
+                center = Offset(space + radius, canvasHeight / 2),
+            ),
+            radius = radius,
+            center = Offset(space + radius, canvasHeight / 2),
+        )
+
+        drawCircle(
+            brush = Brush.sweepGradient(
+                colors = listOf(
+                    Color.Green,
+                    Color.Cyan,
+                    Color.Red,
+                    Color.Blue,
+                    Color.Yellow,
+                    Color.Magenta,
+                ),
+                // Offset for this gradient is not at center, a little bit left of center
+                center = Offset(2 * space + 2.7f * radius, canvasHeight / 2),
+            ),
+            radius = radius,
+            center = Offset(2 * space + 3 * radius, canvasHeight / 2),
+        )
+
+        drawCircle(
+            brush = Brush.sweepGradient(
+                colors = listOf(
+                    Color.Green,
+                    Color.Cyan,
+                    Color.Red,
+                    Color.Blue,
+                    Color.Yellow,
+                    Color.Magenta
+                ),
+                center = Offset(canvasWidth - space - radius, canvasHeight / 2),
+            ),
+            radius = radius,
+            center = Offset(canvasWidth - space - radius, canvasHeight / 2)
+        )
+    }
 
     Spacer(modifier = Modifier.height(10.dp))
     TutorialText2(text = "BlendMode")
@@ -495,7 +555,7 @@ private fun DrawRectangleExample() {
 
         drawRect(
             brush = Brush.radialGradient(
-                colors =   listOf(
+                colors = listOf(
                     Color.Green,
                     Color.Red,
                     Color.Blue,
@@ -512,7 +572,7 @@ private fun DrawRectangleExample() {
 
         drawRect(
             brush = Brush.radialGradient(
-                colors =   listOf(
+                colors = listOf(
                     Color.Green,
                     Color.Red,
                     Color.Blue,
@@ -529,7 +589,7 @@ private fun DrawRectangleExample() {
 
         drawRect(
             brush = Brush.radialGradient(
-             colors =   listOf(
+                colors = listOf(
                     Color.Green,
                     Color.Red,
                     Color.Blue,
@@ -538,7 +598,7 @@ private fun DrawRectangleExample() {
                 ),
                 center = Offset(3 * space + 2.5f * rectWidth, rectHeight),
                 tileMode = TileMode.Decal,
-                radius = rectHeight/2
+                radius = rectHeight / 2
             ),
             topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
             size = Size(rectWidth, rectHeight)
@@ -549,12 +609,87 @@ private fun DrawRectangleExample() {
 @Composable
 private fun DrawPointsExample() {
     Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "PointMode")
+    Canvas(modifier = canvasModifier2) {
+
+        val points1 = getSinusPoints(size)
+
+        drawPoints(
+            color = Color.Blue,
+            points = points1,
+            cap = StrokeCap.Round,
+            pointMode = PointMode.Points,
+            strokeWidth = 10f
+        )
+
+        val points2 = getSinusPoints(size, 100f)
+        drawPoints(
+            color = Color.Green,
+            points = points2,
+            cap = StrokeCap.Round,
+            pointMode = PointMode.Lines,
+            strokeWidth = 10f
+        )
+
+        val points3 = getSinusPoints(size, 200f)
+        drawPoints(
+            color = Color.Red,
+            points = points3,
+            cap = StrokeCap.Round,
+            pointMode = PointMode.Polygon,
+            strokeWidth = 10f
+        )
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
     TutorialText2(text = "Brush")
     Canvas(modifier = canvasModifier2) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
 
+        val points1 = getSinusPoints(size)
+
+        drawPoints(
+            brush = Brush.linearGradient(
+                colors = listOf(Color.Blue, Color.Green)
+            ),
+            points = points1,
+            cap = StrokeCap.Round,
+            pointMode = PointMode.Points,
+            strokeWidth = 10f
+        )
+
+        val points2 = getSinusPoints(size, 100f)
+        drawPoints(
+            brush = Brush.linearGradient(
+                colors = listOf(Color.Green, Color.Magenta)
+            ),
+            points = points2,
+            cap = StrokeCap.Round,
+            pointMode = PointMode.Lines,
+            strokeWidth = 10f
+        )
+
+        val points3 = getSinusPoints(size, 200f)
+        drawPoints(
+            brush = Brush.linearGradient(
+                colors = listOf(Color.Red, Color.Yellow)
+            ),
+            points = points3,
+            cap = StrokeCap.Round,
+            pointMode = PointMode.Polygon,
+            strokeWidth = 10f
+        )
     }
+}
+
+private fun getSinusPoints(size: Size, verticalOffset: Float = 0f): MutableList<Offset> {
+    val points = mutableListOf<Offset>()
+    val verticalCenter = size.height / 2
+
+    for (x in 0 until size.width.toInt() step 20) {
+        val y = (sin(x * (2f * PI / size.width)) * verticalCenter + verticalCenter).toFloat()
+        points.add(Offset(x.toFloat() + verticalOffset, y))
+    }
+    return points
 }
 
 private val canvasModifier = Modifier

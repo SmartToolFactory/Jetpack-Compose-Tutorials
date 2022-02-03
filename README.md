@@ -3,7 +3,7 @@
 ## 🤓 Overview
 
 Series of Tutorials to learn about Jetpack Compose, Material Widgets, State, Animation, and
-Navigation. Easy to search in code and in app. Each chapter module contains it's own content in code. SearchBar
+Navigation. Easy to search in code and in app. Each chapter module contains its own content in code. SearchBar
 can be used to search with a tag or description available for each tutorial.
 
 Recommended section is under constructions for now, when finished it will get recommended tags
@@ -62,7 +62,7 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>3-2-1 Custom Layout</h3><br/>Create custom layout using using MeasurePolicy and use intrinsic dimensions.<br><br>• Custom Layout<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_2_1.png" width=320> |
 |  |  |
-|<h3>3-3-1 Scope&ParenDataModifier</h3><br/>Add custom modifiers to Composable inside a custom layout using it's scope.<br><br>• Custom Layout<br>• Scope<br>• ParentDataModifier<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_3_1.png" width=320> |
+|<h3>3-3-1 Scope&ParenDataModifier</h3><br/>Add custom modifiers to Composable inside a custom layout using its scope like align modifier only available in specific Composable like a custom Column.<br><br>• Custom Layout<br>• Scope<br>• ParentDataModifier<br>• Measurable<br>• Constraint<br>• Placeable<br>|<img src ="/./screenshots/tutorial3_3_1.png" width=320> |
 |  |  |
 |<h3>3-4 BoxWithConstraints</h3><br/>BoxWithConstraints is a composable that defines its own content according to the available space, based on the incoming constraints or the current LayoutDirection.<br><br>• BoxWithConstraints<br>• Constraint<br>|<img src ="/./screenshots/tutorial3_4.png" width=320> |
 |  |  |
