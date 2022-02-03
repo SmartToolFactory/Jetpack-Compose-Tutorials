@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
@@ -19,6 +20,8 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 fun Tutorial6_1Screen1() {
     TutorialContent()
 }
+
+val Red500 = Color(0xffF44336)
 
 @Composable
 private fun TutorialContent() {
@@ -34,18 +37,24 @@ private fun TutorialContent() {
             text = "Draw Line",
             bullets = false
         )
-        DrawLineSample()
+        DrawLineExample()
         StyleableTutorialText(
             modifier = Modifier.padding(top = 10.dp),
             text = "Draw Oval&Circle",
             bullets = false
         )
-        DrawCircleSamples()
+        DrawCircleExample()
+        StyleableTutorialText(
+            modifier = Modifier.padding(top = 10.dp),
+            text = "Draw Rectangle",
+            bullets = false
+        )
+        DrawRectangleExample()
     }
 }
 
 @Composable
-private fun DrawLineSample() {
+private fun DrawLineExample() {
 
     TutorialText2(text = "strokeWidth")
     Canvas(modifier = canvasModifier) {
@@ -71,7 +80,7 @@ private fun DrawLineSample() {
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "cap")
+    TutorialText2(text = "StrokeCap")
     Canvas(modifier = canvasModifier) {
 
         drawLine(
@@ -132,7 +141,7 @@ private fun DrawLineSample() {
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "pathEffect")
+    TutorialText2(text = "PathEffect")
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,7 +212,7 @@ private fun DrawLineSample() {
 }
 
 @Composable
-private fun DrawCircleSamples() {
+private fun DrawCircleExample() {
 
     TutorialText2(text = "Oval and Circle")
 
@@ -231,7 +240,7 @@ private fun DrawCircleSamples() {
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "pathEffect")
+    TutorialText2(text = "DrawStyle")
 
     Canvas(modifier = canvasModifier2) {
         val canvasWidth = size.width
@@ -291,7 +300,7 @@ private fun DrawCircleSamples() {
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "brush")
+    TutorialText2(text = "Brush")
     Canvas(modifier = canvasModifier2) {
         val canvasWidth = size.width
         val canvasHeight = size.height
@@ -334,7 +343,7 @@ private fun DrawCircleSamples() {
 
 
     Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "blendMode")
+    TutorialText2(text = "BlendMode")
     Canvas(modifier = canvasModifier2) {
 
         val canvasWidth = size.width
@@ -348,7 +357,7 @@ private fun DrawCircleSamples() {
             drawCircle(
                 color = Color.Red,
                 radius = radius,
-                center = Offset(space  + radius + 50f, canvasHeight / 2),
+                center = Offset(space + radius + 50f, canvasHeight / 2),
             )
 
 
@@ -361,6 +370,190 @@ private fun DrawCircleSamples() {
 
             restoreToCount(checkPoint)
         }
+    }
+}
+
+@Composable
+private fun DrawRectangleExample() {
+    Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "Rectangle")
+    Canvas(modifier = canvasModifier2) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val space = 60f
+        val rectHeight = canvasHeight / 2
+        val rectWidth = (canvasWidth - 4 * space) / 3
+
+        drawRect(
+            color = Color.Blue,
+            topLeft = Offset(space, rectHeight / 2),
+            size = Size(rectWidth, rectHeight)
+        )
+
+        drawRect(
+            color = Color.Green,
+            topLeft = Offset(2 * space + rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            style = Stroke(width = 12.dp.toPx())
+        )
+
+        drawRect(
+            color = Color.Red,
+            topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            style = Stroke(width = 2.dp.toPx())
+        )
+    }
+
+
+    TutorialText2(text = "RoundedRect")
+    Canvas(modifier = canvasModifier2) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val space = 60f
+        val rectHeight = canvasHeight / 2
+        val rectWidth = (canvasWidth - 4 * space) / 3
+
+        drawRoundRect(
+            color = Color.Blue,
+            topLeft = Offset(space, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            cornerRadius = CornerRadius(8.dp.toPx(), 8.dp.toPx())
+        )
+
+        drawRoundRect(
+            color = Color.Green,
+            topLeft = Offset(2 * space + rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            cornerRadius = CornerRadius(70f, 70f)
+
+        )
+
+        drawRoundRect(
+            color = Red500,
+            topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            cornerRadius = CornerRadius(50f, 25f)
+
+        )
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "DrawStyle")
+    Canvas(modifier = canvasModifier2) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val space = 30f
+        val rectHeight = canvasHeight / 2
+        val rectWidth = (canvasWidth - 4 * space) / 3
+
+        drawRect(
+            color = Color.Blue,
+            topLeft = Offset(space, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            style = Stroke(
+                width = 2.dp.toPx(),
+                join = StrokeJoin.Miter,
+                cap = StrokeCap.Butt,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f))
+            )
+        )
+
+        drawRect(
+            color = Color.Green,
+            topLeft = Offset(2 * space + rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            style = Stroke(
+                width = 2.dp.toPx(),
+                join = StrokeJoin.Bevel,
+                cap = StrokeCap.Square,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f))
+            )
+        )
+
+        drawRect(
+            color = Color.Red,
+            topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight),
+            style = Stroke(
+                width = 2.dp.toPx(),
+                join = StrokeJoin.Round,
+                cap = StrokeCap.Round,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f))
+            )
+        )
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "Brush")
+    Canvas(modifier = canvasModifier2) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val space = 30f
+        val rectHeight = canvasHeight / 2
+        val rectWidth = (canvasWidth - 4 * space) / 3
+
+        drawRect(
+            brush = Brush.radialGradient(
+                colors =   listOf(
+                    Color.Green,
+                    Color.Red,
+                    Color.Blue,
+                    Color.Yellow,
+                    Color.Magenta
+                ),
+                center = Offset(space + .5f * rectWidth, rectHeight),
+                tileMode = TileMode.Mirror,
+                radius = 20f
+            ),
+            topLeft = Offset(space, rectHeight / 2),
+            size = Size(rectWidth, rectHeight)
+        )
+
+        drawRect(
+            brush = Brush.radialGradient(
+                colors =   listOf(
+                    Color.Green,
+                    Color.Red,
+                    Color.Blue,
+                    Color.Yellow,
+                    Color.Magenta
+                ),
+                center = Offset(2 * space + 1.5f * rectWidth, rectHeight),
+                tileMode = TileMode.Repeated,
+                radius = 20f
+            ),
+            topLeft = Offset(2 * space + rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight)
+        )
+
+        drawRect(
+            brush = Brush.radialGradient(
+             colors =   listOf(
+                    Color.Green,
+                    Color.Red,
+                    Color.Blue,
+                    Color.Yellow,
+                    Color.Magenta
+                ),
+                center = Offset(3 * space + 2.5f * rectWidth, rectHeight),
+                tileMode = TileMode.Decal,
+                radius = rectHeight/2
+            ),
+            topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
+            size = Size(rectWidth, rectHeight)
+        )
+    }
+}
+
+@Composable
+private fun DrawPointsExample() {
+    Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "Brush")
+    Canvas(modifier = canvasModifier2) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
     }
 }
 
