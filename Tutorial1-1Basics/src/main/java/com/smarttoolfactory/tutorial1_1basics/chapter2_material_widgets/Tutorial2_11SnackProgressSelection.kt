@@ -21,8 +21,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -510,7 +510,7 @@ private fun CheckBoxWithText(label: String, state: Boolean, onStateChange: (Bool
 }
 
 @Composable
-private fun CheckBoxWithTextRippled(
+ fun CheckBoxWithTextRippled(
     label: String,
     state: Boolean,
     onStateChange: (Boolean) -> Unit

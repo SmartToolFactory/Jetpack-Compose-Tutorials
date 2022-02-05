@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -18,12 +19,11 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import java.lang.Math.PI
 import kotlin.math.sin
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Tutorial6_1Screen1() {
     TutorialContent()
 }
-
-val Red500 = Color(0xffF44336)
 
 @Composable
 private fun TutorialContent() {
@@ -490,7 +490,7 @@ private fun DrawRectangleExample() {
         )
 
         drawRoundRect(
-            color = Red500,
+            color = Color.Red,
             topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
             size = Size(rectWidth, rectHeight),
             cornerRadius = CornerRadius(50f, 25f)
@@ -649,7 +649,7 @@ private fun DrawPointsExample() {
 
         drawPoints(
             brush = Brush.linearGradient(
-                colors = listOf(Color.Blue, Color.Green)
+                colors = listOf(Color.Red, Color.Green)
             ),
             points = points1,
             cap = StrokeCap.Round,

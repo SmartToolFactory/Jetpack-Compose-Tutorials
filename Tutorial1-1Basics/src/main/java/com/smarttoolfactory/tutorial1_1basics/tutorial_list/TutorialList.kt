@@ -15,6 +15,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.*
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.GraphicsListColor
@@ -951,9 +952,10 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 @Composable
 fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
-    val tutorial6_1 = TutorialSectionModel(
-        title = "Canvas Basics",
-        description = "Use canvas draw basic shapes like rectangle, circle.",
+    val tutorial6_1_1 = TutorialSectionModel(
+        title = "6-1-1 Canvas Basics",
+        description = "Use canvas draw basic shapes like line, circle, rectangle," +
+                "and points with different attributes such as style, stroke cap, brush.",
         action = {
             Tutorial6_1Screen1()
         },
@@ -965,7 +967,23 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_1_2 = TutorialSectionModel(
+        title = "6-1-2 Canvas Basics2",
+        description = "Use canvas to draw arc, image, path, and try different " +
+                "blend modes and color filters.",
+        action = {
+            Tutorial6_1Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
-        tutorial6_1
+        tutorial6_1_1,
+        tutorial6_1_2
     )
 }
