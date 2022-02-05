@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,7 +23,9 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
 
 
 @Composable
@@ -45,8 +49,13 @@ private fun TutorialContent() {
             modifier = Modifier.padding(8.dp)
         )
         DrawArcExamples()
-
-
+        Text(
+            "Draw Path",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        DrawPathExamples()
     }
 
 }
@@ -71,6 +80,21 @@ private fun DrawArc() {
     var sweepAngle by remember { mutableStateOf(60f) }
     var useCenter by remember { mutableStateOf(true) }
 
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        drawArc(
+            color = Red400,
+            startAngle,
+            sweepAngle,
+            useCenter,
+            topLeft = Offset((canvasWidth - canvasHeight) / 2, 0f),
+            size = Size(canvasHeight, canvasHeight)
+        )
+    }
+
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Text(text = "StartAngle ${startAngle.roundToInt()}")
         Slider(
@@ -91,19 +115,6 @@ private fun DrawArc() {
         }
     }
 
-    Canvas(modifier = canvasModifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-
-        drawArc(
-            color = Red400,
-            startAngle,
-            sweepAngle,
-            useCenter,
-            topLeft = Offset((canvasWidth - canvasHeight) / 2, 0f),
-            size = Size(canvasHeight, canvasHeight)
-        )
-    }
 }
 
 @Composable
@@ -111,6 +122,20 @@ private fun DrawNegativeArc() {
     var startAngle2 by remember { mutableStateOf(0f) }
     var sweepAngle2 by remember { mutableStateOf(60f) }
     var useCenter2 by remember { mutableStateOf(true) }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        drawArc(
+            color = Red400,
+            startAngle2,
+            sweepAngle2,
+            useCenter2,
+            topLeft = Offset((canvasWidth - canvasHeight) / 2, 0f),
+            size = Size(canvasHeight, canvasHeight)
+        )
+    }
 
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Text(text = "StartAngle ${startAngle2.roundToInt()}")
@@ -132,20 +157,6 @@ private fun DrawNegativeArc() {
         }
     }
 
-
-    Canvas(modifier = canvasModifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-
-        drawArc(
-            color = Red400,
-            startAngle2,
-            sweepAngle2,
-            useCenter2,
-            topLeft = Offset((canvasWidth - canvasHeight) / 2, 0f),
-            size = Size(canvasHeight, canvasHeight)
-        )
-    }
 }
 
 @Composable
@@ -161,6 +172,54 @@ private fun DrawMultipleArcs() {
     var startAngleGreen by remember { mutableStateOf(240f) }
     var sweepAngleGreen by remember { mutableStateOf(120f) }
     var useCenterGreen by remember { mutableStateOf(false) }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val arcHeight = canvasHeight - 20.dp.toPx()
+        val arcStrokeWidth = 10.dp.toPx()
+
+        drawArc(
+            color = Blue400,
+            startAngleBlue,
+            sweepAngleBlue,
+            useCenterBlue,
+            topLeft = Offset(
+                (canvasWidth - canvasHeight) / 2,
+                (canvasHeight - arcHeight) / 2
+            ),
+            size = Size(arcHeight, arcHeight),
+            style = Stroke(
+                arcStrokeWidth
+            )
+        )
+
+        drawArc(
+            color = Red400,
+            startAngleRed,
+            sweepAngleRed,
+            useCenterRed,
+            topLeft = Offset(
+                (canvasWidth - canvasHeight) / 2,
+                (canvasHeight - arcHeight) / 2
+            ),
+            size = Size(arcHeight, arcHeight),
+            style = Stroke(arcStrokeWidth)
+        )
+
+        drawArc(
+            color = Green400,
+            startAngleGreen,
+            sweepAngleGreen,
+            useCenterGreen,
+            topLeft = Offset(
+                (canvasWidth - canvasHeight) / 2,
+                (canvasHeight - arcHeight) / 2
+            ),
+            size = Size(arcHeight, arcHeight),
+            style = Stroke(arcStrokeWidth)
+        )
+    }
 
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Text(text = "StartAngle ${startAngleBlue.roundToInt()}", color = Blue400)
@@ -224,53 +283,66 @@ private fun DrawMultipleArcs() {
 //        }
     }
 
+}
+
+@Composable
+private fun DrawPathExamples() {
+    var sides by remember { mutableStateOf(3f) }
+    var cornerRadius by remember { mutableStateOf(1f) }
+
     Canvas(modifier = canvasModifier) {
         val canvasWidth = size.width
         val canvasHeight = size.height
-        val arcHeight = canvasHeight - 20.dp.toPx()
-        val arcStrokeWidth = 10.dp.toPx()
+        val cx = canvasWidth / 2
+        val cy = canvasHeight / 2
+        val radius = (canvasHeight - 20.dp.toPx()) / 2
+        val path = createPath(cx, cy, sides.roundToInt(), radius)
 
-        drawArc(
-            color = Blue400,
-            startAngleBlue,
-            sweepAngleBlue,
-            useCenterBlue,
-            topLeft = Offset(
-                (canvasWidth - canvasHeight) / 2,
-                (canvasHeight - arcHeight) / 2
-            ),
-            size = Size(arcHeight, arcHeight),
+        drawPath(
+            color = Color.Red,
+            path = path,
             style = Stroke(
-                arcStrokeWidth
+                width = 5.dp.toPx(),
+                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
             )
         )
+    }
 
-        drawArc(
-            color = Red400,
-            startAngleRed,
-            sweepAngleRed,
-            useCenterRed,
-            topLeft = Offset(
-                (canvasWidth - canvasHeight) / 2,
-                (canvasHeight - arcHeight) / 2
-            ),
-            size = Size(arcHeight, arcHeight),
-            style = Stroke(arcStrokeWidth)
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Text(text = "Sides ${sides.roundToInt()}")
+        Slider(
+            value = sides,
+            onValueChange = { sides = it },
+            valueRange = 3f..12f,
+            steps = 10
         )
 
-        drawArc(
-            color = Green400,
-            startAngleGreen,
-            sweepAngleGreen,
-            useCenterGreen,
-            topLeft = Offset(
-                (canvasWidth - canvasHeight) / 2,
-                (canvasHeight - arcHeight) / 2
-            ),
-            size = Size(arcHeight, arcHeight),
-            style = Stroke(arcStrokeWidth)
+        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
+
+        Slider(
+            value = cornerRadius,
+            onValueChange = { cornerRadius = it },
+            valueRange = 0f..49f,
+            steps = 50
         )
     }
+}
+
+fun createPath(cx: Float, cy: Float, sides: Int, radius: Float): Path {
+    val path = Path()
+    val angle = 2.0 * Math.PI / sides
+    path.moveTo(
+        cx + (radius * cos(0.0)).toFloat(),
+        cy + (radius * sin(0.0)).toFloat()
+    )
+    for (i in 1 until sides) {
+        path.lineTo(
+            cx + (radius * cos(angle * i)).toFloat(),
+            cy + (radius * sin(angle * i)).toFloat()
+        )
+    }
+    path.close()
+    return path
 }
 
 private val canvasModifier = Modifier

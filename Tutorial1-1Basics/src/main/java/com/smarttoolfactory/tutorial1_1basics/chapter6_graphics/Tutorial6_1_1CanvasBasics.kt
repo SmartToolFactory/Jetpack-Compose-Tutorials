@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -13,8 +14,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import java.lang.Math.PI
 import kotlin.math.sin
@@ -34,28 +36,33 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
 
-        StyleableTutorialText(
-            modifier = Modifier.padding(top = 10.dp),
+        Text(
             text = "Draw Line",
-            bullets = false
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
         )
         DrawLineExample()
-        StyleableTutorialText(
-            modifier = Modifier.padding(top = 10.dp),
+
+        Text(
             text = "Draw Oval&Circle",
-            bullets = false
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
         )
         DrawCircleExample()
-        StyleableTutorialText(
-            modifier = Modifier.padding(top = 10.dp),
+        Text(
             text = "Draw Rectangle",
-            bullets = false
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
         )
         DrawRectangleExample()
-        StyleableTutorialText(
-            modifier = Modifier.padding(top = 10.dp),
+        Text(
             text = "Draw Points",
-            bullets = false
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
         )
         DrawPointsExample()
     }
