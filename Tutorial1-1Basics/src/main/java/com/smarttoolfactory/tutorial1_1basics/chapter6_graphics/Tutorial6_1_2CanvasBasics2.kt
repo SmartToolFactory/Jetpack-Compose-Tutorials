@@ -14,6 +14,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -287,6 +288,16 @@ private fun DrawMultipleArcs() {
 
 @Composable
 private fun DrawPathExamples() {
+
+    Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "Path and CornerRadius")
+    DrawPath()
+    TutorialText2(text = "Path Progress")
+    DrawPathProgress()
+}
+
+@Composable
+private fun DrawPath() {
     var sides by remember { mutableStateOf(3f) }
     var cornerRadius by remember { mutableStateOf(1f) }
 
@@ -302,7 +313,7 @@ private fun DrawPathExamples() {
             color = Color.Red,
             path = path,
             style = Stroke(
-                width = 5.dp.toPx(),
+                width = 4.dp.toPx(),
                 pathEffect = PathEffect.cornerPathEffect(cornerRadius)
             )
         )
@@ -322,8 +333,80 @@ private fun DrawPathExamples() {
         Slider(
             value = cornerRadius,
             onValueChange = { cornerRadius = it },
-            valueRange = 0f..49f,
-            steps = 50
+            valueRange = 0f..50f,
+        )
+    }
+}
+
+
+@Composable
+private fun DrawPathProgress() {
+    var sides by remember { mutableStateOf(3f) }
+    var cornerRadius by remember { mutableStateOf(1f) }
+    val pathMeasure by remember { mutableStateOf(PathMeasure()) }
+    var progress by remember { mutableStateOf(50f) }
+
+    val newPath by remember {
+        mutableStateOf(Path())
+    }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val cx = canvasWidth / 2
+        val cy = canvasHeight / 2
+        val radius = (canvasHeight - 20.dp.toPx()) / 2
+
+        val path = createPath(cx, cy, sides.roundToInt(), radius)
+        newPath.reset()
+
+        if (progress>=100f) {
+            newPath.addPath(path)
+        }else {
+            pathMeasure.setPath(path, forceClosed = false)
+            pathMeasure.getSegment(
+                startDistance = 0f,
+                stopDistance = pathMeasure.length * progress/100f,
+                newPath,
+                startWithMoveTo = true
+            )
+        }
+
+        drawPath(
+            color = Color.Red,
+            path = newPath,
+            style = Stroke(
+                width = 4.dp.toPx(),
+                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
+            )
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Text(text = "Sides ${sides.roundToInt()}")
+        Slider(
+            value = sides,
+            onValueChange = { sides = it },
+            valueRange = 3f..12f,
+            steps = 10
+        )
+
+
+
+        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
+
+        Slider(
+            value = cornerRadius,
+            onValueChange = { cornerRadius = it },
+            valueRange = 0f..50f,
+        )
+
+        Text(text = "Progress ${progress.roundToInt()}")
+
+        Slider(
+            value = progress,
+            onValueChange = { progress = it },
+            valueRange = 0f..100f,
         )
     }
 }
@@ -349,4 +432,3 @@ private val canvasModifier = Modifier
     .background(Color.LightGray)
     .fillMaxSize()
     .height(200.dp)
-
