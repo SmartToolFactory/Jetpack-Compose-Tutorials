@@ -970,30 +970,34 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_1_2 = TutorialSectionModel(
         title = "6-1-2 Canvas Basics2",
-        description = "Use canvas to draw arc, image, path, and try different " +
-                "blend modes and color filters.",
+        description = "Use canvas to draw arc, image, path with path effect, stroke cap, " +
+                "stroke join, miter and other attributes",
         action = {
             Tutorial6_1Screen2()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_CANVAS,
-            TAG_DRAW_SCOPE
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_PATH_EFFECT
         ),
         tagColor = GraphicsListColor
     )
 
     val tutorial6_2 = TutorialSectionModel(
         title = "6-2 BlendMode",
-        description = "Use canvas to draw arc, image, path, and try different " +
-                "blend modes and color filters.",
+        description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
+                "or clip based on blend mode.",
         action = {
             Tutorial6_2Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_CANVAS,
-            TAG_DRAW_SCOPE
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_BLEND_MODE
         ),
         tagColor = GraphicsListColor
     )
