@@ -214,41 +214,6 @@ private fun BlendModeSelection(
     }
 }
 
-@Composable
-private fun BlendModeCheckBoxRow(
-    text: String,
-    selectedOption: String,
-    onBlendModeSelected: (BlendMode) -> Unit
-) {
-
-    var selectedText by remember { mutableStateOf(text) }
-
-    Row(
-        Modifier
-            .wrapContentWidth()
-            .selectable(
-                selected = (text == selectedOption),
-                onClick = {
-                    selectedText = text
-                    onBlendModeSelected(blendModes[selectedText]!!)
-                },
-                role = Role.RadioButton
-            )
-            .padding(horizontal = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = (selectedText == selectedOption),
-            onClick = null
-        )
-        Text(
-            text = text,
-            style = MaterialTheme.typography.body1.merge(),
-            modifier = Modifier.padding(start = 16.dp)
-        )
-    }
-}
-
 val blendModes = hashMapOf(
     "Clear" to BlendMode.Clear,
     "Src" to BlendMode.Src,
@@ -271,7 +236,7 @@ val blendModes = hashMapOf(
     "ColorDodge" to BlendMode.ColorDodge,
     "ColorBurn" to BlendMode.ColorBurn,
     "HardLight" to BlendMode.Hardlight,
-    "Softlight" to BlendMode.Softlight,
+    "SoftLight" to BlendMode.Softlight,
     "Difference" to BlendMode.Difference,
     "Exclusion" to BlendMode.Exclusion,
     "Multiply" to BlendMode.Multiply,

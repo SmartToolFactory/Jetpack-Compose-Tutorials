@@ -11,14 +11,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
@@ -57,6 +58,13 @@ private fun TutorialContent() {
             modifier = Modifier.padding(8.dp)
         )
         DrawPathExample()
+        Text(
+            "Draw Image",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        DrawImageExample()
     }
 
 }
@@ -360,13 +368,13 @@ private fun DrawPathProgress() {
         val path = createPath(cx, cy, sides.roundToInt(), radius)
         newPath.reset()
 
-        if (progress>=100f) {
+        if (progress >= 100f) {
             newPath.addPath(path)
-        }else {
+        } else {
             pathMeasure.setPath(path, forceClosed = false)
             pathMeasure.getSegment(
                 startDistance = 0f,
-                stopDistance = pathMeasure.length * progress/100f,
+                stopDistance = pathMeasure.length * progress / 100f,
                 newPath,
                 startWithMoveTo = true
             )
@@ -423,6 +431,95 @@ fun createPath(cx: Float, cy: Float, sides: Int, radius: Float): Path {
     }
     path.close()
     return path
+}
+
+@Composable
+private fun DrawImageExample() {
+
+    val bitmap = ImageBitmap.imageResource(id = R.drawable.landscape1)
+    Canvas(modifier = canvasModifier) {
+        drawImage(bitmap)
+    }
+
+    var srcOffsetX by remember { mutableStateOf(0) }
+    var srcOffsetY by remember { mutableStateOf(0) }
+    var srcWidth by remember { mutableStateOf(1080) }
+    var srcHeight by remember { mutableStateOf(1080) }
+
+    var dstOffsetX by remember { mutableStateOf(0) }
+    var dstOffsetY by remember { mutableStateOf(0) }
+    var dstWidth by remember { mutableStateOf(1080) }
+    var dstHeight by remember { mutableStateOf(1080) }
+
+    Spacer(modifier = Modifier.height(10.dp))
+    TutorialText2(text = "Src, Dst Offset and Size")
+    Canvas(modifier = canvasModifier) {
+        drawImage(
+            image = bitmap,
+            srcOffset = IntOffset(srcOffsetX, srcOffsetY),
+            srcSize = IntSize(srcWidth, srcHeight),
+            dstOffset = IntOffset(dstOffsetX, dstOffsetY),
+            dstSize = IntSize(dstWidth, dstHeight),
+            filterQuality = FilterQuality.High
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Text(text = "srcOffsetX $srcOffsetX")
+        Slider(
+            value = srcOffsetX.toFloat(),
+            onValueChange = { srcOffsetX = it.toInt() },
+            valueRange = -540f..540f,
+        )
+
+        Text(text = "srcOffsetY $srcOffsetY")
+        Slider(
+            value = srcOffsetY.toFloat(),
+            onValueChange = { srcOffsetY = it.toInt() },
+            valueRange = -540f..540f,
+        )
+        Text(text = "srcWidth $srcWidth")
+        Slider(
+            value = srcWidth.toFloat(),
+            onValueChange = { srcWidth = it.toInt() },
+            valueRange = 0f..1080f,
+        )
+
+        Text(text = "srcHeight $srcHeight")
+        Slider(
+            value = srcHeight.toFloat(),
+            onValueChange = { srcHeight = it.toInt() },
+            valueRange = 0f..1080f,
+        )
+
+
+        Text(text = "dstOffsetX $dstOffsetX")
+        Slider(
+            value = dstOffsetX.toFloat(),
+            onValueChange = { dstOffsetX = it.toInt() },
+            valueRange = -540f..540f,
+        )
+
+        Text(text = "dstOffsetY $dstOffsetY")
+        Slider(
+            value = dstOffsetY.toFloat(),
+            onValueChange = { dstOffsetY = it.toInt() },
+            valueRange = -540f..540f,
+        )
+        Text(text = "dstWidth $dstWidth")
+        Slider(
+            value = dstWidth.toFloat(),
+            onValueChange = { dstWidth = it.toInt() },
+            valueRange = 0f..1080f,
+        )
+
+        Text(text = "dstHeight $dstHeight")
+        Slider(
+            value = dstHeight.toFloat(),
+            onValueChange = { dstHeight = it.toInt() },
+            valueRange = 0f..1080f,
+        )
+    }
 }
 
 private val canvasModifier = Modifier
