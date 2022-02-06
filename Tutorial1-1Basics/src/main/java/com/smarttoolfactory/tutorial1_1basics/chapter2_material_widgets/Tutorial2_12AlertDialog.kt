@@ -24,8 +24,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.smarttoolfactory.tutorial1_1basics.R
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
@@ -359,7 +359,7 @@ private fun CustomDialogExample(
 }
 
 @Composable
-private fun CustomDialogWithResultExample(
+fun CustomDialogWithResultExample(
     onDismiss: () -> Unit,
     onNegativeClick: () -> Unit,
     onPositiveClick: (Color) -> Unit

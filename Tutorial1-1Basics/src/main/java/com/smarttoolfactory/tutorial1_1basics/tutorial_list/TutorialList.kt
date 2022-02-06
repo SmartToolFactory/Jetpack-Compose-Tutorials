@@ -16,6 +16,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.*
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.GraphicsListColor
@@ -933,7 +934,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_AWAIT_POINTER_EVENT_SCOPE,
             TAG_INDICATION,
             TAG_INTERACTION_SOURCE
-            ),
+        ),
         tagColor = GestureListColor
     )
 
@@ -982,8 +983,24 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_2 = TutorialSectionModel(
+        title = "6-2 BlendMode",
+        description = "Use canvas to draw arc, image, path, and try different " +
+                "blend modes and color filters.",
+        action = {
+            Tutorial6_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
-        tutorial6_1_2
+        tutorial6_1_2,
+        tutorial6_2
     )
 }

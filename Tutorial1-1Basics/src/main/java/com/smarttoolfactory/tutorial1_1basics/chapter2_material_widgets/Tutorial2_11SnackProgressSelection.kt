@@ -205,7 +205,7 @@ private fun CheckboxExample() {
 
     var checkBoxState3 by remember { mutableStateOf(false) }
 
-    CheckBoxWithTextRippled("Checkbox with Text and ripple", checkBoxState3) {
+    CheckBoxWithTextRippleFullRow("Checkbox with Text and ripple", checkBoxState3) {
         checkBoxState3 = it
     }
 
@@ -510,7 +510,7 @@ private fun CheckBoxWithText(label: String, state: Boolean, onStateChange: (Bool
 }
 
 @Composable
- fun CheckBoxWithTextRippled(
+ fun CheckBoxWithTextRippleFullRow(
     label: String,
     state: Boolean,
     onStateChange: (Boolean) -> Unit

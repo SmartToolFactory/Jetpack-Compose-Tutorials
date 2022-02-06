@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippled
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
@@ -49,20 +49,20 @@ private fun TutorialContent() {
             fontSize = 20.sp,
             modifier = Modifier.padding(8.dp)
         )
-        DrawArcExamples()
+        DrawArcExample()
         Text(
             "Draw Path",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier.padding(8.dp)
         )
-        DrawPathExamples()
+        DrawPathExample()
     }
 
 }
 
 @Composable
-private fun DrawArcExamples() {
+private fun DrawArcExample() {
 
     DrawArc()
     Spacer(modifier = Modifier.height(10.dp))
@@ -111,7 +111,7 @@ private fun DrawArc() {
             valueRange = 0f..360f,
         )
 
-        CheckBoxWithTextRippled(label = "useCenter", useCenter) {
+        CheckBoxWithTextRippleFullRow(label = "useCenter", useCenter) {
             useCenter = it
         }
     }
@@ -153,7 +153,7 @@ private fun DrawNegativeArc() {
             valueRange = -180f..180f,
         )
 
-        CheckBoxWithTextRippled(label = "useCenter", useCenter2) {
+        CheckBoxWithTextRippleFullRow(label = "useCenter", useCenter2) {
             useCenter2 = it
         }
     }
@@ -287,7 +287,7 @@ private fun DrawMultipleArcs() {
 }
 
 @Composable
-private fun DrawPathExamples() {
+private fun DrawPathExample() {
 
     Spacer(modifier = Modifier.height(10.dp))
     TutorialText2(text = "Path and CornerRadius")
@@ -383,6 +383,14 @@ private fun DrawPathProgress() {
     }
 
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+        Text(text = "Progress ${progress.roundToInt()}")
+        Slider(
+            value = progress,
+            onValueChange = { progress = it },
+            valueRange = 0f..100f,
+        )
+
         Text(text = "Sides ${sides.roundToInt()}")
         Slider(
             value = sides,
@@ -391,22 +399,11 @@ private fun DrawPathProgress() {
             steps = 10
         )
 
-
-
         Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
-
         Slider(
             value = cornerRadius,
             onValueChange = { cornerRadius = it },
             valueRange = 0f..50f,
-        )
-
-        Text(text = "Progress ${progress.roundToInt()}")
-
-        Slider(
-            value = progress,
-            onValueChange = { progress = it },
-            valueRange = 0f..100f,
         )
     }
 }
