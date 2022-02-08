@@ -346,9 +346,13 @@ private fun DrawPath() {
     }
 }
 
-
+/**
+ * [PathMeasure.getSegment] returns a new path segment from original path it's set with.
+ * Start and stop distances determine which sections are set to new path.
+ */
 @Composable
 private fun DrawPathProgress() {
+
     var sides by remember { mutableStateOf(3f) }
     var cornerRadius by remember { mutableStateOf(1f) }
     val pathMeasure by remember { mutableStateOf(PathMeasure()) }
@@ -399,7 +403,7 @@ private fun DrawPathProgress() {
             valueRange = 0f..100f,
         )
 
-        Text(text = "Sides ${sides.roundToInt()}")
+        Text(text = "Sides ${sides.roundToInt()}%")
         Slider(
             value = sides,
             onValueChange = { sides = it },

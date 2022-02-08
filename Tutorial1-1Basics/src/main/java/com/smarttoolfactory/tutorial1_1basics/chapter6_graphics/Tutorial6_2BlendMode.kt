@@ -27,8 +27,17 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
 /*
-    For more info about Blend or Porter-Duff modes refer official link below
-    https://developer.android.com/reference/android/graphics/PorterDuff.Mode?hl=eu
+    For more info about Blend or Porter-Duff modes refer official links below
+    https://developer.android.com/reference/android/graphics/PorterDuff.Mode
+    https://medium.com/mobile-app-development-publication/practical-image-porterduff-mode-usage-in-android-3b4b5d2e8f5f
+
+    PorteDuffMode is a software image blending method that is available in many software platforms,
+    which includes Android. It is based on a mathematic model which runs on the pixels
+    of two images to produce a neat output.
+
+    We simply draw destination shape/image first, then draw source shape/image and apply
+    blend mode to source.
+
  */
 @Composable
 fun Tutorial6_2Screen() {
@@ -55,10 +64,18 @@ private fun BlendModeExample() {
     DrawShapeBlendMode()
     TutorialText2(text = "Draw Images with Blend Mode")
     DrawImageBlendMode()
-    TutorialText2(text = "Clip Image with Blend Mode")
-    ClipImageWithBlendMode()
+    TutorialText2(text = "Clip Image with Blend Mode Via Path")
+    ClipImageWithBlendModeViaPath()
+    TutorialText2(text = "Clip Image with Blend Mode Via Image")
+    ClipImageWithBlendModeViaAnotherImage()
 }
 
+
+/**
+ * In this example destination path is drawn first, then source path with blend mode.
+ * Since we don't have full screen paths blend modes are applied to intersection of these
+ * shapes.
+ */
 @Composable
 private fun DrawShapeBlendMode() {
     var selectedIndex by remember { mutableStateOf(3) }
@@ -179,7 +196,11 @@ private fun DrawShapeBlendMode() {
     }
 }
 
-
+/**
+ * Images are overlapped on other. src is drawn on top of dst image, both images have transparent
+ * pixels. Setting blend mode and color of dst and/or src will change clipping or coloring
+ * of canvas.
+ */
 @Composable
 private fun DrawImageBlendMode() {
 
@@ -234,10 +255,13 @@ private fun DrawImageBlendMode() {
     )
 }
 
+/**
+ * src image is clipped using shape we draw behind as dst.
+ */
 @Composable
-private fun ClipImageWithBlendMode() {
+private fun ClipImageWithBlendModeViaPath() {
     var sides by remember { mutableStateOf(6f) }
-    val bitmap = ImageBitmap.imageResource(id = R.drawable.landscape1)
+    val srcBitmap = ImageBitmap.imageResource(id = R.drawable.landscape1)
 
     var selectedIndex by remember { mutableStateOf(5) }
     var blendMode: BlendMode by remember { mutableStateOf(BlendMode.SrcIn) }
@@ -259,12 +283,11 @@ private fun ClipImageWithBlendMode() {
                 color = Color.Blue,
                 path = path
             )
-
             // Source
             drawImage(
                 blendMode = blendMode,
-                image = bitmap,
-                srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
+                image = srcBitmap,
+                srcSize = IntSize( srcBitmap.width, srcBitmap.height),
                 dstSize = IntSize(canvasWidth, canvasHeight)
             )
 
@@ -282,6 +305,62 @@ private fun ClipImageWithBlendMode() {
             steps = 10
         )
 
+        Text(
+            text = "Src BlendMode: $blendMode",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        BlendModeSelection(
+            modifier = Modifier
+                .height(200.dp)
+                .verticalScroll(rememberScrollState()),
+            selectedIndex = selectedIndex,
+            onBlendModeSelected = { index, mode ->
+                blendMode = mode
+                selectedIndex = index
+            }
+        )
+    }
+}
+
+@Composable
+private fun ClipImageWithBlendModeViaAnotherImage() {
+    val srcBitmap = ImageBitmap.imageResource(id = R.drawable.landscape9)
+    val dstBitmap = ImageBitmap.imageResource(id = R.drawable.dots_transparent)
+
+    var selectedIndex by remember { mutableStateOf(5) }
+    var blendMode: BlendMode by remember { mutableStateOf(BlendMode.SrcIn) }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width.roundToInt()
+        val canvasHeight = size.height.roundToInt()
+
+
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
+
+            // Destination
+            drawImage(
+                image = dstBitmap,
+                srcSize = IntSize( dstBitmap.width, dstBitmap.height),
+                dstSize = IntSize(canvasWidth, canvasHeight)
+            )
+
+            // Source
+            drawImage(
+                blendMode = blendMode,
+                image = srcBitmap,
+                srcSize = IntSize( srcBitmap.width, srcBitmap.height),
+                dstSize = IntSize(canvasWidth, canvasHeight)
+            )
+
+            restoreToCount(checkPoint)
+        }
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Text(
             text = "Src BlendMode: $blendMode",
             fontSize = 16.sp,
