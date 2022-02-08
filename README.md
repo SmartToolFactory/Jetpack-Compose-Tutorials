@@ -103,3 +103,28 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>5-4-3 Centroid, Zoom, Pan, Rotation</h3><br/>Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.<br><br>• AwaitPointerEventScope<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_4_3.gif" width=320> |
 |  |  |
+
+### Resources and References
+[Codelab Jetpack Compose Basics](https://developer.android.com/codelabs/jetpack-compose-basics)
+<br>
+[Codelab Jetpack Compose Layouts](https://developer.android.com/codelabs/jetpack-compose-layouts?hl=en#0)
+<br>
+[Codelab Jetpack Compose States](https://developer.android.com/codelabs/jetpack-compose-state?hl=en#0)
+<br>
+[Codelab Jetpack Compose Advanced State](https://developer.android.com/codelabs/jetpack-compose-advanced-state-side-effects?hl=en#0)
+<br>
+[Developer Android](https://developer.android.com/jetpack/compose/mental-model)
+<br>
+[Developer Android Material](https://developer.android.com/reference/kotlin/androidx/compose/material/package-summary#theming)
+<br>
+[Jetpack Compose Samples](https://github.com/android/compose-samples)
+<br>
+[Under the hood of Jetpack Compose — part 2 of 2-
+Leland Richardson](https://medium.com/androiddevelopers/under-the-hood-of-jetpack-compose-part-2-of-2-37b2c20c6cdd)
+<br>
+[What is “donut-hole skipping” in Jetpack Compose?-Vinay Gaba](https://www.jetpackcompose.app/articles/donut-hole-skipping-in-jetpack-compose)
+<br>
+[Playing with Paths-Nick Butcher](https://medium.com/androiddevelopers/playing-with-paths-3fbc679a6f77)
+<br>
+[Porter Duff Mode](https://developer.android.com/reference/android/graphics/PorterDuff.Mode)
+<br>
