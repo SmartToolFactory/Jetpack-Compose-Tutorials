@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,10 +9,12 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,11 +64,11 @@ private fun DrawShapeBlendMode() {
     var selectedIndex by remember { mutableStateOf(3) }
     var blendMode: BlendMode by remember { mutableStateOf(BlendMode.SrcOver) }
 
-    var srcColor by remember { mutableStateOf(Color(0xff29B6F6)) }
     var dstColor by remember { mutableStateOf(Color(0xffEC407A)) }
+    var srcColor by remember { mutableStateOf(Color(0xff29B6F6)) }
 
-    var showSrcColorDialog by remember { mutableStateOf(false) }
     var showDstColorDialog by remember { mutableStateOf(false) }
+    var showSrcColorDialog by remember { mutableStateOf(false) }
 
 
     Canvas(modifier = canvasModifier) {
@@ -86,6 +87,7 @@ private fun DrawShapeBlendMode() {
         with(drawContext.canvas.nativeCanvas) {
             val checkPoint = saveLayer(null, null)
 
+            // Destination
             drawCircle(
                 color = dstColor,
                 radius = radius,
@@ -94,10 +96,24 @@ private fun DrawShapeBlendMode() {
                     canvasHeight / 2 - verticalOffset
                 ),
             )
+
+            // Source
             drawPath(path = srcPath, color = srcColor, blendMode = blendMode)
 
             restoreToCount(checkPoint)
         }
+    }
+
+    OutlinedButton(onClick = { showDstColorDialog = true }) {
+        Text(
+            text = "Dst Color",
+            fontSize = 16.sp,
+            color = dstColor,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
     }
 
     OutlinedButton(onClick = {
@@ -114,20 +130,8 @@ private fun DrawShapeBlendMode() {
         )
     }
 
-    OutlinedButton(onClick = { showDstColorDialog = true }) {
-        Text(
-            text = "Dst Color",
-            fontSize = 16.sp,
-            color = dstColor,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
-    }
-
     Text(
-        text = "Dst BlendMode: $blendMode",
+        text = "Src BlendMode: $blendMode",
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(8.dp)
@@ -182,8 +186,8 @@ private fun DrawImageBlendMode() {
     var selectedIndex by remember { mutableStateOf(3) }
     var blendMode: BlendMode by remember { mutableStateOf(BlendMode.SrcOver) }
 
-    val srcImage = ImageBitmap.imageResource(id = R.drawable.composite_src)
     val dstImage = ImageBitmap.imageResource(id = R.drawable.composite_dst)
+    val srcImage = ImageBitmap.imageResource(id = R.drawable.composite_src)
 
     Canvas(modifier = canvasModifier) {
 
@@ -193,11 +197,14 @@ private fun DrawImageBlendMode() {
         with(drawContext.canvas.nativeCanvas) {
             val checkPoint = saveLayer(null, null)
 
+            // Destination
             drawImage(
                 image = dstImage,
                 srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
                 dstSize = IntSize(canvasWidth, canvasHeight),
             )
+
+            // Source
             drawImage(
                 image = srcImage,
                 srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
@@ -209,7 +216,7 @@ private fun DrawImageBlendMode() {
     }
 
     Text(
-        text = "Dst BlendMode: $blendMode",
+        text = "Src BlendMode: $blendMode",
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(8.dp)
@@ -235,11 +242,7 @@ private fun ClipImageWithBlendMode() {
     var selectedIndex by remember { mutableStateOf(5) }
     var blendMode: BlendMode by remember { mutableStateOf(BlendMode.SrcIn) }
 
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .height(200.dp)
-    ) {
+    Canvas(modifier = canvasModifier) {
         val canvasWidth = size.width.roundToInt()
         val canvasHeight = size.height.roundToInt()
         val cx = canvasWidth / 2
@@ -248,20 +251,21 @@ private fun ClipImageWithBlendMode() {
         val path = createPath(cx.toFloat(), cy.toFloat(), sides.roundToInt(), radius)
 
 
-
         with(drawContext.canvas.nativeCanvas) {
             val checkPoint = saveLayer(null, null)
 
+            // Destination
             drawPath(
                 color = Color.Blue,
                 path = path
             )
 
+            // Source
             drawImage(
                 blendMode = blendMode,
                 image = bitmap,
                 srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
-                dstSize = IntSize(canvasWidth, canvasHeight),
+                dstSize = IntSize(canvasWidth, canvasHeight)
             )
 
             restoreToCount(checkPoint)
@@ -279,7 +283,7 @@ private fun ClipImageWithBlendMode() {
         )
 
         Text(
-            text = "Dst BlendMode: $blendMode",
+            text = "Src BlendMode: $blendMode",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)
@@ -299,9 +303,9 @@ private fun ClipImageWithBlendMode() {
 }
 
 private val canvasModifier = Modifier
-    .background(Color.LightGray)
-//    .drawBehind {
-//        drawRect(Color.LightGray, style = Stroke(width = 4.dp.toPx()))
-//    }
+//    .background(Color.LightGray)
+    .drawBehind {
+        drawRect(Color.LightGray, style = Stroke(width = 4.dp.toPx()))
+    }
     .fillMaxSize()
     .height(200.dp)

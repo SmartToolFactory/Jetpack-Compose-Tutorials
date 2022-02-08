@@ -73,9 +73,9 @@ private fun TutorialContent() {
 private fun DrawArcExample() {
 
     DrawArc()
+
     Spacer(modifier = Modifier.height(10.dp))
     TutorialText2(text = "Negative Angles")
-
     DrawNegativeArc()
 
     Spacer(modifier = Modifier.height(10.dp))

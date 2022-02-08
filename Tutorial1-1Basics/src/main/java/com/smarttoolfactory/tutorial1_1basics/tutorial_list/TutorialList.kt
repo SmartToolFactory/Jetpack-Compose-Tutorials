@@ -986,7 +986,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial6_2 = TutorialSectionModel(
-        title = "6-2 BlendMode",
+        title = "6-2 Blend Modes(Porter-Duff)",
         description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
                 "or clip based on blend mode.",
         action = {
