@@ -128,3 +128,11 @@ Leland Richardson](https://medium.com/androiddevelopers/under-the-hood-of-jetpac
 <br>
 [Porter Duff Mode](https://developer.android.com/reference/android/graphics/PorterDuff.Mode)
 <br>
+[Porter/Duff Compositing and Blend Modes](http://ssp.impulsetrain.com/porterduff.html)
+<br>
+[Practical Image PorterDuff Mode Usage in Android-Elye](https://medium.com/mobile-app-development-publication/practical-image-porterduff-mode-usage-in-android-3b4b5d2e8f5f)
+<br>
+[Android Image Lighting Control and Color Filtering-Elye](https://medium.com/mobile-app-development-publication/android-image-lighting-control-and-color-filtering-89f51a139a79)
+<br>
+[Android Image Color Change With ColorMatrix-Elye](https://medium.com/mobile-app-development-publication/android-image-color-change-with-colormatrix-e927d7fb6eb4)
+<br>
