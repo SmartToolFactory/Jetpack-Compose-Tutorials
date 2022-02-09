@@ -619,7 +619,13 @@ private fun DrawPointsExample() {
     TutorialText2(text = "PointMode")
     Canvas(modifier = canvasModifier2) {
 
-        val points1 = getSinusPoints(size)
+
+        val middleW = size.width / 2
+        val middleH = size.height / 2
+        drawLine(Color.Gray, Offset(0f, middleH), Offset(size.width - 1, middleH))
+        drawLine(Color.Gray, Offset(middleW, 0f), Offset(middleW, size.height - 1))
+
+        val points1 = getSinusoidalPoints(size)
 
         drawPoints(
             color = Color.Blue,
@@ -629,7 +635,7 @@ private fun DrawPointsExample() {
             strokeWidth = 10f
         )
 
-        val points2 = getSinusPoints(size, 100f)
+        val points2 = getSinusoidalPoints(size, 100f)
         drawPoints(
             color = Color.Green,
             points = points2,
@@ -638,7 +644,7 @@ private fun DrawPointsExample() {
             strokeWidth = 10f
         )
 
-        val points3 = getSinusPoints(size, 200f)
+        val points3 = getSinusoidalPoints(size, 200f)
         drawPoints(
             color = Color.Red,
             points = points3,
@@ -652,7 +658,13 @@ private fun DrawPointsExample() {
     TutorialText2(text = "Brush")
     Canvas(modifier = canvasModifier2) {
 
-        val points1 = getSinusPoints(size)
+        val middleW = size.width / 2
+        val middleH = size.height / 2
+        drawLine(Color.Gray, Offset(0f, middleH), Offset(size.width - 1, middleH))
+        drawLine(Color.Gray, Offset(middleW, 0f), Offset(middleW, size.height - 1))
+
+
+        val points1 = getSinusoidalPoints(size)
 
         drawPoints(
             brush = Brush.linearGradient(
@@ -664,7 +676,7 @@ private fun DrawPointsExample() {
             strokeWidth = 10f
         )
 
-        val points2 = getSinusPoints(size, 100f)
+        val points2 = getSinusoidalPoints(size, 100f)
         drawPoints(
             brush = Brush.linearGradient(
                 colors = listOf(Color.Green, Color.Magenta)
@@ -675,7 +687,7 @@ private fun DrawPointsExample() {
             strokeWidth = 10f
         )
 
-        val points3 = getSinusPoints(size, 200f)
+        val points3 = getSinusoidalPoints(size, 200f)
         drawPoints(
             brush = Brush.linearGradient(
                 colors = listOf(Color.Red, Color.Yellow)
@@ -688,13 +700,15 @@ private fun DrawPointsExample() {
     }
 }
 
-private fun getSinusPoints(size: Size, verticalOffset: Float = 0f): MutableList<Offset> {
+
+
+fun getSinusoidalPoints(size: Size, horizontalOffset: Float = 0f): MutableList<Offset> {
     val points = mutableListOf<Offset>()
     val verticalCenter = size.height / 2
 
     for (x in 0 until size.width.toInt() step 20) {
         val y = (sin(x * (2f * PI / size.width)) * verticalCenter + verticalCenter).toFloat()
-        points.add(Offset(x.toFloat() + verticalOffset, y))
+        points.add(Offset(x.toFloat() + horizontalOffset, y))
     }
     return points
 }
