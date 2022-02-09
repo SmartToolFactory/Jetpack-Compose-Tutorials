@@ -52,6 +52,8 @@ private fun DrawPathExample() {
     Spacer(modifier = Modifier.height(10.dp))
     TutorialText2(text = "Absolute and Relative positions")
     DrawPath()
+    TutorialText2(text = "Draw arcTo path")
+    DrawArcToPath()
     TutorialText2(text = "Draw ticket path")
     DrawTicketPathWithArc()
     TutorialText2(text = "Draw rounded rectangle with path")
@@ -157,6 +159,62 @@ private fun DrawPath() {
 }
 
 @Composable
+private fun DrawArcToPath() {
+    val path1 = remember { Path() }
+    val path2 = remember { Path() }
+
+    var startAngle by remember { mutableStateOf(0f) }
+    var sweepAngle by remember { mutableStateOf(90f) }
+
+    Canvas(modifier = canvasModifier) {
+        // Since we remember paths from each recomposition we reset them to have fresh ones
+        // You can create paths here if you want to have new path instances
+        path1.reset()
+        path2.reset()
+
+        val rect = Rect(0f, 0f, size.width, size.height)
+        path1.addRect(rect)
+        path2.arcTo(
+            rect,
+            startAngleDegrees = startAngle,
+            sweepAngleDegrees = sweepAngle,
+            forceMoveTo = false
+        )
+
+        drawPath(
+            color = Color.Red,
+            path = path1,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f))
+            )
+        )
+
+        drawPath(
+            color = Color.Blue,
+            path = path2,
+            style = Stroke(width = 2.dp.toPx())
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Text(text = "StartAngle ${startAngle.roundToInt()}")
+        Slider(
+            value = startAngle,
+            onValueChange = { startAngle = it },
+            valueRange = -360f..360f,
+        )
+
+        Text(text = "SweepAngle ${sweepAngle.roundToInt()}")
+        Slider(
+            value = sweepAngle,
+            onValueChange = { sweepAngle = it },
+            valueRange = -360f..360f,
+        )
+    }
+}
+
+@Composable
 private fun DrawTicketPathWithArc() {
 
     Canvas(modifier = canvasModifier) {
@@ -171,7 +229,7 @@ private fun DrawTicketPathWithArc() {
 private fun DrawRoundedRectangleWithArc() {
 
     Canvas(modifier = canvasModifier) {
-        val path = roundedRectanglePath(size/2f, 20.dp.toPx())
+        val path = roundedRectanglePath(size, 20.dp.toPx())
         drawPath(path, color = Color.Red)
 
     }

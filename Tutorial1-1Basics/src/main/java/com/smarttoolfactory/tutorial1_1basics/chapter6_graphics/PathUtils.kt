@@ -52,7 +52,7 @@ fun roundedRectanglePath(size: Size, cornerRadius: Float): Path {
                 right = radius,
                 bottom = radius
             ),
-            startAngleDegrees = -180.0f,
+            startAngleDegrees = 180.0f,
             sweepAngleDegrees = 90.0f,
             forceMoveTo = false
         )
@@ -107,6 +107,10 @@ fun roundedRectanglePath(size: Size, cornerRadius: Float): Path {
     }
 }
 
+/**
+ *
+ *
+ */
 fun ticketPath(size: Size, cornerRadius: Float): Path {
     return Path().apply {
         reset()

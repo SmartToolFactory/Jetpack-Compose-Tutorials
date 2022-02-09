@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import java.util.concurrent.CancellationException
 import kotlin.math.roundToInt
 
 @Composable
@@ -131,7 +132,11 @@ private fun DetectPressAwaitExample() {
                     // Waits for the press to be released before returning.
                     // If the press was released, true is returned, or if the gesture was
                     // canceled by motion being consumed by another gesture, false is returned .
-                    val released = tryAwaitRelease()
+                    val released = try {
+                        tryAwaitRelease()
+                    } catch (c: CancellationException) {
+                        false
+                    }
 
                     if (released) {
                         gestureText = "onPress Released"
