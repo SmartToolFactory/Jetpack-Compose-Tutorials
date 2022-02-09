@@ -124,7 +124,11 @@ Leland Richardson](https://medium.com/androiddevelopers/under-the-hood-of-jetpac
 <br>
 [What is “donut-hole skipping” in Jetpack Compose?-Vinay Gaba](https://www.jetpackcompose.app/articles/donut-hole-skipping-in-jetpack-compose)
 <br>
+[Android Graphics](https://developer.android.com/jetpack/compose/graphics)
+<br>
 [Playing with Paths-Nick Butcher](https://medium.com/androiddevelopers/playing-with-paths-3fbc679a6f77)
+<br>
+[Custom Shape with Jetpack Compose-Julien Salvi](https://juliensalvi.medium.com/custom-shape-with-jetpack-compose-1cb48a991d42)
 <br>
 [Porter Duff Mode](https://developer.android.com/reference/android/graphics/PorterDuff.Mode)
 <br>

@@ -13,11 +13,10 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,12 +52,20 @@ private fun DrawPathExample() {
     Spacer(modifier = Modifier.height(10.dp))
     TutorialText2(text = "Absolute and Relative positions")
     DrawPath()
+    TutorialText2(text = "Draw ticket path")
+    DrawTicketPathWithArc()
+    TutorialText2(text = "Draw rounded rectangle with path")
+    DrawRoundedRectangleWithArc()
     TutorialText2(text = "Draw path with progress")
     DrawPathProgress()
     TutorialText2(text = "Polygon Path and CornerRadius")
     DrawPolygonPath()
     TutorialText2(text = "Polygon Path Progress")
     DrawPolygonPathWithProgress()
+    TutorialText2(text = "QuadTo and RelativeQuadTo")
+    DrawQuad()
+    TutorialText2(text = "CubicTo")
+    DrawCubic()
 }
 
 @Composable
@@ -150,6 +157,29 @@ private fun DrawPath() {
 }
 
 @Composable
+private fun DrawTicketPathWithArc() {
+
+    Canvas(modifier = canvasModifier) {
+        val path = ticketPath(size, 20.dp.toPx())
+        drawPath(path, color = Color.Black)
+    }
+
+}
+
+
+@Composable
+private fun DrawRoundedRectangleWithArc() {
+
+    Canvas(modifier = canvasModifier) {
+        val path = roundedRectanglePath(size/2f, 20.dp.toPx())
+        drawPath(path, color = Color.Red)
+
+    }
+
+
+}
+
+@Composable
 private fun DrawPathProgress() {
 
     var progressStart by remember { mutableStateOf(20f) }
@@ -178,7 +208,7 @@ private fun DrawPathProgress() {
         val fullPath = Path()
 
 
-        fullPath.moveTo(0f, canvasHeight/2f)
+        fullPath.moveTo(0f, canvasHeight / 2f)
         points.forEach { offset: Offset ->
             fullPath.lineTo(offset.x, offset.y)
         }
@@ -227,7 +257,262 @@ private fun DrawPathProgress() {
             onValueChange = { progressEnd = it },
             valueRange = 0f..100f,
         )
+    }
+}
 
+@Composable
+private fun DrawQuad() {
+
+    val density = LocalDensity.current.density
+
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+
+    val screenWidthInPx = screenWidth.value * density
+
+    // (x0, y0) is initial coordinate where path is moved with path.moveTo(x0,y0)
+    var x0 by remember { mutableStateOf(0f) }
+    var y0 by remember { mutableStateOf(0f) }
+
+    /*
+        Adds a quadratic bezier segment that curves from the current point(x0,y0) to the
+        given point (x2, y2), using the control point (x1, y1).
+     */
+    var x1 by remember { mutableStateOf(0f) }
+    var y1 by remember { mutableStateOf(screenWidthInPx) }
+    var x2 by remember { mutableStateOf(screenWidthInPx) }
+    var y2 by remember { mutableStateOf(screenWidthInPx) }
+
+    val path1 = remember { Path() }
+    val path2 = remember { Path() }
+    Canvas(
+        modifier = Modifier
+            .size(screenWidth, screenWidth)
+            .background(Color.LightGray)
+    ) {
+        path1.reset()
+        path1.moveTo(x0, y0)
+        path1.quadraticBezierTo(x1 = x1, y1 = y1, x2 = x2, y2 = y2)
+
+        // relativeQuadraticBezierTo draws quadraticBezierTo by adding offset
+        // instead of setting absolute position
+        path2.reset()
+        path2.moveTo(x0, y0)
+        path2.relativeQuadraticBezierTo(dx1 = x1 - x0, dy1 = y1 - y0, dx2 = x2 - x0, dy2 = y2 - y0)
+
+
+        drawPath(
+            color = Color.Red,
+            path = path1,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f))
+            )
+        )
+
+        drawPath(
+            color = Color.Blue,
+            path = path2,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f))
+            )
+        )
+
+        // Draw Control Point on screen
+        drawPoints(
+            listOf(Offset(x1, y1)),
+            color = Color.Green,
+            pointMode = PointMode.Points,
+            cap = StrokeCap.Round,
+            strokeWidth = 40f
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+        Text(text = "X0: ${x0.roundToInt()}")
+        Slider(
+            value = x0,
+            onValueChange = { x0 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y0: ${y0.roundToInt()}")
+        Slider(
+            value = y0,
+            onValueChange = { y0 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "X1: ${x1.roundToInt()}")
+        Slider(
+            value = x1,
+            onValueChange = { x1 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y1: ${y1.roundToInt()}")
+        Slider(
+            value = y1,
+            onValueChange = { y1 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "X2: ${x2.roundToInt()}")
+        Slider(
+            value = x2,
+            onValueChange = { x2 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y2: ${y2.roundToInt()}")
+        Slider(
+            value = y2,
+            onValueChange = { y2 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+    }
+}
+
+@Composable
+private fun DrawCubic() {
+
+    val density = LocalDensity.current.density
+
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+
+    val screenWidthInPx = screenWidth.value * density
+
+    // (x0, y0) is initial coordinate where path is moved with path.moveTo(x0,y0)
+    var x0 by remember { mutableStateOf(0f) }
+    var y0 by remember { mutableStateOf(0f) }
+
+    /*
+        Adds a cubic bezier segment that curves from the current point(x0,y0) to the
+        given point (x3, y3), using the control points (x1, y1) and (x2, y2).
+     */
+    var x1 by remember { mutableStateOf(0f) }
+    var y1 by remember { mutableStateOf(screenWidthInPx) }
+    var x2 by remember { mutableStateOf(screenWidthInPx) }
+    var y2 by remember { mutableStateOf(0f) }
+
+    var x3 by remember { mutableStateOf(screenWidthInPx) }
+    var y3 by remember { mutableStateOf(screenWidthInPx) }
+
+    val path1 = remember { Path() }
+    val path2 = remember { Path() }
+    Canvas(
+        modifier = Modifier
+            .size(screenWidth, screenWidth)
+            .background(Color.LightGray)
+    ) {
+        path1.reset()
+        path1.moveTo(x0, y0)
+        path1.cubicTo(x1 = x1, y1 = y1, x2 = x2, y2 = y2, x3 = x3, y3 = y3)
+
+        // relativeQuadraticBezierTo draws quadraticBezierTo by adding offset
+        // instead of setting absolute position
+        path2.reset()
+        path2.moveTo(x0, y0)
+
+        // TODO offset are not correct
+        path2.relativeCubicTo(
+            dx1 = x1 - x0,
+            dy1 = y1 - y0,
+            dx2 = x2 - x0,
+            dy2 = y2 - y0,
+            dx3 = y3 - y0,
+            dy3 = y3 - y0
+        )
+
+
+        drawPath(
+            color = Color.Red,
+            path = path1,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f))
+            )
+        )
+
+        drawPath(
+            color = Color.Blue,
+            path = path2,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f))
+            )
+        )
+
+        // Draw Control Points on screen
+        drawPoints(
+            listOf(Offset(x1, y1), Offset(x2, y2)),
+            color = Color.Green,
+            pointMode = PointMode.Points,
+            cap = StrokeCap.Round,
+            strokeWidth = 40f
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+        Text(text = "X0: ${x0.roundToInt()}")
+        Slider(
+            value = x0,
+            onValueChange = { x0 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y0: ${y0.roundToInt()}")
+        Slider(
+            value = y0,
+            onValueChange = { y0 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "X1: ${x1.roundToInt()}")
+        Slider(
+            value = x1,
+            onValueChange = { x1 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y1: ${y1.roundToInt()}")
+        Slider(
+            value = y1,
+            onValueChange = { y1 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "X2: ${x2.roundToInt()}")
+        Slider(
+            value = x2,
+            onValueChange = { x2 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y2: ${y2.roundToInt()}")
+        Slider(
+            value = y2,
+            onValueChange = { y2 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "X3: ${x3.roundToInt()}")
+        Slider(
+            value = x3,
+            onValueChange = { x3 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
+
+        Text(text = "Y3: ${y3.roundToInt()}")
+        Slider(
+            value = y3,
+            onValueChange = { y3 = it },
+            valueRange = 0f..screenWidthInPx,
+        )
     }
 }
 
