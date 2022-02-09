@@ -11,7 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,9 +27,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
-import kotlin.math.cos
 import kotlin.math.roundToInt
-import kotlin.math.sin
 
 
 @Composable
@@ -51,13 +51,7 @@ private fun TutorialContent() {
             modifier = Modifier.padding(8.dp)
         )
         DrawArcExample()
-        Text(
-            "Draw Path",
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(8.dp)
-        )
-        DrawPathExample()
+
         Text(
             "Draw Image",
             fontWeight = FontWeight.Bold,
@@ -83,6 +77,11 @@ private fun DrawArcExample() {
     DrawMultipleArcs()
 }
 
+/**
+ * **startAngle** Starting angle in degrees. 0 represents 3 o'clock
+ *
+ * **sweepAngle** Size of the arc in degrees that is drawn clockwise relative to **startAngle**
+ */
 @Composable
 private fun DrawArc() {
     var startAngle by remember { mutableStateOf(0f) }
@@ -126,6 +125,9 @@ private fun DrawArc() {
 
 }
 
+/**
+ * In this example range of angles is changed from 0/360 degrees to -180/180 interval
+ */
 @Composable
 private fun DrawNegativeArc() {
     var startAngle2 by remember { mutableStateOf(0f) }
@@ -172,6 +174,8 @@ private fun DrawNegativeArc() {
 private fun DrawMultipleArcs() {
     var startAngleBlue by remember { mutableStateOf(0f) }
     var sweepAngleBlue by remember { mutableStateOf(120f) }
+    // useCenter selections are commented out, you can uncomment to see how it
+    // changes drawing arc with Stroke style
     var useCenterBlue by remember { mutableStateOf(false) }
 
     var startAngleRed by remember { mutableStateOf(120f) }
@@ -292,149 +296,6 @@ private fun DrawMultipleArcs() {
 //        }
     }
 
-}
-
-@Composable
-private fun DrawPathExample() {
-
-    Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "Path and CornerRadius")
-    DrawPath()
-    TutorialText2(text = "Path Progress")
-    DrawPathProgress()
-}
-
-@Composable
-private fun DrawPath() {
-    var sides by remember { mutableStateOf(3f) }
-    var cornerRadius by remember { mutableStateOf(1f) }
-
-    Canvas(modifier = canvasModifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-        val cx = canvasWidth / 2
-        val cy = canvasHeight / 2
-        val radius = (canvasHeight - 20.dp.toPx()) / 2
-        val path = createPath(cx, cy, sides.roundToInt(), radius)
-
-        drawPath(
-            color = Color.Red,
-            path = path,
-            style = Stroke(
-                width = 4.dp.toPx(),
-                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
-            )
-        )
-    }
-
-    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-        Text(text = "Sides ${sides.roundToInt()}")
-        Slider(
-            value = sides,
-            onValueChange = { sides = it },
-            valueRange = 3f..12f,
-            steps = 10
-        )
-
-        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
-
-        Slider(
-            value = cornerRadius,
-            onValueChange = { cornerRadius = it },
-            valueRange = 0f..50f,
-        )
-    }
-}
-
-/**
- * [PathMeasure.getSegment] returns a new path segment from original path it's set with.
- * Start and stop distances determine which sections are set to new path.
- */
-@Composable
-private fun DrawPathProgress() {
-
-    var sides by remember { mutableStateOf(3f) }
-    var cornerRadius by remember { mutableStateOf(1f) }
-    val pathMeasure by remember { mutableStateOf(PathMeasure()) }
-    var progress by remember { mutableStateOf(50f) }
-
-    val newPath by remember {
-        mutableStateOf(Path())
-    }
-
-    Canvas(modifier = canvasModifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-        val cx = canvasWidth / 2
-        val cy = canvasHeight / 2
-        val radius = (canvasHeight - 20.dp.toPx()) / 2
-
-        val path = createPath(cx, cy, sides.roundToInt(), radius)
-        newPath.reset()
-
-        if (progress >= 100f) {
-            newPath.addPath(path)
-        } else {
-            pathMeasure.setPath(path, forceClosed = false)
-            pathMeasure.getSegment(
-                startDistance = 0f,
-                stopDistance = pathMeasure.length * progress / 100f,
-                newPath,
-                startWithMoveTo = true
-            )
-        }
-
-        drawPath(
-            color = Color.Red,
-            path = newPath,
-            style = Stroke(
-                width = 4.dp.toPx(),
-                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
-            )
-        )
-    }
-
-    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-
-        Text(text = "Progress ${progress.roundToInt()}")
-        Slider(
-            value = progress,
-            onValueChange = { progress = it },
-            valueRange = 0f..100f,
-        )
-
-        Text(text = "Sides ${sides.roundToInt()}%")
-        Slider(
-            value = sides,
-            onValueChange = { sides = it },
-            valueRange = 3f..12f,
-            steps = 10
-        )
-
-        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
-        Slider(
-            value = cornerRadius,
-            onValueChange = { cornerRadius = it },
-            valueRange = 0f..50f,
-        )
-    }
-}
-
-fun createPath(cx: Float, cy: Float, sides: Int, radius: Float): Path {
-    val path = Path()
-    val angle = 2.0 * Math.PI / sides
-    path.moveTo(
-        cx + (radius * cos(0.0)).toFloat(),
-        cy + (radius * sin(0.0)).toFloat()
-    )
-    for (i in 1 until sides) {
-        path.lineTo(
-            cx + (radius * cos(angle * i)).toFloat(),
-            cy + (radius * sin(angle * i)).toFloat()
-        )
-    }
-    path.close()
-    return path
 }
 
 @Composable

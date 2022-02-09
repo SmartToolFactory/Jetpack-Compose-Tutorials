@@ -99,7 +99,7 @@ private fun DrawShapeBlendMode() {
 
         val cx = canvasWidth / 2 - horizontalOffset
         val cy = canvasHeight / 2 + verticalOffset
-        val srcPath = createPath(cx, cy, 5, radius)
+        val srcPath = createPolygonPath(cx, cy, 5, radius)
 
         with(drawContext.canvas.nativeCanvas) {
             val checkPoint = saveLayer(null, null)
@@ -272,7 +272,7 @@ private fun ClipImageWithBlendModeViaPath() {
         val cx = canvasWidth / 2
         val cy = canvasHeight / 2
         val radius = (canvasHeight - 20.dp.toPx()) / 2
-        val path = createPath(cx.toFloat(), cy.toFloat(), sides.roundToInt(), radius)
+        val path = createPolygonPath(cx.toFloat(), cy.toFloat(), sides.roundToInt(), radius)
 
 
         with(drawContext.canvas.nativeCanvas) {

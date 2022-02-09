@@ -136,3 +136,5 @@ Leland Richardson](https://medium.com/androiddevelopers/under-the-hood-of-jetpac
 <br>
 [Android Image Color Change With ColorMatrix-Elye](https://medium.com/mobile-app-development-publication/android-image-color-change-with-colormatrix-e927d7fb6eb4)
 <br>
+[Manipulating images and Drawables with Android’s ColorFilter-Nick Rout](https://medium.com/over-engineering/manipulating-images-and-drawables-with-androids-colorfilter-25bf061843e7)
+<br>
