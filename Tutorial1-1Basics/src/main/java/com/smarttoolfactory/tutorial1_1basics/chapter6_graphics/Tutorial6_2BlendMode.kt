@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,7 +25,10 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CustomDialogWithResultExample
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
+
 
 /*
     For more info about Blend or Porter-Duff modes refer official links below
@@ -46,7 +50,6 @@ fun Tutorial6_2Screen() {
 
 @Composable
 private fun TutorialContent() {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,11 +57,11 @@ private fun TutorialContent() {
     ) {
         BlendModeExample()
     }
-
 }
 
 @Composable
 private fun BlendModeExample() {
+
 
     TutorialText2(text = "Draw Shapes with Blend Mode")
     DrawShapeBlendMode()
@@ -73,8 +76,59 @@ private fun BlendModeExample() {
     RevealShapeWithBlendMode()
     TutorialText2(text = "Reveal Shape drawn above transparent")
     RevealShapeWithBlendMode2()
+
+    TutorialText2(text = "Add colors with BlendMode.Plus")
+    ColorAddBlendMode()
+
 }
 
+@Composable
+private fun ColorAddBlendMode() {
+
+
+    Canvas(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .background(Color.LightGray)
+    ) {
+
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val cx = canvasWidth / 2f
+        val cy = canvasHeight / 2f
+        val r = canvasWidth / 7f
+
+        val tx = (r * cos(30 * Math.PI / 180)).toFloat()
+        val ty = (r * sin(30 * Math.PI / 180)).toFloat()
+        val expand = 1.5f
+
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
+
+            drawCircle(
+                color = Color.Red,
+                radius = expand * r,
+                center = Offset(cx, cy - r),
+                blendMode = BlendMode.Plus
+            )
+            drawCircle(
+                color = Color.Green,
+                radius = expand * r,
+                center = Offset(cx - tx, cy + ty),
+                blendMode = BlendMode.Plus
+            )
+            drawCircle(
+                color = Color.Blue,
+                radius = expand * r,
+                center = Offset(cx + tx, cy + ty),
+                blendMode = BlendMode.Plus
+            )
+
+            restoreToCount(checkPoint)
+        }
+    }
+}
 
 /**
  * In this example destination path is drawn first, then source path with blend mode.
@@ -425,7 +479,7 @@ private fun RevealShapeWithBlendMode() {
             // Destination
             drawCircle(
                 color = Color.Red,
-                radius = 100f,
+                radius = 200f,
             )
 
             // Source
@@ -489,7 +543,7 @@ private fun RevealShapeWithBlendMode2() {
             // Source
             drawCircle(
                 color = Color.Transparent,
-                radius = 100f,
+                radius = 200f,
                 blendMode = blendMode
             )
             restoreToCount(checkPoint)
