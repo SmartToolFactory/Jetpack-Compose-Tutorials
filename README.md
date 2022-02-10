@@ -104,7 +104,7 @@ using previous searches using a database, domain with ViewModel.
 |<h3>5-4-3 Centroid, Zoom, Pan, Rotation</h3><br/>Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.<br><br>• AwaitPointerEventScope<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_4_3.gif" width=320> |
 |  |  |
 
-### Graphic
+### Graphics
 
 |Tutorial|Preview|
 |:-------|-------|

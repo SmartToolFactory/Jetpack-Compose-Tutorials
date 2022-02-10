@@ -1,8 +1,11 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +15,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -21,7 +26,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
@@ -46,9 +50,7 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text =
             "1-) Use **awaitPointerEventScope** functions to calculate centroid " +
-                    "size and position, zoom, pan, and rotation.\n" +
-                    "In this example scrollState interferes with **awaitPointerEventScope** " +
-                    "because of this a callback is used for calling **scrollState.stop()**"
+                    "size and position, zoom, pan, and rotation."
         )
 
         TutorialText2(
@@ -57,10 +59,7 @@ private fun TutorialContent() {
         )
 
         CalculateCentroidExample {
-            coroutineScope.launch {
-                scrollState.stopScroll(MutatePriority.PreventUserInput)
-                println("🔥 CANCELING SCROLL")
-            }
+
         }
 
         TutorialText2(
@@ -68,10 +67,7 @@ private fun TutorialContent() {
             modifier = Modifier.padding(top = 8.dp)
         )
         CalculateZoomExample {
-            coroutineScope.launch {
-                scrollState.stopScroll(MutatePriority.PreventUserInput)
-                println("🔥 CANCELING SCROLL")
-            }
+
         }
 
         TutorialText2(
@@ -79,10 +75,7 @@ private fun TutorialContent() {
             modifier = Modifier.padding(top = 20.dp)
         )
         CalculatePanExample {
-            coroutineScope.launch {
-                scrollState.stopScroll(MutatePriority.PreventUserInput)
-                println("🔥 CANCELING SCROLL")
-            }
+
         }
 
         TutorialText2(
@@ -90,16 +83,10 @@ private fun TutorialContent() {
             modifier = Modifier.padding(top = 20.dp)
         )
         CalculateRotationExample {
-            coroutineScope.launch {
-                scrollState.stopScroll(MutatePriority.PreventUserInput)
-                println("🔥 CANCELING SCROLL")
-            }
+
         }
-
-
     }
 }
-
 
 @Composable
 private fun CalculateCentroidExample(onDown: () -> Unit) {
@@ -137,6 +124,7 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
                         // This PointerEvent contains details details including events, id, position and more
                         val event: PointerEvent = awaitPointerEvent()
 
+
                         val size: Float = event.calculateCentroidSize()
                         if (size != 0f) {
                             centroidSize = event.calculateCentroidSize()
@@ -145,6 +133,14 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
                         val centroid: Offset = event.calculateCentroid()
                         if (centroid != Offset.Unspecified) {
                             position = centroid
+                        }
+
+                        /*
+                            Consumes position change if there is any
+                            This stops scrolling if there is one set to any parent Composable
+                         */
+                        event.changes.forEach { pointerInputChange: PointerInputChange ->
+                            pointerInputChange.consumePositionChange()
                         }
 
                     } while (event.changes.any { it.pressed })
@@ -201,6 +197,14 @@ private fun CalculateZoomExample(onDown: () -> Unit) {
                         val event = awaitPointerEvent()
                         zoom *= event.calculateZoom()
                         text = "Zoom $zoom"
+
+                        /*
+                            Consumes position change if there is any
+                            This stops scrolling if there is one set to any parent Composable
+                         */
+                        event.changes.forEach { pointerInputChange: PointerInputChange ->
+                            pointerInputChange.consumePositionChange()
+                        }
                     } while (event.changes.any { it.pressed })
                 }
             }
@@ -248,6 +252,14 @@ private fun CalculatePanExample(onDown: () -> Unit) {
                             offsetY.value += offset.y
 
                             text = "Pan $offset"
+
+                            /*
+                                Consumes position change if there is any
+                                This stops scrolling if there is one set to any parent Composable
+                             */
+                            event.changes.forEach { pointerInputChange: PointerInputChange ->
+                                pointerInputChange.consumePositionChange()
+                            }
                         } while (event.changes.any { it.pressed })
                     }
                 }
@@ -291,6 +303,15 @@ private fun CalculateRotationExample(onDown: () -> Unit) {
                         angle += rotation
 
                         text = "Angle $angle"
+
+                        /*
+                            Consumes position change if there is any
+                            This stops scrolling if there is one set to any parent Composable
+                         */
+                        event.changes.forEach { pointerInputChange: PointerInputChange ->
+                            pointerInputChange.consumePositionChange()
+                        }
+
                     } while (event.changes.any { it.pressed })
                 }
             }
