@@ -104,6 +104,21 @@ using previous searches using a database, domain with ViewModel.
 |<h3>5-4-3 Centroid, Zoom, Pan, Rotation</h3><br/>Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.<br><br>• AwaitPointerEventScope<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_4_3.gif" width=320> |
 |  |  |
 
+### Graphic
+
+|Tutorial|Preview|
+|:-------|-------|
+|<h3>6-1-1 Canvas Basics 1</h3><br/>Use canvas draw basic shapes like line, circle, rectangle, and points with different attributes such as style, stroke cap, brush.<br><br>• clickable<br>• Indication<br>• rememberRipple<br>• InteractionSource<br>• pointerInput<br>• pointerInteropFilter<br>|<img src ="/./screenshots/tutorial6_1_1.gif" width=320> |
+|  |  |
+|<h3>6-1-2 Canvas Basics 2</h3><br/>Use canvas to draw arc, with path effect, stroke cap, stroke join, miter and other attributes and draw images with src, dst attributes.<br><br>• pointerInput<br>• pointerInteropFilter<br>• detectTapGestures<br>• detectDragGestures<br>• onPress<br>• onDoubleTap<br>|<img src ="/./screenshots/tutorial6_1_2.gif" width=320> |
+|  |  |
+|<h3>6-1-3 Canvas Basics 3</h3><br/>Use canvas to draw path using absolute and relative positions, adding arc to path, drawing custom paths, progress, polygons, quads, and cubic.<br><br>• pointerInput<br>• detectTransformGestures<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial6_1_3.gif" width=320> |
+|  |  |
+|<h3>6-2 Blend(Porter-Duff) Modes</h3><br/>Use blend(Porter-Duff) modes to change drawing source/destination 
+ or clip based on blend mode..<br><br>• AwaitPointerEventScope<br>• PointerInputChange<br>• awaitFirstDown<br>• waitForUpOrCancellation<br>• awaitPointerEvent<br>• awaitTouchSlopOrCancellation<br>• awaitDragOrCancellation<br>|<img src ="/./screenshots/tutorial6_2.gif" width=320> |
+|  |  |
+
+
 ### Resources and References
 [Codelab Jetpack Compose Basics](https://developer.android.com/codelabs/jetpack-compose-basics)
 <br>

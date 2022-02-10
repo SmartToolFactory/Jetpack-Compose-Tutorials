@@ -14,9 +14,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.*
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen1
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen2
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.*
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.GraphicsListColor
@@ -970,10 +968,26 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_1_2 = TutorialSectionModel(
         title = "6-1-2 Canvas Basics2",
-        description = "Use canvas to draw arc, image, path with path effect, stroke cap, " +
-                "stroke join, miter and other attributes",
+        description = "Use canvas to draw arc, with path effect, stroke cap, " +
+                "stroke join, miter and other attributes and draw images with src, dst attributes",
         action = {
             Tutorial6_1Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH_EFFECT
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_1_3 = TutorialSectionModel(
+        title = "6-1-3 Canvas Basics3",
+        description = "Use canvas to draw path using absolute and relative positions, adding " +
+                "arc to path, drawing custom paths, progress, polygons, quads, and cubic. ",
+        action = {
+            Tutorial6_1Screen3()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -1002,9 +1016,31 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_4 = TutorialSectionModel(
+        title = "6-4-1 Draw with Touch",
+        description = "Draw to canvas using touch down, move and up events",
+        action = {
+            Tutorial6_4Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
-        tutorial6_2
+        tutorial6_1_3,
+        tutorial6_2,
+        tutorial6_4
     )
 }
