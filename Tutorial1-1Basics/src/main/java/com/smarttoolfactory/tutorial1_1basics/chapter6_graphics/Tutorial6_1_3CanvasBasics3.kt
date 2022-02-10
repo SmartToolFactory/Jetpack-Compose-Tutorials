@@ -9,10 +9,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
@@ -216,25 +213,79 @@ private fun DrawArcToPath() {
 
 @Composable
 private fun DrawTicketPathWithArc() {
-
     Canvas(modifier = canvasModifier) {
-        val path = ticketPath(size, 20.dp.toPx())
-        drawPath(path, color = Color.Black)
+
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        // Black background
+        val ticketBackgroundWidth = canvasWidth * .8f
+        val horizontalSpace = (canvasWidth - ticketBackgroundWidth) / 2
+
+        val ticketBackgroundHeight = canvasHeight * .8f
+        val verticalSpace = (canvasHeight - ticketBackgroundHeight) / 2
+
+        // Get ticket path for background
+        val path1 = ticketPath(
+            topLeft = Offset(horizontalSpace, verticalSpace),
+            size = Size(ticketBackgroundWidth, ticketBackgroundHeight),
+            cornerRadius = 20.dp.toPx()
+        )
+        drawPath(path1, color = Color.Black)
+
+        // Dashed path in foreground
+        val ticketForegroundWidth = ticketBackgroundWidth * .95f
+        val horizontalSpace2 = (canvasWidth - ticketForegroundWidth) / 2
+
+        val ticketForegroundHeight = ticketBackgroundHeight * .9f
+        val verticalSpace2 = (canvasHeight - ticketForegroundHeight) / 2
+
+        // Get ticket path for background
+        val path2 = ticketPath(
+            topLeft = Offset(horizontalSpace2, verticalSpace2),
+            size = Size(ticketForegroundWidth, ticketForegroundHeight),
+            cornerRadius = 20.dp.toPx()
+        )
+        drawPath(
+            path2,
+            color = Color.Red,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(
+                    floatArrayOf(20f, 20f)
+                )
+            )
+        )
     }
-
 }
-
 
 @Composable
 private fun DrawRoundedRectangleWithArc() {
 
     Canvas(modifier = canvasModifier) {
-        val path = roundedRectanglePath(size, 20.dp.toPx())
-        drawPath(path, color = Color.Red)
 
+        val path1 = roundedRectanglePath(
+            topLeft = Offset(100f, 100f),
+            size = Size(400f, 300f),
+            cornerRadius = 20.dp.toPx()
+        )
+        drawPath(path1, color = Color.Red)
+
+        val path2 = roundedRectanglePath(
+            topLeft = Offset(600f, 200f),
+            size = Size(200f, 200f),
+            cornerRadius = 8.dp.toPx()
+        )
+        drawPath(
+            path2, color = Color.Blue,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(
+                    floatArrayOf(20f, 20f)
+                )
+            )
+        )
     }
-
-
 }
 
 @Composable

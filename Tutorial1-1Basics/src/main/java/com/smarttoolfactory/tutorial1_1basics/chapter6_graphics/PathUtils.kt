@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
@@ -39,7 +40,7 @@ fun createPolygonPath(cx: Float, cy: Float, sides: Int, radius: Float): Path {
     }
 }
 
-fun roundedRectanglePath(size: Size, cornerRadius: Float): Path {
+fun roundedRectanglePath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius: Float): Path {
     return Path().apply {
         reset()
 
@@ -47,125 +48,127 @@ fun roundedRectanglePath(size: Size, cornerRadius: Float): Path {
         val radius = cornerRadius * 2
         arcTo(
             rect = Rect(
-                left = 0f,
-                top = 0f,
-                right = radius,
-                bottom = radius
+                left = topLeft.x,
+                top = topLeft.y,
+                right = topLeft.x + radius,
+                bottom = topLeft.y + radius
             ),
             startAngleDegrees = 180.0f,
             sweepAngleDegrees = 90.0f,
             forceMoveTo = false
         )
 
-        lineTo(x = size.width - radius, y = 0f)
+        lineTo(x = topLeft.x + size.width - radius, y = topLeft.y)
 
         // Top right arc
         arcTo(
             rect = Rect(
-                left = size.width - radius,
-                top = 0f,
-                right = size.width,
-                bottom = radius
+                left = topLeft.x + size.width - radius,
+                top = topLeft.y,
+                right = topLeft.x + size.width,
+                bottom = topLeft.y + radius
             ),
             startAngleDegrees = -90.0f,
             sweepAngleDegrees = 90.0f,
             forceMoveTo = false
         )
 
-        lineTo(x = size.width, y = size.height - radius)
+        lineTo(x = topLeft.x + size.width, y = topLeft.y + size.height - radius)
 
         // Bottom right arc
         arcTo(
             rect = Rect(
-                left = size.width - radius,
-                top = size.height - radius,
-                right = size.width ,
-                bottom = size.height
+                left = topLeft.x + size.width - radius,
+                top = topLeft.y + size.height - radius,
+                right = topLeft.x + size.width,
+                bottom = topLeft.y + size.height
             ),
             startAngleDegrees = 0f,
             sweepAngleDegrees = 90.0f,
             forceMoveTo = false
         )
 
-        lineTo(x = radius, y = size.height)
+        lineTo(x = topLeft.x + radius, y = topLeft.y + size.height)
 
         // Bottom left arc
         arcTo(
             rect = Rect(
-                left = 0f,
-                top = size.height - radius,
-                right = radius,
-                bottom = size.height
+                left = topLeft.x,
+                top = topLeft.y + size.height - radius,
+                right = topLeft.x + radius,
+                bottom = topLeft.y + size.height
             ),
             startAngleDegrees = 90.0f,
             sweepAngleDegrees = 90.0f,
             forceMoveTo = false
         )
 
-        lineTo(x = 0f, y = radius)
+        lineTo(x = topLeft.x, y = topLeft.y + radius)
         close()
     }
 }
 
 /**
+ * Create a ticket path with given size and corner radius in px with offset [topLeft].
  *
- *
+ * Refer [this link](https://juliensalvi.medium.com/custom-shape-with-jetpack-compose-1cb48a991d42)
+ * for implementation details.
  */
-fun ticketPath(size: Size, cornerRadius: Float): Path {
+fun ticketPath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius: Float): Path {
     return Path().apply {
         reset()
         // Top left arc
         arcTo(
             rect = Rect(
-                left = -cornerRadius,
-                top = -cornerRadius,
-                right = cornerRadius,
-                bottom = cornerRadius
+                left = topLeft.x + -cornerRadius,
+                top = topLeft.y + -cornerRadius,
+                right = topLeft.x + cornerRadius,
+                bottom = topLeft.y + cornerRadius
             ),
             startAngleDegrees = 90.0f,
             sweepAngleDegrees = -90.0f,
             forceMoveTo = false
         )
-        lineTo(x = size.width - cornerRadius, y = 0f)
+        lineTo(x = topLeft.x + size.width - cornerRadius, y = topLeft.y)
         // Top right arc
         arcTo(
             rect = Rect(
-                left = size.width - cornerRadius,
-                top = -cornerRadius,
-                right = size.width + cornerRadius,
-                bottom = cornerRadius
+                left = topLeft.x + size.width - cornerRadius,
+                top = topLeft.y + -cornerRadius,
+                right = topLeft.x + size.width + cornerRadius,
+                bottom = topLeft.y + cornerRadius
             ),
             startAngleDegrees = 180.0f,
             sweepAngleDegrees = -90.0f,
             forceMoveTo = false
         )
-        lineTo(x = size.width, y = size.height - cornerRadius)
+        lineTo(x = topLeft.x + size.width, y = topLeft.y + size.height - cornerRadius)
         // Bottom right arc
         arcTo(
             rect = Rect(
-                left = size.width - cornerRadius,
-                top = size.height - cornerRadius,
-                right = size.width + cornerRadius,
-                bottom = size.height + cornerRadius
+                left = topLeft.x + size.width - cornerRadius,
+                top = topLeft.y + size.height - cornerRadius,
+                right = topLeft.x + size.width + cornerRadius,
+                bottom = topLeft.y + size.height + cornerRadius
             ),
             startAngleDegrees = 270.0f,
             sweepAngleDegrees = -90.0f,
             forceMoveTo = false
         )
-        lineTo(x = cornerRadius, y = size.height)
+        lineTo(x = topLeft.x + cornerRadius, y = topLeft.y + size.height)
         // Bottom left arc
         arcTo(
             rect = Rect(
-                left = -cornerRadius,
-                top = size.height - cornerRadius,
-                right = cornerRadius,
-                bottom = size.height + cornerRadius
+                left = topLeft.x + -cornerRadius,
+                top = topLeft.y + size.height - cornerRadius,
+                right = topLeft.x + cornerRadius,
+                bottom = topLeft.y + size.height + cornerRadius
             ),
             startAngleDegrees = 0.0f,
             sweepAngleDegrees = -90.0f,
             forceMoveTo = false
         )
-        lineTo(x = 0f, y = cornerRadius)
+        lineTo(x = topLeft.x, y = topLeft.y + cornerRadius)
         close()
     }
 }
