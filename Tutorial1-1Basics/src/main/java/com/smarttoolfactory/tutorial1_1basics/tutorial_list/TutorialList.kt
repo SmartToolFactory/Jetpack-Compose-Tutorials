@@ -961,7 +961,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_CANVAS,
-            TAG_DRAW_SCOPE
+            TAG_DRAW_SCOPE,
+            TAG_PATH_EFFECT
         ),
         tagColor = GraphicsListColor
     )
@@ -1002,7 +1003,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     val tutorial6_2 = TutorialSectionModel(
         title = "6-2 Blend Modes(Porter-Duff)",
         description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
-                "or clip based on blend mode.",
+                "or clip based on blend mode, and manipulate pixels.",
         action = {
             Tutorial6_2Screen()
         },
