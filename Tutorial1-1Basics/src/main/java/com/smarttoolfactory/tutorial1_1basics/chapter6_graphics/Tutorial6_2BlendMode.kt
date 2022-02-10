@@ -32,7 +32,7 @@ import kotlin.math.roundToInt
     https://medium.com/mobile-app-development-publication/practical-image-porterduff-mode-usage-in-android-3b4b5d2e8f5f
 
     PorteDuffMode is a software image blending method that is available in many software platforms,
-    which includes Android. It is based on a mathematic model which runs on the pixels
+    which includes Android. It is based on a mathematical model which runs on the pixels
     of two images to produce a neat output.
 
     We simply draw destination shape/image first, then draw source shape/image and apply
@@ -68,6 +68,11 @@ private fun BlendModeExample() {
     ClipImageWithBlendModeViaPath()
     TutorialText2(text = "Clip Image with Blend Mode Via Image")
     ClipImageWithBlendModeViaAnotherImage()
+
+    TutorialText2(text = "Reveal Shape drawn below transparent")
+    RevealShapeWithBlendMode()
+    TutorialText2(text = "Reveal Shape drawn above transparent")
+    RevealShapeWithBlendMode2()
 }
 
 
@@ -256,7 +261,7 @@ private fun DrawImageBlendMode() {
 }
 
 /**
- * src image is clipped using shape we draw behind as dst.
+ * src image is clipped using shape drawn behind as dst.
  */
 @Composable
 private fun ClipImageWithBlendModeViaPath() {
@@ -287,7 +292,7 @@ private fun ClipImageWithBlendModeViaPath() {
             drawImage(
                 blendMode = blendMode,
                 image = srcBitmap,
-                srcSize = IntSize( srcBitmap.width, srcBitmap.height),
+                srcSize = IntSize(srcBitmap.width, srcBitmap.height),
                 dstSize = IntSize(canvasWidth, canvasHeight)
             )
 
@@ -325,6 +330,10 @@ private fun ClipImageWithBlendModeViaPath() {
     }
 }
 
+/**
+ * Clip landscape using transparent bubbles. Depending on blending mode both, src, dst or neither
+ * of them are clipped or pixels are transformed.
+ */
 @Composable
 private fun ClipImageWithBlendModeViaAnotherImage() {
     val srcBitmap = ImageBitmap.imageResource(id = R.drawable.landscape9)
@@ -344,7 +353,7 @@ private fun ClipImageWithBlendModeViaAnotherImage() {
             // Destination
             drawImage(
                 image = dstBitmap,
-                srcSize = IntSize( dstBitmap.width, dstBitmap.height),
+                srcSize = IntSize(dstBitmap.width, dstBitmap.height),
                 dstSize = IntSize(canvasWidth, canvasHeight)
             )
 
@@ -352,7 +361,7 @@ private fun ClipImageWithBlendModeViaAnotherImage() {
             drawImage(
                 blendMode = blendMode,
                 image = srcBitmap,
-                srcSize = IntSize( srcBitmap.width, srcBitmap.height),
+                srcSize = IntSize(srcBitmap.width, srcBitmap.height),
                 dstSize = IntSize(canvasWidth, canvasHeight)
             )
 
@@ -379,6 +388,131 @@ private fun ClipImageWithBlendModeViaAnotherImage() {
             }
         )
     }
+}
+
+
+/**
+ *
+ * Remove circle from transparent rectangle over image using [BlendMode]
+ *
+ * This example uses [BlendMode.SrcOut] to clip circle path from transparent rectangle over image.
+ *
+ * Circle that removed from transparent rectangle is drawn as Destination.
+ *
+ * Transparent rectangle is drawn as Source with Blend Mode.
+ */
+@Composable
+private fun RevealShapeWithBlendMode() {
+
+    val dstBitmap = ImageBitmap.imageResource(id = R.drawable.landscape10)
+
+    var selectedIndex by remember { mutableStateOf(7) }
+    var blendMode: BlendMode by remember { mutableStateOf(BlendMode.SrcOut) }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width.roundToInt()
+        val canvasHeight = size.height.roundToInt()
+
+        drawImage(
+            image = dstBitmap,
+            srcSize = IntSize(dstBitmap.width, dstBitmap.height),
+            dstSize = IntSize(canvasWidth, canvasHeight)
+        )
+
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
+
+            // Destination
+            drawCircle(
+                color = Color.Red,
+                radius = 100f,
+            )
+
+            // Source
+            drawRect(Color(0xcc000000), blendMode = blendMode)
+
+            restoreToCount(checkPoint)
+        }
+    }
+
+    Text(
+        text = "Src BlendMode: $blendMode",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(8.dp)
+    )
+
+    BlendModeSelection(
+        modifier = Modifier
+            .height(200.dp)
+            .verticalScroll(rememberScrollState()),
+        selectedIndex = selectedIndex,
+        onBlendModeSelected = { index, mode ->
+            blendMode = mode
+            selectedIndex = index
+        }
+    )
+}
+
+/**
+ *
+ * Remove circle from transparent rectangle over image using [BlendMode]
+ *
+ * This example uses [BlendMode.Clear] to clip circle path from transparent rectangle over image.
+ *
+ * Circle that removed from transparent rectangle is drawn as Source with BlendMode
+ */
+@Composable
+private fun RevealShapeWithBlendMode2() {
+
+    val dstBitmap = ImageBitmap.imageResource(id = R.drawable.landscape1)
+
+    var selectedIndex by remember { mutableStateOf(0) }
+    var blendMode: BlendMode by remember { mutableStateOf(BlendMode.Clear) }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width.roundToInt()
+        val canvasHeight = size.height.roundToInt()
+
+        drawImage(
+            image = dstBitmap,
+            srcSize = IntSize(dstBitmap.width, dstBitmap.height),
+            dstSize = IntSize(canvasWidth, canvasHeight)
+        )
+
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
+
+            // Destination
+            drawRect(Color(0xcc000000))
+
+            // Source
+            drawCircle(
+                color = Color.Transparent,
+                radius = 100f,
+                blendMode = blendMode
+            )
+            restoreToCount(checkPoint)
+        }
+    }
+
+    Text(
+        text = "Src BlendMode: $blendMode",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(8.dp)
+    )
+
+    BlendModeSelection(
+        modifier = Modifier
+            .height(200.dp)
+            .verticalScroll(rememberScrollState()),
+        selectedIndex = selectedIndex,
+        onBlendModeSelected = { index, mode ->
+            blendMode = mode
+            selectedIndex = index
+        }
+    )
 }
 
 private val canvasModifier = Modifier
