@@ -308,7 +308,6 @@ private fun DrawPathProgress() {
 
         /*
             Draw  function with progress like sinus wave
-
          */
         val canvasHeight = size.height
 
