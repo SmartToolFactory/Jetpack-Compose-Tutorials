@@ -1,25 +1,29 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.SubcomposeColumn
-import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
-import com.smarttoolfactory.tutorial1_1basics.ui.Green400
-import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
-import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
@@ -44,7 +48,7 @@ private fun TutorialContent() {
                     "as params for the composition of the children.\n" +
                     "In this sample below we get main size to add his height as padding to second one."
         )
-        SubComposeLayoutSample1()
+        SubComposeLayoutExample1()
 
         StyleableTutorialText(
             text = "2-) It's possible to **remeasure a composable** using a **SubcomposeLayout**. " +
@@ -54,16 +58,21 @@ private fun TutorialContent() {
         )
 
         TutorialText2(text = "SubComposeColumn with 2 children and result")
-        SubcomposeLayoutSample2()
+        SubcomposeLayoutExample2()
         TutorialText2(text = "SubComposeColumn with multiple children")
-        SubcomposeLayoutSample3()
+        SubcomposeLayoutExample3()
 
-
+        StyleableTutorialText(
+            text = "3-) Instead of max width get max height and remeasure each Composable " +
+                    "using this max height while having a horizontal scroll like news columns."
+        )
+        TutorialText2(text = "SubComposeRow like news column with same height")
+        SubComposeRowExample()
     }
 }
 
 @Composable
-private fun SubComposeLayoutSample1() {
+private fun SubComposeLayoutExample1() {
 
     val density = LocalDensity.current.density
 
@@ -105,7 +114,7 @@ private fun SubComposeLayoutSample1() {
 }
 
 @Composable
-private fun SubcomposeLayoutSample2() {
+private fun SubcomposeLayoutExample2() {
     var mainText by remember { mutableStateOf(TextFieldValue("Main Component")) }
     var dependentText by remember { mutableStateOf(TextFieldValue("Dependent Component")) }
 
@@ -210,7 +219,7 @@ private fun SubcomposeLayoutSample2() {
 }
 
 @Composable
-private fun SubcomposeLayoutSample3() {
+private fun SubcomposeLayoutExample3() {
     var text1 by remember { mutableStateOf(TextFieldValue("Text1 context")) }
     var text2 by remember { mutableStateOf(TextFieldValue("Text2 context")) }
     var text3 by remember { mutableStateOf(TextFieldValue("Text3 context")) }
@@ -328,6 +337,32 @@ private fun SubcomposeLayoutSample3() {
     )
 }
 
+@Composable
+private fun SubComposeRowExample() {
+    SubcomposeRow(
+        modifier = Modifier.horizontalScroll(state = rememberScrollState())
+    ) {
+        Item(
+            text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy " +
+                    "eirmod tempor invidunt ut labore et dolore magna aliquyam"
+        )
+
+        Spacer(modifier = Modifier.width(20.dp))
+
+        Item(
+            text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy " +
+                    "eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam " +
+                    "voluptua. At"
+        )
+
+        Spacer(modifier = Modifier.width(20.dp))
+
+        Item(
+            text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+        )
+    }
+}
+
 
 @Composable
 private fun SubComponent(
@@ -367,3 +402,95 @@ private fun SubComponent(
 
 enum class SlotsEnum { Main, Dependent }
 
+// SubComposeRow
+
+@Composable
+private fun Item(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    Column(
+        modifier = modifier
+            .width(200.dp),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text("Some static text")
+
+            // Dynamic text
+            Text(
+                text,
+                modifier = Modifier.padding(top = 5.dp)
+            )
+        }
+
+        // The space between these two composables should be flexible,
+        // hence the outer column with Arrangement.SpaceBetween
+
+        Button(
+            modifier = Modifier.padding(top = 20.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Red400,
+                contentColor = Color.White
+            ),
+            shape = RoundedCornerShape(8.dp),
+            onClick = {}
+        ) {
+            Text("Button")
+        }
+    }
+}
+
+@Composable
+private fun SubcomposeRow(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit = {},
+) {
+
+    SubcomposeLayout(modifier = modifier) { constraints ->
+
+        var recompositionIndex = 0
+
+        var placeables: List<Placeable> = subcompose(recompositionIndex++, content).map {
+            it.measure(constraints)
+        }
+
+        var rowSize =
+            placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
+                IntSize(
+                    width = currentMax.width + placeable.width,
+                    height = maxOf(currentMax.height, placeable.height)
+                )
+            }
+
+        // Remeasure every element using width of longest item as minWidth of Constraint
+        if (!placeables.isNullOrEmpty() && placeables.size > 1) {
+            placeables = subcompose(recompositionIndex, content).map { measurable: Measurable ->
+                measurable.measure(
+                    Constraints(
+                        minHeight = rowSize.height,
+                        maxHeight = constraints.maxHeight
+                    )
+                )
+            }
+
+            rowSize =
+                placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
+                    IntSize(
+                        width = currentMax.width + placeable.width,
+                        height = maxOf(currentMax.height, placeable.height)
+                    )
+                }
+        }
+
+        layout(rowSize.width, rowSize.height) {
+            var xPos = 0
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(xPos, 0)
+                xPos += placeable.width
+            }
+
+        }
+    }
+}

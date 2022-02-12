@@ -161,7 +161,7 @@ private fun TutorialContent() {
 
                 Box(
                     modifier = Modifier
-                        .nonComposedBackground(150.dp, 20.dp, 0)
+                        .nonComposedBackground(150.dp, 20.dp)
                         .width(150.dp)
                 ) {
                     Text(text = "Recomposed $counter")
@@ -169,7 +169,7 @@ private fun TutorialContent() {
 
                 Box(
                     modifier = Modifier
-                        .nonComposedBackground(150.dp, 20.dp, 1)
+                        .nonComposedBackground(150.dp, 20.dp)
                         .width(150.dp)
                 ) {
                     Text(text = "Recomposed $counter")
@@ -252,7 +252,7 @@ fun Modifier.firstBaselineToTop(
     }
 )
 
-// let's create you own custom stateful modifier with multiple arguments
+// Creates stateful modifier with multiple arguments
 fun Modifier.composedBackground(width: Dp, height: Dp, index: Int) = composed(
     // pass inspector information for debug
     inspectorInfo = debugInspectorInfo {
@@ -297,7 +297,7 @@ fun Modifier.composedBackground(width: Dp, height: Dp, index: Int) = composed(
     }
 )
 
-fun Modifier.nonComposedBackground(width: Dp, height: Dp, index: Int) = this.then(
+fun Modifier.nonComposedBackground(width: Dp, height: Dp) = this.then(
 
     // add your modifier implementation here
     Modifier.drawBehind {
