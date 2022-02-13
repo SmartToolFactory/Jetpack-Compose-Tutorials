@@ -65,6 +65,7 @@ private fun DrawPathExample() {
     DrawQuad()
     TutorialText2(text = "CubicTo")
     DrawCubic()
+
 }
 
 @Composable
@@ -369,6 +370,121 @@ private fun DrawPathProgress() {
 }
 
 @Composable
+private fun DrawPolygonPath() {
+    var sides by remember { mutableStateOf(3f) }
+    var cornerRadius by remember { mutableStateOf(1f) }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val cx = canvasWidth / 2
+        val cy = canvasHeight / 2
+        val radius = (canvasHeight - 20.dp.toPx()) / 2
+        val path = createPolygonPath(cx, cy, sides.roundToInt(), radius)
+
+        drawPath(
+            color = Color.Red,
+            path = path,
+            style = Stroke(
+                width = 4.dp.toPx(),
+                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
+            )
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Text(text = "Sides ${sides.roundToInt()}")
+        Slider(
+            value = sides,
+            onValueChange = { sides = it },
+            valueRange = 3f..12f,
+            steps = 10
+        )
+
+        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
+
+        Slider(
+            value = cornerRadius,
+            onValueChange = { cornerRadius = it },
+            valueRange = 0f..50f,
+        )
+    }
+}
+
+/**
+ * [PathMeasure.getSegment] returns a new path segment from original path it's set with.
+ * Start and stop distances determine which sections are set to new path.
+ */
+@Composable
+private fun DrawPolygonPathWithProgress() {
+
+    var sides by remember { mutableStateOf(3f) }
+    var cornerRadius by remember { mutableStateOf(1f) }
+    val pathMeasure by remember { mutableStateOf(PathMeasure()) }
+    var progress by remember { mutableStateOf(50f) }
+
+    val pathWithProgress by remember {
+        mutableStateOf(Path())
+    }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val cx = canvasWidth / 2
+        val cy = canvasHeight / 2
+        val radius = (canvasHeight - 20.dp.toPx()) / 2
+
+        val fullPath = createPolygonPath(cx, cy, sides.roundToInt(), radius)
+        pathWithProgress.reset()
+        if (progress >= 100f) {
+            pathWithProgress.addPath(fullPath)
+        } else {
+            pathMeasure.setPath(fullPath, forceClosed = false)
+            pathMeasure.getSegment(
+                startDistance = 0f,
+                stopDistance = pathMeasure.length * progress / 100f,
+                pathWithProgress,
+                startWithMoveTo = true
+            )
+        }
+
+        drawPath(
+            color = Color.Red,
+            path = pathWithProgress,
+            style = Stroke(
+                width = 4.dp.toPx(),
+                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
+            )
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+        Text(text = "Progress ${progress.roundToInt()}%")
+        Slider(
+            value = progress,
+            onValueChange = { progress = it },
+            valueRange = 0f..100f,
+        )
+
+        Text(text = "Sides ${sides.roundToInt()}")
+        Slider(
+            value = sides,
+            onValueChange = { sides = it },
+            valueRange = 3f..12f,
+            steps = 10
+        )
+
+        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
+        Slider(
+            value = cornerRadius,
+            onValueChange = { cornerRadius = it },
+            valueRange = 0f..50f,
+        )
+    }
+}
+
+@Composable
 private fun DrawQuad() {
 
     val density = LocalDensity.current.density
@@ -620,121 +736,6 @@ private fun DrawCubic() {
             value = y3,
             onValueChange = { y3 = it },
             valueRange = 0f..screenWidthInPx,
-        )
-    }
-}
-
-@Composable
-private fun DrawPolygonPath() {
-    var sides by remember { mutableStateOf(3f) }
-    var cornerRadius by remember { mutableStateOf(1f) }
-
-    Canvas(modifier = canvasModifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-        val cx = canvasWidth / 2
-        val cy = canvasHeight / 2
-        val radius = (canvasHeight - 20.dp.toPx()) / 2
-        val path = createPolygonPath(cx, cy, sides.roundToInt(), radius)
-
-        drawPath(
-            color = Color.Red,
-            path = path,
-            style = Stroke(
-                width = 4.dp.toPx(),
-                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
-            )
-        )
-    }
-
-    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-        Text(text = "Sides ${sides.roundToInt()}")
-        Slider(
-            value = sides,
-            onValueChange = { sides = it },
-            valueRange = 3f..12f,
-            steps = 10
-        )
-
-        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
-
-        Slider(
-            value = cornerRadius,
-            onValueChange = { cornerRadius = it },
-            valueRange = 0f..50f,
-        )
-    }
-}
-
-/**
- * [PathMeasure.getSegment] returns a new path segment from original path it's set with.
- * Start and stop distances determine which sections are set to new path.
- */
-@Composable
-private fun DrawPolygonPathWithProgress() {
-
-    var sides by remember { mutableStateOf(3f) }
-    var cornerRadius by remember { mutableStateOf(1f) }
-    val pathMeasure by remember { mutableStateOf(PathMeasure()) }
-    var progress by remember { mutableStateOf(50f) }
-
-    val pathWithProgress by remember {
-        mutableStateOf(Path())
-    }
-
-    Canvas(modifier = canvasModifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-        val cx = canvasWidth / 2
-        val cy = canvasHeight / 2
-        val radius = (canvasHeight - 20.dp.toPx()) / 2
-
-        val fullPath = createPolygonPath(cx, cy, sides.roundToInt(), radius)
-        pathWithProgress.reset()
-        if (progress >= 100f) {
-            pathWithProgress.addPath(fullPath)
-        } else {
-            pathMeasure.setPath(fullPath, forceClosed = false)
-            pathMeasure.getSegment(
-                startDistance = 0f,
-                stopDistance = pathMeasure.length * progress / 100f,
-                pathWithProgress,
-                startWithMoveTo = true
-            )
-        }
-
-        drawPath(
-            color = Color.Red,
-            path = pathWithProgress,
-            style = Stroke(
-                width = 4.dp.toPx(),
-                pathEffect = PathEffect.cornerPathEffect(cornerRadius)
-            )
-        )
-    }
-
-    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-
-        Text(text = "Progress ${progress.roundToInt()}%")
-        Slider(
-            value = progress,
-            onValueChange = { progress = it },
-            valueRange = 0f..100f,
-        )
-
-        Text(text = "Sides ${sides.roundToInt()}")
-        Slider(
-            value = sides,
-            onValueChange = { sides = it },
-            valueRange = 3f..12f,
-            steps = 10
-        )
-
-        Text(text = "CornerRadius ${cornerRadius.roundToInt()}")
-        Slider(
-            value = cornerRadius,
-            onValueChange = { cornerRadius = it },
-            valueRange = 0f..50f,
         )
     }
 }

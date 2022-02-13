@@ -25,10 +25,12 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -46,7 +48,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         TutorialText2(text = "Draw with Touch")
-        TouchDrawExample1()
+//        TouchDrawExample1()
         TouchDrawExample2()
     }
 }
@@ -146,10 +148,15 @@ private fun TouchDrawExample1() {
 @Composable
 private fun TouchDrawExample2() {
 
-    val path = remember { Path() }
+    // Path used for drawing
+    val drawPath = remember { Path() }
+    // Path used for erasing. In this example erasing is faked by drawing with canvas color
+    // above draw path.
+    val erasePath = remember { Path() }
+
     var motionEvent by remember { mutableStateOf(ACTION_IDLE) }
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
-
+    var eraseModeOn by remember { mutableStateOf(false) }
 
     val pathOption = rememberPathOption()
 
@@ -169,7 +176,8 @@ private fun TouchDrawExample2() {
                     }
 
                     do {
-                        // This PointerEvent contains details details including events, id, position and more
+                        // This PointerEvent contains details details including events, id,
+                        // position and more
                         val event: PointerEvent = awaitPointerEvent()
                         motionEvent = ACTION_MOVE
                         currentPosition = event.changes.first().position
@@ -189,45 +197,69 @@ private fun TouchDrawExample2() {
 
     Canvas(modifier = drawModifier) {
 
+        // Draw or erase depending on erase mode is active or not
+        val currentPath = if (eraseModeOn) erasePath else drawPath
+
         when (motionEvent) {
+
             ACTION_DOWN -> {
-                path.moveTo(currentPosition.x, currentPosition.y)
+                currentPath.moveTo(currentPosition.x, currentPosition.y)
+                print("🚀 CANVAS ACTION_DOWN eraseMode: $eraseModeOn")
+
             }
             ACTION_MOVE -> {
 
-                if (currentPosition != Offset.Unspecified) {
-                    path.lineTo(currentPosition.x, currentPosition.y)
-                }
+                print("🔥 CANVAS ACTION_MOVE eraseMode: $eraseModeOn")
+                currentPath.lineTo(currentPosition.x, currentPosition.y)
+
             }
 
             ACTION_UP -> {
-                path.lineTo(currentPosition.x, currentPosition.y)
+                currentPath.lineTo(currentPosition.x, currentPosition.y)
             }
-
             else -> Unit
         }
 
         drawPath(
             color = pathOption.color,
-            path = path,
+            path = drawPath,
             style = Stroke(
                 width = pathOption.strokeWidth,
                 cap = pathOption.strokeCap,
                 join = pathOption.strokeJoin
             )
         )
+
+        drawPath(
+            color = Color.LightGray,
+            path = erasePath,
+            style = Stroke(
+                width = 30f,
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
+            )
+        )
     }
 
-    DrawingControl(pathOption = pathOption)
+    DrawingControl(pathOption = pathOption, eraseModeOn) {
+        motionEvent = ACTION_IDLE
+        eraseModeOn = it
+    }
 }
 
 @Composable
-private fun DrawingControl(pathOption: PathOption) {
+private fun DrawingControl(
+    pathOption: PathOption,
+    eraseModeOn: Boolean,
+    onEraseModeChange: (Boolean) -> Unit
+) {
 
     var showColorDialog by remember { mutableStateOf(false) }
     var showPropertiesDialog by remember { mutableStateOf(false) }
+    var eraseMode = eraseModeOn
     Row(
         modifier = Modifier
+            .padding(bottom = 8.dp)
             .shadow(2.dp, RoundedCornerShape(8.dp))
             .fillMaxWidth()
             .background(Color.White)
@@ -235,12 +267,24 @@ private fun DrawingControl(pathOption: PathOption) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
+        IconButton(
+            onClick = {
+                eraseMode = !eraseMode
+                onEraseModeChange(eraseMode)
+            }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_deblur_24),
+                contentDescription = null,
+                tint = if (eraseMode) Color.Black else Color.LightGray
+            )
+        }
         IconButton(onClick = { showColorDialog = !showColorDialog }) {
             Icon(Icons.Filled.ColorLens, contentDescription = null, tint = pathOption.color)
         }
 
         IconButton(onClick = { showPropertiesDialog = !showPropertiesDialog }) {
-            Icon(Icons.Filled.BorderColor, contentDescription = null, tint = pathOption.color)
+            Icon(Icons.Filled.BorderColor, contentDescription = null, tint = Color.LightGray)
         }
 
         Canvas(
@@ -389,7 +433,6 @@ fun ColorSelectionDialog(
 @Composable
 private fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
 
-
     Dialog(onDismissRequest = onDismiss) {
 
         Card(
@@ -412,7 +455,7 @@ private fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
                 )
 
 
-                PropertyMenu(title = "Stroke Cap",
+                ExposedSelectionMenu(title = "Stroke Cap",
                     index = when (pathOption.strokeCap) {
                         StrokeCap.Butt -> 0
                         StrokeCap.Round -> 1
@@ -429,7 +472,7 @@ private fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
                     }
                 )
 
-                PropertyMenu(title = "Stroke Join",
+                ExposedSelectionMenu(title = "Stroke Join",
                     index = when (pathOption.strokeJoin) {
                         StrokeJoin.Miter -> 0
                         StrokeJoin.Round -> 1
@@ -450,86 +493,6 @@ private fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
         }
 
     }
-}
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun PropertyMenu(title: String, index: Int, options: List<String>, onSelected: (Int) -> Unit) {
-
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[index]) }
-    var selectedIndex  = remember { index }
-
-    ExposedDropdownMenuBox(
-        modifier = Modifier.fillMaxWidth(),
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    ) {
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            readOnly = true,
-            value = selectedOptionText,
-            onValueChange = { },
-            label = { Text(title) },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-            )
-        )
-        ExposedDropdownMenu(
-            modifier = Modifier.fillMaxWidth(),
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-
-            }
-        ) {
-            options.forEachIndexed { index: Int, selectionOption: String ->
-                DropdownMenuItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                        selectedIndex = index
-                        onSelected(selectedIndex)
-                    }
-                ) {
-                    Text(text = selectionOption)
-                }
-            }
-        }
-    }
-}
-
-fun rememberPathOption(
-    strokeWidth: Float = 10f,
-    color: Color = Color.Red,
-    strokeCap: StrokeCap = StrokeCap.Round,
-    strokeJoin: StrokeJoin = StrokeJoin.Round
-): PathOption {
-    return PathOption(strokeWidth, color, strokeCap, strokeJoin)
-}
-
-class PathOption(
-    strokeWidth: Float,
-    color: Color,
-    strokeCap: StrokeCap,
-    strokeJoin: StrokeJoin
-) {
-    var strokeWidth by mutableStateOf(strokeWidth)
-    var color by mutableStateOf(color)
-    var strokeCap by mutableStateOf(strokeCap)
-    var strokeJoin by mutableStateOf(strokeJoin)
 }
 
 val ACTION_IDLE = 0

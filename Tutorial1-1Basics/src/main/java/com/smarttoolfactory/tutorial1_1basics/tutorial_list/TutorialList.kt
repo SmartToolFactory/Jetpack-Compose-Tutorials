@@ -1000,6 +1000,23 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_1_4 = TutorialSectionModel(
+        title = "6-1-4 Canvas Basics4",
+        description = "Use canvas to clip paths, or canvas using path, or rectangle with " +
+                "operations such as Difference, Intersect, Union, Xor, or ReverseDifference.",
+        action = {
+            Tutorial6_1Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_PATH_EFFECT
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_2 = TutorialSectionModel(
         title = "6-2 Blend Modes(Porter-Duff)",
         description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
@@ -1041,6 +1058,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_1,
         tutorial6_1_2,
         tutorial6_1_3,
+        tutorial6_1_4,
         tutorial6_2,
         tutorial6_4
     )
