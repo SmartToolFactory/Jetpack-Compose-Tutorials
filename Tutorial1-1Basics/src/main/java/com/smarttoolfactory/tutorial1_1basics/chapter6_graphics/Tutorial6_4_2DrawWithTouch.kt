@@ -19,10 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.res.painterResource
@@ -155,7 +152,11 @@ private fun TouchDrawExample2() {
     val erasePath = remember { Path() }
 
     var motionEvent by remember { mutableStateOf(ACTION_IDLE) }
+    // This is our motion event we get from touch motion
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
+    // This is previous motion event before next touch is saved into this current position
+    var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
+
     var eraseModeOn by remember { mutableStateOf(false) }
 
     val pathOption = rememberPathOption()
@@ -204,13 +205,19 @@ private fun TouchDrawExample2() {
 
             ACTION_DOWN -> {
                 currentPath.moveTo(currentPosition.x, currentPosition.y)
-                print("🚀 CANVAS ACTION_DOWN eraseMode: $eraseModeOn")
+                previousPosition = currentPosition
 
             }
             ACTION_MOVE -> {
 
-                print("🔥 CANVAS ACTION_MOVE eraseMode: $eraseModeOn")
-                currentPath.lineTo(currentPosition.x, currentPosition.y)
+                currentPath.quadraticBezierTo(
+                    previousPosition.x,
+                    previousPosition.y,
+                    (previousPosition.x + currentPosition.x) / 2,
+                    (previousPosition.y + currentPosition.y) / 2
+
+                )
+                previousPosition = currentPosition
 
             }
 
@@ -220,25 +227,36 @@ private fun TouchDrawExample2() {
             else -> Unit
         }
 
-        drawPath(
-            color = pathOption.color,
-            path = drawPath,
-            style = Stroke(
-                width = pathOption.strokeWidth,
-                cap = pathOption.strokeCap,
-                join = pathOption.strokeJoin
-            )
-        )
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
 
-        drawPath(
-            color = Color.LightGray,
-            path = erasePath,
-            style = Stroke(
-                width = 30f,
-                cap = StrokeCap.Round,
-                join = StrokeJoin.Round
+            // Destination
+            drawPath(
+                color = pathOption.color,
+                path = drawPath,
+                style = Stroke(
+                    width = pathOption.strokeWidth,
+                    cap = pathOption.strokeCap,
+                    join = pathOption.strokeJoin
+                )
             )
-        )
+
+            // Source
+            drawPath(
+                color = Color.Transparent,
+                path = erasePath,
+                style = Stroke(
+                    width = 30f,
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
+                ),
+                blendMode = BlendMode.Clear
+            )
+
+            restoreToCount(checkPoint)
+        }
+
+
     }
 
     DrawingControl(pathOption = pathOption, eraseModeOn) {
@@ -280,7 +298,7 @@ private fun DrawingControl(
             )
         }
         IconButton(onClick = { showColorDialog = !showColorDialog }) {
-            Icon(Icons.Filled.ColorLens, contentDescription = null, tint = pathOption.color)
+            Icon(Icons.Filled.ColorLens, contentDescription = null, tint = Color.LightGray)
         }
 
         IconButton(onClick = { showPropertiesDialog = !showPropertiesDialog }) {
