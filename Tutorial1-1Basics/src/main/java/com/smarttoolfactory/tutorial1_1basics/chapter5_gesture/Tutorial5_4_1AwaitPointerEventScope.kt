@@ -211,6 +211,8 @@ private fun AwaitTouchSlopOrCancellationExample() {
                     text = "awaitFirstDown() id: ${down.id}"
                     println("🍏 DOWN: ${down.position}")
 
+                    // 🔥🔥 Waits for drag threshold to be passed by pointer
+                    // or it returns null if up event is triggered
                     var change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
 

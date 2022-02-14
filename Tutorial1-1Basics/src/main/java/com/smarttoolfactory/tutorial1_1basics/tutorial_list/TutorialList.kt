@@ -962,7 +962,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
-            TAG_PATH_EFFECT
+            TAG_PATH_EFFECT,
+            TAG_BRUSH
         ),
         tagColor = GraphicsListColor
     )
@@ -978,7 +979,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
-            TAG_PATH_EFFECT
+            TAG_PATH_EFFECT,
+            TAG_BRUSH
         ),
         tagColor = GraphicsListColor
     )
@@ -995,7 +997,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
             TAG_PATH,
-            TAG_PATH_EFFECT
+            TAG_PATH_EFFECT,
+            TAG_BRUSH
         ),
         tagColor = GraphicsListColor
     )
@@ -1012,7 +1015,10 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
             TAG_PATH,
-            TAG_PATH_EFFECT
+            TAG_PATH_EFFECT,
+            TAG_BRUSH,
+            TAG_PATH_OPERATION,
+            TAG_CLIP_PATH
         ),
         tagColor = GraphicsListColor
     )
@@ -1034,9 +1040,11 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
-    val tutorial6_4 = TutorialSectionModel(
+    val tutorial6_4_1 = TutorialSectionModel(
         title = "6-4-1 Draw with Touch",
-        description = "Draw to canvas using touch down, move and up events",
+        description = "Draw to canvas using touch down, move and up events, o" +
+                "r drag gestures with properties such as color, stroke width," +
+                " or draw on image.",
         action = {
             Tutorial6_4Screen1()
         },
@@ -1049,7 +1057,31 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_AWAIT_POINTER_EVENT_SCOPE,
             TAG_POINTER_INPUT_CHANGE,
             TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
+            TAG_AWAIT_DRAG_OR_CANCELLATION,
+            TAG_BLEND_MODE
+        ),
+        tagColor = GraphicsListColor
+    )
 
+    val tutorial6_4_2 = TutorialSectionModel(
+        title = "6-4-2 Drawing App",
+        description = "Draw to canvas using touch down, move and up events using array of " +
+                "paths to have erase, undo, redo actions " +
+                "and set properties for each path separately.",
+        action = {
+            Tutorial6_4Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_BLEND_MODE
         ),
         tagColor = GraphicsListColor
     )
@@ -1060,6 +1092,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_3,
         tutorial6_1_4,
         tutorial6_2,
-        tutorial6_4
+        tutorial6_4_1,
+        tutorial6_4_2
     )
 }

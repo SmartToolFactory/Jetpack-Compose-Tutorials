@@ -174,6 +174,10 @@ private fun TouchDrawMotionEventsAndPathExample() {
     )
 }
 
+/**
+ * This example uses **awaitTouchSlopOrCancellation** and **awaitDragOrCancellation**
+ * to set touch event state, and position.
+ */
 @Composable
 private fun TouchDrawWithDragGesture() {
 
@@ -201,6 +205,8 @@ private fun TouchDrawWithDragGesture() {
                     gestureText = "awaitFirstDown() id: ${down.id}"
                     println("🍏 DOWN: ${down.position}")
 
+                    // Waits for drag threshold to be passed by pointer
+                    // or it returns null if up event is triggered
                     var change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
 

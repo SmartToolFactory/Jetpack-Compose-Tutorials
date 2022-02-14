@@ -500,7 +500,7 @@ private fun RevealShapeWithBlendMode() {
             )
 
             // Source
-            drawRect(Color(0xcc000000), blendMode = blendMode)
+            drawRect(Color(0xaa000000), blendMode = blendMode)
 
             restoreToCount(checkPoint)
         }
@@ -555,7 +555,7 @@ private fun RevealShapeWithBlendMode2() {
             val checkPoint = saveLayer(null, null)
 
             // Destination
-            drawRect(Color(0xcc000000))
+            drawRect(Color(0xaa000000))
 
             // Source
             drawCircle(
