@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +11,6 @@ import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -47,7 +45,7 @@ fun ExposedSelectionMenu(
     var selectedIndex = remember { index }
 
     ExposedDropdownMenuBox(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
@@ -98,6 +96,7 @@ fun ExposedSelectionMenu(
 
 @Composable
 fun DrawingControl(
+    modifier: Modifier = Modifier,
     pathOption: PathOption,
     eraseModeOn: Boolean,
     onEraseModeChange: (Boolean) -> Unit
@@ -107,12 +106,7 @@ fun DrawingControl(
     var showPropertiesDialog by remember { mutableStateOf(false) }
     var eraseMode = eraseModeOn
     Row(
-        modifier = Modifier
-            .padding(bottom = 8.dp)
-            .shadow(2.dp, RoundedCornerShape(8.dp))
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(4.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {

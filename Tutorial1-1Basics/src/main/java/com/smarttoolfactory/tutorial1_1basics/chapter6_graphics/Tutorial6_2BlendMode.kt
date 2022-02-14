@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CustomDialogWithResultExample
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -63,6 +64,19 @@ private fun TutorialContent() {
 @Composable
 private fun BlendModeExample() {
 
+    Text(
+        "Blend (PorterDuff) Modes",
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        modifier = Modifier.padding(8.dp)
+    )
+
+    StyleableTutorialText(
+        text = "Blend modes are used to clip, change position of destination/source " +
+                "or manipulate pixels." +
+                "\nFirst drawn shape/image is **Destination**, second one that drawn with " +
+                "**blend mode** is **Source**",
+        bullets = false)
 
     TutorialText2(text = "Draw Shapes with Blend Mode")
     DrawShapeBlendMode()

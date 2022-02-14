@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitDragOrCancellation
@@ -8,6 +9,7 @@ import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -18,9 +20,17 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.*
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import kotlin.math.roundToInt
 
 @Composable
 fun Tutorial6_4Screen1() {
@@ -35,6 +45,17 @@ private fun TutorialContent() {
             .background(backgroundColor)
             .verticalScroll(rememberScrollState())
     ) {
+
+        Text(
+            "Draw via Gestures",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        StyleableTutorialText(
+            text = "Drawing samples with **awaitPointerEventScope** to get touch " +
+                    "event states and position, paths to save quads/lines to draw on Canvas",
+            bullets = false)
         TutorialText2(text = "Draw with Touch")
         TouchDrawMotionEventsAndPathExample()
         TutorialText2(
@@ -48,6 +69,11 @@ private fun TutorialContent() {
         )
         TouchDrawWithPropertiesAndEraseExample()
 
+        TutorialText2(
+            text = "Draw on Image",
+            modifier = Modifier.padding(top = 10.dp)
+        )
+        TouchDrawImageExample()
     }
 }
 
@@ -227,8 +253,6 @@ private fun TouchDrawWithDragGesture() {
                     }
 
 
-
-
                 }
             }
         }
@@ -285,6 +309,8 @@ private fun TouchDrawWithDragGesture() {
  */
 @Composable
 private fun TouchDrawWithPropertiesAndEraseExample() {
+
+    val context = LocalContext.current
 
     // Path used for drawing
     val drawPath = remember { Path() }
@@ -393,9 +419,166 @@ private fun TouchDrawWithPropertiesAndEraseExample() {
         }
     }
 
-    DrawingControl(pathOption = pathOption, eraseMode) {
+    DrawingControl(
+        modifier = Modifier
+            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
+            .shadow(1.dp, RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(4.dp),
+        pathOption = pathOption,
+        eraseModeOn = eraseMode
+    ) {
         motionEvent = ACTION_IDLE
         eraseMode = it
+        if (eraseMode)
+            Toast.makeText(context, "Erase Mode On", Toast.LENGTH_SHORT).show()
+    }
+}
+
+
+/**
+ * Instead of drawing white canvas draw on an image that drawn to canvas
+ */
+@Composable
+private fun TouchDrawImageExample() {
+
+    val context = LocalContext.current
+
+    // This is the image to draw onto
+    val dstBitmap = ImageBitmap.imageResource(id = R.drawable.landscape10)
+
+    // Path used for drawing
+    val drawPath = remember { Path() }
+    // Path used for erasing. In this example erasing is faked by drawing with canvas color
+    // above draw path.
+    val erasePath = remember { Path() }
+
+    var motionEvent by remember { mutableStateOf(ACTION_IDLE) }
+    // This is our motion event we get from touch motion
+    var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
+    // This is previous motion event before next touch is saved into this current position
+    var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
+
+    var eraseMode by remember { mutableStateOf(false) }
+
+    val pathOption = rememberPathOption()
+
+    val drawModifier = canvasModifier
+        .background(Color.White)
+        .pointerInput(Unit) {
+            forEachGesture {
+                awaitPointerEventScope {
+
+                    // Wait for at least one pointer to press down, and set first contact position
+                    awaitFirstDown().also {
+                        motionEvent = ACTION_DOWN
+                        currentPosition = it.position
+                    }
+
+                    do {
+                        // This PointerEvent contains details details including events, id,
+                        // position and more
+                        val event: PointerEvent = awaitPointerEvent()
+                        motionEvent = ACTION_MOVE
+                        currentPosition = event.changes.first().position
+                    } while (event.changes.any {
+                            val pressed = it.pressed
+                            if (pressed) {
+                                it.consumePositionChange()
+                            }
+                            pressed
+                        }
+                    )
+
+                    motionEvent = ACTION_UP
+                }
+            }
+        }
+
+    Canvas(modifier = drawModifier) {
+
+        val canvasWidth = size.width.roundToInt()
+        val canvasHeight = size.height.roundToInt()
+
+        // Draw or erase depending on erase mode is active or not
+        val currentPath = if (eraseMode) erasePath else drawPath
+
+        when (motionEvent) {
+
+            ACTION_DOWN -> {
+                currentPath.moveTo(currentPosition.x, currentPosition.y)
+                previousPosition = currentPosition
+
+            }
+            ACTION_MOVE -> {
+
+                currentPath.quadraticBezierTo(
+                    previousPosition.x,
+                    previousPosition.y,
+                    (previousPosition.x + currentPosition.x) / 2,
+                    (previousPosition.y + currentPosition.y) / 2
+
+                )
+                previousPosition = currentPosition
+            }
+
+            ACTION_UP -> {
+                currentPath.lineTo(currentPosition.x, currentPosition.y)
+            }
+            else -> Unit
+        }
+
+        // Draw Image first
+        drawImage(
+            image = dstBitmap,
+            srcSize = IntSize(dstBitmap.width, dstBitmap.height),
+            dstSize = IntSize(canvasWidth, canvasHeight)
+        )
+
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
+
+            // Destination
+            drawPath(
+                color = pathOption.color,
+                path = drawPath,
+                style = Stroke(
+                    width = pathOption.strokeWidth,
+                    cap = pathOption.strokeCap,
+                    join = pathOption.strokeJoin
+                )
+            )
+
+            // Source
+            drawPath(
+                color = Color.Transparent,
+                path = erasePath,
+                style = Stroke(
+                    width = 30f,
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
+                ),
+                blendMode = BlendMode.Clear
+            )
+            restoreToCount(checkPoint)
+        }
+    }
+
+    DrawingControl(
+        modifier = Modifier
+            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
+            .shadow(1.dp, RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(4.dp),
+        pathOption = pathOption,
+        eraseModeOn = eraseMode
+    ) {
+        motionEvent = ACTION_IDLE
+        eraseMode = it
+        if (eraseMode)
+            Toast.makeText(context, "Erase Mode On", Toast.LENGTH_SHORT).show()
     }
 }
 

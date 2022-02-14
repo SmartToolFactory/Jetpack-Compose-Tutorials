@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
@@ -46,6 +47,11 @@ private fun TutorialContent() {
             fontSize = 20.sp,
             modifier = Modifier.padding(8.dp)
         )
+
+        StyleableTutorialText(
+            text = "In this example **path.op**, **DrawScope.clipPath/Rect** with " +
+                    "with different operations modes used to clip some sections of shapes or **Canvas**.",
+            bullets = false)
 
         TutorialText2(text = "path.op Stroke")
         PathOp1()
