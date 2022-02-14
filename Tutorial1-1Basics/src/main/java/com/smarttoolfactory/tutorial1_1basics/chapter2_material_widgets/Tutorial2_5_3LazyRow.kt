@@ -1,11 +1,12 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +18,10 @@ import com.smarttoolfactory.tutorial1_1basics.model.Place
 import com.smarttoolfactory.tutorial1_1basics.model.Snack
 import com.smarttoolfactory.tutorial1_1basics.model.places
 import com.smarttoolfactory.tutorial1_1basics.model.snacks
-import com.smarttoolfactory.tutorial1_1basics.ui.components.*
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.HorizontalSnackCard
+import com.smarttoolfactory.tutorial1_1basics.ui.components.PlaceCard
+import com.smarttoolfactory.tutorial1_1basics.ui.components.PlacesToBookComponent
 
 @Composable
 fun Tutorial2_5Screen3() {
@@ -32,7 +36,7 @@ private fun TutorialContent() {
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxHeight()
-            .background(Color(0xffECEFF1)),
+            .background(backgroundColor),
         content = {
 
             item {

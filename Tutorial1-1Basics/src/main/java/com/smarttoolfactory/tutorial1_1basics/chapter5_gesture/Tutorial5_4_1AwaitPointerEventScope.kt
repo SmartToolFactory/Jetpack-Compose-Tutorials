@@ -209,10 +209,12 @@ private fun AwaitTouchSlopOrCancellationExample() {
                     val down: PointerInputChange = awaitFirstDown()
                     gestureColor = Orange400
                     text = "awaitFirstDown() id: ${down.id}"
+                    println("🍏 DOWN: ${down.position}")
 
                     var change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
 
+                            println("⛺️ awaitTouchSlopOrCancellation ${change.position}, over: $over")
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + over
 

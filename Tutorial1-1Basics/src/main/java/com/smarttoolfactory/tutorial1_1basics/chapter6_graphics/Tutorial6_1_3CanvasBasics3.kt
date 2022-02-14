@@ -9,6 +9,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -17,6 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
@@ -30,6 +32,7 @@ private fun TutorialContent() {
 
     Column(
         modifier = Modifier
+            .background(backgroundColor)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -511,8 +514,10 @@ private fun DrawQuad() {
     val path2 = remember { Path() }
     Canvas(
         modifier = Modifier
+            .padding(8.dp)
+            .shadow(1.dp)
+            .background(Color.White)
             .size(screenWidth, screenWidth)
-            .background(Color.LightGray)
     ) {
         path1.reset()
         path1.moveTo(x0, y0)
@@ -629,8 +634,10 @@ private fun DrawCubic() {
     val path2 = remember { Path() }
     Canvas(
         modifier = Modifier
+            .padding(8.dp)
+            .shadow(1.dp)
+            .background(Color.White)
             .size(screenWidth, screenWidth)
-            .background(Color.LightGray)
     ) {
         path1.reset()
         path1.moveTo(x0, y0)
@@ -741,6 +748,8 @@ private fun DrawCubic() {
 }
 
 private val canvasModifier = Modifier
-    .background(Color.LightGray)
+    .padding(8.dp)
+    .shadow(1.dp)
+    .background(Color.White)
     .fillMaxSize()
     .height(200.dp)

@@ -10,12 +10,11 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CustomDialogWithResultExample
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -52,6 +52,7 @@ fun Tutorial6_2Screen() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
+            .background(backgroundColor)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -88,9 +89,11 @@ private fun ColorAddBlendMode() {
 
     Canvas(
         modifier = Modifier
+            .padding(8.dp)
+            .shadow(1.dp)
+            .background(Color.White)
             .fillMaxWidth()
             .aspectRatio(1f)
-            .background(Color.LightGray)
     ) {
 
         val canvasWidth = size.width
@@ -570,9 +573,8 @@ private fun RevealShapeWithBlendMode2() {
 }
 
 private val canvasModifier = Modifier
-//    .background(Color.LightGray)
-    .drawBehind {
-        drawRect(Color.LightGray, style = Stroke(width = 4.dp.toPx()))
-    }
+    .padding(8.dp)
+    .shadow(1.dp)
+    .background(Color.White)
     .fillMaxSize()
     .height(200.dp)

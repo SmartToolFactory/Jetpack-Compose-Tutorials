@@ -9,6 +9,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBox
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
@@ -40,6 +42,7 @@ private fun TutorialContent() {
 
     Column(
         modifier = Modifier
+            .background(backgroundColor)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -388,6 +391,8 @@ private fun DrawImageExample() {
 }
 
 private val canvasModifier = Modifier
-    .background(Color.LightGray)
+    .padding(8.dp)
+    .shadow(1.dp)
+    .background(Color.White)
     .fillMaxSize()
     .height(200.dp)

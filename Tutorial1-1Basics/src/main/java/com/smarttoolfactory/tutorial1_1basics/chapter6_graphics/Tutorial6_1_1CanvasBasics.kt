@@ -9,6 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import java.lang.Math.PI
 import kotlin.math.sin
@@ -32,6 +34,7 @@ private fun TutorialContent() {
 
     Column(
         modifier = Modifier
+            .background(backgroundColor)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -159,8 +162,10 @@ private fun DrawLineExample() {
     TutorialText2(text = "PathEffect")
     Canvas(
         modifier = Modifier
+            .padding(8.dp)
+            .shadow(1.dp)
+            .background(Color.White)
             .fillMaxWidth()
-            .background(Color.LightGray)
             .height(120.dp)
     ) {
 
@@ -714,12 +719,16 @@ fun getSinusoidalPoints(size: Size, horizontalOffset: Float = 0f): MutableList<O
 }
 
 private val canvasModifier = Modifier
-    .background(Color.LightGray)
+    .padding(8.dp)
+    .shadow(1.dp)
+    .background(Color.White)
     .fillMaxSize()
     .height(60.dp)
 
 private val canvasModifier2 = Modifier
-    .background(Color.LightGray)
+    .padding(8.dp)
+    .shadow(1.dp)
+    .background(Color.White)
     .fillMaxSize()
     .height(100.dp)
 

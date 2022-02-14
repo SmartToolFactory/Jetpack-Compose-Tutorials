@@ -1,10 +1,29 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BorderColor
+import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import com.smarttoolfactory.tutorial1_1basics.R
 
 /**
  * Expandable selection menu
@@ -72,6 +91,253 @@ fun ExposedSelectionMenu(
                 ) {
                     Text(text = selectionOption)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun DrawingControl(
+    pathOption: PathOption,
+    eraseModeOn: Boolean,
+    onEraseModeChange: (Boolean) -> Unit
+) {
+
+    var showColorDialog by remember { mutableStateOf(false) }
+    var showPropertiesDialog by remember { mutableStateOf(false) }
+    var eraseMode = eraseModeOn
+    Row(
+        modifier = Modifier
+            .padding(bottom = 8.dp)
+            .shadow(2.dp, RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        IconButton(
+            onClick = {
+                eraseMode = !eraseMode
+                onEraseModeChange(eraseMode)
+            }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_deblur_24),
+                contentDescription = null,
+                tint = if (eraseMode) Color.Black else Color.LightGray
+            )
+        }
+        IconButton(onClick = { showColorDialog = !showColorDialog }) {
+            Icon(Icons.Filled.ColorLens, contentDescription = null, tint = Color.LightGray)
+        }
+
+        IconButton(onClick = { showPropertiesDialog = !showPropertiesDialog }) {
+            Icon(Icons.Filled.BorderColor, contentDescription = null, tint = Color.LightGray)
+        }
+
+        Canvas(
+            modifier = Modifier
+                .height(10.dp)
+                .width(100.dp)
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+        ) {
+            val path = Path()
+            path.moveTo(0f, size.height / 2)
+            path.lineTo(size.width, size.height / 2)
+
+            drawPath(
+                color = pathOption.color,
+                path = path,
+                style = Stroke(
+                    width = pathOption.strokeWidth,
+                    cap = pathOption.strokeCap,
+                    join = pathOption.strokeJoin
+                )
+            )
+        }
+    }
+
+    if (showColorDialog) {
+        ColorSelectionDialog(
+            pathOption.color,
+            onDismiss = { showColorDialog = !showColorDialog },
+            onNegativeClick = { showColorDialog = !showColorDialog },
+            onPositiveClick = { color: Color ->
+                showColorDialog = !showColorDialog
+                pathOption.color = color
+            }
+        )
+    }
+
+    if (showPropertiesDialog) {
+        DrawingMenuDialog(pathOption) {
+            showPropertiesDialog = !showPropertiesDialog
+        }
+    }
+}
+
+@Composable
+fun ColorSelectionDialog(
+    initialColor: Color,
+    onDismiss: () -> Unit,
+    onNegativeClick: () -> Unit,
+    onPositiveClick: (Color) -> Unit
+) {
+    var red by remember { mutableStateOf(initialColor.red * 255) }
+    var green by remember { mutableStateOf(initialColor.green * 255) }
+    var blue by remember { mutableStateOf(initialColor.blue * 255) }
+
+    val color = Color(
+        red = red.toInt(),
+        green = green.toInt(),
+        blue = blue.toInt(),
+        alpha = 255
+    )
+
+    Dialog(onDismissRequest = onDismiss) {
+
+        Card(
+            elevation = 2.dp,
+            shape = RoundedCornerShape(8.dp)
+        ) {
+
+            Column(modifier = Modifier.padding(8.dp)) {
+
+                Text(
+                    text = "Select Color",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Color Selection
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+
+                    Column {
+
+                        Text(text = "Red ${red.toInt()}")
+                        Slider(
+                            value = red,
+                            onValueChange = { red = it },
+                            valueRange = 0f..255f,
+                            onValueChangeFinished = {}
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(text = "Green ${green.toInt()}")
+                        Slider(
+                            value = green,
+                            onValueChange = { green = it },
+                            valueRange = 0f..255f,
+                            onValueChangeFinished = {}
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(text = "Blue ${blue.toInt()}")
+                        Slider(
+                            value = blue,
+                            onValueChange = { blue = it },
+                            valueRange = 0f..255f,
+                            onValueChangeFinished = {}
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Surface(
+                            shape = CutCornerShape(5.dp),
+                            color = color,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                        ) {}
+                    }
+                }
+
+                // Buttons
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    TextButton(onClick = onNegativeClick) {
+                        Text(text = "CANCEL")
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
+                    TextButton(onClick = {
+                        onPositiveClick(color)
+                    }) {
+                        Text(text = "OK")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
+
+    Dialog(onDismissRequest = onDismiss) {
+
+        Card(
+            elevation = 2.dp,
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Column(modifier = Modifier.padding(6.dp)) {
+
+                Text(
+                    text = "Stroke Width ${pathOption.strokeWidth.toInt()}",
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+
+                Slider(
+                    value = pathOption.strokeWidth,
+                    onValueChange = { pathOption.strokeWidth = it },
+                    valueRange = 1f..100f,
+                    onValueChangeFinished = {}
+                )
+
+
+                ExposedSelectionMenu(title = "Stroke Cap",
+                    index = when (pathOption.strokeCap) {
+                        StrokeCap.Butt -> 0
+                        StrokeCap.Round -> 1
+                        else -> 2
+                    },
+                    options = listOf("Butt", "Round", "Square"),
+                    onSelected = {
+                        println("STOKE CAP $it")
+                        pathOption.strokeCap = when (it) {
+                            0 -> StrokeCap.Butt
+                            1 -> StrokeCap.Round
+                            else -> StrokeCap.Square
+                        }
+                    }
+                )
+
+                ExposedSelectionMenu(title = "Stroke Join",
+                    index = when (pathOption.strokeJoin) {
+                        StrokeJoin.Miter -> 0
+                        StrokeJoin.Round -> 1
+                        else -> 2
+                    },
+                    options = listOf("Miter", "Round", "Bevel"),
+                    onSelected = {
+                        println("STOKE JOIN $it")
+
+                        pathOption.strokeJoin = when (it) {
+                            0 -> StrokeJoin.Miter
+                            1 -> StrokeJoin.Round
+                            else -> StrokeJoin.Bevel
+                        }
+                    }
+                )
             }
         }
     }

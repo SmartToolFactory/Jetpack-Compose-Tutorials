@@ -17,6 +17,8 @@ val Purple400 = Color(0xffAB47BC)
 val Brown400 = Color(0xff8D6E63)
 val BlueGrey400 = Color(0xff78909C)
 
+val backgroundColor = Color(0xffECEFF1)
+
 
 val DefaultListColor = Color(0xff00BCD4)
 val LayoutListColor = Color(0xffFFEB3B)

@@ -31,6 +31,7 @@ import com.smarttoolfactory.tutorial1_1basics.model.ActionItemSpec
 import com.smarttoolfactory.tutorial1_1basics.model.separateIntoActionAndOverflow
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
@@ -53,7 +54,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xffECEFF1)),
+            .background(backgroundColor),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         content = {
@@ -388,7 +389,7 @@ fun ChatAppbar(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clickable { onClick?.invoke()}
+                    .clickable { onClick?.invoke() }
                     .padding(2.dp),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {

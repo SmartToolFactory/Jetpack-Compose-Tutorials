@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
@@ -27,7 +28,7 @@ private fun TutorialContent() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xffECEFF1)),
+            .background(backgroundColor),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         content = {

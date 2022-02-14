@@ -9,10 +9,10 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.Snack
 import com.smarttoolfactory.tutorial1_1basics.model.snacks
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.GridSnackCard
 
 @ExperimentalFoundationApi
@@ -28,7 +28,7 @@ private fun TutorialContent() {
         contentPadding = PaddingValues(12.dp),
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xffECEFF1)),
+            .background(backgroundColor),
         cells = GridCells.Fixed(3),
         content = {
             items(items = snacks, itemContent = { snack: Snack ->

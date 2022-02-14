@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 
 @ExperimentalMaterialApi
 @Composable
@@ -38,7 +39,7 @@ fun Tutorial2_8Screen(onBack: (() -> Unit)? = null) {
 private fun TutorialContent(onBack: (() -> Unit)? = null) {
     Scaffold(
 
-        modifier = Modifier.background(Color(0xffECEFF1)),
+        modifier = Modifier.background(backgroundColor),
 
         floatingActionButton = {
             FloatingActionButton(
@@ -67,7 +68,7 @@ private fun MainContent(bottomAppBarHeight: Dp) {
 
     // 🔥 Get BottomAppBar height to set correct bottom padding for LazyColumn
     LazyColumn(
-        modifier = Modifier.background(Color(0xffECEFF1)),
+        modifier = Modifier.background(backgroundColor),
         contentPadding = PaddingValues(
             top = 8.dp,
             start = 8.dp,

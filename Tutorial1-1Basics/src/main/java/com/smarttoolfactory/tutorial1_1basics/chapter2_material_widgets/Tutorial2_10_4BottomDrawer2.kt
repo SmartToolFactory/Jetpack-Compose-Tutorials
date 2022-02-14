@@ -14,14 +14,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.DrawerButton
 import kotlinx.coroutines.launch
 
@@ -112,7 +111,7 @@ private fun DrawerContent(
     openDrawer: () -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.background(Color(0xffECEFF1)),
+        modifier = Modifier.background(backgroundColor),
         contentPadding = PaddingValues(
             top = 8.dp,
             start = 8.dp,
