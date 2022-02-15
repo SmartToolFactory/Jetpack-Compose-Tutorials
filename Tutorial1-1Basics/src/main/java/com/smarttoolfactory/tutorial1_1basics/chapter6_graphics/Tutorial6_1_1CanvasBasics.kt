@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import java.lang.Math.PI
 import kotlin.math.sin
@@ -38,6 +39,18 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
+        Text(
+            "Canvas Basics",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        StyleableTutorialText(
+            text = "Examples for drawing line, rectangle, circle, " +
+                    "and points with stroke, cap, join and brush properties.",
+            bullets = false)
 
         Text(
             text = "Draw Line",

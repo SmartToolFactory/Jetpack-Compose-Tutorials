@@ -38,7 +38,6 @@ fun Tutorial5_4Screen3() {
 private fun TutorialContent() {
 
     val scrollState: ScrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -121,7 +120,7 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
                         // More spaced need to scroll so added verticalScroll to parent
                         onDown()
 
-                        // This PointerEvent contains details details including events, id, position and more
+                        // This PointerEvent contains details including events, id, position and more
                         val event: PointerEvent = awaitPointerEvent()
 
 

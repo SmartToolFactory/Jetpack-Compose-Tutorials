@@ -58,7 +58,7 @@ fun roundedRectanglePath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius
             forceMoveTo = false
         )
 
-        lineTo(x = topLeft.x + size.width - radius, y = topLeft.y)
+        lineTo(x = topLeft.x + size.width - cornerRadius, y = topLeft.y)
 
         // Top right arc
         arcTo(
@@ -73,7 +73,7 @@ fun roundedRectanglePath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius
             forceMoveTo = false
         )
 
-        lineTo(x = topLeft.x + size.width, y = topLeft.y + size.height - radius)
+        lineTo(x = topLeft.x + size.width, y = topLeft.y + size.height - cornerRadius)
 
         // Bottom right arc
         arcTo(
@@ -88,7 +88,7 @@ fun roundedRectanglePath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius
             forceMoveTo = false
         )
 
-        lineTo(x = topLeft.x + radius, y = topLeft.y + size.height)
+        lineTo(x = topLeft.x + cornerRadius, y = topLeft.y + size.height)
 
         // Bottom left arc
         arcTo(
@@ -103,7 +103,7 @@ fun roundedRectanglePath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius
             forceMoveTo = false
         )
 
-        lineTo(x = topLeft.x, y = topLeft.y + radius)
+        lineTo(x = topLeft.x, y = topLeft.y + cornerRadius)
         close()
     }
 }

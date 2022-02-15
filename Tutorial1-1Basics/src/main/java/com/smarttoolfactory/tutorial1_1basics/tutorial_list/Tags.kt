@@ -178,6 +178,7 @@ const val TAG_AWAIT_VERTICAL_TOUCH_SLOP_OR_CANCELLATION = "awaitVerticalTouchSlo
 const val TAG_CANVAS = "Canvas"
 const val TAG_DRAW_SCOPE = "DrawScope"
 const val TAG_PATH = "Path"
+const val TAG_PATH_SEGMENT = "PathSegment"
 const val TAG_PATH_EFFECT = "Path Effect"
 const val TAG_BRUSH = "Brush"
 const val TAG_PATH_OPERATION ="PathOperation"

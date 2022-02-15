@@ -28,6 +28,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
@@ -46,6 +47,18 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
+        Text(
+            "Canvas Basics2",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        StyleableTutorialText(
+            text = "Examples for drawing arc with positive or negative start or sweep " +
+                    "angles. Draw image with src, dst parameters",
+            bullets = false)
 
         Text(
             "Draw Arc",

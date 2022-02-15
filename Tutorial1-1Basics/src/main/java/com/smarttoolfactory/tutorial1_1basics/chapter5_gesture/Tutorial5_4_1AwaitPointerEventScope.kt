@@ -148,7 +148,7 @@ private fun AwaitPointerEventExample() {
                     }
 
                     do {
-                        // 🔥 This PointerEvent contains details details including events,
+                        // 🔥 This PointerEvent contains details including events,
                         // id, position and more
                         val event: PointerEvent = awaitPointerEvent()
 

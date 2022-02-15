@@ -986,7 +986,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial6_1_3 = TutorialSectionModel(
-        title = "6-1-3 Canvas Basics3",
+        title = "6-1-3 Canvas Paths",
         description = "Use canvas to draw path using absolute and relative positions, adding " +
                 "arc to path, drawing custom paths, progress, polygons, quads, and cubic. ",
         action = {
@@ -1004,7 +1004,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial6_1_4 = TutorialSectionModel(
-        title = "6-1-4 Canvas Basics4",
+        title = "6-1-4 Canvas Path Ops",
         description = "Use canvas to clip paths, or canvas using path, or rectangle with " +
                 "operations such as Difference, Intersect, Union, Xor, or ReverseDifference.",
         action = {
@@ -1017,6 +1017,26 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_PATH,
             TAG_PATH_EFFECT,
             TAG_BRUSH,
+            TAG_PATH_OPERATION,
+            TAG_CLIP_PATH
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_1_5 = TutorialSectionModel(
+        title = "6-1-5 Canvas Path Segments",
+        description = "Flatten Android Path to path segments and display " +
+                "PathSegment start and/or end points.",
+        action = {
+            Tutorial6_1Screen5()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_PATH_SEGMENT,
+            TAG_PATH_EFFECT,
             TAG_PATH_OPERATION,
             TAG_CLIP_PATH
         ),
@@ -1091,6 +1111,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_2,
         tutorial6_1_3,
         tutorial6_1_4,
+        tutorial6_1_5,
         tutorial6_2,
         tutorial6_4_1,
         tutorial6_4_2

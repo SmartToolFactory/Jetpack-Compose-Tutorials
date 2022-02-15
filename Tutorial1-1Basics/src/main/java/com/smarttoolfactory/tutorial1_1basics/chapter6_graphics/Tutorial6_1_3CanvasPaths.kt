@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
@@ -42,33 +43,31 @@ private fun TutorialContent() {
             fontSize = 20.sp,
             modifier = Modifier.padding(8.dp)
         )
-        DrawPathExample()
+        StyleableTutorialText(
+            text = "Draw paths using absolute or relative positions, add circles, " +
+                    "rectangles, or create custom rounded rectangle or ticket shaped paths." +
+                    "\n Draw path progress with **PathMeasure**, or draw polygons with " +
+                    "simple trigonometry or draw quad or cubic",
+            bullets = false)
+        TutorialText2(text = "Absolute and Relative positions")
+        DrawPath()
+        TutorialText2(text = "Draw arcTo path")
+        DrawArcToPath()
+        TutorialText2(text = "Draw ticket path")
+        DrawTicketPathWithArc()
+        TutorialText2(text = "Draw rounded rectangle with path")
+        DrawRoundedRectangleWithArc()
+        TutorialText2(text = "Draw path with progress")
+        DrawPathProgress()
+        TutorialText2(text = "Polygon Path and CornerRadius")
+        DrawPolygonPath()
+        TutorialText2(text = "Polygon Path Progress")
+        DrawPolygonPathWithProgress()
+        TutorialText2(text = "QuadTo and RelativeQuadTo")
+        DrawQuad()
+        TutorialText2(text = "CubicTo")
+        DrawCubic()
     }
-}
-
-@Composable
-private fun DrawPathExample() {
-
-    Spacer(modifier = Modifier.height(10.dp))
-    TutorialText2(text = "Absolute and Relative positions")
-    DrawPath()
-    TutorialText2(text = "Draw arcTo path")
-    DrawArcToPath()
-    TutorialText2(text = "Draw ticket path")
-    DrawTicketPathWithArc()
-    TutorialText2(text = "Draw rounded rectangle with path")
-    DrawRoundedRectangleWithArc()
-    TutorialText2(text = "Draw path with progress")
-    DrawPathProgress()
-    TutorialText2(text = "Polygon Path and CornerRadius")
-    DrawPolygonPath()
-    TutorialText2(text = "Polygon Path Progress")
-    DrawPolygonPathWithProgress()
-    TutorialText2(text = "QuadTo and RelativeQuadTo")
-    DrawQuad()
-    TutorialText2(text = "CubicTo")
-    DrawCubic()
-
 }
 
 @Composable
