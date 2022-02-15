@@ -1025,7 +1025,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_1_5 = TutorialSectionModel(
         title = "6-1-5 Canvas Path Segments",
-        description = "Flatten Android Path to path segments and display " +
+        description = "Use canvas to flatten Android Path to path segments and display " +
                 "PathSegment start and/or end points.",
         action = {
             Tutorial6_1Screen5()
