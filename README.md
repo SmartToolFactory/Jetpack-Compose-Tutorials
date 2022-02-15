@@ -114,9 +114,9 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>6-1-3 Canvas Path</h3><br/>Use canvas to draw path using absolute and relative positions, adding arc to path, drawing custom paths, progress, polygons, quads, and cubic.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>|<img src ="/./screenshots/tutorial6_1_3.gif" width=320> |
 |  |  |
-|<h3>6-1-4 Canvas Path Ops</h3><br/>Use canvas to clip paths, or canvas using path, or rectangle with operations such as Difference, Intersect, Union, Xor, or ReverseDifference..<br><br>• Canvas<br>• DrawScope<br>• Path<br>• PathOperation<br>• ClipOperation<br>|<img src ="/./screenshots/tutorial6_1_3.gif" width=320> |
+|<h3>6-1-4 Canvas Path Ops</h3><br/>Use canvas to clip paths, or canvas using path, or rectangle with operations such as Difference, Intersect, Union, Xor, or ReverseDifference..<br><br>• Canvas<br>• DrawScope<br>• Path<br>• PathOperation<br>• ClipOperation<br>|<img src ="/./screenshots/tutorial6_1_4.gif" width=320> |
 |  |  |
-|<h3>6-1-5 Canvas Path Segments</h3><br/>Use canvas to flatten Android Path to path segments and display PathSegment start and/or end points.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• PathSegment<br>|<img src ="/./screenshots/tutorial6_1_3.gif" width=320> |
+|<h3>6-1-5 Canvas Path Segments</h3><br/>Use canvas to flatten Android Path to path segments and display PathSegment start and/or end points.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• PathSegment<br>|<img src ="/./screenshots/tutorial6_1_5.gif" width=320> |
 |  |  |
 |<h3>6-2 Blend(Porter-Duff) Modes</h3><br/>Use blend(Porter-Duff) modes to change drawing source/destination or clip based on blend mode ,and manipulate pixels<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>• BlendMode<br>|<img src ="/./screenshots/tutorial6_2.gif" width=320> |
 |  |  |
