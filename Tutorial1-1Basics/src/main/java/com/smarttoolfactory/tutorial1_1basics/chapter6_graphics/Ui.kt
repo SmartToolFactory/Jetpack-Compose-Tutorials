@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.ColorLens
+import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +46,9 @@ fun ExposedSelectionMenu(
     var selectedIndex = remember { index }
 
     ExposedDropdownMenuBox(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
@@ -105,6 +108,7 @@ fun DrawingControl(
     var showColorDialog by remember { mutableStateOf(false) }
     var showPropertiesDialog by remember { mutableStateOf(false) }
     var eraseMode = eraseModeOn
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -170,6 +174,105 @@ fun DrawingControl(
         }
     }
 }
+
+@Composable
+fun DrawingControlExtended(
+    modifier: Modifier = Modifier,
+    pathOption: PathOption,
+    drawMode: DrawMode,
+    onDrawModeChanged: (DrawMode) -> Unit
+) {
+
+    var showColorDialog by remember { mutableStateOf(false) }
+    var showPropertiesDialog by remember { mutableStateOf(false) }
+    var currentDrawMode = drawMode
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        IconButton(
+            onClick = {
+                currentDrawMode = if (currentDrawMode == DrawMode.Touch) {
+                    DrawMode.Draw
+                } else {
+                    DrawMode.Touch
+                }
+                onDrawModeChanged(currentDrawMode)
+            }
+        ) {
+            Icon(
+                Icons.Filled.TouchApp,
+                contentDescription = null,
+                tint = if (currentDrawMode == DrawMode.Touch) Color.Black else Color.LightGray
+            )
+        }
+        IconButton(
+            onClick = {
+                currentDrawMode = if (currentDrawMode == DrawMode.Erase) {
+                    DrawMode.Draw
+                } else {
+                    DrawMode.Erase
+                }
+                onDrawModeChanged(currentDrawMode)
+            }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_deblur_24),
+                contentDescription = null,
+                tint = if (currentDrawMode == DrawMode.Erase) Color.Black else Color.LightGray
+            )
+        }
+        IconButton(onClick = { showColorDialog = !showColorDialog }) {
+            Icon(Icons.Filled.ColorLens, contentDescription = null, tint = Color.LightGray)
+        }
+
+        IconButton(onClick = { showPropertiesDialog = !showPropertiesDialog }) {
+            Icon(Icons.Filled.BorderColor, contentDescription = null, tint = Color.LightGray)
+        }
+
+        Canvas(
+            modifier = Modifier
+                .height(10.dp)
+                .width(100.dp)
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+        ) {
+            val path = Path()
+            path.moveTo(0f, size.height / 2)
+            path.lineTo(size.width, size.height / 2)
+
+            drawPath(
+                color = pathOption.color,
+                path = path,
+                style = Stroke(
+                    width = pathOption.strokeWidth,
+                    cap = pathOption.strokeCap,
+                    join = pathOption.strokeJoin
+                )
+            )
+        }
+    }
+
+    if (showColorDialog) {
+        ColorSelectionDialog(
+            pathOption.color,
+            onDismiss = { showColorDialog = !showColorDialog },
+            onNegativeClick = { showColorDialog = !showColorDialog },
+            onPositiveClick = { color: Color ->
+                showColorDialog = !showColorDialog
+                pathOption.color = color
+            }
+        )
+    }
+
+    if (showPropertiesDialog) {
+        DrawingMenuDialog(pathOption) {
+            showPropertiesDialog = !showPropertiesDialog
+        }
+    }
+}
+
 
 @Composable
 fun ColorSelectionDialog(
@@ -335,4 +438,8 @@ fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
             }
         }
     }
+}
+
+enum class DrawMode {
+    Draw, Touch, Erase
 }

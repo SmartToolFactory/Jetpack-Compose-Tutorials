@@ -49,7 +49,8 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "Draw segments of paths by flattening paths. Use selections to display " +
                     "**start** or/and **end** of any segment.",
-            bullets = false)
+            bullets = false
+        )
         DrawPath()
         DrawArcToPath()
         DrawTicketPathWithArc()
@@ -137,23 +138,19 @@ private fun DrawPath() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -206,23 +203,19 @@ private fun DrawArcToPath() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -310,23 +303,19 @@ private fun DrawTicketPathWithArc() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -357,11 +346,13 @@ private fun DrawRoundedRectangleWithArc() {
             cornerRadius = 20.dp.toPx()
         )
 
-        path.addPath(roundedRectanglePath(
-            topLeft = Offset(600f, 200f),
-            size = Size(200f, 200f),
-            cornerRadius = 8.dp.toPx()
-        ))
+        path.addPath(
+            roundedRectanglePath(
+                topLeft = Offset(600f, 200f),
+                size = Size(200f, 200f),
+                cornerRadius = 8.dp.toPx()
+            )
+        )
 
         drawPath(path, color = Color.Blue)
 
@@ -371,23 +362,19 @@ private fun DrawRoundedRectangleWithArc() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -462,23 +449,19 @@ private fun DrawPathProgress() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -537,23 +520,19 @@ private fun DrawPolygonPath() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -612,7 +591,7 @@ private fun DrawPathOperation() {
             path = path1,
             style = Stroke(
                 width = 1.dp.toPx(),
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f,20f))
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
             )
         )
 
@@ -621,7 +600,7 @@ private fun DrawPathOperation() {
             path = path2,
             style = Stroke(
                 width = 1.dp.toPx(),
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f,20f))
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
             )
         )
 
@@ -648,23 +627,19 @@ private fun DrawPathOperation() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }
@@ -791,23 +766,19 @@ private fun DrawQuad() {
             segments.forEach { pathSegment: PathSegment ->
 
                 if (displaySegmentStart) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.start.x, pathSegment.start.y)),
+                    drawCircle(
                         color = Color.Cyan,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Butt,
-                        alpha = .5f,
-                        strokeWidth = 20f
+                        center = Offset(pathSegment.start.x, pathSegment.start.y),
+                        radius = 8f
                     )
                 }
 
                 if (displaySegmentEnd) {
-                    drawPoints(
-                        listOf(Offset(pathSegment.end.x, pathSegment.end.y)),
+                    drawCircle(
                         color = Red400,
-                        pointMode = PointMode.Points,
-                        cap = StrokeCap.Round,
-                        strokeWidth = 14f
+                        center = Offset(pathSegment.end.x, pathSegment.end.y),
+                        radius = 8f,
+                        style = Stroke(2f)
                     )
                 }
             }

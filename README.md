@@ -110,9 +110,9 @@ using previous searches using a database, domain with ViewModel.
 |:-------|-------|
 |<h3>6-1-1 Canvas Basics 1</h3><br/>Use canvas draw basic shapes like line, circle, rectangle, and points with different attributes such as style, stroke cap, brush.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>|<img src ="/./screenshots/tutorial6_1_1.gif" width=320> |
 |  |  |
-|<h3>6-1-2 Canvas Paths</h3><br/>Use canvas to draw arc, with path effect, stroke cap, stroke join, miter and other attributes and draw images with src, dst attributes.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>|<img src ="/./screenshots/tutorial6_1_2.gif" width=320> |
+|<h3>6-1-2 Canvas Basics 2</h3><br/>Use canvas to draw arc, with path effect, stroke cap, stroke join, miter and other attributes and draw images with src, dst attributes.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>|<img src ="/./screenshots/tutorial6_1_2.gif" width=320> |
 |  |  |
-|<h3>6-1-3 Canvas Path</h3><br/>Use canvas to draw path using absolute and relative positions, adding arc to path, drawing custom paths, progress, polygons, quads, and cubic.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>|<img src ="/./screenshots/tutorial6_1_3.gif" width=320> |
+|<h3>6-1-3 Canvas Paths</h3><br/>Use canvas to draw path using absolute and relative positions, adding arc to path, drawing custom paths, progress, polygons, quads, and cubic.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>|<img src ="/./screenshots/tutorial6_1_3.gif" width=320> |
 |  |  |
 |<h3>6-1-4 Canvas Path Ops</h3><br/>Use canvas to clip paths, or canvas using path, or rectangle with operations such as Difference, Intersect, Union, Xor, or ReverseDifference..<br><br>• Canvas<br>• DrawScope<br>• Path<br>• PathOperation<br>• ClipOperation<br>|<img src ="/./screenshots/tutorial6_1_4.gif" width=320> |
 |  |  |

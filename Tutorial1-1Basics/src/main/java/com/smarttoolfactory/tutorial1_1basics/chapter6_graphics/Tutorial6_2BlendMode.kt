@@ -57,93 +57,36 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        BlendModeExample()
-    }
-}
+        Text(
+            "Blend (PorterDuff) Modes",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
 
-@Composable
-private fun BlendModeExample() {
+        StyleableTutorialText(
+            text = "Blend modes are used to clip, change position of destination/source " +
+                    "or manipulate pixels." +
+                    "\nFirst drawn shape/image is **Destination**, second one that drawn with " +
+                    "**blend mode** is **Source**",
+            bullets = false)
 
-    Text(
-        "Blend (PorterDuff) Modes",
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        modifier = Modifier.padding(8.dp)
-    )
+        TutorialText2(text = "Draw Shapes with Blend Mode")
+        DrawShapeBlendMode()
+        TutorialText2(text = "Draw Images with Blend Mode")
+        DrawImageBlendMode()
+        TutorialText2(text = "Clip Image with Blend Mode Via Path")
+        ClipImageWithBlendModeViaPath()
+        TutorialText2(text = "Clip Image with Blend Mode Via Image")
+        ClipImageWithBlendModeViaAnotherImage()
 
-    StyleableTutorialText(
-        text = "Blend modes are used to clip, change position of destination/source " +
-                "or manipulate pixels." +
-                "\nFirst drawn shape/image is **Destination**, second one that drawn with " +
-                "**blend mode** is **Source**",
-        bullets = false)
+        TutorialText2(text = "Reveal Shape drawn below transparent")
+        RevealShapeWithBlendMode()
+        TutorialText2(text = "Reveal Shape drawn above transparent")
+        RevealShapeWithBlendMode2()
 
-    TutorialText2(text = "Draw Shapes with Blend Mode")
-    DrawShapeBlendMode()
-    TutorialText2(text = "Draw Images with Blend Mode")
-    DrawImageBlendMode()
-    TutorialText2(text = "Clip Image with Blend Mode Via Path")
-    ClipImageWithBlendModeViaPath()
-    TutorialText2(text = "Clip Image with Blend Mode Via Image")
-    ClipImageWithBlendModeViaAnotherImage()
-
-    TutorialText2(text = "Reveal Shape drawn below transparent")
-    RevealShapeWithBlendMode()
-    TutorialText2(text = "Reveal Shape drawn above transparent")
-    RevealShapeWithBlendMode2()
-
-    TutorialText2(text = "Add colors with BlendMode.Plus")
-    ColorAddBlendMode()
-
-}
-
-@Composable
-private fun ColorAddBlendMode() {
-
-
-    Canvas(
-        modifier = Modifier
-            .padding(8.dp)
-            .shadow(1.dp)
-            .background(Color.White)
-            .fillMaxWidth()
-            .aspectRatio(1f)
-    ) {
-
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-        val cx = canvasWidth / 2f
-        val cy = canvasHeight / 2f
-        val r = canvasWidth / 7f
-
-        val tx = (r * cos(30 * Math.PI / 180)).toFloat()
-        val ty = (r * sin(30 * Math.PI / 180)).toFloat()
-        val expand = 1.5f
-
-        with(drawContext.canvas.nativeCanvas) {
-            val checkPoint = saveLayer(null, null)
-
-            drawCircle(
-                color = Color.Red,
-                radius = expand * r,
-                center = Offset(cx, cy - r),
-                blendMode = BlendMode.Plus
-            )
-            drawCircle(
-                color = Color.Green,
-                radius = expand * r,
-                center = Offset(cx - tx, cy + ty),
-                blendMode = BlendMode.Plus
-            )
-            drawCircle(
-                color = Color.Blue,
-                radius = expand * r,
-                center = Offset(cx + tx, cy + ty),
-                blendMode = BlendMode.Plus
-            )
-
-            restoreToCount(checkPoint)
-        }
+        TutorialText2(text = "Add colors with BlendMode.Plus")
+        ColorAddBlendMode()
     }
 }
 
@@ -584,6 +527,55 @@ private fun RevealShapeWithBlendMode2() {
             selectedIndex = index
         }
     )
+}
+
+@Composable
+private fun ColorAddBlendMode() {
+
+    Canvas(
+        modifier = Modifier
+            .padding(8.dp)
+            .shadow(1.dp)
+            .background(Color.White)
+            .fillMaxWidth()
+            .aspectRatio(1f)
+    ) {
+
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val cx = canvasWidth / 2f
+        val cy = canvasHeight / 2f
+        val r = canvasWidth / 7f
+
+        val tx = (r * cos(30 * Math.PI / 180)).toFloat()
+        val ty = (r * sin(30 * Math.PI / 180)).toFloat()
+        val expand = 1.5f
+
+        with(drawContext.canvas.nativeCanvas) {
+            val checkPoint = saveLayer(null, null)
+
+            drawCircle(
+                color = Color.Red,
+                radius = expand * r,
+                center = Offset(cx, cy - r),
+                blendMode = BlendMode.Plus
+            )
+            drawCircle(
+                color = Color.Green,
+                radius = expand * r,
+                center = Offset(cx - tx, cy + ty),
+                blendMode = BlendMode.Plus
+            )
+            drawCircle(
+                color = Color.Blue,
+                radius = expand * r,
+                center = Offset(cx + tx, cy + ty),
+                blendMode = BlendMode.Plus
+            )
+
+            restoreToCount(checkPoint)
+        }
+    }
 }
 
 private val canvasModifier = Modifier

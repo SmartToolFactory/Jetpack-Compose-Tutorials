@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -51,12 +52,15 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "In this example **path.op**, **DrawScope.clipPath/Rect** with " +
                     "with different operations modes used to clip some sections of shapes or **Canvas**.",
-            bullets = false)
+            bullets = false
+        )
 
         TutorialText2(text = "path.op Stroke")
-        PathOp1()
+        PathOpStroke()
         TutorialText2(text = "path.op Fill")
-        PathOp2()
+        PathOpFill()
+        TutorialText2(text = "path.op Fill")
+        PathOpStrokeFill2()
         TutorialText2(text = "DrawScope.clipPath")
         ClipPath()
         TutorialText2(text = "DrawScope.clipRect")
@@ -66,7 +70,7 @@ private fun TutorialContent() {
 
 
 @Composable
-private fun PathOp1() {
+private fun PathOpStroke() {
 
     var sides1 by remember { mutableStateOf(5f) }
     var radius1 by remember { mutableStateOf(300f) }
@@ -179,7 +183,7 @@ private fun PathOp1() {
 }
 
 @Composable
-private fun PathOp2() {
+private fun PathOpFill() {
 
     var sides1 by remember { mutableStateOf(5f) }
     var radius1 by remember { mutableStateOf(400f) }
@@ -287,6 +291,92 @@ private fun PathOp2() {
     }
 }
 
+@Composable
+private fun PathOpStrokeFill2() {
+
+    var operation by remember { mutableStateOf(PathOperation.Difference) }
+
+    val newPath = remember { Path() }
+
+    Canvas(modifier = canvasModifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        val path1 = Path()
+        val path2 = Path()
+
+
+        val radius = canvasHeight / 2 - 100
+
+        val horizontalOffset = 70f
+        val verticalOffset = 50f
+
+        val cx = canvasWidth / 2 - horizontalOffset
+        val cy = canvasHeight / 2 + verticalOffset
+        val srcPath = createPolygonPath(cx, cy, 5, radius)
+        path1.addPath(srcPath)
+
+        path2.addOval(
+            Rect(
+                center = Offset(
+                    canvasWidth / 2 + horizontalOffset,
+                    canvasHeight / 2 - verticalOffset
+                ),
+                radius = radius
+            )
+        )
+
+        newPath.op(path1, path2, operation = operation)
+
+        drawPath(
+            color = Color.Red,
+            path = path1,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
+            )
+        )
+
+        drawPath(
+            color = Color.Blue,
+            path = path2,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
+            )
+        )
+
+
+
+        drawPath(
+            color = Color.Green,
+            path = newPath,
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
+
+        ExposedSelectionMenu(title = "Path Operation",
+            index = when (operation) {
+                PathOperation.Difference -> 0
+                PathOperation.Intersect -> 1
+                PathOperation.Union -> 2
+                PathOperation.Xor -> 3
+                else -> 4
+            },
+            options = listOf("Difference", "Intersect", "Union", "Xor", "ReverseDifference"),
+            onSelected = {
+                operation = when (it) {
+                    0 -> PathOperation.Difference
+                    1 -> PathOperation.Intersect
+                    2 -> PathOperation.Union
+                    3 -> PathOperation.Xor
+                    else -> PathOperation.ReverseDifference
+                }
+            }
+        )
+    }
+}
 
 @Composable
 private fun ClipPath() {
