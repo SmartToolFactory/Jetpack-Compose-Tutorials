@@ -1036,9 +1036,9 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_DRAW_SCOPE,
             TAG_PATH,
             TAG_PATH_SEGMENT,
-            TAG_PATH_EFFECT,
             TAG_PATH_OPERATION,
-            TAG_CLIP_PATH
+            TAG_CLIP_PATH,
+            TAG_PATH_EFFECT
         ),
         tagColor = GraphicsListColor
     )
@@ -1054,8 +1054,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
-            TAG_PATH,
-            TAG_BLEND_MODE
+            TAG_BLEND_MODE,
+            TAG_PATH
         ),
         tagColor = GraphicsListColor
     )

@@ -68,28 +68,28 @@ private fun TutorialContent() {
         TouchDrawMotionEventsAndPathExample()
         TutorialText2(
             text = "Drawing using drag gesture",
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
         TouchDrawWithDragGesture()
         TutorialText2(
             text = "Drawing with properties and erase",
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
         TouchDrawWithPropertiesAndEraseExample()
 
         TutorialText2(
             text = "Draw on Image",
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
         TouchDrawImageExample()
         TutorialText2(
             text = "Draw Touch Segments",
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
         TouchDrawPathSegmentsExample()
         TutorialText2(
             text = "Touch Mode moves path",
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
         TouchDrawWithMovablePathExample()
 
@@ -918,4 +918,30 @@ val ACTION_IDLE = 0
 val ACTION_DOWN = 1
 val ACTION_MOVE = 2
 val ACTION_UP = 3
+
+@Composable
+private fun rememberPathOption(
+    strokeWidth: Float = 10f,
+    color: Color = Color.Red,
+    strokeCap: StrokeCap = StrokeCap.Round,
+    strokeJoin: StrokeJoin = StrokeJoin.Round
+): PathOption {
+    return remember{
+        PathOption(strokeWidth, color, strokeCap, strokeJoin)
+    }
+}
+
+class PathOption(
+    strokeWidth: Float = 10f,
+    color: Color = Color.Black,
+    strokeCap: StrokeCap = StrokeCap.Round,
+    strokeJoin: StrokeJoin = StrokeJoin.Round
+) {
+    var strokeWidth by mutableStateOf(strokeWidth)
+    var color by mutableStateOf(color)
+    var strokeCap by mutableStateOf(strokeCap)
+    var strokeJoin by mutableStateOf(strokeJoin)
+    var eraseMode = false
+}
+
 

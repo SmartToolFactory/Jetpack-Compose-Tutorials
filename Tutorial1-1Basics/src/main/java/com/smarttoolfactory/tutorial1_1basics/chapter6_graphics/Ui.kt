@@ -385,12 +385,12 @@ fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
             elevation = 2.dp,
             shape = RoundedCornerShape(8.dp)
         ) {
-            Column(modifier = Modifier.padding(6.dp)) {
+            Column(modifier = Modifier.padding(8.dp)) {
 
                 Text(
                     text = "Stroke Width ${pathOption.strokeWidth.toInt()}",
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(horizontal = 4.dp)
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(horizontal = 12.dp)
                 )
 
                 Slider(
