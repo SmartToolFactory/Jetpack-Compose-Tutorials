@@ -23,6 +23,18 @@ import com.smarttoolfactory.tutorial1_1basics.model.places
 import com.smarttoolfactory.tutorial1_1basics.ui.components.PlacesToBookVerticalComponent
 import kotlinx.coroutines.launch
 
+
+/*
+    Material Design backdrop. This component provides an API to put together
+    several material components to construct your screen.
+
+    For a similar component which
+    implements the basic material design layout strategy with app bars,
+    floating action buttons and navigation drawers, use the standard Scaffold.
+
+    For similar component that uses a bottom sheet as the centerpiece of the screen,
+    use BottomSheetScaffold.
+ */
 /**
  * [Backdrop](https://material.io/components/backdrop#behavior)
  *

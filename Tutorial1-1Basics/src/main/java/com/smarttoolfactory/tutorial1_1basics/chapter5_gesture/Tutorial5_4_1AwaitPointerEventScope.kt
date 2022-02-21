@@ -1,14 +1,11 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,13 +16,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -38,14 +35,8 @@ fun Tutorial5_4Screen1() {
 @Composable
 private fun TutorialContent() {
 
-    val scrollState = rememberScrollState()
-
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-        // ⚠️ Vertical Scroll cancels awaitPointerEventScope events, calls up
-        // or scrolls when on a Composable with awaitPointerEventScope touch events
-//            .verticalScroll(scrollState)
+        modifier = Modifier.fillMaxSize()
     ) {
 
         StyleableTutorialText(
@@ -70,6 +61,7 @@ private fun TutorialContent() {
 
 @Composable
 private fun AwaitFirstDownExample() {
+
     var touchText by remember {
         mutableStateOf(
             "Touch to get awaitFirstDown() " +
@@ -78,9 +70,7 @@ private fun AwaitFirstDownExample() {
     }
 
     var gestureColor by remember { mutableStateOf(Color.LightGray) }
-    val interactionSource by remember { mutableStateOf(MutableInteractionSource()) }
 
-    Modifier
     val pointerModifier = Modifier
         .padding(vertical = 8.dp, horizontal = 12.dp)
         .fillMaxWidth()
@@ -88,32 +78,29 @@ private fun AwaitFirstDownExample() {
         .height(90.dp)
         .pointerInput(Unit) {
             forEachGesture {
-                coroutineScope {
-                    awaitPointerEventScope {
+                awaitPointerEventScope {
 
-                        val down: PointerInputChange = awaitFirstDown(requireUnconsumed = true)
-                        touchText = "DOWN Pointer down position: ${down.position}"
-                        gestureColor = Orange400
+                    val down: PointerInputChange = awaitFirstDown(requireUnconsumed = true)
+                    touchText = "DOWN Pointer down position: ${down.position}"
+                    gestureColor = Orange400
 
-                        // 🔥 Wait for Up Event, this is called if only one pointer exits
-                        // when it's up or moved out of Composable bounds
-                        // When multiple pointers touch Composable it requires only one to be
-                        // out of Composable bounds
-                        val up = waitForUpOrCancellation()
+                    // 🔥 Wait for Up Event, this is called if only one pointer exits
+                    // when it's up or moved out of Composable bounds
+                    // When multiple pointers touch Composable it requires only one to be
+                    // out of Composable bounds
+                    val up: PointerInputChange? = waitForUpOrCancellation()
 
-                        if (up?.position != null) {
-                            touchText = "UP Pointer up.position: ${(up.position)}"
-                            gestureColor = Green400
-                        } else {
-                            touchText = "UP CANCEL"
-                            gestureColor = Red400
-                        }
-
+                    if (up?.position != null) {
+                        touchText = "UP Pointer up.position: ${(up.position)}"
+                        gestureColor = Green400
+                    } else {
+                        touchText = "UP CANCEL"
+                        gestureColor = Red400
                     }
+
                 }
             }
         }
-        .indication(interactionSource, rememberRipple())
 
     GestureDisplayBox(pointerModifier, touchText)
 
@@ -148,8 +135,10 @@ private fun AwaitPointerEventExample() {
                     }
 
                     do {
-                        // 🔥 This PointerEvent contains details including events,
+                        // 🔥🔥 This PointerEvent contains details including events,
                         // id, position and more
+                        // Other events such as drag are structured with consume events
+                        // using awaitPointerEvent in a while loop
                         val event: PointerEvent = awaitPointerEvent()
 
                         var eventChanges = ""
@@ -184,6 +173,9 @@ private fun AwaitPointerEventExample() {
 
 @Composable
 private fun AwaitTouchSlopOrCancellationExample() {
+
+    val context = LocalContext.current
+
     val offsetX = remember { mutableStateOf(0f) }
     val offsetY = remember { mutableStateOf(0f) }
     var size by remember { mutableStateOf(Size.Zero) }
@@ -201,7 +193,6 @@ private fun AwaitTouchSlopOrCancellationExample() {
         .size(80.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
-        .background(Yellow400)
         .pointerInput(Unit) {
             forEachGesture {
                 awaitPointerEventScope {
@@ -216,6 +207,15 @@ private fun AwaitTouchSlopOrCancellationExample() {
                     var change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
 
+                            Toast
+                                .makeText(
+                                    context,
+                                    "awaitTouchSlopOrCancellation(down.id) passed for " +
+                                            "id: ${down.id}, ${change.position}, over: $over",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+
                             println("⛺️ awaitTouchSlopOrCancellation ${change.position}, over: $over")
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + over
@@ -225,6 +225,8 @@ private fun AwaitTouchSlopOrCancellationExample() {
                                 y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
 
+                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // function properly.
                             change.consumePositionChange()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
@@ -246,6 +248,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
 
                         gestureColor = Blue400
 
+                        // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
                         change = awaitDragOrCancellation(change.id)
 
                         if (change != null && change.pressed) {
@@ -320,6 +323,7 @@ private fun AwaitDragOrCancellationExample() {
 
                     while (down != null && down.pressed) {
 
+                        // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
                         down = awaitDragOrCancellation(down.id)
 
                         if (down == null) {

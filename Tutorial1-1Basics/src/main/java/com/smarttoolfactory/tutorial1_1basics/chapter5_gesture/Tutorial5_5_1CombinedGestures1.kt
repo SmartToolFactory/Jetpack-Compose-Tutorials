@@ -43,7 +43,7 @@ private fun TutorialContent() {
         )
         CombinedPointerInputSample()
         StyleableTutorialText(
-            text = "Combine  **detectTapGestures** and **awaitPointerEventScope**. In this example" +
+            text = "Combine  **detectTapGestures** and **awaitPointerEventScope**. In this example " +
                     "**awaitPointerEventScope** is in second order and receives events",
             bullets = false
         )

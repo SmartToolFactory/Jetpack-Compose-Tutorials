@@ -29,6 +29,26 @@ fun Tutorial5_4Screen2() {
     TutorialContent()
 }
 
+/*
+    Source code of drag
+
+    suspend fun AwaitPointerEventScope.drag(
+    pointerId: PointerId,
+    onDrag: (PointerInputChange) -> Unit
+): Boolean {
+    var pointer = pointerId
+    while (true) {
+        val change = awaitDragOrCancellation(pointer) ?: return false
+
+        if (change.changedToUpIgnoreConsumed()) {
+            return true
+        }
+
+        onDrag(change)
+        pointer = change.id
+    }
+}
+ */
 @Composable
 private fun TutorialContent() {
     Column(
@@ -79,6 +99,8 @@ private fun DragExample() {
                     gestureColor = Orange400
                     text = "awaitFirstDown() id: ${down.id}"
 
+                    // 🔥 Function to detect if our down pointer passed
+                    // viewConfiguration.pointerSlop(pointerType)
                     val change = awaitTouchSlopOrCancellation(down.id) { change, over ->
 
                         val original = Offset(offsetX.value, offsetY.value)
@@ -104,6 +126,8 @@ private fun DragExample() {
 
                     if (change != null) {
 
+
+                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + it.positionChange()
@@ -175,6 +199,8 @@ private fun HorizontalDragExample() {
                     gestureColor = Orange400
                     text = "awaitFirstDown() id: ${down.id}"
 
+                    // 🔥 Function to detect if our down pointer passed
+                    // viewConfiguration.pointerSlop(pointerType)
                     val change =
                         awaitHorizontalTouchSlopOrCancellation(down.id) { change, over ->
                             val originalX = offsetX.value
@@ -196,6 +222,8 @@ private fun HorizontalDragExample() {
                     }
 
                     if (change != null) {
+
+                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         horizontalDrag(change.id) {
                             val originalX = offsetX.value
                             val newValue = (originalX + it.positionChange().x)
@@ -257,6 +285,8 @@ private fun VerticalDragExample() {
                     val down = awaitFirstDown()
                     gestureColor = Orange400
 
+                    // 🔥 Function to detect if our down pointer passed
+                    // viewConfiguration.pointerSlop(pointerType)
                     val change =
                         awaitVerticalTouchSlopOrCancellation(down.id) { change, over ->
                             val originalY = offsetY.value
@@ -274,6 +304,8 @@ private fun VerticalDragExample() {
                     }
 
                     if (change != null) {
+
+                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         verticalDrag(change.id) {
                             val originalY = offsetY.value
                             val newValue = (originalY + it.positionChange().y)

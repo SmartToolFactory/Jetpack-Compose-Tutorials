@@ -906,6 +906,24 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_4_4 = TutorialSectionModel(
+        title = "5-4-4 Consume Change",
+        description = "Consume different type of touch events such as down, " +
+                "position change and check if events are consumed.",
+        action = {
+            Tutorial5_4Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_CONSUME_DOWN_CHANGE,
+            TAG_CONSUME_POSITION_CHANGE,
+            TAG_ANY_CHANGE_CONSUMED,
+            TAG_POSITION_CHANGE_CONSUMED
+        ),
+        tagColor = GestureListColor
+    )
+
     val tutorial5_5_1 = TutorialSectionModel(
         title = "5-5-1 Combined Gesture Events",
         description = "Combine pointerInput function and observe how gestures are performed " +
@@ -943,6 +961,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_4_1,
         tutorial5_4_2,
         tutorial5_4_3,
+        tutorial5_4_4,
         tutorial5_5_1,
         tutorial5_6
     )
