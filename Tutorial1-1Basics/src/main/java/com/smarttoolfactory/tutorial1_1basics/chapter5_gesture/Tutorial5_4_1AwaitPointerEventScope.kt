@@ -4,12 +4,13 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -23,8 +24,6 @@ import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -36,7 +35,9 @@ fun Tutorial5_4Screen1() {
 private fun TutorialContent() {
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
 
         StyleableTutorialText(
@@ -47,6 +48,7 @@ private fun TutorialContent() {
             text = "2-) **awaitPointerEvent()**  returns pointer and event details"
         )
         AwaitPointerEventExample()
+        AwaitPointerEventExample2()
 
         StyleableTutorialText(
             text = "3-) **awaitDragOrCancellation()** reads pointer events until " +
@@ -88,35 +90,25 @@ private fun AwaitFirstDownExample() {
                     // when it's up or moved out of Composable bounds
                     // When multiple pointers touch Composable it requires only one to be
                     // out of Composable bounds
-                    val up: PointerInputChange? = waitForUpOrCancellation()
+                    val upOrCancel: PointerInputChange? = waitForUpOrCancellation()
 
-                    if (up?.position != null) {
-                        touchText = "UP Pointer up.position: ${(up.position)}"
+                    if (upOrCancel?.position != null) {
+                        touchText = "UP Pointer up.position: ${(upOrCancel.position)}"
                         gestureColor = Green400
                     } else {
                         touchText = "UP CANCEL"
                         gestureColor = Red400
                     }
-
                 }
             }
         }
-
     GestureDisplayBox(pointerModifier, touchText)
-
 }
 
 @Composable
 private fun AwaitPointerEventExample() {
 
-    var touchText by remember {
-        mutableStateOf(
-            "Use single or multiple pointers to calculate centroid position and size."
-        )
-    }
-
-    val scope = rememberCoroutineScope()
-
+    var touchText by remember { mutableStateOf("Use single or multiple pointers.") }
     var gestureColor by remember { mutableStateOf(Color.LightGray) }
 
     val pointerModifier = Modifier
@@ -127,12 +119,6 @@ private fun AwaitPointerEventExample() {
 
                     awaitFirstDown()
                     gestureColor = Orange400
-
-                    // This is to show like touch down gesture before going to move event
-                    scope.launch {
-                        delay(50)
-                        gestureColor = Blue400
-                    }
 
                     do {
                         // 🔥🔥 This PointerEvent contains details including events,
@@ -150,6 +136,7 @@ private fun AwaitPointerEventExample() {
                             }
 
                         touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
+                        gestureColor = Blue400
                     } while (event.changes.any { it.pressed })
 
                     gestureColor = Green400
@@ -157,13 +144,72 @@ private fun AwaitPointerEventExample() {
             }
         }
 
-    // 🔥 This outer box uses clipToBounds() to clip circle if it's out of box bounds
     Box(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 12.dp)
             .fillMaxWidth()
             .height(120.dp)
-            .clipToBounds()
+            .background(gestureColor),
+        contentAlignment = Alignment.Center
+    ) {
+        GestureDisplayBox(pointerModifier.matchParentSize(), touchText)
+    }
+}
+
+@Composable
+private fun AwaitPointerEventExample2() {
+
+    var touchText by remember { mutableStateOf("Use single or multiple pointers.\n" +
+            "This example uses while(true) loop") }
+    var gestureColor by remember { mutableStateOf(Color.LightGray) }
+
+    val pointerModifier = Modifier
+        .pointerInput(Unit) {
+            forEachGesture {
+
+                awaitPointerEventScope {
+
+                    awaitFirstDown()
+                    gestureColor = Orange400
+
+                    // This is preferred way in default Compose gesture codes
+                    // to loop gesture events and use consume or position changes to
+                    // break while loop
+                    while(true) {
+                        // 🔥🔥 This PointerEvent contains details including events,
+                        // id, position and more
+                        // Other events such as drag are structured with consume events
+                        // using awaitPointerEvent in a while loop
+                        val event: PointerEvent = awaitPointerEvent()
+
+                        val anyPressed = event.changes.any { it.pressed }
+
+                        // All of the pointers are up
+                        if (!anyPressed) {
+                            gestureColor = Green400
+                            break
+                        }else {
+                            gestureColor = Blue400
+                            var eventChanges = ""
+
+                            event.changes
+                                .map {pointerInputChange: PointerInputChange ->
+                                    eventChanges += "id: ${pointerInputChange.id}, " +
+                                            "pos: ${pointerInputChange.position}\n"
+                                }
+
+                            touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
+                        }
+                    }
+                }
+            }
+        }
+
+    Box(
+        modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 12.dp)
+            .fillMaxWidth()
+            .height(120.dp)
             .background(gestureColor),
         contentAlignment = Alignment.Center
     ) {
@@ -190,7 +236,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
 
     val modifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-        .size(80.dp)
+        .size(140.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
@@ -235,9 +281,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
                             text =
                                 "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
                                         "\nnewValue: $newValue"
-
                         }
-
 
                     if (change == null) {
                         gestureColor = Red400
@@ -255,8 +299,8 @@ private fun AwaitTouchSlopOrCancellationExample() {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + change.positionChange()
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 140.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 140.dp.toPx())
                             )
                             change.consumePositionChange()
                             offsetX.value = newValue.x
@@ -279,7 +323,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
         Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .height(120.dp)
+            .height(200.dp)
             .background(gestureColor)
             .onSizeChanged { size = it.toSize() }
     ) {
@@ -309,7 +353,7 @@ private fun AwaitDragOrCancellationExample() {
 
     val modifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-        .size(80.dp)
+        .size(140.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
@@ -329,7 +373,6 @@ private fun AwaitDragOrCancellationExample() {
                         if (down == null) {
                             gestureColor = Red400
                             text = "awaitDragOrCancellation() is NULL"
-
                         }
 
                         if (down != null && down.pressed) {
@@ -337,8 +380,8 @@ private fun AwaitDragOrCancellationExample() {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + down.positionChange()
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 160.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 160.dp.toPx())
                             )
                             down.consumePositionChange()
                             offsetX.value = newValue.x
@@ -361,7 +404,7 @@ private fun AwaitDragOrCancellationExample() {
         Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .height(120.dp)
+            .height(200.dp)
             .background(gestureColor)
             .onSizeChanged { size = it.toSize() }
     ) {

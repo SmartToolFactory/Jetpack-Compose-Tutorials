@@ -66,7 +66,8 @@ private fun ConsumeDownAndUpEventsExample() {
                         "🎃DOWN\n" +
                                 "changedToDown: ${down.changedToDown()}, " +
                                 "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                "changedUp: ${down.changedToUp()}, pressed: ${down.pressed}\n" +
+                                "pressed: ${down.pressed}\n" +
+                                "changedUp: ${down.changedToUp()}\n" +
                                 "positionChanged: ${down.positionChanged()}\n" +
                                 "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
                                 "positionChangeConsumed: ${down.positionChangeConsumed()}\n"
@@ -77,22 +78,24 @@ private fun ConsumeDownAndUpEventsExample() {
                     // when it's up or moved out of Composable bounds
                     // When multiple pointers touch Composable it requires only one to be
                     // out of Composable bounds
-                    val up: PointerInputChange? = waitForUpOrCancellation()
+                    val upOrCancel: PointerInputChange? = waitForUpOrCancellation()
 
-                    if (up != null) {
+                    if (upOrCancel != null) {
 
-                        // Consuming all changes causes changedToUp to return false
+                        // Consume the up or down change of this PointerInputChange
+                        // if there is an up or down change to consume.
                         // However verticalScroll() causes any vertical scroll to return NULL
-                        up.consumeAllChanges()
+//                        up.consumeDownChange()
 
                         eventChanges +=
                             "🍒UP\n" +
-                                    "changedToDown: ${up.changedToDown()}, " +
-                                    "changedToDownIgnoreConsumed: ${up.changedToDownIgnoreConsumed()}\n" +
-                                    "changedUp: ${up.changedToUp()}\n" +
-                                    "changedToUpIgnoreConsumed: ${up.changedToUpIgnoreConsumed()}\n" +
-                                    "anyChangeConsumed: ${up.anyChangeConsumed()}\n" +
-                                    "positionChangeConsumed: ${up.positionChangeConsumed()}\n"
+                                    "changedToDown: ${upOrCancel.changedToDown()}, " +
+                                    "changedToDownIgnoreConsumed: ${upOrCancel.changedToDownIgnoreConsumed()}\n" +
+                                    "pressed: ${upOrCancel.pressed}\n" +
+                                    "changedUp: ${upOrCancel.changedToUp()}\n" +
+                                    "changedToUpIgnoreConsumed: ${upOrCancel.changedToUpIgnoreConsumed()}\n" +
+                                    "anyChangeConsumed: ${upOrCancel.anyChangeConsumed()}\n" +
+                                    "positionChangeConsumed: ${upOrCancel.positionChangeConsumed()}\n"
                         gestureColor = Green400
                     } else {
                         eventChanges += "UP CANCEL"
@@ -148,7 +151,8 @@ private fun ConsumeDownAndMoveEventsExample() {
                             "🎃DOWN\n" +
                                     "changedToDown: ${down.changedToDown()}, " +
                                     "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                    "changedUp: ${down.changedToUp()}, pressed: ${down.pressed}\n" +
+                                    "pressed: ${down.pressed}\n" +
+                                    "changedUp: ${down.changedToUp()}\n" +
                                     "positionChanged: ${down.positionChanged()}\n" +
                                     "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
                                     "positionChangeConsumed: ${down.positionChangeConsumed()}\n"
@@ -171,10 +175,12 @@ private fun ConsumeDownAndMoveEventsExample() {
                                     "Index: " +
                                             "$index, id: ${pointerInputChange.id}, " +
                                             "pos: ${pointerInputChange.position}\n" +
+                                            "pressed: ${pointerInputChange.pressed}\n" +
                                             "changedUp: ${pointerInputChange.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n" +
                                             "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
-                                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                                            "changedToUpIgnoreConsumed: ${down.changedToUpIgnoreConsumed()}\n"
+                                            "positionChangeConsumed: ${pointerInputChange.positionChangeConsumed()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n"
                                 gestureText = eventChanges
 
                             }
@@ -231,7 +237,8 @@ private fun ConsumeDragEventsExample() {
                         "🎃DOWN\n" +
                                 "changedToDown: ${down.changedToDown()}, " +
                                 "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                "changedUp: ${down.changedToUp()}, pressed: ${down.pressed}\n" +
+                                "pressed: ${down.pressed}\n" +
+                                "changedUp: ${down.changedToUp()}\n" +
                                 "positionChanged: ${down.positionChanged()}\n" +
                                 "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
                                 "positionChangeConsumed: ${down.positionChangeConsumed()}\n"
@@ -257,13 +264,14 @@ private fun ConsumeDragEventsExample() {
                             // Consuming position change causes
                             // change.positionChanged() to return false.
                             change.consumePositionChange()
-
                             eventChanges +=
-                                "⛺️ awaitTouchSlopOrCancellation()  " +
+                                "⛺️ awaitTouchSlopOrCancellation()\n" +
                                         "down.id: ${down.id} change.id: ${change.id}\n" +
-                                        "changedToDown: ${change.changedToDown()}, " +
+                                        "changedToDown: ${change.changedToDown()}\n" +
                                         "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
-                                        "changedUp: ${change.changedToUp()}, pressed: ${change.pressed}\n" +
+                                        "pressed: ${change.pressed}\n" +
+                                        "changedUp: ${change.changedToUp()}\n" +
+                                        "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
                                         "positionChanged: ${change.positionChanged()}\n" +
                                         "anyChangeConsumed: ${change.anyChangeConsumed()}\n" +
                                         "positionChangeConsumed: ${change.positionChangeConsumed()}\n"
@@ -294,9 +302,11 @@ private fun ConsumeDragEventsExample() {
                                 eventChanges +=
                                     "🚌 awaitDragOrCancellation()  " +
                                             "down.id: ${down.id} change.id: ${change.id}\n" +
-                                            "changedToDown: ${change.changedToDown()}, " +
+                                            "changedToDown: ${change.changedToDown()}\n" +
                                             "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
-                                            "changedUp: ${change.changedToUp()}, pressed: ${change.pressed}\n" +
+                                            "pressed: ${change.pressed}\n" +
+                                            "changedUp: ${change.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n"

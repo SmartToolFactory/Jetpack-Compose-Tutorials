@@ -126,7 +126,6 @@ private fun DragExample() {
 
                     if (change != null) {
 
-
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) {
                             val original = Offset(offsetX.value, offsetY.value)
