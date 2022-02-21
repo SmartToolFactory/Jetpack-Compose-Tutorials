@@ -47,7 +47,7 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>2-10-4 BottomDrawer</h3><br/>BottomDrawer with BottomAppBar.<br><br> • BottomDrawer<br>• BottomAppBar<br>• Scaffold<br>|<img src ="/./screenshots/tutorial2_10_4.jpeg" width=320> |
 |  |  |
-|<h3>2-10-5 BackdropScaffold</h3><br/>Material Design backdrop. This component provides an API to put together several material components to construct your screen. For a similar component which implements the basic material design layout strategy with app bars, floating action buttons and navigation drawers, use the standard Scaffold. For similar component that uses a bottom sheet as the centerpiece of the screen, use BottomSheetScaffold.<br>|<img src ="/./screenshots/tutorial2_10_5.jpeg" width=320> |
+|<h3>2-10-5 BackdropScaffold</h3><br/>BackdropScaffold provides an API to put together several material components to construct your screen.<br>|<img src ="/./screenshots/tutorial2_10_5.jpeg" width=320> |
 |  |  |
 |<h3>2-11 Snackbar, Progress, Selection</h3><br/>Create Snackbars with various layouts and styling, Checkboxes with selectable text, tri state checkbox, grouped radio buttons and sliders.<br><br> • SnackBar<br>• ProgressIndicator<br>• Checkbox<br>• TriStateCheckbox<br>• Switch<br>• RadioButton<br>• Slider<br>• RangeSlider<br>|<img src ="/./screenshots/tutorial2_11.gif" width=320> |
 |  |  |
