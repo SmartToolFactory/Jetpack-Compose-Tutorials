@@ -4,9 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,9 +33,7 @@ fun Tutorial5_4Screen1() {
 private fun TutorialContent() {
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+        modifier = Modifier.fillMaxSize()
     ) {
 
         StyleableTutorialText(
@@ -131,6 +127,11 @@ private fun AwaitPointerEventExample() {
 
                         event.changes
                             .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+
+                                // 🔥🔥 If consumePositionChange() is not consumed
+                                // vertical scroll or other events interfere with current event
+                                pointerInputChange.consumePositionChange()
+
                                 eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
                                         "pos: ${pointerInputChange.position}\n"
                             }
@@ -156,6 +157,9 @@ private fun AwaitPointerEventExample() {
     }
 }
 
+/**
+ * Same example as the one above. This one uses while(true) instead of do-while.
+ */
 @Composable
 private fun AwaitPointerEventExample2() {
 
@@ -194,6 +198,7 @@ private fun AwaitPointerEventExample2() {
 
                             event.changes
                                 .map {pointerInputChange: PointerInputChange ->
+                                    pointerInputChange.consumePositionChange()
                                     eventChanges += "id: ${pointerInputChange.id}, " +
                                             "pos: ${pointerInputChange.position}\n"
                                 }
@@ -236,7 +241,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
 
     val modifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-        .size(140.dp)
+        .size(80.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
@@ -271,8 +276,6 @@ private fun AwaitTouchSlopOrCancellationExample() {
                                 y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
 
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
-                            // function properly.
                             change.consumePositionChange()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
@@ -299,8 +302,8 @@ private fun AwaitTouchSlopOrCancellationExample() {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + change.positionChange()
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 140.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 140.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
                             change.consumePositionChange()
                             offsetX.value = newValue.x
@@ -323,7 +326,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
         Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .height(200.dp)
+            .height(120.dp)
             .background(gestureColor)
             .onSizeChanged { size = it.toSize() }
     ) {
@@ -353,7 +356,7 @@ private fun AwaitDragOrCancellationExample() {
 
     val modifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-        .size(140.dp)
+        .size(80.dp)
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
@@ -380,8 +383,8 @@ private fun AwaitDragOrCancellationExample() {
                             val original = Offset(offsetX.value, offsetY.value)
                             val summed = original + down.positionChange()
                             val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 160.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 160.dp.toPx())
+                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
                             down.consumePositionChange()
                             offsetX.value = newValue.x
@@ -404,7 +407,7 @@ private fun AwaitDragOrCancellationExample() {
         Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .height(200.dp)
+            .height(120.dp)
             .background(gestureColor)
             .onSizeChanged { size = it.toSize() }
     ) {
