@@ -276,6 +276,10 @@ private fun AwaitTouchSlopOrCancellationExample() {
                                 y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
 
+                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // function properly.
+                            // Consuming position change causes
+                            // change.positionChanged() to return false.
                             change.consumePositionChange()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
