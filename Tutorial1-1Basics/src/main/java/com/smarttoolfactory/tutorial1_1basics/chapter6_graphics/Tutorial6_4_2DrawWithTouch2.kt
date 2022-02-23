@@ -1,10 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import android.graphics.Paint
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -16,19 +15,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.PointerEvent
-import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
-import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 @Composable
 fun Tutorial6_4Screen2() {
@@ -53,7 +52,7 @@ private fun DrawingApp() {
 
     // Canvas touch state. Idle by default, Down at first contact, Move while dragging and UP
     // when first pointer is up
-    var motionEvent by remember { mutableStateOf(ACTION_IDLE) }
+    var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
 
     // This is our motion event we get from touch motion
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
@@ -63,10 +62,20 @@ private fun DrawingApp() {
 
     var drawMode by remember { mutableStateOf(DrawMode.Draw) }
 
-    val currentPathOption = remember { PathProperties() }
+    var pathProperty = remember { PathProperties() }
 
     var currentPath = remember { Path() }
-    var isPathCompleted = remember { false }
+
+    // This text is drawn to Canvas
+    val canvasText = remember { StringBuilder() }
+
+    val paint = remember {
+        Paint().apply {
+            textSize = 40f
+            color = Color.Black.toArgb()
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -79,87 +88,81 @@ private fun DrawingApp() {
             .shadow(1.dp)
             .fillMaxWidth()
             .weight(1f)
-//            .background(Color.White)
-            .background(getRandomColor())
-            .pointerInput(Unit) {
-                forEachGesture {
-                    awaitPointerEventScope {
-
-                        // Wait for at least one pointer to press down, and set first contact position
-                        val down: PointerInputChange = awaitFirstDown().also {
-                            motionEvent = ACTION_DOWN
-                            currentPosition = it.position
-                        }
-
-                        do {
-                            // This PointerEvent contains details including events, id, position and more
-                            val event: PointerEvent = awaitPointerEvent()
-                            motionEvent = ACTION_MOVE
-                            currentPosition = event.changes.first().position
-                        } while (event.changes.any {
-                                val pressed = it.pressed
-                                if (pressed) {
-                                    it.consumePositionChange()
-                                }
-                                pressed
-                            }
-                        )
-
-                        motionEvent = ACTION_UP
-                    }
+            .background(Color.White)
+//            .background(getRandomColor())
+            .dragMotionEvent(
+                onDragStart = { pointerInputChange ->
+                    motionEvent = MotionEvent.Down
+                    currentPosition = pointerInputChange.position
+                    pointerInputChange.consumeDownChange()
+                },
+                onDrag = { pointerInputChange ->
+                    motionEvent = MotionEvent.Move
+                    currentPosition = pointerInputChange.position
+                    pointerInputChange.consumePositionChange()
+                },
+                onDragEnd = { pointerInputChange ->
+                    motionEvent = MotionEvent.Up
+                    pointerInputChange.consumeDownChange()
                 }
-            }
+            )
 
-        Canvas(modifier = drawModifier.background(getRandomColor())) {
+        Canvas(modifier = drawModifier) {
 
-            println("CANVAS motionEvent: $motionEvent")
+            println("🚀 CANVAS motionEvent: $motionEvent")
 
             when (motionEvent) {
-                ACTION_DOWN -> {
+                MotionEvent.Down -> {
                     currentPath.moveTo(currentPosition.x, currentPosition.y)
-                    isPathCompleted = false
                 }
-                ACTION_MOVE -> {
+                MotionEvent.Move -> {
                     if (currentPosition != Offset.Unspecified) {
                         currentPath.lineTo(currentPosition.x, currentPosition.y)
                     }
                 }
 
-                ACTION_UP -> {
-                    println(
-                        "🔥 Canvas ACTION_UP " +
-                                "currentPath: ${currentPath.hashCode()}, " +
-                                "currentPathOption: ${currentPathOption.hashCode()}"
-                    )
-
+                MotionEvent.Up -> {
                     currentPath.lineTo(currentPosition.x, currentPosition.y)
 
-                    paths[currentPath] = PathProperties(
-                        strokeWidth = currentPathOption.strokeWidth,
-                        color = currentPathOption.color,
-                        strokeCap = currentPathOption.strokeCap,
-                        strokeJoin = currentPathOption.strokeJoin,
-                    ).apply {
-                        eraseMode = currentPathOption.eraseMode
-                    }
-
-                    currentPath = Path()
+                    // Pointer is up save current path
+                    paths[currentPath] = pathProperty
 
                     println(
-                        "🔥🔥 Canvas ACTION_UP " +
+                        "🔥🔥 Canvas MotionEvent.Up " +
                                 "currentPath: ${currentPath.hashCode()}, " +
-                                "currentPathOption: ${currentPathOption.hashCode()}"
+                                "pathProperties: ${pathProperty.hashCode()}"
+                    )
+
+                    // Since paths are keys for map, use new one for each key
+                    // and have separate path for each down-move-up gesture cycle
+                    currentPath = Path()
+
+                    // Create new instance of path properties to have new path and properties
+                    // only for the one currently being drawn
+                    pathProperty = PathProperties(
+                        strokeWidth = pathProperty.strokeWidth,
+                        color = pathProperty.color,
+                        strokeCap = pathProperty.strokeCap,
+                        strokeJoin = pathProperty.strokeJoin,
+                    ).apply {
+                        eraseMode = pathProperty.eraseMode
+                    }
+
+
+                    println(
+                        "🔥🔥 Canvas MotionEvent.Up " +
+                                "currentPath: ${currentPath.hashCode()}, " +
+                                "pathProperties: ${pathProperty.hashCode()}"
                     )
 
 
+                    // If we leave this state at MotionEvent.Up it causes current path to draw
+                    // line from (0,0) if this composable recomposes when draw mode is changed
+                    motionEvent = MotionEvent.Idle
                 }
 
                 else -> {
-                    println(
-                        "🔥🔥🔥 Canvas ACTION_IDLE " +
-                                "currentPath: ${currentPath.hashCode()}, " +
-                                "currentPathOption: ${currentPathOption.hashCode()}"
-                    )
+
                 }
             }
 
@@ -170,18 +173,16 @@ private fun DrawingApp() {
                 paths.forEach {
 
                     val path = it.key
-                    val pathOption = it.value
+                    val property = it.value
 
-                    println("🍏 PATHS DRAW path: ${path.hashCode()}, pathOption: ${pathOption.hashCode()}")
-
-                    if (!pathOption.eraseMode) {
+                    if (!property.eraseMode) {
                         drawPath(
-                            color = pathOption.color,
+                            color = property.color,
                             path = path,
                             style = Stroke(
-                                width = pathOption.strokeWidth,
-                                cap = pathOption.strokeCap,
-                                join = pathOption.strokeJoin
+                                width = property.strokeWidth,
+                                cap = property.strokeCap,
+                                join = property.strokeJoin
                             )
                         )
                     } else {
@@ -200,28 +201,28 @@ private fun DrawingApp() {
                     }
                 }
 
-                if (!isPathCompleted) {
+                if (motionEvent != MotionEvent.Idle) {
+                    println("🍒 CURRENT PATH DRAW motionEvent: $motionEvent")
 
-                    println("🍒 Drawing CURRENT PATH")
-
-                    if (!currentPathOption.eraseMode) {
+                    if (drawMode == DrawMode.Draw) {
                         drawPath(
-                            color = currentPathOption.color,
+                            color = pathProperty.color,
                             path = currentPath,
                             style = Stroke(
-                                width = currentPathOption.strokeWidth,
-                                cap = currentPathOption.strokeCap,
-                                join = currentPathOption.strokeJoin
+                                width = pathProperty.strokeWidth,
+                                cap = pathProperty.strokeCap,
+                                join = pathProperty.strokeJoin
                             )
                         )
-                    } else {
+                    } else if (drawMode == DrawMode.Erase) {
+                        println("🍒🍒 CURRENT PATH ERASE!!")
                         drawPath(
                             color = Color.Transparent,
                             path = currentPath,
                             style = Stroke(
-                                width = currentPathOption.strokeWidth,
-                                cap = currentPathOption.strokeCap,
-                                join = currentPathOption.strokeJoin
+                                width = pathProperty.strokeWidth,
+                                cap = pathProperty.strokeCap,
+                                join = pathProperty.strokeJoin
                             ),
                             blendMode = BlendMode.Clear
                         )
@@ -229,6 +230,27 @@ private fun DrawingApp() {
                 }
                 restoreToCount(checkPoint)
             }
+
+            canvasText.clear()
+
+            paths.forEach {
+                val path = it.key
+                val property = it.value
+
+                canvasText.append(
+                    "pHash: ${path.hashCode()}, " +
+                            "propHash: ${property.hashCode()}, " +
+                            "Mode: ${property.eraseMode}\n"
+                )
+            }
+            canvasText.append(
+                "🔥 pHash: ${currentPath.hashCode()}, " +
+                        "propHash: ${pathProperty.hashCode()}, " +
+                        "Mode: ${pathProperty.eraseMode}\n"
+            )
+
+
+            drawText(text = canvasText.toString(), x = 0f, y = 60f, paint)
         }
 
         DrawingPropertiesMenu(
@@ -238,20 +260,21 @@ private fun DrawingApp() {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(4.dp),
-            properties = currentPathOption,
+            properties = pathProperty,
             drawMode = drawMode,
             onPathPropertiesChange = {
-//                motionEvent = ACTION_IDLE
+                motionEvent = MotionEvent.Idle
             },
             onDrawModeChanged = {
-//                motionEvent = ACTION_IDLE
+                motionEvent = MotionEvent.Idle
                 drawMode = it
+                pathProperty.eraseMode = drawMode == DrawMode.Erase
                 Toast.makeText(
-                    context, "Draw Mode: $drawMode", Toast.LENGTH_SHORT
+                    context, "pathProperty: ${pathProperty.hashCode()}, " +
+                            "Erase Mode: ${pathProperty.eraseMode}", Toast.LENGTH_SHORT
                 ).show()
             }
         )
-
     }
 }
 
@@ -426,7 +449,19 @@ internal fun PropertiesMenuDialog(pathOption: PathProperties, onDismiss: () -> U
     }
 }
 
-data class PathProperties(
+private fun DrawScope.drawText(text: String, x: Float, y: Float, paint: Paint) {
+
+    val lines = text.split("\n")
+    // 🔥🔥 There is not a built-in function as of 1.0.0
+    // for drawing text so we get the native canvas to draw text and use a Paint object
+    val nativeCanvas = drawContext.canvas.nativeCanvas
+
+    lines.indices.withIndex().forEach { (posY, i) ->
+        nativeCanvas.drawText(lines[i], x, posY * 40 + y, paint)
+    }
+}
+
+class PathProperties(
     var strokeWidth: Float = 10f,
     var color: Color = Color.Black,
     var strokeCap: StrokeCap = StrokeCap.Round,
