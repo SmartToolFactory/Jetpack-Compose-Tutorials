@@ -1,28 +1,33 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BorderColor
+import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.ColorSlider
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
+import kotlin.math.roundToInt
 
 /**
  * Expandable selection menu
@@ -284,90 +289,151 @@ fun ColorSelectionDialog(
     var red by remember { mutableStateOf(initialColor.red * 255) }
     var green by remember { mutableStateOf(initialColor.green * 255) }
     var blue by remember { mutableStateOf(initialColor.blue * 255) }
+    var alpha by remember { mutableStateOf(initialColor.alpha * 255)}
 
     val color = Color(
-        red = red.toInt(),
-        green = green.toInt(),
-        blue = blue.toInt(),
-        alpha = 255
+        red = red.roundToInt(),
+        green = green.roundToInt(),
+        blue = blue.roundToInt(),
+        alpha = alpha.roundToInt()
     )
 
     Dialog(onDismissRequest = onDismiss) {
 
-        Card(
-            elevation = 2.dp,
-            shape = RoundedCornerShape(8.dp)
+        BoxWithConstraints(
+            Modifier
+                .shadow(1.dp, RoundedCornerShape(8.dp))
+                .background(Color.White)
         ) {
 
-            Column(modifier = Modifier.padding(8.dp)) {
+            val widthInDp = LocalDensity.current.run { maxWidth }
+
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                 Text(
-                    text = "Select Color",
+                    text = "Color",
+                    color = Blue400,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(top = 12.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
 
-                // Color Selection
+                // Initial and Current Colors
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 50.dp, vertical = 20.dp)
                 ) {
 
-
-                    Column {
-
-                        Text(text = "Red ${red.toInt()}")
-                        Slider(
-                            value = red,
-                            onValueChange = { red = it },
-                            valueRange = 0f..255f,
-                            onValueChangeFinished = {}
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(text = "Green ${green.toInt()}")
-                        Slider(
-                            value = green,
-                            onValueChange = { green = it },
-                            valueRange = 0f..255f,
-                            onValueChangeFinished = {}
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(text = "Blue ${blue.toInt()}")
-                        Slider(
-                            value = blue,
-                            onValueChange = { blue = it },
-                            valueRange = 0f..255f,
-                            onValueChangeFinished = {}
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Surface(
-                            shape = CutCornerShape(5.dp),
-                            color = color,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                        ) {}
-                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(40.dp)
+                            .background(
+                                initialColor,
+                                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+                            )
+                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(40.dp)
+                            .background(
+                                color,
+                                shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
+                            )
+                    )
                 }
 
+                ColorWheel(
+                    modifier = Modifier
+                        .width(widthInDp * .8f)
+                        .aspectRatio(1f)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sliders
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Red",
+                    titleColor = Color.Red,
+                    rgb = red,
+                    onColorChanged = {
+                        red = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Green",
+                    titleColor = Color.Green,
+                    rgb = green,
+                    onColorChanged = {
+                        green = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Blue",
+                    titleColor = Color.Blue,
+                    rgb = blue,
+                    onColorChanged = {
+                        blue = it
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Alpha",
+                    titleColor = Color.Black,
+                    rgb = alpha,
+                    onColorChanged = {
+                        alpha = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
                 // Buttons
+
                 Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .background(Color(0xffF3E5F5)),
+                    verticalAlignment = Alignment.CenterVertically
+
                 ) {
 
-                    TextButton(onClick = onNegativeClick) {
+                    TextButton(
+                        onClick = onNegativeClick,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
                         Text(text = "CANCEL")
                     }
-                    Spacer(modifier = Modifier.width(4.dp))
-                    TextButton(onClick = {
-                        onPositiveClick(color)
-                    }) {
+                    TextButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        onClick = {
+                            onPositiveClick(color)
+                        },
+                    ) {
                         Text(text = "OK")
                     }
                 }
@@ -375,6 +441,8 @@ fun ColorSelectionDialog(
         }
     }
 }
+
+
 
 @Composable
 fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
@@ -439,6 +507,41 @@ fun DrawingMenuDialog(pathOption: PathOption, onDismiss: () -> Unit) {
         }
     }
 }
+
+/**
+ * Simple circle with stroke to show rainbow colors as [Brush.sweepGradient]
+ */
+@Composable
+fun ColorWheel(modifier: Modifier = Modifier) {
+
+    Canvas(modifier = modifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        require(canvasWidth == canvasHeight,
+            lazyMessage = {
+                print("Canvas dimensions should be equal to each other")
+            }
+        )
+        val cX = canvasWidth / 2
+        val cY = canvasHeight / 2
+        val canvasRadius = canvasWidth.coerceAtMost(canvasHeight) / 2f
+        val center = Offset(cX, cY)
+        val strokeWidth = canvasRadius * .3f
+        // Stroke is drawn out of the radius, so it's required to subtract stroke width from radius
+        val radius = canvasRadius - strokeWidth
+
+        drawCircle(
+            brush = Brush.sweepGradient(colors = gradientColors, center = center),
+            radius = radius,
+            center = center,
+            style = Stroke(
+                width = strokeWidth
+            )
+        )
+    }
+}
+
 
 enum class DrawMode {
     Draw, Touch, Erase

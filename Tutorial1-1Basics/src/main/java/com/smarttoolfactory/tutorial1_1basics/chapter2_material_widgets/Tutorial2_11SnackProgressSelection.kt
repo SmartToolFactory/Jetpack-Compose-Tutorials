@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -476,6 +477,41 @@ private fun SliderExample() {
         },
         colors = colors
     )
+}
+
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to pick color
+ */
+@Composable
+fun ColorSlider(
+    modifier: Modifier,
+    title: String,
+    titleColor: Color,
+    valueRange:  ClosedFloatingPointRange<Float> = 0f..255f,
+    rgb: Float,
+    onColorChanged: (Float) -> Unit
+) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+
+        Text(text = title.substring(0,1), color = titleColor, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.width(8.dp))
+        Slider(
+            modifier = Modifier.weight(1f),
+            value = rgb,
+            onValueChange = { onColorChanged(it) },
+            valueRange = valueRange,
+            onValueChangeFinished = {}
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = rgb.toInt().toString(),
+            color = Color.LightGray,
+            fontSize = 12.sp,
+            modifier = Modifier.width(30.dp)
+        )
+
+    }
 }
 
 @Composable

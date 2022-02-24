@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BorderColor
+import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Redo
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.Undo
@@ -31,7 +31,6 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
-import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
 
 @Composable
 fun Tutorial6_4Screen2() {
@@ -310,7 +309,7 @@ private fun DrawingPropertiesMenu(
             }
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_deblur_24),
+                painter = painterResource(id = R.drawable.ic_eraser_black_24dp),
                 contentDescription = null,
                 tint = if (currentDrawMode == DrawMode.Erase) Color.Black else Color.LightGray
             )
@@ -322,7 +321,7 @@ private fun DrawingPropertiesMenu(
         }
 
         IconButton(onClick = { showPropertiesDialog = !showPropertiesDialog }) {
-            Icon(Icons.Filled.BorderColor, contentDescription = null, tint = Color.LightGray)
+            Icon(Icons.Filled.Brush, contentDescription = null, tint = Color.LightGray)
         }
 
         IconButton(onClick = { }) {
@@ -332,27 +331,6 @@ private fun DrawingPropertiesMenu(
         IconButton(onClick = { }) {
             Icon(Icons.Filled.Redo, contentDescription = null, tint = Color.LightGray)
         }
-
-//        Canvas(
-//            modifier = Modifier
-//                .height(10.dp)
-//                .width(100.dp)
-//                .padding(horizontal = 8.dp, vertical = 2.dp)
-//        ) {
-//            val path = Path()
-//            path.moveTo(0f, size.height / 2)
-//            path.lineTo(size.width, size.height / 2)
-//
-//            drawPath(
-//                color = properties.color,
-//                path = path,
-//                style = Stroke(
-//                    width = properties.strokeWidth,
-//                    cap = properties.strokeCap,
-//                    join = properties.strokeJoin
-//                )
-//            )
-//        }
     }
 
     if (showColorDialog) {
@@ -453,12 +431,24 @@ private fun DrawScope.drawText(text: String, x: Float, y: Float, paint: Paint) {
 class PathProperties(
     var strokeWidth: Float = 10f,
     var color: Color = Color.Black,
+    var alpha: Float = 1f,
     var strokeCap: StrokeCap = StrokeCap.Round,
     var strokeJoin: StrokeJoin = StrokeJoin.Round,
     var eraseMode: Boolean = false
 ) {
 
-    fun copy(properties: PathProperties) {
+    fun copy(
+        strokeWidth: Float = this.strokeWidth,
+        color: Color = this.color,
+        alpha: Float = this.alpha,
+        strokeCap: StrokeCap = this.strokeCap,
+        strokeJoin: StrokeJoin = this.strokeJoin,
+        eraseMode: Boolean = this.eraseMode
+    ) = PathProperties(
+        strokeWidth, color, alpha, strokeCap, strokeJoin, eraseMode
+    )
+
+    fun copyFrom(properties: PathProperties) {
         this.strokeWidth = properties.strokeWidth
         this.color = properties.color
         this.strokeCap = properties.strokeCap
@@ -466,39 +456,4 @@ class PathProperties(
         this.eraseMode = properties.eraseMode
     }
 }
-
-/**
- * Simple circle with stroke to show rainbow colors as [Brush.sweepGradient]
- */
-@Composable
-private fun ColorWheel(modifier: Modifier = Modifier) {
-
-    Canvas(modifier = modifier) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
-
-        require(canvasWidth == canvasHeight,
-            lazyMessage = {
-                print("Canvas dimensions should be equal to each other")
-            }
-        )
-        val cX = canvasWidth / 2
-        val cY = canvasHeight / 2
-        val canvasRadius = canvasWidth.coerceAtMost(canvasHeight)/2f
-        val center = Offset(cX, cY)
-        val strokeWidth = canvasRadius * .3f
-        // Stroke is drawn out of the radius, so it's required to subtract stroke width from radius
-        val radius = canvasRadius - strokeWidth
-
-        drawCircle(
-            brush = Brush.sweepGradient(colors = gradientColors, center = center),
-            radius = radius,
-            center = center,
-            style = Stroke(
-                width = strokeWidth
-            )
-        )
-    }
-}
-
 

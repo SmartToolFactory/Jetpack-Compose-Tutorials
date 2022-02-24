@@ -186,6 +186,7 @@ private fun DrawShapeBlendMode() {
 
     if (showSrcColorDialog) {
         CustomDialogWithResultExample(
+            initialColor = srcColor,
             onDismiss = {
                 showSrcColorDialog = false
             },
@@ -201,6 +202,7 @@ private fun DrawShapeBlendMode() {
 
     if (showDstColorDialog) {
         CustomDialogWithResultExample(
+            initialColor = dstColor,
             onDismiss = {
                 showDstColorDialog = false
             },

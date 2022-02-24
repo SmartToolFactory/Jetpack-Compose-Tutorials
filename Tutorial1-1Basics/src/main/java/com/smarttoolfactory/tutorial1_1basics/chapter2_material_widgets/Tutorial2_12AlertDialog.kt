@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,9 +12,11 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ColorWheel
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -156,6 +159,7 @@ private fun TutorialContent() {
 
                 if (showCustomDialogWithResult) {
                     CustomDialogWithResultExample(
+                        initialColor = Color.Black,
                         onDismiss = {
                             showCustomDialogWithResult = !showCustomDialogWithResult
                             Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
@@ -360,13 +364,14 @@ private fun CustomDialogExample(
 
 @Composable
 fun CustomDialogWithResultExample(
+    initialColor: Color,
     onDismiss: () -> Unit,
     onNegativeClick: () -> Unit,
     onPositiveClick: (Color) -> Unit
 ) {
-    var red by remember { mutableStateOf(0f) }
-    var green by remember { mutableStateOf(0f) }
-    var blue by remember { mutableStateOf(0f) }
+    var red by remember { mutableStateOf(initialColor.red * 255) }
+    var green by remember { mutableStateOf(initialColor.green * 255) }
+    var blue by remember { mutableStateOf(initialColor.blue * 255) }
 
     val color = Color(
         red = red.toInt(),
@@ -377,80 +382,126 @@ fun CustomDialogWithResultExample(
 
     Dialog(onDismissRequest = onDismiss) {
 
-        Card(
-            elevation = 8.dp,
-            shape = RoundedCornerShape(12.dp)
+        BoxWithConstraints(
+            Modifier
+                .shadow(1.dp, RoundedCornerShape(8.dp))
+                .background(Color.White)
         ) {
 
-            Column(modifier = Modifier.padding(8.dp)) {
+            val widthInDp = LocalDensity.current.run { maxWidth }
+
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                 Text(
-                    text = "Select Color",
+                    text = "Color",
+                    color = Blue400,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(top = 12.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
 
-                // Color Selection
+                // Initial and Current Colors
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 50.dp, vertical = 20.dp)
                 ) {
 
-
-                    Column {
-
-                        Text(text = "Red ${red.toInt()}")
-                        Slider(
-                            value = red,
-                            onValueChange = { red = it },
-                            valueRange = 0f..255f,
-                            onValueChangeFinished = {}
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(text = "Green ${green.toInt()}")
-                        Slider(
-                            value = green,
-                            onValueChange = { green = it },
-                            valueRange = 0f..255f,
-                            onValueChangeFinished = {}
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(text = "Blue ${blue.toInt()}")
-                        Slider(
-                            value = blue,
-                            onValueChange = { blue = it },
-                            valueRange = 0f..255f,
-                            onValueChangeFinished = {}
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Surface(
-                            border = BorderStroke(1.dp, Color.DarkGray),
-                            color = color,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                        ) {}
-                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(40.dp)
+                            .background(
+                                initialColor,
+                                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+                            )
+                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(40.dp)
+                            .background(
+                                color,
+                                shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
+                            )
+                    )
                 }
 
+                ColorWheel(
+                    modifier = Modifier
+                        .width(widthInDp * .8f)
+                        .aspectRatio(1f)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sliders
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Red",
+                    titleColor = Color.Red,
+                    rgb = red,
+                    onColorChanged = {
+                        red = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Green",
+                    titleColor = Color.Green,
+                    rgb = green,
+                    onColorChanged = {
+                        green = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                ColorSlider(
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 12.dp)
+                        .fillMaxWidth(),
+                    title = "Blue",
+                    titleColor = Color.Blue,
+                    rgb = blue,
+                    onColorChanged = {
+                        blue = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
                 // Buttons
+
                 Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .background(Color(0xffF3E5F5)),
+                    verticalAlignment = Alignment.CenterVertically
+
                 ) {
 
-                    TextButton(onClick = onNegativeClick) {
+                    TextButton(
+                        onClick = onNegativeClick,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
                         Text(text = "CANCEL")
                     }
-                    Spacer(modifier = Modifier.width(4.dp))
-                    TextButton(onClick = {
-                        onPositiveClick(color)
-                    }) {
+                    TextButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        onClick = {
+                            onPositiveClick(color)
+                        },
+                    ) {
                         Text(text = "OK")
                     }
                 }
