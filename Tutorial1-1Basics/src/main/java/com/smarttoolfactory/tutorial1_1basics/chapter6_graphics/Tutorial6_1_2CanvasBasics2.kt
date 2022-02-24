@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
@@ -24,10 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
-import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
-import com.smarttoolfactory.tutorial1_1basics.ui.Green400
-import com.smarttoolfactory.tutorial1_1basics.ui.Red400
-import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
@@ -58,7 +56,8 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "Examples for drawing arc with positive or negative start or sweep " +
                     "angles. Draw image with src, dst parameters",
-            bullets = false)
+            bullets = false
+        )
 
         Text(
             "Draw Arc",
@@ -110,7 +109,10 @@ private fun DrawArc() {
         val canvasHeight = size.height
 
         drawArc(
-            color = Red400,
+            brush = Brush.sweepGradient(
+                colors = gradientColors,
+                center = Offset(canvasWidth / 2, canvasHeight / 2)
+            ),
             startAngle,
             sweepAngle,
             useCenter,

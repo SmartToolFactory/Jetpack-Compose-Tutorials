@@ -32,3 +32,12 @@ val ReceivedQuoteColor = Color(0xffECEFF1)
 val QuoteTextColor = Color(0xff757575)
 val RecipientAltNameColor = Color(0xff757575)
 
+val gradientColors = listOf(
+    Color.Red,
+    Color.Magenta,
+    Color.Blue,
+    Color.Cyan,
+    Color.Green,
+    Color.Yellow,
+    Color.Red
+)

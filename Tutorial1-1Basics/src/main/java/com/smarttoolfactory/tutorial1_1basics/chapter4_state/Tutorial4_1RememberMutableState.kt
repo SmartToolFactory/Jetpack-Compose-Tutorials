@@ -38,7 +38,7 @@ private fun TutorialContent() {
         Spacer(modifier = Modifier.height(8.dp))
         StyleableTutorialText(
             text = "In counter 2 and 3 **myVal is always 0** because " +
-                    "it's initial value is remembered in outer composable",
+                    "its initial value is remembered in outer composable",
             bullets = false
         )
         Counter2()
@@ -174,7 +174,8 @@ private fun Counter4() {
             onClick = {
                 counter++
                 myVal++
-                // 🔥 Since MyData is remembered at each composition first one in remember is retained
+                // 🔥 Since MyData is remembered at each composition the one initially instantiated
+                // inside remember is retained
                 myData = MyData(myData.value + 1)
             }) {
             Text("Counter: $counter, myVal: $myVal, myData value: ${myData.value}")

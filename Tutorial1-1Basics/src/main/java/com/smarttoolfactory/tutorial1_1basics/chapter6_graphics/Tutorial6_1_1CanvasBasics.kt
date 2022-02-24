@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
 import java.lang.Math.PI
 import kotlin.math.sin
 
@@ -50,7 +51,8 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "Examples for drawing line, rectangle, circle, " +
                     "and points with stroke, cap, join and brush properties.",
-            bullets = false)
+            bullets = false
+        )
 
         Text(
             text = "Draw Line",
@@ -410,16 +412,10 @@ private fun DrawCircleExample() {
             center = Offset(2 * space + 3 * radius, canvasHeight / 2),
         )
 
+
         drawCircle(
             brush = Brush.sweepGradient(
-                colors = listOf(
-                    Color.Green,
-                    Color.Cyan,
-                    Color.Red,
-                    Color.Blue,
-                    Color.Yellow,
-                    Color.Magenta
-                ),
+                colors = gradientColors,
                 center = Offset(canvasWidth - space - radius, canvasHeight / 2),
             ),
             radius = radius,
@@ -717,7 +713,6 @@ private fun DrawPointsExample() {
         )
     }
 }
-
 
 
 fun getSinusoidalPoints(size: Size, horizontalOffset: Float = 0f): MutableList<Offset> {

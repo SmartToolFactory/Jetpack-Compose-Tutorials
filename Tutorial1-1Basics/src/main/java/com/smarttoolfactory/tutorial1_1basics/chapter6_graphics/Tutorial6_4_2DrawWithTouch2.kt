@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.BorderColor
+import androidx.compose.material.icons.filled.Redo
+import androidx.compose.material.icons.filled.TouchApp
+import androidx.compose.material.icons.filled.Undo
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +31,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
 
 @Composable
 fun Tutorial6_4Screen2() {
@@ -62,20 +66,16 @@ private fun DrawingApp() {
 
     var drawMode by remember { mutableStateOf(DrawMode.Draw) }
 
-    var pathProperty = remember { PathProperties() }
+    var currentPath by remember { mutableStateOf(Path()) }
+    var pathProperty by remember { mutableStateOf(PathProperties()) }
 
-    var currentPath = remember { Path() }
-
-    // This text is drawn to Canvas
     val canvasText = remember { StringBuilder() }
-
     val paint = remember {
         Paint().apply {
             textSize = 40f
             color = Color.Black.toArgb()
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -109,8 +109,6 @@ private fun DrawingApp() {
 
         Canvas(modifier = drawModifier) {
 
-            println("🚀 CANVAS motionEvent: $motionEvent")
-
             when (motionEvent) {
                 MotionEvent.Down -> {
                     currentPath.moveTo(currentPosition.x, currentPosition.y)
@@ -127,12 +125,6 @@ private fun DrawingApp() {
                     // Pointer is up save current path
                     paths[currentPath] = pathProperty
 
-                    println(
-                        "🔥🔥 Canvas MotionEvent.Up " +
-                                "currentPath: ${currentPath.hashCode()}, " +
-                                "pathProperties: ${pathProperty.hashCode()}"
-                    )
-
                     // Since paths are keys for map, use new one for each key
                     // and have separate path for each down-move-up gesture cycle
                     currentPath = Path()
@@ -144,26 +136,15 @@ private fun DrawingApp() {
                         color = pathProperty.color,
                         strokeCap = pathProperty.strokeCap,
                         strokeJoin = pathProperty.strokeJoin,
-                    ).apply {
                         eraseMode = pathProperty.eraseMode
-                    }
-
-
-                    println(
-                        "🔥🔥 Canvas MotionEvent.Up " +
-                                "currentPath: ${currentPath.hashCode()}, " +
-                                "pathProperties: ${pathProperty.hashCode()}"
                     )
-
 
                     // If we leave this state at MotionEvent.Up it causes current path to draw
                     // line from (0,0) if this composable recomposes when draw mode is changed
                     motionEvent = MotionEvent.Idle
                 }
 
-                else -> {
-
-                }
+                else -> Unit
             }
 
             with(drawContext.canvas.nativeCanvas) {
@@ -192,9 +173,9 @@ private fun DrawingApp() {
                             color = Color.Transparent,
                             path = path,
                             style = Stroke(
-                                width = 30f,
-                                cap = StrokeCap.Round,
-                                join = StrokeJoin.Round
+                                width = pathProperty.strokeWidth,
+                                cap = pathProperty.strokeCap,
+                                join = pathProperty.strokeJoin
                             ),
                             blendMode = BlendMode.Clear
                         )
@@ -202,9 +183,8 @@ private fun DrawingApp() {
                 }
 
                 if (motionEvent != MotionEvent.Idle) {
-                    println("🍒 CURRENT PATH DRAW motionEvent: $motionEvent")
 
-                    if (drawMode == DrawMode.Draw) {
+                    if (!pathProperty.eraseMode) {
                         drawPath(
                             color = pathProperty.color,
                             path = currentPath,
@@ -214,8 +194,7 @@ private fun DrawingApp() {
                                 join = pathProperty.strokeJoin
                             )
                         )
-                    } else if (drawMode == DrawMode.Erase) {
-                        println("🍒🍒 CURRENT PATH ERASE!!")
+                    } else {
                         drawPath(
                             color = Color.Transparent,
                             path = currentPath,
@@ -237,18 +216,19 @@ private fun DrawingApp() {
                 val path = it.key
                 val property = it.value
 
+
                 canvasText.append(
                     "pHash: ${path.hashCode()}, " +
                             "propHash: ${property.hashCode()}, " +
                             "Mode: ${property.eraseMode}\n"
                 )
             }
+
             canvasText.append(
                 "🔥 pHash: ${currentPath.hashCode()}, " +
                         "propHash: ${pathProperty.hashCode()}, " +
                         "Mode: ${pathProperty.eraseMode}\n"
             )
-
 
             drawText(text = canvasText.toString(), x = 0f, y = 60f, paint)
         }
@@ -260,7 +240,7 @@ private fun DrawingApp() {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(4.dp),
-            properties = pathProperty,
+            pathProperties = pathProperty,
             drawMode = drawMode,
             onPathPropertiesChange = {
                 motionEvent = MotionEvent.Idle
@@ -268,7 +248,7 @@ private fun DrawingApp() {
             onDrawModeChanged = {
                 motionEvent = MotionEvent.Idle
                 drawMode = it
-                pathProperty.eraseMode = drawMode == DrawMode.Erase
+                pathProperty.eraseMode = (drawMode == DrawMode.Erase)
                 Toast.makeText(
                     context, "pathProperty: ${pathProperty.hashCode()}, " +
                             "Erase Mode: ${pathProperty.eraseMode}", Toast.LENGTH_SHORT
@@ -281,18 +261,25 @@ private fun DrawingApp() {
 @Composable
 private fun DrawingPropertiesMenu(
     modifier: Modifier = Modifier,
-    properties: PathProperties,
+    pathProperties: PathProperties,
     drawMode: DrawMode,
     onPathPropertiesChange: (PathProperties) -> Unit,
     onDrawModeChanged: (DrawMode) -> Unit
 ) {
+
+    val properties by rememberUpdatedState(newValue = pathProperties)
+
+    val context = LocalContext.current
+
 
     var showColorDialog by remember { mutableStateOf(false) }
     var showPropertiesDialog by remember { mutableStateOf(false) }
     var currentDrawMode = drawMode
 
     Row(
-        modifier = modifier,
+        modifier = modifier
+//            .background(getRandomColor())
+        ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -328,8 +315,10 @@ private fun DrawingPropertiesMenu(
                 tint = if (currentDrawMode == DrawMode.Erase) Color.Black else Color.LightGray
             )
         }
+
+
         IconButton(onClick = { showColorDialog = !showColorDialog }) {
-            Icon(Icons.Filled.ColorLens, contentDescription = null, tint = Color.LightGray)
+            ColorWheel(modifier = Modifier.size(24.dp))
         }
 
         IconButton(onClick = { showPropertiesDialog = !showPropertiesDialog }) {
@@ -344,26 +333,26 @@ private fun DrawingPropertiesMenu(
             Icon(Icons.Filled.Redo, contentDescription = null, tint = Color.LightGray)
         }
 
-        Canvas(
-            modifier = Modifier
-                .height(10.dp)
-                .width(100.dp)
-                .padding(horizontal = 8.dp, vertical = 2.dp)
-        ) {
-            val path = Path()
-            path.moveTo(0f, size.height / 2)
-            path.lineTo(size.width, size.height / 2)
-
-            drawPath(
-                color = properties.color,
-                path = path,
-                style = Stroke(
-                    width = properties.strokeWidth,
-                    cap = properties.strokeCap,
-                    join = properties.strokeJoin
-                )
-            )
-        }
+//        Canvas(
+//            modifier = Modifier
+//                .height(10.dp)
+//                .width(100.dp)
+//                .padding(horizontal = 8.dp, vertical = 2.dp)
+//        ) {
+//            val path = Path()
+//            path.moveTo(0f, size.height / 2)
+//            path.lineTo(size.width, size.height / 2)
+//
+//            drawPath(
+//                color = properties.color,
+//                path = path,
+//                style = Stroke(
+//                    width = properties.strokeWidth,
+//                    cap = properties.strokeCap,
+//                    join = properties.strokeJoin
+//                )
+//            )
+//        }
     }
 
     if (showColorDialog) {
@@ -467,4 +456,49 @@ class PathProperties(
     var strokeCap: StrokeCap = StrokeCap.Round,
     var strokeJoin: StrokeJoin = StrokeJoin.Round,
     var eraseMode: Boolean = false
-)
+) {
+
+    fun copy(properties: PathProperties) {
+        this.strokeWidth = properties.strokeWidth
+        this.color = properties.color
+        this.strokeCap = properties.strokeCap
+        this.strokeJoin = properties.strokeJoin
+        this.eraseMode = properties.eraseMode
+    }
+}
+
+/**
+ * Simple circle with stroke to show rainbow colors as [Brush.sweepGradient]
+ */
+@Composable
+private fun ColorWheel(modifier: Modifier = Modifier) {
+
+    Canvas(modifier = modifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        require(canvasWidth == canvasHeight,
+            lazyMessage = {
+                print("Canvas dimensions should be equal to each other")
+            }
+        )
+        val cX = canvasWidth / 2
+        val cY = canvasHeight / 2
+        val canvasRadius = canvasWidth.coerceAtMost(canvasHeight)/2f
+        val center = Offset(cX, cY)
+        val strokeWidth = canvasRadius * .3f
+        // Stroke is drawn out of the radius, so it's required to subtract stroke width from radius
+        val radius = canvasRadius - strokeWidth
+
+        drawCircle(
+            brush = Brush.sweepGradient(colors = gradientColors, center = center),
+            radius = radius,
+            center = center,
+            style = Stroke(
+                width = strokeWidth
+            )
+        )
+    }
+}
+
+
