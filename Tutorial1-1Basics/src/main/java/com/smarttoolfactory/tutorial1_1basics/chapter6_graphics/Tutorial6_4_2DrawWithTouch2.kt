@@ -24,12 +24,14 @@ import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 
 @Composable
@@ -355,30 +357,67 @@ private fun DrawingPropertiesMenu(
 @Composable
 internal fun PropertiesMenuDialog(pathOption: PathProperties, onDismiss: () -> Unit) {
 
+    var strokeWidth by remember { mutableStateOf(pathOption.strokeWidth) }
+    var strokeCap by remember { mutableStateOf(pathOption.strokeCap) }
+    var strokeJoin by remember { mutableStateOf(pathOption.strokeJoin) }
+
     Dialog(onDismissRequest = onDismiss) {
 
         Card(
             elevation = 2.dp,
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Column(modifier = Modifier.padding(8.dp)) {
 
                 Text(
-                    text = "Stroke Width ${pathOption.strokeWidth.toInt()}",
+                    text = "Properties",
+                    color = Blue400,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 12.dp, top = 12.dp)
+                )
+
+                Canvas(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp, vertical = 20.dp)
+                        .height(40.dp)
+                        .fillMaxWidth()
+                ) {
+                    val path = Path()
+                    path.moveTo(0f, size.height / 2)
+                    path.lineTo(size.width, size.height / 2)
+
+                    drawPath(
+                        color = pathOption.color,
+                        path = path,
+                        style = Stroke(
+                            width = strokeWidth,
+                            cap = strokeCap,
+                            join = strokeJoin
+                        )
+                    )
+                }
+
+                Text(
+                    text = "Stroke Width ${strokeWidth.toInt()}",
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
 
                 Slider(
-                    value = pathOption.strokeWidth,
-                    onValueChange = { pathOption.strokeWidth = it },
+                    value = strokeWidth,
+                    onValueChange = {
+                        strokeWidth = it
+                        pathOption.strokeWidth = strokeWidth
+                    },
                     valueRange = 1f..100f,
                     onValueChangeFinished = {}
                 )
 
 
                 ExposedSelectionMenu(title = "Stroke Cap",
-                    index = when (pathOption.strokeCap) {
+                    index = when (strokeCap) {
                         StrokeCap.Butt -> 0
                         StrokeCap.Round -> 1
                         else -> 2
@@ -386,16 +425,19 @@ internal fun PropertiesMenuDialog(pathOption: PathProperties, onDismiss: () -> U
                     options = listOf("Butt", "Round", "Square"),
                     onSelected = {
                         println("STOKE CAP $it")
-                        pathOption.strokeCap = when (it) {
+                        strokeCap = when (it) {
                             0 -> StrokeCap.Butt
                             1 -> StrokeCap.Round
                             else -> StrokeCap.Square
                         }
+
+                        pathOption.strokeCap = strokeCap
+
                     }
                 )
 
                 ExposedSelectionMenu(title = "Stroke Join",
-                    index = when (pathOption.strokeJoin) {
+                    index = when (strokeJoin) {
                         StrokeJoin.Miter -> 0
                         StrokeJoin.Round -> 1
                         else -> 2
@@ -404,11 +446,13 @@ internal fun PropertiesMenuDialog(pathOption: PathProperties, onDismiss: () -> U
                     onSelected = {
                         println("STOKE JOIN $it")
 
-                        pathOption.strokeJoin = when (it) {
+                        strokeJoin = when (it) {
                             0 -> StrokeJoin.Miter
                             1 -> StrokeJoin.Round
                             else -> StrokeJoin.Bevel
                         }
+
+                        pathOption.strokeJoin = strokeJoin
                     }
                 )
             }
