@@ -49,26 +49,52 @@ private fun DrawingApp() {
 
     val context = LocalContext.current
 
-    /*
-        Paths that are added, this is required to have paths with different options and paths
-        with erase to keep over each other
+    /**
+     * Paths that are added, this is required to have paths with different options and paths
+     *  ith erase to keep over each other
      */
     val paths = remember { linkedMapOf<Path, PathProperties>() }
 
-    // Canvas touch state. Idle by default, Down at first contact, Move while dragging and UP
-    // when first pointer is up
+
+    /**
+     * Paths that are undone via button. These are saved to redo if user pushes
+     * redo button
+     */
+    val pathsUndone = remember { linkedMapOf<Path, PathProperties>() }
+
+    /**
+     * Canvas touch state. [MotionEvent.Idle] by default, [MotionEvent.Down] at first contact,
+     * [MotionEvent.Move] while dragging and [MotionEvent.Up] when first pointer is up
+     */
     var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
 
-    // This is our motion event we get from touch motion
+    /**
+     * Current position of the pointer that is pressed or being moved
+     */
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
-    // This is previous motion event before next touch is saved into this current position
+
+    /**
+     * Previous motion event before next touch is saved into this current position.
+     */
     var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
 
+    /**
+     * Draw mode, erase mode or touch mode to
+     */
     var drawMode by remember { mutableStateOf(DrawMode.Draw) }
 
+    /**
+     * Path that is being drawn between [MotionEvent.Down] and [MotionEvent.Up]. When
+     * pointer is up this path is saved to **paths** and new instance is created
+     */
     var currentPath by remember { mutableStateOf(Path()) }
-    var pathProperty by remember { mutableStateOf(PathProperties()) }
+
+    /**
+     * Properties of path that is currently being drawn between
+     * [MotionEvent.Down] and [MotionEvent.Up].
+     */
+    var currentPathProperty by remember { mutableStateOf(PathProperties()) }
 
     val canvasText = remember { StringBuilder() }
     val paint = remember {
@@ -124,7 +150,7 @@ private fun DrawingApp() {
                     currentPath.lineTo(currentPosition.x, currentPosition.y)
 
                     // Pointer is up save current path
-                    paths[currentPath] = pathProperty
+                    paths[currentPath] = currentPathProperty
 
                     // Since paths are keys for map, use new one for each key
                     // and have separate path for each down-move-up gesture cycle
@@ -132,12 +158,12 @@ private fun DrawingApp() {
 
                     // Create new instance of path properties to have new path and properties
                     // only for the one currently being drawn
-                    pathProperty = PathProperties(
-                        strokeWidth = pathProperty.strokeWidth,
-                        color = pathProperty.color,
-                        strokeCap = pathProperty.strokeCap,
-                        strokeJoin = pathProperty.strokeJoin,
-                        eraseMode = pathProperty.eraseMode
+                    currentPathProperty = PathProperties(
+                        strokeWidth = currentPathProperty.strokeWidth,
+                        color = currentPathProperty.color,
+                        strokeCap = currentPathProperty.strokeCap,
+                        strokeJoin = currentPathProperty.strokeJoin,
+                        eraseMode = currentPathProperty.eraseMode
                     )
 
                     // If we leave this state at MotionEvent.Up it causes current path to draw
@@ -174,9 +200,9 @@ private fun DrawingApp() {
                             color = Color.Transparent,
                             path = path,
                             style = Stroke(
-                                width = pathProperty.strokeWidth,
-                                cap = pathProperty.strokeCap,
-                                join = pathProperty.strokeJoin
+                                width = currentPathProperty.strokeWidth,
+                                cap = currentPathProperty.strokeCap,
+                                join = currentPathProperty.strokeJoin
                             ),
                             blendMode = BlendMode.Clear
                         )
@@ -185,14 +211,14 @@ private fun DrawingApp() {
 
                 if (motionEvent != MotionEvent.Idle) {
 
-                    if (!pathProperty.eraseMode) {
+                    if (!currentPathProperty.eraseMode) {
                         drawPath(
-                            color = pathProperty.color,
+                            color = currentPathProperty.color,
                             path = currentPath,
                             style = Stroke(
-                                width = pathProperty.strokeWidth,
-                                cap = pathProperty.strokeCap,
-                                join = pathProperty.strokeJoin
+                                width = currentPathProperty.strokeWidth,
+                                cap = currentPathProperty.strokeCap,
+                                join = currentPathProperty.strokeJoin
                             )
                         )
                     } else {
@@ -200,9 +226,9 @@ private fun DrawingApp() {
                             color = Color.Transparent,
                             path = currentPath,
                             style = Stroke(
-                                width = pathProperty.strokeWidth,
-                                cap = pathProperty.strokeCap,
-                                join = pathProperty.strokeJoin
+                                width = currentPathProperty.strokeWidth,
+                                cap = currentPathProperty.strokeCap,
+                                join = currentPathProperty.strokeJoin
                             ),
                             blendMode = BlendMode.Clear
                         )
@@ -227,8 +253,8 @@ private fun DrawingApp() {
 
             canvasText.append(
                 "🔥 pHash: ${currentPath.hashCode()}, " +
-                        "propHash: ${pathProperty.hashCode()}, " +
-                        "Mode: ${pathProperty.eraseMode}\n"
+                        "propHash: ${currentPathProperty.hashCode()}, " +
+                        "Mode: ${currentPathProperty.eraseMode}\n"
             )
 
             drawText(text = canvasText.toString(), x = 0f, y = 60f, paint)
@@ -241,18 +267,24 @@ private fun DrawingApp() {
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(4.dp),
-            pathProperties = pathProperty,
+            pathProperties = currentPathProperty,
             drawMode = drawMode,
+            onUndo = {
+
+            },
+            onRedo = {
+
+            },
             onPathPropertiesChange = {
                 motionEvent = MotionEvent.Idle
             },
             onDrawModeChanged = {
                 motionEvent = MotionEvent.Idle
                 drawMode = it
-                pathProperty.eraseMode = (drawMode == DrawMode.Erase)
+                currentPathProperty.eraseMode = (drawMode == DrawMode.Erase)
                 Toast.makeText(
-                    context, "pathProperty: ${pathProperty.hashCode()}, " +
-                            "Erase Mode: ${pathProperty.eraseMode}", Toast.LENGTH_SHORT
+                    context, "pathProperty: ${currentPathProperty.hashCode()}, " +
+                            "Erase Mode: ${currentPathProperty.eraseMode}", Toast.LENGTH_SHORT
                 ).show()
             }
         )
@@ -264,6 +296,8 @@ private fun DrawingPropertiesMenu(
     modifier: Modifier = Modifier,
     pathProperties: PathProperties,
     drawMode: DrawMode,
+    onUndo:() ->Unit,
+    onRedo:()->Unit,
     onPathPropertiesChange: (PathProperties) -> Unit,
     onDrawModeChanged: (DrawMode) -> Unit
 ) {
@@ -271,7 +305,6 @@ private fun DrawingPropertiesMenu(
     val properties by rememberUpdatedState(newValue = pathProperties)
 
     val context = LocalContext.current
-
 
     var showColorDialog by remember { mutableStateOf(false) }
     var showPropertiesDialog by remember { mutableStateOf(false) }
@@ -326,11 +359,15 @@ private fun DrawingPropertiesMenu(
             Icon(Icons.Filled.Brush, contentDescription = null, tint = Color.LightGray)
         }
 
-        IconButton(onClick = { }) {
+        IconButton(onClick = {
+            onUndo()
+        }) {
             Icon(Icons.Filled.Undo, contentDescription = null, tint = Color.LightGray)
         }
 
-        IconButton(onClick = { }) {
+        IconButton(onClick = {
+            onRedo()
+        }) {
             Icon(Icons.Filled.Redo, contentDescription = null, tint = Color.LightGray)
         }
     }
