@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -96,6 +97,11 @@ private fun DrawingApp() {
      */
     var currentPathProperty by remember { mutableStateOf(PathProperties()) }
 
+    /**
+     * Offset for canvas drawing if moved in [DrawMode.Touch]
+     */
+//    var translateOffset by remember { mutableStateOf(Offset.Zero) }
+
     val canvasText = remember { StringBuilder() }
     val paint = remember {
         Paint().apply {
@@ -122,11 +128,23 @@ private fun DrawingApp() {
                     motionEvent = MotionEvent.Down
                     currentPosition = pointerInputChange.position
                     pointerInputChange.consumeDownChange()
+
                 },
                 onDrag = { pointerInputChange ->
                     motionEvent = MotionEvent.Move
                     currentPosition = pointerInputChange.position
+
+                    if (drawMode == DrawMode.Touch) {
+                        val change = pointerInputChange.positionChange()
+                        println("DRAG: $change")
+                        paths.forEach { entry ->
+                            val path: Path = entry.key
+                            path.translate(change)
+                        }
+                        currentPath.translate(change)
+                    }
                     pointerInputChange.consumePositionChange()
+
                 },
                 onDragEnd = { pointerInputChange ->
                     motionEvent = MotionEvent.Up
@@ -137,40 +155,58 @@ private fun DrawingApp() {
         Canvas(modifier = drawModifier) {
 
             when (motionEvent) {
+
                 MotionEvent.Down -> {
-                    currentPath.moveTo(currentPosition.x, currentPosition.y)
+                    if (drawMode != DrawMode.Touch) {
+                        currentPath.moveTo(currentPosition.x, currentPosition.y)
+                    }
+
+                    previousPosition = currentPosition
+
                 }
                 MotionEvent.Move -> {
-                    if (currentPosition != Offset.Unspecified) {
-                        currentPath.lineTo(currentPosition.x, currentPosition.y)
+
+                    if (drawMode != DrawMode.Touch) {
+                        currentPath.quadraticBezierTo(
+                            previousPosition.x,
+                            previousPosition.y,
+                            (previousPosition.x + currentPosition.x) / 2,
+                            (previousPosition.y + currentPosition.y) / 2
+
+                        )
                     }
+
+                    previousPosition = currentPosition
                 }
 
                 MotionEvent.Up -> {
-                    currentPath.lineTo(currentPosition.x, currentPosition.y)
+                    if (drawMode != DrawMode.Touch) {
+                        currentPath.lineTo(currentPosition.x, currentPosition.y)
 
-                    // Pointer is up save current path
-                    paths[currentPath] = currentPathProperty
+                        // Pointer is up save current path
+                        paths[currentPath] = currentPathProperty
 
-                    // Since paths are keys for map, use new one for each key
-                    // and have separate path for each down-move-up gesture cycle
-                    currentPath = Path()
+                        // Since paths are keys for map, use new one for each key
+                        // and have separate path for each down-move-up gesture cycle
+                        currentPath = Path()
 
-                    // Create new instance of path properties to have new path and properties
-                    // only for the one currently being drawn
-                    currentPathProperty = PathProperties(
-                        strokeWidth = currentPathProperty.strokeWidth,
-                        color = currentPathProperty.color,
-                        strokeCap = currentPathProperty.strokeCap,
-                        strokeJoin = currentPathProperty.strokeJoin,
-                        eraseMode = currentPathProperty.eraseMode
-                    )
+                        // Create new instance of path properties to have new path and properties
+                        // only for the one currently being drawn
+                        currentPathProperty = PathProperties(
+                            strokeWidth = currentPathProperty.strokeWidth,
+                            color = currentPathProperty.color,
+                            strokeCap = currentPathProperty.strokeCap,
+                            strokeJoin = currentPathProperty.strokeJoin,
+                            eraseMode = currentPathProperty.eraseMode
+                        )
+                    }
 
                     // If we leave this state at MotionEvent.Up it causes current path to draw
                     // line from (0,0) if this composable recomposes when draw mode is changed
+                    currentPosition = Offset.Unspecified
+                    previousPosition = currentPosition
                     motionEvent = MotionEvent.Idle
                 }
-
                 else -> Unit
             }
 
@@ -243,7 +279,6 @@ private fun DrawingApp() {
                 val path = it.key
                 val property = it.value
 
-
                 canvasText.append(
                     "pHash: ${path.hashCode()}, " +
                             "propHash: ${property.hashCode()}, " +
@@ -296,8 +331,8 @@ private fun DrawingPropertiesMenu(
     modifier: Modifier = Modifier,
     pathProperties: PathProperties,
     drawMode: DrawMode,
-    onUndo:() ->Unit,
-    onRedo:()->Unit,
+    onUndo: () -> Unit,
+    onRedo: () -> Unit,
     onPathPropertiesChange: (PathProperties) -> Unit,
     onDrawModeChanged: (DrawMode) -> Unit
 ) {
