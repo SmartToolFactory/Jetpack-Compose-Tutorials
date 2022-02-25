@@ -63,7 +63,7 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:1.4.0")
 
-    def accompanist_version = "0.24.0-alpha"
+    def accompanist_version = "0.24.3-alpha"
     // Accompanist
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
