@@ -54,14 +54,16 @@ private fun DrawingApp() {
      * Paths that are added, this is required to have paths with different options and paths
      *  ith erase to keep over each other
      */
-    val paths = remember { linkedMapOf<Path, PathProperties>() }
-
+    val paths = remember { mutableStateListOf<Pair<Path, PathProperties>>()  }
 
     /**
-     * Paths that are undone via button. These are saved to redo if user pushes
-     * redo button
+     * Paths that are undone via button. These paths are restored if user pushes
+     * redo button if there is no new path drawn.
+     *
+     * If new path is drawn after this list is cleared to not break paths after undoing previous
+     * ones.
      */
-    val pathsUndone = remember { linkedMapOf<Path, PathProperties>() }
+    val pathsUndone = remember { mutableStateListOf<Pair<Path, PathProperties>>() }
 
     /**
      * Canvas touch state. [MotionEvent.Idle] by default, [MotionEvent.Down] at first contact,
@@ -73,7 +75,6 @@ private fun DrawingApp() {
      * Current position of the pointer that is pressed or being moved
      */
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
-
 
     /**
      * Previous motion event before next touch is saved into this current position.
@@ -96,11 +97,6 @@ private fun DrawingApp() {
      * [MotionEvent.Down] and [MotionEvent.Up].
      */
     var currentPathProperty by remember { mutableStateOf(PathProperties()) }
-
-    /**
-     * Offset for canvas drawing if moved in [DrawMode.Touch]
-     */
-//    var translateOffset by remember { mutableStateOf(Offset.Zero) }
 
     val canvasText = remember { StringBuilder() }
     val paint = remember {
@@ -138,7 +134,7 @@ private fun DrawingApp() {
                         val change = pointerInputChange.positionChange()
                         println("DRAG: $change")
                         paths.forEach { entry ->
-                            val path: Path = entry.key
+                            val path: Path = entry.first
                             path.translate(change)
                         }
                         currentPath.translate(change)
@@ -184,7 +180,8 @@ private fun DrawingApp() {
                         currentPath.lineTo(currentPosition.x, currentPosition.y)
 
                         // Pointer is up save current path
-                        paths[currentPath] = currentPathProperty
+//                        paths[currentPath] = currentPathProperty
+                        paths.add(Pair(currentPath,currentPathProperty))
 
                         // Since paths are keys for map, use new one for each key
                         // and have separate path for each down-move-up gesture cycle
@@ -201,6 +198,9 @@ private fun DrawingApp() {
                         )
                     }
 
+                    // Since new path is drawn no need to store paths to undone
+                    pathsUndone.clear()
+
                     // If we leave this state at MotionEvent.Up it causes current path to draw
                     // line from (0,0) if this composable recomposes when draw mode is changed
                     currentPosition = Offset.Unspecified
@@ -216,8 +216,8 @@ private fun DrawingApp() {
 
                 paths.forEach {
 
-                    val path = it.key
-                    val property = it.value
+                    val path = it.first
+                    val property = it.second
 
                     if (!property.eraseMode) {
                         drawPath(
@@ -273,26 +273,27 @@ private fun DrawingApp() {
                 restoreToCount(checkPoint)
             }
 
-            canvasText.clear()
-
-            paths.forEach {
-                val path = it.key
-                val property = it.value
-
-                canvasText.append(
-                    "pHash: ${path.hashCode()}, " +
-                            "propHash: ${property.hashCode()}, " +
-                            "Mode: ${property.eraseMode}\n"
-                )
-            }
-
-            canvasText.append(
-                "🔥 pHash: ${currentPath.hashCode()}, " +
-                        "propHash: ${currentPathProperty.hashCode()}, " +
-                        "Mode: ${currentPathProperty.eraseMode}\n"
-            )
-
-            drawText(text = canvasText.toString(), x = 0f, y = 60f, paint)
+            // 🔥🔥 This is for debugging
+//            canvasText.clear()
+//
+//            paths.forEach {
+//                val path = it.first
+//                val property = it.second
+//
+//                canvasText.append(
+//                    "pHash: ${path.hashCode()}, " +
+//                            "propHash: ${property.hashCode()}, " +
+//                            "Mode: ${property.eraseMode}\n"
+//                )
+//            }
+//
+//            canvasText.append(
+//                "🔥 pHash: ${currentPath.hashCode()}, " +
+//                        "propHash: ${currentPathProperty.hashCode()}, " +
+//                        "Mode: ${currentPathProperty.eraseMode}\n"
+//            )
+//
+//            drawText(text = canvasText.toString(), x = 0f, y = 60f, paint)
         }
 
         DrawingPropertiesMenu(
@@ -305,10 +306,25 @@ private fun DrawingApp() {
             pathProperties = currentPathProperty,
             drawMode = drawMode,
             onUndo = {
+                if (paths.isNotEmpty()) {
 
+                    val lastItem = paths.last()
+                    val lastPath = lastItem.first
+                    val lastPathProperty = lastItem.second
+                    paths.remove(lastItem)
+
+                    pathsUndone.add(Pair(lastPath,lastPathProperty))
+
+                }
             },
             onRedo = {
+                if (pathsUndone.isNotEmpty()) {
 
+                    val lastPath = pathsUndone.last().first
+                    val lastPathProperty = pathsUndone.last().second
+                    pathsUndone.removeLast()
+                    paths.add(Pair(lastPath,lastPathProperty))
+                }
             },
             onPathPropertiesChange = {
                 motionEvent = MotionEvent.Idle
@@ -338,8 +354,6 @@ private fun DrawingPropertiesMenu(
 ) {
 
     val properties by rememberUpdatedState(newValue = pathProperties)
-
-    val context = LocalContext.current
 
     var showColorDialog by remember { mutableStateOf(false) }
     var showPropertiesDialog by remember { mutableStateOf(false) }

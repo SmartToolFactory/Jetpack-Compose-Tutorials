@@ -120,7 +120,8 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>6-2 Blend(Porter-Duff) Modes</h3><br/>Use blend(Porter-Duff) modes to change drawing source/destination or clip based on blend mode ,and manipulate pixels<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>• BlendMode<br>|<img src ="/./screenshots/tutorial6_2.gif" width=320> |
 |  |  |
-
+|<h3>6-4-2 Drawing App</h3><br/>Draw to canvas using touch down, move and up events using array of paths to have erase, undo, redo actions and set properties for each path separately.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• AwaitPointerEventScope<br>• PointerInputChange<br>• BlendMode<br>|<img src ="/./screenshots/tutorial6_4_2.gif" width=320> |
+|  |  |
 
 ### Resources and References
 [Codelab Jetpack Compose Basics](https://developer.android.com/codelabs/jetpack-compose-basics)
