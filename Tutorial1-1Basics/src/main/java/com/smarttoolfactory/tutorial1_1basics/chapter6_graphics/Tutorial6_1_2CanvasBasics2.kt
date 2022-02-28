@@ -409,5 +409,5 @@ private val canvasModifier = Modifier
     .padding(8.dp)
     .shadow(1.dp)
     .background(Color.White)
-    .fillMaxSize()
+    .fillMaxWidth()
     .height(200.dp)

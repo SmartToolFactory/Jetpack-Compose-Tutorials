@@ -39,6 +39,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
@@ -143,8 +145,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
 
     // 🔥🔥 If pointer is moved fast, Canvas misses, only Canvas misses it, events work fine
     // MotionEvent.Down events, and skips first down
-    // This flag makes sure that first down is always processed by Canvas
-    var canvasConsumedDown by remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
 
     val drawModifier = canvasModifier
         .background(gestureColor)
@@ -161,10 +162,15 @@ private fun TouchDrawMotionEventsAndPathExample() {
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange = awaitFirstDown()
 
-                    canvasConsumedDown = false
+                    var waitedAfterDown = false
                     currentPosition = down.position
                     motionEvent = MotionEvent.Down
                     gestureColor = Blue400
+
+                    scope.launch {
+                        delay(20)
+                        waitedAfterDown = true
+                    }
 
                     down.consumeDownChange()
 
@@ -180,25 +186,26 @@ private fun TouchDrawMotionEventsAndPathExample() {
 
                         if (anyPressed) {
 
-                            if (canvasConsumedDown) {
-                                // Get pointer that is down, if first pointer is up
-                                // get another and use it if other pointers are also down
-                                // event.changes.first() doesn't return same order
-                                val pointerInputChange =
-                                    event.changes.firstOrNull { it.id == pointerId }
-                                        ?: event.changes.first()
+                            // Get pointer that is down, if first pointer is up
+                            // get another and use it if other pointers are also down
+                            // event.changes.first() doesn't return same order
+                            val pointerInputChange =
+                                event.changes.firstOrNull { it.id == pointerId }
+                                    ?: event.changes.first()
 
-                                // Next time will check same pointer with this id
-                                pointerId = pointerInputChange.id
+                            // Next time will check same pointer with this id
+                            pointerId = pointerInputChange.id
 
+                            if (waitedAfterDown) {
                                 currentPosition = pointerInputChange.position
                                 motionEvent = MotionEvent.Move
                                 gestureColor = Green400
-
-                                // This necessary to prevent other gestures or scrolling
-                                // when at least one pointer is down on canvas to draw
-                                pointerInputChange.consumePositionChange()
                             }
+
+                            // This necessary to prevent other gestures or scrolling
+                            // when at least one pointer is down on canvas to draw
+                            pointerInputChange.consumePositionChange()
+
 
                         } else {
                             // All of the pointers are up
@@ -217,7 +224,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
 //                        // This PointerEvent contains details including events, id, position and more
 //                        val event: PointerEvent = awaitPointerEvent()
 //
-//                        if (canvasConsumedDown) {
+//                        if (waitedAfterDown) {
 //                            currentPosition = event.changes.first().position
 //                            motionEvent = MotionEvent.Move
 //                            gestureColor = Green400
@@ -249,24 +256,21 @@ private fun TouchDrawMotionEventsAndPathExample() {
             MotionEvent.Down -> {
                 path.moveTo(currentPosition.x, currentPosition.y)
                 previousPosition = currentPosition
-                canvasConsumedDown = true
                 canvasText.clear()
                 canvasText.append("MotionEvent.Down pos: $currentPosition\n")
             }
 
             MotionEvent.Move -> {
-                if (canvasConsumedDown) {
-                    path.quadraticBezierTo(
-                        previousPosition.x,
-                        previousPosition.y,
-                        (previousPosition.x + currentPosition.x) / 2,
-                        (previousPosition.y + currentPosition.y) / 2
+                path.quadraticBezierTo(
+                    previousPosition.x,
+                    previousPosition.y,
+                    (previousPosition.x + currentPosition.x) / 2,
+                    (previousPosition.y + currentPosition.y) / 2
 
-                    )
-                    canvasText.append("MotionEvent.Move pos: $currentPosition\n")
+                )
+                canvasText.append("MotionEvent.Move pos: $currentPosition\n")
+                previousPosition = currentPosition
 
-                    previousPosition = currentPosition
-                }
             }
 
             MotionEvent.Up -> {
@@ -321,7 +325,7 @@ private fun TouchDrawWithCustomGestureModifierExample() {
     var gestureColor by remember { mutableStateOf(Color.White) }
 
     // Draw state on canvas as text when set to true
-    var debug = false
+    var debug = true
 
     // This text is drawn to Canvas
     val canvasText = remember { StringBuilder() }
@@ -333,16 +337,10 @@ private fun TouchDrawWithCustomGestureModifierExample() {
         }
     }
 
-    // 🔥🔥 If pointer is moved fast, Canvas misses, only Canvas misses it, events work fine
-    // MotionEvent.Down events, and skips first down
-    // This flag makes sure that first down is always processed by Canvas
-    var canvasConsumedDown by remember { mutableStateOf(true) }
-
     val drawModifier = canvasModifier
         .background(gestureColor)
         .awaitPointerMotionEvent(
             onDown = { pointerInputChange: PointerInputChange ->
-                canvasConsumedDown = false
                 currentPosition = pointerInputChange.position
                 motionEvent = MotionEvent.Down
                 gestureColor = Blue400
@@ -369,24 +367,21 @@ private fun TouchDrawWithCustomGestureModifierExample() {
             MotionEvent.Down -> {
                 path.moveTo(currentPosition.x, currentPosition.y)
                 previousPosition = currentPosition
-                canvasConsumedDown = true
                 canvasText.clear()
                 canvasText.append("MotionEvent.Down pos: $currentPosition\n")
             }
 
             MotionEvent.Move -> {
-                if (canvasConsumedDown) {
-                    path.quadraticBezierTo(
-                        previousPosition.x,
-                        previousPosition.y,
-                        (previousPosition.x + currentPosition.x) / 2,
-                        (previousPosition.y + currentPosition.y) / 2
+                path.quadraticBezierTo(
+                    previousPosition.x,
+                    previousPosition.y,
+                    (previousPosition.x + currentPosition.x) / 2,
+                    (previousPosition.y + currentPosition.y) / 2
 
-                    )
-                    canvasText.append("MotionEvent.Move pos: $currentPosition\n")
+                )
+                canvasText.append("MotionEvent.Move pos: $currentPosition\n")
 
-                    previousPosition = currentPosition
-                }
+                previousPosition = currentPosition
             }
 
             MotionEvent.Up -> {
@@ -395,7 +390,6 @@ private fun TouchDrawWithCustomGestureModifierExample() {
                 currentPosition = Offset.Unspecified
                 previousPosition = currentPosition
                 motionEvent = MotionEvent.Idle
-
             }
 
             else -> {
