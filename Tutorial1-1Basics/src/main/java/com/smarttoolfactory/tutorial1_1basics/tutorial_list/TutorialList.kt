@@ -939,6 +939,21 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_5_2 = TutorialSectionModel(
+        title = "5-5-2 Gesture Propagation",
+        description = "Combine pointerInput function and observe how gestures are performed " +
+                "when combined with other pointerInput functions",
+        action = {
+            Tutorial5_5Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+
+            ),
+        tagColor = GestureListColor
+    )
+
     val tutorial5_6 = TutorialSectionModel(
         title = "5-6 Ripple Gesture Events",
         description = "",
@@ -963,6 +978,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_4_3,
         tutorial5_4_4,
         tutorial5_5_1,
+        tutorial5_5_2,
         tutorial5_6
     )
 }
@@ -1079,10 +1095,31 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_4_0 = TutorialSectionModel(
+        title = "6-4-0 Canvas Touch Events",
+        description = "Test touch down, move and up events and invocations on Canvas",
+        action = {
+            Tutorial6_4Screen0()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
+            TAG_AWAIT_DRAG_OR_CANCELLATION
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_4_1 = TutorialSectionModel(
         title = "6-4-1 Draw with Touch",
-        description = "Draw to canvas using touch down, move and up events, o" +
-                "r drag gestures with properties such as color, stroke width," +
+        description = "Draw to canvas using touch down, move and up events, or " +
+                "drag gestures with properties such as color, stroke width," +
                 " or draw on image.",
         action = {
             Tutorial6_4Screen1()
@@ -1132,6 +1169,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_4,
         tutorial6_1_5,
         tutorial6_2,
+        tutorial6_4_0,
         tutorial6_4_1,
         tutorial6_4_2
     )
