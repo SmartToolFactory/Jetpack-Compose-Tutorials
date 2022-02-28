@@ -225,14 +225,14 @@ private fun DetectDragGesturesCycleExample() {
             detectDragGestures(
                 onDragStart = { offset ->
                     gestureText = "onDragStart offset: $offset"
-                    gestureColor = Blue400
+                    gestureColor = Orange400
                     Toast
                         .makeText(context, "onDragStart", Toast.LENGTH_SHORT)
                         .show()
                 },
                 onDrag = { change: PointerInputChange, dragAmount: Offset ->
                     gestureText = "onDrag dragAmount: $dragAmount"
-                    gestureColor = Pink400
+                    gestureColor = Blue400
 
                     gestureDetailText = """
                        id: ${change.id}, type: ${change.type}, position: ${change.position}, previousPosition: ${change.previousPosition}  

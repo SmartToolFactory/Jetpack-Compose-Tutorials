@@ -99,7 +99,7 @@ private fun CombinedDragTapGestureSample() {
             detectDragGestures(
                 onDragStart = { offset ->
                     gestureText = "onDragStart offset: $offset"
-                    gestureColor = BlueGrey400
+                    gestureColor = Orange400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
@@ -107,7 +107,7 @@ private fun CombinedDragTapGestureSample() {
                 },
                 onDrag = { change: PointerInputChange, dragAmount: Offset ->
                     gestureText = "onDrag dragAmount: $dragAmount"
-                    gestureColor = Purple400
+                    gestureColor = Blue400
 
                 },
                 onDragEnd = {
@@ -119,7 +119,7 @@ private fun CombinedDragTapGestureSample() {
                 },
                 onDragCancel = {
                     gestureText = "onDragCancel"
-                    gestureColor = Pink400
+                    gestureColor = Yellow400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()

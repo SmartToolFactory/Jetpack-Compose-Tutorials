@@ -40,7 +40,7 @@ suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
         // All of the pointers are up
         onTouchEvent(MotionEvent.Up, pointer)
     } else {
-        // Drag threshold is not passed and last pointer is up
+        // Drag threshold is not passed(awaitTouchSlopOrCancellation is NULL) and last pointer is up
         onTouchEvent(MotionEvent.Up, pointer)
     }
 }
@@ -87,7 +87,7 @@ suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
         // All of the pointers are up
         onDragEnd(pointer)
     } else {
-        // Drag threshold is not passed and last pointer is up
+        // Drag threshold is not passed(awaitTouchSlopOrCancellation is NULL) and last pointer is up
         onDragEnd(pointer)
     }
 }

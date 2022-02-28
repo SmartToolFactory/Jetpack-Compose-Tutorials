@@ -906,23 +906,6 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_4_4 = TutorialSectionModel(
-        title = "5-4-4 Consume Change",
-        description = "Consume different type of touch events such as down, " +
-                "position change and check if events are consumed.",
-        action = {
-            Tutorial5_4Screen4()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_AWAIT_POINTER_EVENT_SCOPE,
-            TAG_CONSUME_DOWN_CHANGE,
-            TAG_CONSUME_POSITION_CHANGE,
-            TAG_ANY_CHANGE_CONSUMED,
-            TAG_POSITION_CHANGE_CONSUMED
-        ),
-        tagColor = GestureListColor
-    )
 
     val tutorial5_5_1 = TutorialSectionModel(
         title = "5-5-1 Combined Gesture Events",
@@ -939,12 +922,29 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_5_2 = TutorialSectionModel(
-        title = "5-5-2 Gesture Propagation",
-        description = "Combine pointerInput function and observe how gestures are performed " +
-                "when combined with other pointerInput functions",
+    val tutorial5_6_1 = TutorialSectionModel(
+        title = "5-6-1 Consume Change",
+        description = "Consume different type of touch events such as down, " +
+                "position change and check if events are consumed.",
         action = {
-            Tutorial5_5Screen2()
+            Tutorial5_6Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_CONSUME_DOWN_CHANGE,
+            TAG_CONSUME_POSITION_CHANGE,
+            TAG_ANY_CHANGE_CONSUMED,
+            TAG_POSITION_CHANGE_CONSUMED
+        ),
+        tagColor = GestureListColor
+    )
+    val tutorial5_6_2 = TutorialSectionModel(
+        title = "5-6-2 Gesture Propagation1",
+        description = "Consume different type of touch events in Composable in an hierarchy" +
+                "to display gesture propagation between parent and children.",
+        action = {
+            Tutorial5_6Screen2()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -954,11 +954,26 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_6 = TutorialSectionModel(
-        title = "5-6 Ripple Gesture Events",
+    val tutorial5_6_3 = TutorialSectionModel(
+        title = "5-6-3 Gesture Propagation2",
+        description = "Consume different type of touch events in Composable in an hierarchy" +
+                "to display gesture propagation between parent and children.",
+        action = {
+            Tutorial5_6Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+
+            ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_7_1 = TutorialSectionModel(
+        title = "5-7-1 Ripple Gesture Events",
         description = "",
         action = {
-            Tutorial5_6Screen()
+            Tutorial5_7_1Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -976,10 +991,11 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_4_1,
         tutorial5_4_2,
         tutorial5_4_3,
-        tutorial5_4_4,
         tutorial5_5_1,
-        tutorial5_5_2,
-        tutorial5_6
+        tutorial5_6_1,
+        tutorial5_6_2,
+        tutorial5_6_3,
+        tutorial5_7_1
     )
 }
 
