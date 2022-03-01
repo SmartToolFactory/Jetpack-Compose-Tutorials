@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
@@ -15,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.*
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
@@ -38,7 +36,10 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "This example shows how gestures are propagated " +
                     "when **pointerInput.consumeX** functions are " +
-                    "called after down, move or up.",
+                    "called after down, move or up.\n" +
+                    "**NOTE:** After changing a flag in a level(outer, center, inner) " +
+                    "press that level to make sure that it's recomposed and " +
+                    "flags work properly in that modifier",
             bullets = false
         )
         GesturePropagationExample()
@@ -54,7 +55,7 @@ private fun TutorialContent() {
 @Composable
 private fun GesturePropagationExample() {
 
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
     var gestureText by remember { mutableStateOf("") }
 
@@ -66,19 +67,23 @@ private fun GesturePropagationExample() {
     var gestureColorCenter by remember { mutableStateOf(centerColor) }
     var gestureColorInner by remember { mutableStateOf(innerColor) }
 
-    // FLAGS for consuming events which effects gesture propagation
+    /*
+        FLAGS for consuming events which effects gesture propagation
+     */
+    var outerRequireUnconsumed by remember { mutableStateOf(true) }
     var outerConsumeDown by remember { mutableStateOf(false) }
     var outerConsumePositionChange by remember { mutableStateOf(false) }
     var outerConsumeUp by remember { mutableStateOf(false) }
 
+    var centerRequireUnconsumed by remember { mutableStateOf(true) }
     var centerConsumeDown by remember { mutableStateOf(false) }
     var centerConsumePositionChange by remember { mutableStateOf(false) }
     var centerConsumeUp by remember { mutableStateOf(false) }
 
+    var innerRequireUnconsumed by remember { mutableStateOf(true) }
     var innerConsumeDown by remember { mutableStateOf(false) }
     var innerConsumePositionChange by remember { mutableStateOf(false) }
     var innerConsumeUp by remember { mutableStateOf(false) }
-
 
     val outerModifier = Modifier
         .shadow(4.dp, shape = RoundedCornerShape(8.dp))
@@ -88,8 +93,18 @@ private fun GesturePropagationExample() {
             forEachGesture {
                 awaitPointerEventScope {
 
+                    println(
+                        "😍outerRequireUnconsumed: $outerRequireUnconsumed, " +
+                                "outerConsumeDown: $outerConsumeDown, " +
+                                "outerConsumePositionChange: $outerConsumePositionChange, " +
+                                "outerConsumeUp: $outerConsumeUp"
+                    )
+
                     // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown()
+                    val down: PointerInputChange =
+                        // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
+                        // this down never occurs
+                        awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
                         down.consumeDownChange()
@@ -105,9 +120,9 @@ private fun GesturePropagationExample() {
                             "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
                     gestureText += downText
 
-                    Toast
-                        .makeText(context, downText, Toast.LENGTH_SHORT)
-                        .show()
+//                    Toast
+//                        .makeText(context, downText, Toast.LENGTH_SHORT)
+//                        .show()
 
                     gestureColorOuter = Pink400
 
@@ -140,9 +155,9 @@ private fun GesturePropagationExample() {
 
                                 gestureText += upText
 
-                                Toast
-                                    .makeText(context, upText, Toast.LENGTH_SHORT)
-                                    .show()
+//                                Toast
+//                                    .makeText(context, upText, Toast.LENGTH_SHORT)
+//                                    .show()
                             }
                             it.pressed
                         }
@@ -165,6 +180,8 @@ private fun GesturePropagationExample() {
                                     val outerText =
                                         "🍏 OUTER MOVE changes size ${event.changes.size}\n" +
                                                 "id: ${pointer.id.value}, " +
+                                                "changedToDown: ${pointer.changedToDown()}, " +
+                                                "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
                                                 "pressed: ${pointer.pressed}\n" +
                                                 "changedUp: ${pointer.changedToUp()}\n" +
                                                 "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
@@ -172,19 +189,18 @@ private fun GesturePropagationExample() {
                                                 "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
                                                 "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n"
                                     gestureText += outerText
-                                    Toast
-                                        .makeText(context, outerText, Toast.LENGTH_SHORT)
-                                        .show()
+//                                    Toast
+//                                        .makeText(context, outerText, Toast.LENGTH_SHORT)
+//                                        .show()
                                 }
 
                                 pointerSize = event.changes.size
                             }
 
-
                             gestureColorOuter = Blue400
                         } else {
                             // All of the pointers are up
-                            gestureText += "Outer Up\n"
+                            gestureText = "Outer Up\n"
                             gestureColorOuter = outerColor
                             break
                         }
@@ -192,7 +208,6 @@ private fun GesturePropagationExample() {
                 }
             }
         }
-
 
     val centerModifier = Modifier
         .shadow(4.dp, shape = RoundedCornerShape(8.dp))
@@ -202,8 +217,18 @@ private fun GesturePropagationExample() {
             forEachGesture {
                 awaitPointerEventScope {
 
+                    println(
+                        "🚌centerRequireUnconsumed: $centerRequireUnconsumed, " +
+                                "centerConsumeDown: $centerConsumeDown, " +
+                                "centerConsumePositionChange: $centerConsumePositionChange, " +
+                                "centerConsumeUp: $centerConsumeUp"
+                    )
+
                     // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown()
+                    val down: PointerInputChange =
+                        // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
+                        // this down never occurs
+                        awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
 
                     if (centerConsumeDown) {
                         down.consumeDownChange()
@@ -219,9 +244,9 @@ private fun GesturePropagationExample() {
                             "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
                     gestureText += downText
 
-                    Toast
-                        .makeText(context, downText, Toast.LENGTH_SHORT)
-                        .show()
+//                    Toast
+//                        .makeText(context, downText, Toast.LENGTH_SHORT)
+//                        .show()
 
                     gestureColorCenter = Pink400
 
@@ -252,9 +277,9 @@ private fun GesturePropagationExample() {
 
                                 gestureText += upText
 
-                                Toast
-                                    .makeText(context, upText, Toast.LENGTH_SHORT)
-                                    .show()
+//                                Toast
+//                                    .makeText(context, upText, Toast.LENGTH_SHORT)
+//                                    .show()
                             }
                             it.pressed
                         }
@@ -277,6 +302,8 @@ private fun GesturePropagationExample() {
                                     val outerText =
                                         "🍏🍏 CENTER MOVE changes size ${event.changes.size}\n" +
                                                 "id: ${pointer.id.value}, " +
+                                                "changedToDown: ${pointer.changedToDown()}, " +
+                                                "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
                                                 "pressed: ${pointer.pressed}\n" +
                                                 "changedUp: ${pointer.changedToUp()}\n" +
                                                 "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
@@ -284,9 +311,9 @@ private fun GesturePropagationExample() {
                                                 "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
                                                 "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n"
                                     gestureText += outerText
-                                    Toast
-                                        .makeText(context, outerText, Toast.LENGTH_SHORT)
-                                        .show()
+//                                    Toast
+//                                        .makeText(context, outerText, Toast.LENGTH_SHORT)
+//                                        .show()
                                 }
 
                                 pointerSize = event.changes.size
@@ -312,8 +339,18 @@ private fun GesturePropagationExample() {
             forEachGesture {
                 awaitPointerEventScope {
 
+                    println(
+                        "🤡innerRequireUnconsumed: $innerRequireUnconsumed, " +
+                                "innerConsumeDown: $innerConsumeDown, " +
+                                "innerConsumePositionChange: $innerConsumePositionChange, " +
+                                "innerConsumeUp: $innerConsumeUp"
+                    )
+
                     // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown()
+                    val down: PointerInputChange =
+                        // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
+                        // this down never occurs
+                        awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
                         down.consumeDownChange()
@@ -329,9 +366,9 @@ private fun GesturePropagationExample() {
                             "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
                     gestureText += downText
 
-                    Toast
-                        .makeText(context, downText, Toast.LENGTH_SHORT)
-                        .show()
+//                    Toast
+//                        .makeText(context, downText, Toast.LENGTH_SHORT)
+//                        .show()
 
                     gestureColorInner = Pink400
 
@@ -362,9 +399,9 @@ private fun GesturePropagationExample() {
 
                                 gestureText += upText
 
-                                Toast
-                                    .makeText(context, upText, Toast.LENGTH_SHORT)
-                                    .show()
+//                                Toast
+//                                    .makeText(context, upText, Toast.LENGTH_SHORT)
+//                                    .show()
                             }
                             it.pressed
                         }
@@ -387,6 +424,8 @@ private fun GesturePropagationExample() {
                                     val outerText =
                                         "🍏🍏🍏 INNER MOVE changes size ${event.changes.size}\n" +
                                                 "id: ${pointer.id.value}, " +
+                                                "changedToDown: ${pointer.changedToDown()}, " +
+                                                "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
                                                 "pressed: ${pointer.pressed}\n" +
                                                 "changedUp: ${pointer.changedToUp()}\n" +
                                                 "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
@@ -394,9 +433,9 @@ private fun GesturePropagationExample() {
                                                 "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
                                                 "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n"
                                     gestureText += outerText
-                                    Toast
-                                        .makeText(context, outerText, Toast.LENGTH_SHORT)
-                                        .show()
+//                                    Toast
+//                                        .makeText(context, outerText, Toast.LENGTH_SHORT)
+//                                        .show()
                                 }
 
                                 pointerSize = event.changes.size
@@ -429,22 +468,27 @@ private fun GesturePropagationExample() {
         }
     }
 
-
-    Text("OUTER Composable")
-    CheckBoxWithTextRippleFullRow(label = "outerConsumeDown", outerConsumeDown) {
-        outerConsumeDown = it
+    Text("INNER Composable")
+    CheckBoxWithTextRippleFullRow(label = "innerRequireUnconsumed", innerRequireUnconsumed) {
+        innerRequireUnconsumed = it
+    }
+    CheckBoxWithTextRippleFullRow(label = "innerConsumeDown", innerConsumeDown) {
+        innerConsumeDown = it
     }
     CheckBoxWithTextRippleFullRow(
-        label = "outerConsumePositionChange",
-        outerConsumePositionChange
+        label = "innerConsumePositionChange",
+        innerConsumePositionChange
     ) {
-        outerConsumePositionChange = it
+        innerConsumePositionChange = it
     }
-    CheckBoxWithTextRippleFullRow(label = "outerConsumeUp", outerConsumeUp) {
-        outerConsumeUp = it
+    CheckBoxWithTextRippleFullRow(label = "innerConsumeUp", innerConsumeUp) {
+        innerConsumeUp = it
     }
 
     Text("CENTER Composable")
+    CheckBoxWithTextRippleFullRow(label = "centerRequireUnconsumed", centerRequireUnconsumed) {
+        centerRequireUnconsumed = it
+    }
     CheckBoxWithTextRippleFullRow(label = "centerConsumeDown", centerConsumeDown) {
         centerConsumeDown = it
     }
@@ -457,18 +501,21 @@ private fun GesturePropagationExample() {
         centerConsumeUp = it
     }
 
-    Text("INNER Composable")
-    CheckBoxWithTextRippleFullRow(label = "innerConsumeDown", innerConsumeDown) {
-        innerConsumeDown = it
+    Text("OUTER Composable")
+    CheckBoxWithTextRippleFullRow(label = "outerRequireUnconsumed", outerRequireUnconsumed) {
+        outerRequireUnconsumed = it
+    }
+    CheckBoxWithTextRippleFullRow(label = "outerConsumeDown", outerConsumeDown) {
+        outerConsumeDown = it
     }
     CheckBoxWithTextRippleFullRow(
-        label = "innerConsumePositionChange",
-        innerConsumePositionChange
+        label = "outerConsumePositionChange",
+        outerConsumePositionChange
     ) {
-        innerConsumePositionChange = it
+        outerConsumePositionChange = it
     }
-    CheckBoxWithTextRippleFullRow(label = "innerConsumeUp", innerConsumeUp) {
-        innerConsumeUp = it
+    CheckBoxWithTextRippleFullRow(label = "outerConsumeUp", outerConsumeUp) {
+        outerConsumeUp = it
     }
 
     Text(
