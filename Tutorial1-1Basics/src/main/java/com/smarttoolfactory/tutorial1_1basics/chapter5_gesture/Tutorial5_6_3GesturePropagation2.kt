@@ -1,13 +1,15 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,9 +19,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
@@ -62,8 +66,8 @@ private fun TutorialContent() {
         )
         DetectDragGesturesPropagationExample2()
         StyleableTutorialText(
-            text = "4-) This example uses **awaitFirstDown** and **awaitPointerEvent**, and " +
-                    "**drag(id)** drag events to drag outer or inner square.\n" +
+            text = "4-) This example uses **awaitFirstDown** and **awaitTouchSlopOrCancellation**, " +
+                    "and **drag(id)** drag events to drag outer or inner square.\n" +
                     "**NOTE:** The pointer input handling block will be cancelled " +
                     "and re-started when pointerInput is recomposed with any different keys."
         )
@@ -164,6 +168,26 @@ private fun DetectDragGesturesPropagationExample() {
     }
 }
 
+/**
+ * This example displays how **DRAG** events propagate, and how
+ * [PointerInputChange.consumeDownChange] when a pointer is **down** or **up** or
+ * [PointerInputChange.consumePositionChange] when pointer is **moving** effects
+ * propagation.
+ *
+ * * Events propagate from child to parent unlike View touch events moving from parent to
+ * child with **dispatchTouchEvent->onTouchEvent**
+ *
+ * * If `awaitFirstDown(requireUnconsumed)` has **true** param and if inner composable
+ * consumes down, next Composable does not receive awaitFirstDown
+ *
+ * * If an inner(child) composable consumes down and current Composable calls `awaitFirstDown(true)`
+ * it doesn't receive events from in flow from child to parent
+ *
+ * * Since `awaitTouchSlopOrCancellation` needs to consume position change
+ * positionChange() returns 0 for parent Composables. Unlike touch we can't drag parent
+ * with a motion starting from a child when `awaitTouchSlopOrCancellation` consume position change
+ *
+ */
 @Composable
 private fun DragPropagationExample() {
     var gestureText by remember { mutableStateOf("") }
@@ -220,15 +244,9 @@ private fun DragPropagationExample() {
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
                             "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
-                            "outerRequireUnconsumed: $outerRequireUnconsumed, " +
-                            "outerConsumeDown: $outerConsumeDown, " +
-                            "outerConsumePositionChange: $outerConsumePositionChange\n\n"
-
+                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
                     gestureText += downText
                     gestureColorOuter = Purple400
-
-                    var pointerId = 0L
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
@@ -236,18 +254,20 @@ private fun DragPropagationExample() {
                             // function properly.
                             // Consuming position change causes change.positionChanged() to return false.
                             change.consumePositionChange()
+
                         }
 
                     if (change != null) {
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
+
+                            // 🔥 Consuming position change makes sure that pointer.positionChange()
+                            // returns 0, positionChanged() returns false, prevents scrolling
+                            if (outerConsumePositionChange) {
+                                pointerInputChange.consumePositionChange()
+                            }
                             gestureColorOuter = Blue400
 
-                            if (outerConsumePositionChange) {
-                                change.consumePositionChange()
-                            }
-
-                            if (pointerId != change.id.value) {
                                 val outerText =
                                     "🍏 OUTER DRAG" +
                                             "id: ${change.id.value}, " +
@@ -256,18 +276,18 @@ private fun DragPropagationExample() {
                                             "pressed: ${change.pressed}\n" +
                                             "changedUp: ${change.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${change.position}\n" +
+                                            "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
                                 gestureText += outerText
-                                pointerId = change.id.value
-                            }
                         }
 
-                        gestureText += "OUTER onDragEnd\n"
+                        gestureText += "OUTER onDragEnd\n\n"
                         gestureColorOuter = outerColor
                     } else {
-                        gestureText += "OUTER onDragCancel\n"
+                        gestureText += "OUTER onDragEnd\n\n"
                         gestureColorOuter = Red400
                     }
 
@@ -304,14 +324,9 @@ private fun DragPropagationExample() {
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
                             "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
-                            "centerRequireUnconsumed: $centerRequireUnconsumed, " +
-                            "centerConsumeDown: $centerConsumeDown, " +
-                            "centerConsumePositionChange: $centerConsumePositionChange\n\n"
+                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
                     gestureText += downText
                     gestureColorCenter = Purple400
-
-                    var pointerId = 0L
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
@@ -319,20 +334,21 @@ private fun DragPropagationExample() {
                             // function properly.
                             // Consuming position change causes change.positionChanged() to return false.
                             change.consumePositionChange()
+
                         }
 
                     if (change != null) {
 
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
-                            gestureText += "CENTER onDrag dragAmount: ${pointerInputChange.positionChange()}\n"
+
+                            // 🔥 Consuming position change makes sure that pointer.positionChange()
+                            // returns 0, positionChanged() returns false, prevents scrolling
+                            if (centerConsumePositionChange) {
+                                pointerInputChange.consumePositionChange()
+                            }
                             gestureColorCenter = Blue400
 
-                            if (centerConsumePositionChange) {
-                                change.consumePositionChange()
-                            }
-
-                            if (pointerId != change.id.value) {
                                 val centerText =
                                     "🍏🍏 CENTER DRAG" +
                                             "id: ${change.id.value}, " +
@@ -341,18 +357,18 @@ private fun DragPropagationExample() {
                                             "pressed: ${change.pressed}\n" +
                                             "changedUp: ${change.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${change.position}\n" +
+                                            "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
                                 gestureText += centerText
-                                pointerId = change.id.value
-                            }
                         }
 
-                        gestureText += "CENTER onDragEnd\n"
+                        gestureText += "CENTER onDragEnd\n\n"
                         gestureColorCenter = centerColor
                     } else {
-                        gestureText += "CENTER onDragCancel\n"
+                        gestureText += "CENTER onDragEnd\n\n"
                         gestureColorCenter = Red400
                     }
 
@@ -389,16 +405,16 @@ private fun DragPropagationExample() {
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
                             "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
-                            "innerRequireUnconsumed: $innerRequireUnconsumed, " +
-                            "innerConsumeDown: $innerConsumeDown, " +
-                            "innerConsumePositionChange: $innerConsumePositionChange\n\n"
+                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
                     gestureText += downText
 
                     var pointerId = 0L
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
+                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // function properly.
+                            // Consuming position change causes change.positionChanged() to return false.
                             change.consumePositionChange()
                         }
 
@@ -406,13 +422,13 @@ private fun DragPropagationExample() {
 
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
-                            gestureText += "INNER onDrag ${pointerInputChange.positionChanged()}," +
-                                    " dragAmount: ${pointerInputChange.positionChange()}\n"
-                            gestureColorInner = Blue400
 
+                            // 🔥 Consuming position change makes sure that pointer.positionChange()
+                            // returns 0, positionChanged() returns false, prevents scrolling
                             if (innerConsumePositionChange) {
-                                change.consumePositionChange()
+                                pointerInputChange.consumePositionChange()
                             }
+                            gestureColorInner = Blue400
 
                             if (pointerId != change.id.value) {
                                 val innerText =
@@ -423,6 +439,8 @@ private fun DragPropagationExample() {
                                             "pressed: ${change.pressed}\n" +
                                             "changedUp: ${change.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${change.position}\n" +
+                                            "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
@@ -431,10 +449,10 @@ private fun DragPropagationExample() {
                             }
                         }
 
-                        gestureText += "INNER onDragEnd\n"
+                        gestureText += "INNER onDragEnd\n\n"
                         gestureColorInner = innerColor
                     } else {
-                        gestureText += "INNER onDragCancel\n"
+                        gestureText += "INNER onDragEnd\n\n"
                         gestureColorInner = Red400
                     }
                 }
@@ -456,55 +474,149 @@ private fun DragPropagationExample() {
         }
     }
 
-    Text("INNER Composable")
-    CheckBoxWithTextRippleFullRow(label = "innerRequireUnconsumed", innerRequireUnconsumed) {
-        gestureText = ""
-        innerRequireUnconsumed = it
-    }
-    CheckBoxWithTextRippleFullRow(label = "innerConsumeDown", innerConsumeDown) {
-        gestureText = ""
-        innerConsumeDown = it
-    }
-    CheckBoxWithTextRippleFullRow(
-        label = "innerConsumePositionChange",
-        innerConsumePositionChange
+    /*
+            CONTROLS
+     */
+    var innerCheckBoxesExpanded by remember { mutableStateOf(true) }
+    var centerCheckBoxesExpanded by remember { mutableStateOf(true) }
+    var outerCheckBoxesExpanded by remember { mutableStateOf(true) }
+
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 4.dp)
+            .fillMaxWidth()
+            .clickable {
+                innerCheckBoxesExpanded = !innerCheckBoxesExpanded
+            },
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        gestureText = ""
-        innerConsumePositionChange = it
+        Text(
+            "INNER Composable", modifier = Modifier
+                .weight(1f)
+
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = innerColor
+        )
+        // Change vector drawable to expand more or less based on state of expanded
+        Icon(
+            imageVector = if (innerCheckBoxesExpanded) Icons.Filled.ExpandLess
+            else Icons.Filled.ExpandMore,
+            contentDescription = null
+        )
     }
 
+    AnimatedVisibility(visible = innerCheckBoxesExpanded) {
+        Column {
+            CheckBoxWithTextRippleFullRow(
+                label = "innerRequireUnconsumed",
+                innerRequireUnconsumed
+            ) {
+                gestureText = ""
+                innerRequireUnconsumed = it
+            }
+            CheckBoxWithTextRippleFullRow(label = "innerConsumeDown", innerConsumeDown) {
+                gestureText = ""
+                innerConsumeDown = it
+            }
+            CheckBoxWithTextRippleFullRow(
+                label = "innerConsumePositionChange",
+                innerConsumePositionChange
+            ) {
+                gestureText = ""
+                innerConsumePositionChange = it
+            }
+        }
+    }
 
-    Text("CENTER Composable")
-    CheckBoxWithTextRippleFullRow(label = "centerRequireUnconsumed", centerRequireUnconsumed) {
-        gestureText = ""
-        centerRequireUnconsumed = it
-    }
-    CheckBoxWithTextRippleFullRow(label = "centerConsumeDown", centerConsumeDown) {
-        gestureText = ""
-        centerConsumeDown = it
-    }
-    CheckBoxWithTextRippleFullRow(
-        label = "centerConsumePositionChange", centerConsumePositionChange
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 4.dp)
+            .fillMaxWidth()
+            .clickable {
+                centerCheckBoxesExpanded = !centerCheckBoxesExpanded
+            },
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        gestureText = ""
-        centerConsumePositionChange = it
+        Text(
+            "CENTER Composable", modifier = Modifier
+                .weight(1f)
+
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = centerColor
+        )
+        // Change vector drawable to expand more or less based on state of expanded
+        Icon(
+            imageVector = if (centerCheckBoxesExpanded) Icons.Filled.ExpandLess
+            else Icons.Filled.ExpandMore,
+            contentDescription = null
+        )
+    }
+    AnimatedVisibility(visible = centerCheckBoxesExpanded) {
+        Column {
+            CheckBoxWithTextRippleFullRow(label = "centerRequireUnconsumed", centerRequireUnconsumed) {
+                gestureText = ""
+                centerRequireUnconsumed = it
+            }
+            CheckBoxWithTextRippleFullRow(label = "centerConsumeDown", centerConsumeDown) {
+                gestureText = ""
+                centerConsumeDown = it
+            }
+            CheckBoxWithTextRippleFullRow(
+                label = "centerConsumePositionChange", centerConsumePositionChange
+            ) {
+                gestureText = ""
+                centerConsumePositionChange = it
+            }
+        }
     }
 
-    Text("OUTER Composable")
-    CheckBoxWithTextRippleFullRow(label = "outerRequireUnconsumed", outerRequireUnconsumed) {
-        gestureText = ""
-        outerRequireUnconsumed = it
-    }
-    CheckBoxWithTextRippleFullRow(label = "outerConsumeDown", outerConsumeDown) {
-        gestureText = ""
-        outerConsumeDown = it
-    }
-    CheckBoxWithTextRippleFullRow(
-        label = "outerConsumePositionChange",
-        outerConsumePositionChange
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 4.dp)
+            .fillMaxWidth()
+            .clickable {
+                outerCheckBoxesExpanded = !outerCheckBoxesExpanded
+            },
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        gestureText = ""
-        outerConsumePositionChange = it
+        Text(
+            "OUTER Composable", modifier = Modifier
+                .weight(1f)
+
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = outerColor
+        )
+        // Change vector drawable to expand more or less based on state of expanded
+        Icon(
+            imageVector = if (outerCheckBoxesExpanded) Icons.Filled.ExpandLess
+            else Icons.Filled.ExpandMore,
+            contentDescription = null
+        )
+    }
+    AnimatedVisibility(visible = outerCheckBoxesExpanded) {
+        Column {
+            CheckBoxWithTextRippleFullRow(label = "outerRequireUnconsumed", outerRequireUnconsumed) {
+                gestureText = ""
+                outerRequireUnconsumed = it
+            }
+            CheckBoxWithTextRippleFullRow(label = "outerConsumeDown", outerConsumeDown) {
+                gestureText = ""
+                outerConsumeDown = it
+            }
+            CheckBoxWithTextRippleFullRow(
+                label = "outerConsumePositionChange",
+                outerConsumePositionChange
+            ) {
+                gestureText = ""
+                outerConsumePositionChange = it
+            }
+        }
     }
 
     Text(
@@ -715,10 +827,7 @@ private fun DragPropagationExample2() {
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
                             "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
-                            "outerRequireUnconsumed: $outerRequireUnconsumed, " +
-                            "outerConsumeDown: $outerConsumeDown, " +
-                            "outerConsumePositionChange: $outerConsumePositionChange\n\n"
+                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
 
                     gestureText += downText
                     gestureColorOuter = Purple400
@@ -737,9 +846,6 @@ private fun DragPropagationExample2() {
 
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
-                            gestureText += "Outer onDrag dragAmount: ${pointerInputChange.positionChange()}\n"
-                            gestureColorOuter = Blue400
-
                             gestureColorOuter = Blue400
 
                             val summed = offsetOuter + pointerInputChange.positionChange()
@@ -756,8 +862,10 @@ private fun DragPropagationExample2() {
                                         "OUTER OFFSET: $offsetOuter\n" +
                                         "INNER OFFSET: $offsetInner"
 
+                            // 🔥 Consuming position change makes sure that pointer.positionChange()
+                            // returns 0, positionChanged() returns false, prevents scrolling
                             if (outerConsumePositionChange) {
-                                change.consumePositionChange()
+                                pointerInputChange.consumePositionChange()
                             }
 
                             if (pointerId != change.id.value) {
@@ -769,6 +877,8 @@ private fun DragPropagationExample2() {
                                             "pressed: ${change.pressed}\n" +
                                             "changedUp: ${change.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${change.position}\n" +
+                                            "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
@@ -777,10 +887,10 @@ private fun DragPropagationExample2() {
                             }
                         }
 
-                        gestureText += "OUTER onDragEnd\n"
+                        gestureText += "OUTER onDragEnd\n\n"
                         gestureColorOuter = outerColor
                     } else {
-                        gestureText += "OUTER onDragCancel\n"
+                        gestureText += "OUTER onDragEnd\n\n"
                         gestureColorOuter = Red400
                     }
 
@@ -820,10 +930,7 @@ private fun DragPropagationExample2() {
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
                             "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n" +
-                            "innerRequireUnconsumed: $innerRequireUnconsumed, " +
-                            "innerConsumeDown: $innerConsumeDown, " +
-                            "innerConsumePositionChange: $innerConsumePositionChange\n\n"
+                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
                     gestureText += downText
 
                     val change: PointerInputChange? =
@@ -837,10 +944,6 @@ private fun DragPropagationExample2() {
 
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
-
-                            gestureText += "INNER onDrag ${pointerInputChange.positionChanged()}," +
-                                    " dragAmount: ${pointerInputChange.positionChange()}\n"
-
                             gestureColorInner = Blue400
 
                             val summed = offsetInner + pointerInputChange.positionChange()
@@ -857,8 +960,10 @@ private fun DragPropagationExample2() {
                                         "OUTER OFFSET: $offsetOuter\n" +
                                         "INNER OFFSET: $offsetInner"
 
+                            // 🔥 Consuming position change makes sure that pointer.positionChange()
+                            // returns 0, positionChanged() returns false, prevents scrolling
                             if (innerConsumePositionChange) {
-                                change.consumePositionChange()
+                                pointerInputChange.consumePositionChange()
                             }
 
                             if (pointerId != change.id.value) {
@@ -870,6 +975,8 @@ private fun DragPropagationExample2() {
                                             "pressed: ${change.pressed}\n" +
                                             "changedUp: ${change.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${change.position}\n" +
+                                            "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
@@ -878,10 +985,10 @@ private fun DragPropagationExample2() {
                             }
                         }
 
-                        gestureText += "INNER onDragEnd\n"
+                        gestureText += "INNER onDragEnd\n\n"
                         gestureColorInner = innerColor
                     } else {
-                        gestureText += "INNER onDragCancel\n"
+                        gestureText += "INNER onDragEnd\n\n"
                         gestureColorInner = Red400
                     }
                 }
@@ -905,7 +1012,6 @@ private fun DragPropagationExample2() {
             modifier = Modifier.align(Alignment.Center),
             textAlign = TextAlign.Center
         )
-
 
         Box(
             modifier = outerModifier,
@@ -960,5 +1066,5 @@ private val gestureTextModifier = Modifier
     .shadow(1.dp)
     .fillMaxWidth()
     .background(BlueGrey400)
-    .height(200.dp)
+    .height(250.dp)
     .padding(2.dp)

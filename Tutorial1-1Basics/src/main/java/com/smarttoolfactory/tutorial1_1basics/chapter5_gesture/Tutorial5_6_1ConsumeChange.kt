@@ -158,16 +158,10 @@ private fun ConsumeDownAndMoveEventsExample() {
                                 "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
                                 "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
 
-                    // This is for not logging move events if pointer size didn't change
-                    var pointerSize = 0
-
                     do {
 
                         // This PointerEvent contains details including events, id, position and more
                         val event: PointerEvent = awaitPointerEvent()
-
-                        // This is for not logging move events if pointer size didn't change
-                        if (event.changes.size != pointerSize) {
 
                             eventChanges +=
                                 "\n🍏MOVE changes size ${event.changes.size}\n"
@@ -176,26 +170,25 @@ private fun ConsumeDownAndMoveEventsExample() {
                             event.changes
                                 .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
 
-
-                                    // This necessary to prevent other gestures or scrolling
-                                    // when at least one pointer is down on canvas to draw
-                                    pointerInputChange.consumePositionChange()
-
                                     eventChanges +=
                                         "Index: " +
                                                 "$index, id: ${pointerInputChange.id}, " +
                                                 "pressed: ${pointerInputChange.pressed}\n" +
                                                 "changedUp: ${pointerInputChange.changedToUp()}\n" +
                                                 "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n" +
+                                                "position: ${pointerInputChange.position}\n" +
+                                                "positionChange: ${pointerInputChange.positionChange()}\n" +
                                                 "positionChanged: ${pointerInputChange.positionChanged()}\n" +
                                                 "positionChangeConsumed: ${pointerInputChange.positionChangeConsumed()}\n" +
                                                 "anyChangeConsumed: ${pointerInputChange.anyChangeConsumed()}\n"
                                     gestureText = eventChanges
 
-                                }
 
-                            pointerSize = event.changes.size
-                        }
+                                    // 🔥 Consuming position change makes sure that pointer.positionChange()
+                                    // returns 0, positionChanged() returns false, prevents scrolling
+                                    pointerInputChange.consumePositionChange()
+
+                                }
 
                         gestureColor = Green400
 
@@ -330,9 +323,6 @@ private fun ConsumeDragEventsExample() {
                         gestureText += "awaitTouchSlopOrCancellation() is NULL"
                     } else {
 
-                        // This is for not logging move events if pointer size didn't change
-                        var pointerId = -10L
-
                         while (change != null && change.pressed) {
 
                             // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
@@ -354,6 +344,8 @@ private fun ConsumeDragEventsExample() {
                                             "pressed: ${change.pressed}\n" +
                                             "changedUp: ${change.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${change.position}\n" +
+                                            "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
                                             "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
                                             "anyChangeConsumed: ${change.anyChangeConsumed()}\n"

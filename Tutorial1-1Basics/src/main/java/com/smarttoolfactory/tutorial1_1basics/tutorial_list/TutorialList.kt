@@ -932,6 +932,9 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
             TAG_CONSUME_DOWN_CHANGE,
             TAG_CONSUME_POSITION_CHANGE,
             TAG_ANY_CHANGE_CONSUMED,
@@ -942,13 +945,20 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     val tutorial5_6_2 = TutorialSectionModel(
         title = "5-6-2 Gesture Propagation1",
         description = "Consume different type of touch events in Composable in an hierarchy" +
-                "to display gesture propagation between parent and children.",
+                "to display gesture propagation between parent and children with MOVE gestures.",
         action = {
             Tutorial5_6Screen2()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
+            TAG_CONSUME_DOWN_CHANGE,
+            TAG_CONSUME_POSITION_CHANGE,
+            TAG_ANY_CHANGE_CONSUMED,
+            TAG_POSITION_CHANGE_CONSUMED
 
             ),
         tagColor = GestureListColor
@@ -957,14 +967,21 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     val tutorial5_6_3 = TutorialSectionModel(
         title = "5-6-3 Gesture Propagation2",
         description = "Consume different type of touch events in Composable in an hierarchy" +
-                "to display gesture propagation between parent and children.",
+                "to display gesture propagation between parent and children with DRAG gestures.",
         action = {
             Tutorial5_6Screen3()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_AWAIT_POINTER_EVENT_SCOPE,
-
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
+            TAG_DRAG,
+            TAG_CONSUME_DOWN_CHANGE,
+            TAG_CONSUME_POSITION_CHANGE,
+            TAG_ANY_CHANGE_CONSUMED,
+            TAG_POSITION_CHANGE_CONSUMED
             ),
         tagColor = GestureListColor
     )
