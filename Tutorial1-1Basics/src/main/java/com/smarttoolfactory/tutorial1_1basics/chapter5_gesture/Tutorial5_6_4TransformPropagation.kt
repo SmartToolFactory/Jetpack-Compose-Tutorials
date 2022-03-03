@@ -19,7 +19,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
-import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import java.text.DecimalFormat
 import kotlin.math.abs
@@ -142,11 +142,12 @@ private fun MoveAndTransformationGestureOnImageExample() {
             forEachGesture {
                 awaitPointerEventScope {
 
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                    // before this one consumes down, awaitFirstDown gets triggered nonetheless
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
-                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = requireUnconsumed)
+                    gestureColor = Orange400
 
                     if (consumeDown) {
                         down.consumeDownChange()
@@ -162,7 +163,6 @@ private fun MoveAndTransformationGestureOnImageExample() {
                             "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
 
                     gestureText += downText
-                    gestureColor = Pink400
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
@@ -353,17 +353,16 @@ private fun MoveAndTransformationGestureOnSeparateComposablesExample() {
             forEachGesture {
                 awaitPointerEventScope {
 
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                    // before this one consumes down, awaitFirstDown gets triggered nonetheless
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
-                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = requireUnconsumed)
+                    gestureColor = Orange400
 
                     if (consumeDown) {
                         down.consumeDownChange()
                     }
-
-                    gestureColor = Pink400
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
@@ -517,11 +516,12 @@ private fun PropagationWithDifferentPointerCountExample() {
             forEachGesture {
                 awaitPointerEventScope {
 
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                    // before this one consumes down, awaitFirstDown gets triggered nonetheless
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
-                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = requireUnconsumed)
+                    gestureColor = Orange400
 
                     if (consumeDown) {
                         down.consumeDownChange()

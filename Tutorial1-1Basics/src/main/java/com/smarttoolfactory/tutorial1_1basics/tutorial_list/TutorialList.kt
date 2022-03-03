@@ -998,7 +998,6 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_POINTER_INPUT_CHANGE,
             TAG_AWAIT_FIRST_DOWN,
             TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
-            TAG_DRAG,
             TAG_CONSUME_DOWN_CHANGE,
             TAG_CONSUME_POSITION_CHANGE,
             TAG_ANY_CHANGE_CONSUMED,

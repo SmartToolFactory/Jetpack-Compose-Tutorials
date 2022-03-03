@@ -103,6 +103,10 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>5-4-3 Centroid, Zoom, Pan, Rotation</h3><br/>Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.<br><br>• AwaitPointerEventScope<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_4_3.gif" width=320> |
 |  |  |
+|<h3>5-6-2 Gesture Propagation1</h3><br/>Consume different type of touch events in Composable in an hierarchy to display gesture propagation between parent and children with MOVE gestures.<br><br>• AwaitPointerEventScope<br>• pointerInput<br>• consumeDownChange<br>• consumePositionChange<br>• anyChangeConsumed<br>|<img src ="/./screenshots/tutorial5_6_2.gif" width=320> |
+|  |  |
+|<h3>5-6-4 Transform Propagation1</h3><br/>Consume events to rotate, zoom, move or apply drag or move events on Composables.<br>• AwaitPointerEventScope<br>• detectTransformGestures<br>• consumeDownChange<br>• consumePositionChange<br>• anyChangeConsumed<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_6_4.gif" width=320> |
+|  |  |
 
 ### Graphics
 
