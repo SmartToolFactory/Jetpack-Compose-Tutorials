@@ -1,12 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,6 +20,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBox
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -39,14 +36,52 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        PropagationExample1()
-//        PropagationExample2()
-        PropagationExample3()
+        StyleableTutorialText(
+            text = "1-)In his example Image has two **pointerInput** modifiers. One on top " +
+                    "is for **transformations**," +
+                    "second one is for **move** gestures to mimic drawing on image.\n" +
+                    "Use flags to consume down, position change or up events in " +
+                    "second(move) **awaitPointerEventScope**"
+        )
+
+        MoveAndTransformationGestureOnImageExample()
+        StyleableTutorialText(
+            text = "2-)In his example **Image** has **move** **pointerInput**, **Container** " +
+                    "has **transform** **pointerInput**. Events are first got by Image since it's" +
+                    "child of container." +
+
+                    "Use flags to consume down, position change or up events in " +
+                    "move **awaitPointerEventScope** to prevent **Container** to receive events" +
+                    "when events are **in bounds of Image**."
+        )
+        MoveAndTransformationGestureOnSeparateComposablesExample()
+        StyleableTutorialText(
+            text = "3-)In his example **Image** has **move** **pointerInput**, **Container** " +
+                    "has **transform** **pointerInput** but in this example image processes" +
+                    "move if only **1 pointer** is down.\n" +
+                    "Instead of **detectTransformGestures**, a custom function" +
+                    "**detectMultiplePointerInputTransformGestures** is used which only processes" +
+                    "transform events if specified number of pointers are down"
+        )
+        PropagationWithDifferentPointerCountExample()
     }
 }
 
+/**
+ * In this example [Image] has 2 [Modifier.pointerInput] modifiers. First one the one at the
+ * bottom checks down, move and up events while the one at the top is for transformation events
+ * such as centroid, zoom, pan, and rotation.
+ *
+ * * Calling [PointerInputChange.consumeDownChange] has no effect because [detectTransformGestures]
+ * calls [awaitFirstDown] with false param
+ *
+ * ** Calling [PointerInputChange.consumePositionChange] prevents transformation events to
+ * proceed because [detectTransformGestures] checks [PointerInputChange.positionChangeConsumed]
+ * to cancel these events. Consuming position change also stops other functions like
+ * scrolling or dragging either.
+ */
 @Composable
-private fun PropagationExample1() {
+private fun MoveAndTransformationGestureOnImageExample() {
 
     // TRANSFORMATION Properties
     val decimalFormat = remember { DecimalFormat("0.0") }
@@ -58,11 +93,11 @@ private fun PropagationExample1() {
 
     var transformDetailText by remember {
         mutableStateOf(
-            "Use pinch gesture to zoom, move image with single finger in either x or y coordinates.\n" +
+            "Use pinch gesture to zoom, move image with single finger in either " +
+                    "x or y coordinates.\n" +
                     "Rotate image using two fingers with twisting gesture."
         )
     }
-
     // GESTURE Properties
     var gestureText by remember { mutableStateOf("") }
     var gestureColor by remember { mutableStateOf(Color.White) }
@@ -75,7 +110,7 @@ private fun PropagationExample1() {
     var consumeUp by remember { mutableStateOf(false) }
 
     val imageModifier = imageModifier
-        .border(4.dp, color = gestureColor, shape = RoundedCornerShape(8.dp))
+        .border(4.dp, color = gestureColor)
         // This PointerInput gets events second
         .pointerInput(Unit) {
             detectTransformGestures(
@@ -109,8 +144,8 @@ private fun PropagationExample1() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = requireUnconsumed)
 
                     if (consumeDown) {
@@ -126,15 +161,11 @@ private fun PropagationExample1() {
                             "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
                             "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
 
-
                     gestureText += downText
                     gestureColor = Pink400
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
-
-                    // This is for not logging move events if pointer size didn't change
-                    var pointerSize = 0
 
                     while (true) {
 
@@ -183,25 +214,22 @@ private fun PropagationExample1() {
                             }
                             gestureColor = Blue400
 
-                            if (pointerSize != event.changes.size) {
-                                event.changes.forEach { pointer ->
-                                    val moveText =
-                                        "🍏 MOVE changes size ${event.changes.size}\n" +
-                                                "id: ${pointer.id.value}, " +
-                                                "changedToDown: ${pointer.changedToDown()}, " +
-                                                "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
-                                                "pressed: ${pointer.pressed}\n" +
-                                                "changedUp: ${pointer.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
-                                                "position: ${pointer.position}\n" +
-                                                "positionChange: ${pointer.positionChange()}\n" +
-                                                "positionChanged: ${pointer.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
-                                    gestureText += moveText
-                                }
-
-                                pointerSize = event.changes.size
+                            event.changes.forEach { pointer ->
+                                val moveText =
+                                    "🍏 MOVE changes size ${event.changes.size}\n" +
+                                            "id: ${pointer.id.value}, " +
+                                            "changedToDown: ${pointer.changedToDown()}, " +
+                                            "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
+                                            "pressed: ${pointer.pressed}\n" +
+                                            "previousPressed: ${pointer.previousPressed}\n" +
+                                            "changedUp: ${pointer.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${pointer.position}\n" +
+                                            "positionChange: ${pointer.positionChange()}\n" +
+                                            "positionChanged: ${pointer.positionChanged()}\n" +
+                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
+                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                gestureText += moveText
                             }
 
                         } else {
@@ -230,18 +258,22 @@ private fun PropagationExample1() {
     ImageBox(containerModifier, imageModifier, R.drawable.landscape1, transformDetailText)
     Column {
         CheckBoxWithTextRippleFullRow(label = "requireUnconsumed", requireUnconsumed) {
+            gestureText = ""
             requireUnconsumed = it
         }
         CheckBoxWithTextRippleFullRow(label = "consumeDown", consumeDown) {
+            gestureText = ""
             consumeDown = it
         }
         CheckBoxWithTextRippleFullRow(
             label = "consumePositionChange",
             consumePositionChange
         ) {
+            gestureText = ""
             consumePositionChange = it
         }
         CheckBoxWithTextRippleFullRow(label = "consumeUp", consumeUp) {
+            gestureText = ""
             consumeUp = it
         }
     }
@@ -252,8 +284,14 @@ private fun PropagationExample1() {
     )
 }
 
+/**
+ * In this example [imageModifier] gets events first and can consume events to prevent
+ * [containerModifier]'s [PointerInputChange] to receive position changes when
+ * pointers are in bounds of Image. If pointer starts movement out of the image bounds
+ * it can receive events even if pointer moves inside Image bounds.
+ */
 @Composable
-private fun PropagationExample2() {
+private fun MoveAndTransformationGestureOnSeparateComposablesExample() {
 
     // TRANSFORMATION Properties
     val decimalFormat = remember { DecimalFormat("0.0") }
@@ -265,14 +303,13 @@ private fun PropagationExample2() {
 
     var transformDetailText by remember {
         mutableStateOf(
-            "Use pinch gesture to zoom, move image with single finger in either x or y coordinates.\n" +
+            "Use pinch gesture to zoom, move image with single finger in either " +
+                    "x or y coordinates.\n" +
                     "Rotate image using two fingers with twisting gesture."
         )
     }
 
-
     // GESTURE Properties
-    var gestureText by remember { mutableStateOf("") }
     var gestureColor by remember { mutableStateOf(Color.White) }
     /*
         FLAGS for consuming events which effects gesture propagation
@@ -290,8 +327,6 @@ private fun PropagationExample2() {
                     val oldScale = zoom
                     val newScale = zoom * gestureZoom
 
-                    gestureText += "Container POINTER"
-
                     // For natural zooming and rotating, the centroid of the gesture should
                     // be the fixed point where zooming and rotating occurs.
                     // We compute where the centroid was (in the pre-transformed coordinate
@@ -304,7 +339,7 @@ private fun PropagationExample2() {
                     angle += gestureRotate
 
                     centroid = gestureCentroid
-                    transformDetailText +=
+                    transformDetailText =
                         "Zoom: ${decimalFormat.format(zoom)}, centroid: $gestureCentroid\n" +
                                 "angle: ${decimalFormat.format(angle)}, " +
                                 "Rotate: ${decimalFormat.format(gestureRotate)}, pan: $gesturePan"
@@ -313,15 +348,15 @@ private fun PropagationExample2() {
         }
 
     val imageModifier = imageModifier
-        .border(4.dp, color = gestureColor, shape = RoundedCornerShape(8.dp))
+        .border(4.dp, color = gestureColor)
         .pointerInput(Unit) {
             forEachGesture {
                 awaitPointerEventScope {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = requireUnconsumed)
 
                     if (consumeDown) {
@@ -332,7 +367,6 @@ private fun PropagationExample2() {
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
-
 
                     while (true) {
 
@@ -377,8 +411,6 @@ private fun PropagationExample2() {
                 }
             }
         }
-
-
         .drawWithContent {
             drawContent()
             drawCircle(color = Color.Red, center = centroid, radius = 20f)
@@ -410,35 +442,37 @@ private fun PropagationExample2() {
             consumeUp = it
         }
     }
-    Text(
-        modifier = gestureTextModifier.verticalScroll(rememberScrollState()),
-        text = gestureText,
-        color = Color.White
-    )
 }
 
-
+/**
+ * In this example [imageModifier] gets events first and can consume events to prevent
+ * [containerModifier]'s [PointerInputChange] to receive position changes when
+ * pointers are in bounds of Image. If pointer starts movement out of the image bounds
+ * it can receive events even if pointer moves inside Image bounds.
+ *
+ * *`(anyPressed && pointerCount == 1)` prevents any events with more than one pointer on Image
+ * while we used [detectMultiplePointerTransformGestures] with **2** param to invoke transform
+ * gestures when only multiple pointers(2) are down.
+ */
 @Composable
-private fun PropagationExample3() {
+private fun PropagationWithDifferentPointerCountExample() {
 
     // TRANSFORMATION Properties
     val decimalFormat = remember { DecimalFormat("0.0") }
 
     var zoom by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
-    var centroid by remember { mutableStateOf(Offset.Zero) }
     var angle by remember { mutableStateOf(0f) }
 
     var transformDetailText by remember {
         mutableStateOf(
-            "Use pinch gesture to zoom, move image with single finger in either x or y coordinates.\n" +
+            "Use pinch gesture to zoom, move image with single finger in either " +
+                    "x or y coordinates.\n" +
                     "Rotate image using two fingers with twisting gesture."
         )
     }
 
-
     // GESTURE Properties
-    var gestureText by remember { mutableStateOf("") }
     var gestureColor by remember { mutableStateOf(Color.White) }
     /*
         FLAGS for consuming events which effects gesture propagation
@@ -452,9 +486,8 @@ private fun PropagationExample3() {
     val containerModifier = containerModifier
         .height(200.dp)
         .fillMaxWidth()
-        .border(4.dp, color = gestureColor, shape = RoundedCornerShape(8.dp))
         .pointerInput(Unit) {
-            detectTwoPointerTransformGestures(
+            detectMultiplePointerTransformGestures(
                 onGesture = { gestureCentroid, gesturePan, gestureZoom, gestureRotate ->
                     val oldScale = zoom
                     val newScale = zoom * gestureZoom
@@ -470,7 +503,6 @@ private fun PropagationExample3() {
                     zoom = newScale.coerceIn(0.5f..5f)
                     angle += gestureRotate
 
-                    centroid = gestureCentroid
                     transformDetailText =
                         "Zoom: ${decimalFormat.format(zoom)}, centroid: $gestureCentroid\n" +
                                 "angle: ${decimalFormat.format(angle)}, " +
@@ -480,37 +512,23 @@ private fun PropagationExample3() {
         }
 
     val imageModifier = imageModifier
+        .border(4.dp, color = gestureColor)
         .pointerInput(Unit) {
             forEachGesture {
                 awaitPointerEventScope {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = requireUnconsumed)
 
                     if (consumeDown) {
                         down.consumeDownChange()
                     }
 
-                    val downText = "🎃 OUTER DOWN id: ${down.id.value}\n" +
-                            "changedToDown: ${down.changedToDown()}\n" +
-                            "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                            "pressed: ${down.pressed}\n" +
-                            "changedUp: ${down.changedToUp()}\n" +
-                            "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
-
-
-                    gestureText += downText
-
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
-
-                    // This is for not logging move events if pointer size didn't change
-                    var pointerSize = 0
 
                     while (true) {
 
@@ -525,18 +543,6 @@ private fun PropagationExample3() {
                                 if (consumeUp) {
                                     it.consumeDownChange()
                                 }
-
-                                val upText = "🚀 OUTER UP id: ${down.id.value}\n" +
-                                        "changedToDown: ${it.changedToDown()}, " +
-                                        "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                        "pressed: ${it.pressed}\n" +
-                                        "changedUp: ${it.changedToUp()}\n" +
-                                        "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
-                                        "positionChanged: ${it.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${it.anyChangeConsumed()}\n\n"
-
-                                gestureText += upText
                             }
                             it.pressed
                         }
@@ -556,31 +562,8 @@ private fun PropagationExample3() {
                                 pointerInputChange.consumePositionChange()
                             }
                             gestureColor = Blue400
-
-                            if (pointerSize != event.changes.size) {
-                                event.changes.forEach { pointer ->
-                                    val moveText =
-                                        "🍏 OUTER MOVE changes size ${event.changes.size}\n" +
-                                                "id: ${pointer.id.value}, " +
-                                                "changedToDown: ${pointer.changedToDown()}, " +
-                                                "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
-                                                "pressed: ${pointer.pressed}\n" +
-                                                "changedUp: ${pointer.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
-                                                "position: ${pointer.position}\n" +
-                                                "positionChange: ${pointer.positionChange()}\n" +
-                                                "positionChanged: ${pointer.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
-                                    gestureText += moveText
-                                }
-
-                                pointerSize = event.changes.size
-                            }
-
                         } else {
                             // All of the pointers are up
-                            gestureText += "OUTER Up\n\n"
                             gestureColor = Color.White
                             break
                         }
@@ -588,7 +571,6 @@ private fun PropagationExample3() {
                 }
             }
         }
-
         .graphicsLayer {
             translationX = -offset.x * zoom
             translationY = -offset.y * zoom
@@ -616,24 +598,22 @@ private fun PropagationExample3() {
             consumeUp = it
         }
     }
-    Text(
-        modifier = gestureTextModifier.verticalScroll(rememberScrollState()),
-        text = gestureText,
-        color = Color.White
-    )
 }
 
 /**
  * Returns the rotation, in degrees, of the pointers between the
  * [PointerInputChange.previousPosition] and [PointerInputChange.position] states.
  *
- * Only two pointers that are down in both previous and current states are considered.
+ * Only number of pointers that equal to [numberOfPointersRequired] that are down
+ * in both previous and current states are considered.
  *
  */
-suspend fun PointerInputScope.detectTwoPointerTransformGestures(
+suspend fun PointerInputScope.detectMultiplePointerTransformGestures(
     panZoomLock: Boolean = false,
-    onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit
-) {
+    numberOfPointersRequired: Int = 2,
+    onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit,
+
+    ) {
     forEachGesture {
         awaitPointerEventScope {
             var rotation = 0f
@@ -648,11 +628,12 @@ suspend fun PointerInputScope.detectTwoPointerTransformGestures(
             do {
                 val event = awaitPointerEvent()
 
-                val pointerCount = event.changes.size
+                val downPointerCount = event.changes.size
 
                 // If any position change is consumed from another pointer or pointer
-                // count that is pressed is not equal to 2 cancel this gesture
-                val canceled = event.changes.any { it.positionChangeConsumed() } || (pointerCount != 2)
+                // count that is pressed is not equal to pointerCount cancel this gesture
+                val canceled = event.changes.any { it.positionChangeConsumed() } || (
+                        downPointerCount != numberOfPointersRequired)
 
                 if (!canceled) {
                     val zoomChange = event.calculateZoom()

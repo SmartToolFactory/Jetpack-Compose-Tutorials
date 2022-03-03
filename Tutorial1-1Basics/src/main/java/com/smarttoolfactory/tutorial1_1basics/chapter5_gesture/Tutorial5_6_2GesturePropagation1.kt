@@ -128,8 +128,8 @@ private fun GesturePropagationExample() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
@@ -152,8 +152,6 @@ private fun GesturePropagationExample() {
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
 
-                    // This is for not logging move events if pointer size didn't change
-                    var pointerSize = 0
 
                     while (true) {
 
@@ -201,25 +199,21 @@ private fun GesturePropagationExample() {
                             }
                             gestureColorOuter = Blue400
 
-                            if (pointerSize != event.changes.size) {
-                                event.changes.forEach { pointer ->
-                                    val moveText =
-                                        "🍏 OUTER MOVE changes size ${event.changes.size}\n" +
-                                                "id: ${pointer.id.value}, " +
-                                                "changedToDown: ${pointer.changedToDown()}, " +
-                                                "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
-                                                "pressed: ${pointer.pressed}\n" +
-                                                "changedUp: ${pointer.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
-                                                "position: ${pointer.position}\n" +
-                                                "positionChange: ${pointer.positionChange()}\n" +
-                                                "positionChanged: ${pointer.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
-                                    gestureText += moveText
-                                }
-
-                                pointerSize = event.changes.size
+                            event.changes.forEach { pointer ->
+                                val moveText =
+                                    "🍏 OUTER MOVE changes size ${event.changes.size}\n" +
+                                            "id: ${pointer.id.value}, " +
+                                            "changedToDown: ${pointer.changedToDown()}, " +
+                                            "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
+                                            "pressed: ${pointer.pressed}\n" +
+                                            "changedUp: ${pointer.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${pointer.position}\n" +
+                                            "positionChange: ${pointer.positionChange()}\n" +
+                                            "positionChanged: ${pointer.positionChanged()}\n" +
+                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
+                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                gestureText += moveText
                             }
 
                         } else {
@@ -249,8 +243,8 @@ private fun GesturePropagationExample() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
 
                     if (centerConsumeDown) {
@@ -271,9 +265,6 @@ private fun GesturePropagationExample() {
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
-
-                    // This is for not logging move events if pointer size didn't change
-                    var pointerSize = 0
 
                     while (true) {
 
@@ -319,26 +310,23 @@ private fun GesturePropagationExample() {
                             }
                             gestureColorCenter = Blue400
 
-                            if (pointerSize != event.changes.size) {
-                                event.changes.forEach { pointer ->
-                                    val moveText =
-                                        "🍏🍏 CENTER MOVE changes size ${event.changes.size}\n" +
-                                                "id: ${pointer.id.value}, " +
-                                                "changedToDown: ${pointer.changedToDown()}, " +
-                                                "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                                "pressed: ${pointer.pressed}\n" +
-                                                "changedUp: ${pointer.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
-                                                "position: ${pointer.position}\n" +
-                                                "positionChange: ${pointer.positionChange()}\n" +
-                                                "positionChanged: ${pointer.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
-                                    gestureText += moveText
-                                }
-
-                                pointerSize = event.changes.size
+                            event.changes.forEach { pointer ->
+                                val moveText =
+                                    "🍏🍏 CENTER MOVE changes size ${event.changes.size}\n" +
+                                            "id: ${pointer.id.value}, " +
+                                            "changedToDown: ${pointer.changedToDown()}, " +
+                                            "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
+                                            "pressed: ${pointer.pressed}\n" +
+                                            "changedUp: ${pointer.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${pointer.position}\n" +
+                                            "positionChange: ${pointer.positionChange()}\n" +
+                                            "positionChanged: ${pointer.positionChanged()}\n" +
+                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
+                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                gestureText += moveText
                             }
+
                         } else {
                             // All of the pointers are up
                             gestureText += "CENTER Up\n\n"
@@ -365,8 +353,8 @@ private fun GesturePropagationExample() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
@@ -387,9 +375,6 @@ private fun GesturePropagationExample() {
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
-
-                    // This is for not logging move events if pointer size didn't change
-                    var pointerSize = 0
 
                     while (true) {
 
@@ -435,26 +420,23 @@ private fun GesturePropagationExample() {
                             }
                             gestureColorInner = Blue400
 
-                            if (pointerSize != event.changes.size) {
-                                event.changes.forEach { pointer ->
-                                    val moveText =
-                                        "🍏🍏🍏 INNER MOVE changes size ${event.changes.size}\n" +
-                                                "id: ${pointer.id.value}, " +
-                                                "changedToDown: ${pointer.changedToDown()}, " +
-                                                "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
-                                                "pressed: ${pointer.pressed}\n" +
-                                                "changedUp: ${pointer.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
-                                                "position: ${pointer.position}\n" +
-                                                "positionChange: ${pointer.positionChange()}\n" +
-                                                "positionChanged: ${pointer.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
-                                    gestureText += moveText
-                                }
-
-                                pointerSize = event.changes.size
+                            event.changes.forEach { pointer ->
+                                val moveText =
+                                    "🍏🍏🍏 INNER MOVE changes size ${event.changes.size}\n" +
+                                            "id: ${pointer.id.value}, " +
+                                            "changedToDown: ${pointer.changedToDown()}, " +
+                                            "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
+                                            "pressed: ${pointer.pressed}\n" +
+                                            "changedUp: ${pointer.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${pointer.position}\n" +
+                                            "positionChange: ${pointer.positionChange()}\n" +
+                                            "positionChanged: ${pointer.positionChanged()}\n" +
+                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
+                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                gestureText += moveText
                             }
+
                         } else {
                             // All of the pointers are up
                             gestureText += "INNER Up\n\n"
@@ -568,7 +550,10 @@ private fun GesturePropagationExample() {
     }
     AnimatedVisibility(visible = centerCheckBoxesExpanded) {
         Column {
-            CheckBoxWithTextRippleFullRow(label = "centerRequireUnconsumed", centerRequireUnconsumed) {
+            CheckBoxWithTextRippleFullRow(
+                label = "centerRequireUnconsumed",
+                centerRequireUnconsumed
+            ) {
                 gestureText = ""
                 centerRequireUnconsumed = it
             }
@@ -615,7 +600,10 @@ private fun GesturePropagationExample() {
     }
     AnimatedVisibility(visible = outerCheckBoxesExpanded) {
         Column {
-            CheckBoxWithTextRippleFullRow(label = "outerRequireUnconsumed", outerRequireUnconsumed) {
+            CheckBoxWithTextRippleFullRow(
+                label = "outerRequireUnconsumed",
+                outerRequireUnconsumed
+            ) {
                 gestureText = ""
                 outerRequireUnconsumed = it
             }
@@ -693,8 +681,8 @@ private fun GesturePropagationExample2() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
@@ -769,8 +757,8 @@ private fun GesturePropagationExample2() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
@@ -929,7 +917,10 @@ private fun GesturePropagationExample2() {
     }
     AnimatedVisibility(visible = outerCheckBoxesExpanded) {
         Column {
-            CheckBoxWithTextRippleFullRow(label = "outerRequireUnconsumed", outerRequireUnconsumed) {
+            CheckBoxWithTextRippleFullRow(
+                label = "outerRequireUnconsumed",
+                outerRequireUnconsumed
+            ) {
                 outerRequireUnconsumed = it
             }
             CheckBoxWithTextRippleFullRow(label = "outerConsumeDown", outerConsumeDown) {

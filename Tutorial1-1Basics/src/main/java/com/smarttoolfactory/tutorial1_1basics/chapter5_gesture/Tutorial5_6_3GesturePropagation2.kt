@@ -229,8 +229,8 @@ private fun DragPropagationExample() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
@@ -272,20 +272,20 @@ private fun DragPropagationExample() {
                             }
                             gestureColorOuter = Blue400
 
-                                val outerText =
-                                    "🍏 OUTER DRAG" +
-                                            "id: ${change.id.value}, " +
-                                            "changedToDown: ${change.changedToDown()}, " +
-                                            "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
-                                            "pressed: ${change.pressed}\n" +
-                                            "changedUp: ${change.changedToUp()}\n" +
-                                            "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
-                                            "position: ${change.position}\n" +
-                                            "positionChange: ${change.positionChange()}\n" +
-                                            "positionChanged: ${change.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
-                                gestureText += outerText
+                            val outerText =
+                                "🍏 OUTER DRAG" +
+                                        "id: ${change.id.value}, " +
+                                        "changedToDown: ${change.changedToDown()}, " +
+                                        "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
+                                        "pressed: ${change.pressed}\n" +
+                                        "changedUp: ${change.changedToUp()}\n" +
+                                        "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                        "position: ${change.position}\n" +
+                                        "positionChange: ${change.positionChange()}\n" +
+                                        "positionChanged: ${change.positionChanged()}\n" +
+                                        "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
+                                        "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                            gestureText += outerText
                         }
 
                         gestureText += "OUTER onDragEnd\n\n"
@@ -313,8 +313,8 @@ private fun DragPropagationExample() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
 
                     if (centerConsumeDown) {
@@ -357,20 +357,20 @@ private fun DragPropagationExample() {
                             }
                             gestureColorCenter = Blue400
 
-                                val centerText =
-                                    "🍏🍏 CENTER DRAG" +
-                                            "id: ${change.id.value}, " +
-                                            "changedToDown: ${change.changedToDown()}, " +
-                                            "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
-                                            "pressed: ${change.pressed}\n" +
-                                            "changedUp: ${change.changedToUp()}\n" +
-                                            "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
-                                            "position: ${change.position}\n" +
-                                            "positionChange: ${change.positionChange()}\n" +
-                                            "positionChanged: ${change.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
-                                gestureText += centerText
+                            val centerText =
+                                "🍏🍏 CENTER DRAG" +
+                                        "id: ${change.id.value}, " +
+                                        "changedToDown: ${change.changedToDown()}, " +
+                                        "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
+                                        "pressed: ${change.pressed}\n" +
+                                        "changedUp: ${change.changedToUp()}\n" +
+                                        "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                        "position: ${change.position}\n" +
+                                        "positionChange: ${change.positionChange()}\n" +
+                                        "positionChanged: ${change.positionChanged()}\n" +
+                                        "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
+                                        "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                            gestureText += centerText
                         }
 
                         gestureText += "CENTER onDragEnd\n\n"
@@ -398,8 +398,8 @@ private fun DragPropagationExample() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
@@ -569,7 +569,10 @@ private fun DragPropagationExample() {
     }
     AnimatedVisibility(visible = centerCheckBoxesExpanded) {
         Column {
-            CheckBoxWithTextRippleFullRow(label = "centerRequireUnconsumed", centerRequireUnconsumed) {
+            CheckBoxWithTextRippleFullRow(
+                label = "centerRequireUnconsumed",
+                centerRequireUnconsumed
+            ) {
                 gestureText = ""
                 centerRequireUnconsumed = it
             }
@@ -613,7 +616,10 @@ private fun DragPropagationExample() {
     }
     AnimatedVisibility(visible = outerCheckBoxesExpanded) {
         Column {
-            CheckBoxWithTextRippleFullRow(label = "outerRequireUnconsumed", outerRequireUnconsumed) {
+            CheckBoxWithTextRippleFullRow(
+                label = "outerRequireUnconsumed",
+                outerRequireUnconsumed
+            ) {
                 gestureText = ""
                 outerRequireUnconsumed = it
             }
@@ -824,8 +830,8 @@ private fun DragPropagationExample2() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
@@ -931,8 +937,8 @@ private fun DragPropagationExample2() {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange =
-                    // 🔥🔥 When requireUnconsumed false if a parent consumes this pointer
-                        // this down never occurs
+                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                        // before this one consumes down, awaitFirstDown gets triggered nonetheless
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
