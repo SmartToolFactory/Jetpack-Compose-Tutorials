@@ -35,12 +35,6 @@ fun Tutorial5_3Screen() {
     TutorialContent()
 }
 
- val boxModifier = Modifier
-    .fillMaxWidth()
-    .height(250.dp)
-    .clipToBounds()
-    .background(Color.LightGray)
-
 @Composable
 private fun TutorialContent() {
 
@@ -60,22 +54,22 @@ private fun TutorialContent() {
             text = "Transform scale",
             modifier = Modifier.padding(top = 8.dp)
         )
-        TransformGesturesExample()
+        TransformGesturesZoomExample()
         TutorialText2(
             text = "Transform scale&translation",
             modifier = Modifier.padding(top = 20.dp)
         )
-        TransformGesturesExample2()
+        TransformGesturesZoomPanExample()
         TutorialText2(
             text = "Transform scale, translation, and rotation",
             modifier = Modifier.padding(top = 20.dp)
         )
-        TransformGesturesExample3()
+        TransformGesturesZoomPanRotateExample()
     }
 }
 
 @Composable
-private fun TransformGesturesExample() {
+private fun TransformGesturesZoomExample() {
 
     var centroid by remember { mutableStateOf(Offset.Zero) }
     var zoom by remember { mutableStateOf(1f) }
@@ -115,7 +109,7 @@ private fun TransformGesturesExample() {
 }
 
 @Composable
-private fun TransformGesturesExample2() {
+private fun TransformGesturesZoomPanExample() {
 
     val decimalFormat = remember { DecimalFormat("0.0") }
 
@@ -168,7 +162,7 @@ private fun TransformGesturesExample2() {
 
 
 @Composable
-private fun TransformGesturesExample3() {
+private fun TransformGesturesZoomPanRotateExample() {
     val decimalFormat = remember { DecimalFormat("0.0") }
 
     var zoom by remember { mutableStateOf(1f) }
@@ -256,6 +250,12 @@ fun ImageBox(
         )
     }
 }
+
+val boxModifier = Modifier
+    .fillMaxWidth()
+    .height(250.dp)
+    .clipToBounds()
+    .background(Color.LightGray)
 
 /**
  * Rotates the given offset around the origin by the given angle in degrees.

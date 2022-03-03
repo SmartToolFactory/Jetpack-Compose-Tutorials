@@ -986,6 +986,27 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_6_4 = TutorialSectionModel(
+        title = "5-6-4 Transformation Propagation",
+        description = "Consume events to rotate, zoom, move or apply drag or move events on Composables.",
+        action = {
+            Tutorial5_6Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
+            TAG_DRAG,
+            TAG_CONSUME_DOWN_CHANGE,
+            TAG_CONSUME_POSITION_CHANGE,
+            TAG_ANY_CHANGE_CONSUMED,
+            TAG_POSITION_CHANGE_CONSUMED
+        ),
+        tagColor = GestureListColor
+    )
+
     val tutorial5_7_1 = TutorialSectionModel(
         title = "5-7-1 Ripple Gesture Events",
         description = "",
@@ -1012,6 +1033,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_6_1,
         tutorial5_6_2,
         tutorial5_6_3,
+        tutorial5_6_4,
         tutorial5_7_1
     )
 }

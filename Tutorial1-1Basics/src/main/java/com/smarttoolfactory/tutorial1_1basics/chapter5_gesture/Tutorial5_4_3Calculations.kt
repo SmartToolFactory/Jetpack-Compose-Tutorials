@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
@@ -37,13 +36,11 @@ fun Tutorial5_4Screen3() {
 @Composable
 private fun TutorialContent() {
 
-    val scrollState: ScrollState = rememberScrollState()
-
     Column(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
 
         StyleableTutorialText(
@@ -57,38 +54,30 @@ private fun TutorialContent() {
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        CalculateCentroidExample {
-
-        }
+        CalculateCentroidExample()
 
         TutorialText2(
             text = "Calculate Zoom",
             modifier = Modifier.padding(top = 8.dp)
         )
-        CalculateZoomExample {
-
-        }
+        CalculateZoomExample()
 
         TutorialText2(
             text = "Calculate Pan",
             modifier = Modifier.padding(top = 20.dp)
         )
-        CalculatePanExample {
-
-        }
+        CalculatePanExample()
 
         TutorialText2(
             text = "Calculate Rotation",
             modifier = Modifier.padding(top = 20.dp)
         )
-        CalculateRotationExample {
-
-        }
+        CalculateRotationExample()
     }
 }
 
 @Composable
-private fun CalculateCentroidExample(onDown: () -> Unit) {
+private fun CalculateCentroidExample() {
 
     var centroidSize by remember { mutableStateOf(50f) }
     var position by remember { mutableStateOf(Offset.Zero) }
@@ -104,9 +93,6 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
         .pointerInput(Unit) {
             forEachGesture {
                 awaitPointerEventScope {
-                    // This is for canceling ScrollState in Parent Column, not related with example
-                    // More spaced need to scroll so added verticalScroll to parent
-                    onDown()
 
                     // Wait for at least one pointer to press down, and set first contact position
                     awaitFirstDown().also {
@@ -116,9 +102,6 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
                     gestureColor = Blue400
 
                     do {
-                        // This is for canceling ScrollState in Parent Column, not related with example
-                        // More spaced need to scroll so added verticalScroll to parent
-                        onDown()
 
                         // This PointerEvent contains details including events, id, position and more
                         val event: PointerEvent = awaitPointerEvent()
@@ -167,7 +150,7 @@ private fun CalculateCentroidExample(onDown: () -> Unit) {
 }
 
 @Composable
-private fun CalculateZoomExample(onDown: () -> Unit) {
+private fun CalculateZoomExample() {
     var zoom by remember { mutableStateOf(1f) }
 
     var text by remember {
@@ -182,16 +165,9 @@ private fun CalculateZoomExample(onDown: () -> Unit) {
         .pointerInput(Unit) {
             forEachGesture {
                 awaitPointerEventScope {
-                    // This is for canceling ScrollState in Parent Column, not related with example
-                    // More spaced need to scroll so added verticalScroll to parent
-                    onDown()
-
                     // Wait for at least one pointer to press down
                     awaitFirstDown()
                     do {
-                        // This is for canceling ScrollState in Parent Column, not related with example
-                        // More spaced need to scroll so added verticalScroll to parent
-                        onDown()
 
                         val event = awaitPointerEvent()
                         zoom *= event.calculateZoom()
@@ -215,7 +191,7 @@ private fun CalculateZoomExample(onDown: () -> Unit) {
 
 
 @Composable
-private fun CalculatePanExample(onDown: () -> Unit) {
+private fun CalculatePanExample() {
     val offsetX = remember { mutableStateOf(0f) }
     val offsetY = remember { mutableStateOf(0f) }
 
@@ -233,17 +209,11 @@ private fun CalculatePanExample(onDown: () -> Unit) {
             .pointerInput(Unit) {
                 forEachGesture {
                     awaitPointerEventScope {
-                        // This is for canceling ScrollState in Parent Column, not related with example
-                        // More spaced need to scroll so added verticalScroll to parent
-                        onDown()
 
                         // Wait for at least one pointer to press down
                         awaitFirstDown()
 
                         do {
-                            // This is for canceling ScrollState in Parent Column, not related with example
-                            // More spaced need to scroll so added verticalScroll to parent
-                            onDown()
 
                             val event = awaitPointerEvent()
                             val offset = event.calculatePan()
@@ -270,13 +240,12 @@ private fun CalculatePanExample(onDown: () -> Unit) {
 }
 
 @Composable
-private fun CalculateRotationExample(onDown: () -> Unit) {
+private fun CalculateRotationExample() {
     var angle by remember { mutableStateOf(0f) }
 
     var text by remember {
         mutableStateOf("Rotate image using two fingers with twisting gesture.")
     }
-
 
     val imageModifier = Modifier
         .graphicsLayer(rotationZ = angle)
@@ -285,17 +254,10 @@ private fun CalculateRotationExample(onDown: () -> Unit) {
             forEachGesture {
                 awaitPointerEventScope {
 
-                    // This is for canceling ScrollState in Parent Column, not related with example
-                    // More spaced need to scroll so added verticalScroll to parent
-                    onDown()
-
                     // Wait for at least one pointer to press down
                     awaitFirstDown()
 
                     do {
-                        // This is for canceling ScrollState in Parent Column, not related with example
-                        // More spaced need to scroll so added verticalScroll to parent
-                        onDown()
 
                         val event = awaitPointerEvent()
                         val rotation = event.calculateRotation()

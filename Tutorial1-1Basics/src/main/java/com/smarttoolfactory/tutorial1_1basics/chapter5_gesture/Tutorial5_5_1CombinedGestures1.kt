@@ -31,21 +31,20 @@ private fun TutorialContent() {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         StyleableTutorialText(
-            text = "Combine drag and tap gestures with different **pointerInput** functions",
-            bullets = false
+            text = "1-) Combine drag and tap gestures with different **pointerInput** functions"
         )
         CombinedDragTapGestureSample()
 
         StyleableTutorialText(
-            text = "Combine **awaitPointerEventScope** with **detectTapGestures**. In this example" +
-                    "**awaitPointerEventScope** is in first order and doesn't receive events",
-            bullets = false
+            text = "2-) Combine **awaitPointerEventScope** with **detectTapGestures**.\n" +
+                    "In this example **awaitPointerEventScope** is in first order " +
+                    "and **doesn't receive** events."
         )
         CombinedPointerInputSample()
         StyleableTutorialText(
-            text = "Combine  **detectTapGestures** and **awaitPointerEventScope**. In this example " +
-                    "**awaitPointerEventScope** is in second order and receives events",
-            bullets = false
+            text = "3-) Combine  **detectTapGestures** and **awaitPointerEventScope**.\n" +
+                    "In this example **awaitPointerEventScope** is in second order " +
+                    "and receives events."
         )
         CombinedPointerInputSample2()
     }
@@ -149,7 +148,7 @@ private fun CombinedPointerInputSample() {
 
                     val down = awaitFirstDown()
 
-                    gestureText = "DOWN"
+                    gestureText = "DOWN $down"
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
@@ -157,7 +156,7 @@ private fun CombinedPointerInputSample() {
                     do {
                         val event: PointerEvent = awaitPointerEvent()
                         gestureColor = Blue400
-                        var eventChanges = ""
+                        var eventChanges = "MOVE\n"
 
                         event.changes
                             .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
@@ -165,9 +164,8 @@ private fun CombinedPointerInputSample() {
                                         "pos: ${pointerInputChange.position}\n"
                             }
 
-                        gestureText = "EVENT changes size ${event.changes.size}\n" + eventChanges
+                        gestureText += "EVENT changes size ${event.changes.size}\n" + eventChanges
                     } while (event.changes.any { it.pressed })
-
 
                     gestureColor = Green400
                     gestureText = "UP"
@@ -177,21 +175,21 @@ private fun CombinedPointerInputSample() {
         .pointerInput(Unit) {
             detectTapGestures(
                 onPress = {
-                    gestureText = "onPress"
+                    gestureText = "onPress\n"
                     gestureColor = Orange400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
                 },
                 onTap = {
-                    gestureText = "onTap offset: $it"
+                    gestureText = "onTap offset: $it\n"
                     gestureColor = Pink400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
                 },
                 onDoubleTap = {
-                    gestureText = "onDoubleTap offset: $it"
+                    gestureText = "onDoubleTap offset: $it\n"
                     gestureColor = Blue400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
@@ -199,7 +197,7 @@ private fun CombinedPointerInputSample() {
 
                 },
                 onLongPress = {
-                    gestureText = "onLongPress offset: $it"
+                    gestureText = "onLongPress offset: $it\n"
                     gestureColor = Brown400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
@@ -228,21 +226,21 @@ private fun CombinedPointerInputSample2() {
         .pointerInput(Unit) {
             detectTapGestures(
                 onPress = {
-                    gestureText = "onPress"
+                    gestureText = "onPress\n"
                     gestureColor = Orange400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
                 },
                 onTap = {
-                    gestureText = "onTap offset: $it"
+                    gestureText = "onTap offset: $it\n"
                     gestureColor = Pink400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
                 },
                 onDoubleTap = {
-                    gestureText = "onDoubleTap offset: $it"
+                    gestureText = "onDoubleTap offset: $it\n"
                     gestureColor = Blue400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
@@ -250,7 +248,7 @@ private fun CombinedPointerInputSample2() {
 
                 },
                 onLongPress = {
-                    gestureText = "onLongPress offset: $it"
+                    gestureText = "onLongPress offset: $it\n"
                     gestureColor = Brown400
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
@@ -264,7 +262,7 @@ private fun CombinedPointerInputSample2() {
 
                     val down = awaitFirstDown()
 
-                    gestureText = "DOWN"
+                    gestureText = "DOWN $down"
                     Toast
                         .makeText(context, gestureText, Toast.LENGTH_SHORT)
                         .show()
@@ -272,7 +270,7 @@ private fun CombinedPointerInputSample2() {
                     do {
                         val event: PointerEvent = awaitPointerEvent()
                         gestureColor = Blue400
-                        var eventChanges = ""
+                        var eventChanges = "MOVE\n"
 
                         event.changes
                             .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
@@ -280,7 +278,7 @@ private fun CombinedPointerInputSample2() {
                                         "pos: ${pointerInputChange.position}\n"
                             }
 
-                        gestureText = "EVENT changes size ${event.changes.size}\n" + eventChanges
+                        gestureText += "EVENT changes size ${event.changes.size}\n" + eventChanges
                     } while (event.changes.any { it.pressed })
 
 

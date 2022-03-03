@@ -190,8 +190,12 @@ private fun GesturePropagationExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 Consuming position change makes sure that pointer.positionChange()
-                            // returns 0, positionChanged() returns false, prevents scrolling
+                            // 🔥 calling consumePositionChange() sets
+                            // positionChange() to 0,
+                            // positionChanged() to false,
+                            // positionChangeConsumed() to true.
+                            // And any parent or pointerInput above this gets no position change
+                            // Scrolling or detectGestures check positionChangeConsumed()
                             if (outerConsumePositionChange) {
                                 pointerInputChange.consumePositionChange()
                             }
@@ -304,8 +308,12 @@ private fun GesturePropagationExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 Consuming position change makes sure that pointer.positionChange()
-                            // returns 0, positionChanged() returns false, prevents scrolling
+                            // 🔥 calling consumePositionChange() sets
+                            // positionChange() to 0,
+                            // positionChanged() to false,
+                            // positionChangeConsumed() to true.
+                            // And any parent or pointerInput above this gets no position change
+                            // Scrolling or detectGestures check positionChangeConsumed()
                             if (centerConsumePositionChange) {
                                 pointerInputChange.consumePositionChange()
                             }
@@ -416,8 +424,12 @@ private fun GesturePropagationExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 Consuming position change makes sure that pointer.positionChange()
-                            // returns 0, positionChanged() returns false, prevents scrolling
+                            // 🔥 calling consumePositionChange() sets
+                            // positionChange() to 0,
+                            // positionChanged() to false,
+                            // positionChangeConsumed() to true.
+                            // And any parent or pointerInput above this gets no position change
+                            // Scrolling or detectGestures check positionChangeConsumed()
                             if (innerConsumePositionChange) {
                                 pointerInputChange.consumePositionChange()
                             }

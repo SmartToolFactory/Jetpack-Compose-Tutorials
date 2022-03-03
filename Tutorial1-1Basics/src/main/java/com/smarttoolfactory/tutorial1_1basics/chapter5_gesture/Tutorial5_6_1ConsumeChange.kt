@@ -58,7 +58,7 @@ private fun ConsumeDownAndUpEventsExample() {
                     val down: PointerInputChange = awaitFirstDown(requireUnconsumed = false)
 
                     var eventChanges = ""
-                    gestureColor = Blue400
+                    gestureColor = Orange400
 
                     // Consuming down causes changeToDown to return false
                     // And other events like scroll to not interfere with this event
@@ -142,7 +142,7 @@ private fun ConsumeDownAndMoveEventsExample() {
                     val down: PointerInputChange = awaitFirstDown()
 
                     var eventChanges = ""
-                    gestureColor = Blue400
+                    gestureColor = Orange400
 
                     // Consuming down causes changeToDown to return false
                     // And other events like scroll to not interfere with this event
@@ -184,13 +184,17 @@ private fun ConsumeDownAndMoveEventsExample() {
                                     gestureText = eventChanges
 
 
-                                    // 🔥 Consuming position change makes sure that pointer.positionChange()
-                                    // returns 0, positionChanged() returns false, prevents scrolling
+                                    // 🔥 calling consumePositionChange() sets
+                                    // positionChange() to 0,
+                                    // positionChanged() to false,
+                                    // positionChangeConsumed() to true.
+                                    // And any parent or pointerInput above this gets no position change
+                                    // Scrolling or detectGestures check positionChangeConsumed()
                                     pointerInputChange.consumePositionChange()
 
                                 }
 
-                        gestureColor = Green400
+                        gestureColor = Blue400
 
                     } while (
                         event.changes.any {
@@ -236,7 +240,7 @@ private fun ConsumeDownAndMoveEventsExample() {
                         }
                     )
 
-                    gestureColor = Color.White
+                    gestureColor = Green400
                 }
             }
         }
@@ -269,7 +273,7 @@ private fun ConsumeDragEventsExample() {
                 awaitPointerEventScope {
 
                     val down: PointerInputChange = awaitFirstDown().also {
-                        gestureColor = Blue400
+                        gestureColor = Orange400
                     }
 
                     // Consuming down causes changeToDown to return false
@@ -330,7 +334,7 @@ private fun ConsumeDragEventsExample() {
 
                             if (change != null && change.pressed) {
 
-                                gestureColor = Green400
+                                gestureColor = Blue400
 
                                 // 🔥 Consuming position change causes
                                 // change.positionChanged() to return false.
@@ -353,7 +357,7 @@ private fun ConsumeDragEventsExample() {
                         }
 
                         gestureText = eventChanges
-                        gestureColor = Color.White
+                        gestureColor = Green400
                     }
                 }
             }
