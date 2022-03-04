@@ -18,7 +18,18 @@ val suggestionList = listOf(
     SuggestionModel("Modifier"),
     SuggestionModel("SubcomposeLayout"),
     SuggestionModel("Recomposition"),
-    SuggestionModel("SideEffect")
+    SuggestionModel("SideEffect"),
+    SuggestionModel("PointerInput"),
+    SuggestionModel("AwaitPointerScope"),
+    SuggestionModel("Gesture"),
+    SuggestionModel("Drag"),
+    SuggestionModel("Transform"),
+    SuggestionModel("Canvas"),
+    SuggestionModel("DrawScope"),
+    SuggestionModel("Path"),
+    SuggestionModel("PathEffect"),
+    SuggestionModel("PathOperation"),
+    SuggestionModel("Blend Mode"),
 )
 
 class HomeViewModel : ViewModel() {
@@ -27,7 +38,7 @@ class HomeViewModel : ViewModel() {
 
     val tutorialList = mutableListOf<List<TutorialSectionModel>>()
 
-    private val _suggestionState = MutableStateFlow<List<SuggestionModel>>(suggestionList)
+    private val _suggestionState = MutableStateFlow(suggestionList)
 
     val suggestionState: SharedFlow<List<SuggestionModel>>
         get() = _suggestionState
