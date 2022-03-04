@@ -450,9 +450,9 @@ private fun SubcomposeRow(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
-        var recompositionIndex = 0
+        var subcomposeIndex = 0
 
-        var placeables: List<Placeable> = subcompose(recompositionIndex++, content).map {
+        var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
             it.measure(constraints)
         }
 
@@ -466,7 +466,7 @@ private fun SubcomposeRow(
 
         // Remeasure every element using width of longest item as minWidth of Constraint
         if (!placeables.isNullOrEmpty() && placeables.size > 1) {
-            placeables = subcompose(recompositionIndex, content).map { measurable: Measurable ->
+            placeables = subcompose(subcomposeIndex, content).map { measurable: Measurable ->
                 measurable.measure(
                     Constraints(
                         minHeight = rowSize.height,

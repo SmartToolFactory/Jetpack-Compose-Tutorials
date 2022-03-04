@@ -19,9 +19,9 @@ fun SubcomposeColumn(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
-        var recompositionIndex = 0
+        var subcomposeIndex = 0
 
-        var placeables: List<Placeable> = subcompose(recompositionIndex++, content).map {
+        var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
             it.measure(constraints)
         }
 
@@ -47,7 +47,7 @@ fun SubcomposeColumn(
 //                        "columnSize columnSize"
 //            )
 
-            placeables = subcompose(recompositionIndex, content).map { measurable: Measurable ->
+            placeables = subcompose(subcomposeIndex, content).map { measurable: Measurable ->
                 measurable.measure(Constraints(columnSize.width, constraints.maxWidth))
             }
         }
@@ -82,9 +82,9 @@ fun SubcomposeColumn(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
-        var recompositionIndex = 0
+        var subcomposeIndex = 0
 
-        var mainPlaceables: List<Placeable> = subcompose(recompositionIndex++, mainContent).map {
+        var mainPlaceables: List<Placeable> = subcompose(subcomposeIndex++, mainContent).map {
             it.measure(constraints)
         }
 
@@ -96,7 +96,7 @@ fun SubcomposeColumn(
                 )
             }
 
-        val dependentMeasurables: List<Measurable> = subcompose(recompositionIndex++) {
+        val dependentMeasurables: List<Measurable> = subcompose(subcomposeIndex++) {
             // 🔥🔥 Send columnSize of mainComponent to
             // dependent composable in case it might be used
             dependentContent(columnSize)
@@ -127,7 +127,7 @@ fun SubcomposeColumn(
 //                "✏️✏️ SubcomposeColumn() REMEASURE MAIN COMPONENT " +
 //                        "maxWidth: $maxWidth, columnSize width: ${columnSize.width}"
 //            )
-            mainPlaceables = subcompose(recompositionIndex, mainContent).map {
+            mainPlaceables = subcompose(subcomposeIndex, mainContent).map {
                 it.measure(Constraints(maxWidth, constraints.maxWidth))
             }
         }
