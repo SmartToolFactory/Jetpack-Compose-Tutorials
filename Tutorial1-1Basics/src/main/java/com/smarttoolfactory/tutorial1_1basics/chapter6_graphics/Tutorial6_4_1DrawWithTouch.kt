@@ -34,7 +34,7 @@ import androidx.core.graphics.flatten
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.awaitPointerMotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.detectMotionEvents
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
@@ -300,7 +300,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
 }
 
 /**
- * This example uses [Modifier.awaitPointerMotionEvent] to get [MotionEvent] states
+ * This example uses [Modifier.detectMotionEvents] to get [MotionEvent] states
  * and [PointerInputChange] in down, move and up states.
  */
 @Composable
@@ -339,7 +339,7 @@ private fun TouchDrawWithCustomGestureModifierExample() {
 
     val drawModifier = canvasModifier
         .background(gestureColor)
-        .awaitPointerMotionEvent(
+        .detectMotionEvents(
             onDown = { pointerInputChange: PointerInputChange ->
                 currentPosition = pointerInputChange.position
                 motionEvent = MotionEvent.Down
@@ -356,7 +356,8 @@ private fun TouchDrawWithCustomGestureModifierExample() {
                 motionEvent = MotionEvent.Up
                 gestureColor = Color.White
                 pointerInputChange.consumeDownChange()
-            }
+            },
+            delayAfterDownInMillis = 25L
         )
 
     Canvas(modifier = drawModifier) {
