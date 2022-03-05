@@ -6,11 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -20,6 +23,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
@@ -37,7 +41,9 @@ fun SearchBar(
     modifier: Modifier = Modifier
 ) {
 
-//    println("🍭 SearchBar() query: $query, searching: $searching, focused: $focused")
+//    SideEffect {
+//        println("🍭 SearchBar() query: ${query.text}, searching: $searching, focused: $focused")
+//    }
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -77,6 +83,7 @@ fun SearchBar(
  * and clear and loading [IconButton]s to clear query or show progress indicator when
  * a query is in progress.
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchTextField(
     query: TextFieldValue,
@@ -129,11 +136,14 @@ fun SearchTextField(
                             }
                             .focusRequester(focusRequester)
                             .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
-                        singleLine = true
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Search
+                        )
                     )
 
                     when {
-                        searching -> {
+                        searching && query.text.isNotEmpty() -> {
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .padding(horizontal = 6.dp)
@@ -149,7 +159,6 @@ fun SearchTextField(
                 }
             }
         }
-
     }
 }
 
@@ -163,71 +172,8 @@ private fun SearchHint(modifier: Modifier = Modifier) {
 
     ) {
         Text(
-            color = Color(0xff757575),
+            color = Color(0xffBDBDBD),
             text = "Search a Tag or Description",
         )
     }
 }
-
-@Composable
-fun <R, S> rememberSearchState(
-    query: TextFieldValue = TextFieldValue(""),
-    focused: Boolean = false,
-    searching: Boolean = false,
-    suggestions: List<S> = emptyList(),
-    searchResults: List<R> = emptyList()
-): SearchState<R, S> {
-    return remember {
-        SearchState(
-            query = query,
-            focused = focused,
-            searching = searching,
-            suggestions = suggestions,
-            searchResults = searchResults
-        )
-    }
-}
-
-@Stable
-class SearchState<R, S>(
-    query: TextFieldValue,
-    focused: Boolean,
-    searching: Boolean,
-    suggestions: List<S>,
-    searchResults: List<R>
-) {
-    var query by mutableStateOf(query)
-    var focused by mutableStateOf(focused)
-    var searching by mutableStateOf(searching)
-    var suggestions by mutableStateOf(suggestions)
-    var searchResults by mutableStateOf(searchResults)
-
-    val searchDisplay: SearchDisplay
-        get() = when {
-            !focused && query.text.isEmpty() -> SearchDisplay.InitialResults
-            focused && query.text.isEmpty() -> SearchDisplay.Suggestions
-            searchResults.isEmpty() -> SearchDisplay.NoResults
-            else -> SearchDisplay.Results
-        }
-
-    override fun toString(): String {
-        return "🚀 State query: $query, focused: $focused, searching: $searching " +
-                "suggestions: ${suggestions.size}, " +
-                "searchResults: ${searchResults.size}, " +
-                " searchDisplay: $searchDisplay"
-
-    }
-}
-
-/**
- * Enum class with different values to set search state based on text, focus, initial state and
- * results from search.
- *
- * **InitialResults** represents the initial state before search is initiated. This represents
- * the whole screen
- *
- */
-enum class SearchDisplay {
-    InitialResults, Suggestions, Results, NoResults
-}
-

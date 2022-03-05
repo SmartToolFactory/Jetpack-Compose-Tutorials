@@ -57,7 +57,7 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:1.4.0"
 
-    def nav_compose_version = "2.5.0-alpha02"
+    def nav_compose_version = "2.5.0-alpha03"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil

@@ -1,6 +1,13 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.smarttoolfactory.tutorial1_1basics
 
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,9 +15,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -23,7 +34,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.JumpToBottom
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StaggeredGrid
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Graphics", "Theming")
@@ -31,40 +41,57 @@ internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Graph
 /**
  * This is Home Screen that contains Search bar, Tabs, and tutorial pages in Pager
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @ExperimentalAnimationApi
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
     navigateToTutorial: (String) -> Unit,
-    state: SearchState<TutorialSectionModel, SuggestionModel> = rememberSearchState()
-) {
-//    println("✅ HomeScreen() state:\n$state")
 
-    state.suggestions = viewModel.suggestionState.collectAsState(initial = suggestionList).value
-
-    Column(
-        modifier = modifier.fillMaxSize()
     ) {
 
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+//            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
 
-        // FIXME Crashes when back button is pressed before any search
-/*
-         val dispatcher: OnBackPressedDispatcher =
-            LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
         val context = LocalContext.current
+
+        val state =
+            rememberSearchState(
+                initialResults = viewModel.tutorialList,
+                suggestions = suggestionList,
+                timeoutMillis = 600,
+            ) { query: TextFieldValue ->
+                viewModel.getTutorials(query.text)
+            }
+
+//        SideEffect {
+//            println("⛺️ HomeScreen() state: $state")
+//        }
+
+        val focusManager = LocalFocusManager.current
+        val keyboardController = LocalSoftwareKeyboardController.current
+
+        val dispatcher: OnBackPressedDispatcher =
+            LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
 
         val backCallback = remember {
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (state.query.text.isEmpty()) {
+                    if (!state.focused) {
+                        isEnabled = false
+                        Toast.makeText(context, "Back", Toast.LENGTH_SHORT).show()
                         dispatcher.onBackPressed()
                     } else {
-//                        Toast.makeText(context, "Back", Toast.LENGTH_SHORT).show()
                         state.query = TextFieldValue("")
+                        state.focused = false
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
                     }
-
                 }
             }
         }
@@ -72,12 +99,35 @@ fun HomeScreen(
         DisposableEffect(dispatcher) { // dispose/relaunch if dispatcher changes
             dispatcher.addCallback(backCallback)
             onDispose {
-//                Toast.makeText(context, "Disposed", Toast.LENGTH_SHORT).show()
-
                 backCallback.remove() // avoid leaks!
             }
         }
-*/
+
+        /*
+        LaunchedEffect(key1 = Unit) {
+            snapshotFlow { state.query }
+                .distinctUntilChanged()
+                .filter {
+                    it.text.isNotEmpty() && !state.sameAsPreviousQuery()
+                }
+                .map {
+                    state.searching = false
+                    state.searchInProgress = true
+                    it
+                }
+                .debounce(300)
+                .mapLatest {
+                    state.searching = true
+                    delay(300)
+                    viewModel.getTutorials(it.text)
+                }
+                .collect {
+                    state.searchResults = it
+                    state.searchInProgress = false
+                    state.searching = false
+                }
+        }
+        */
 
         SearchBar(
             query = state.query,
@@ -90,17 +140,11 @@ fun HomeScreen(
             modifier = modifier
         )
 
-        LaunchedEffect(state.query.text) {
-            state.searching = true
-//            println("⚠️ HomeScreen() LaunchedEffect query: ${state.query.text}, searching: ${state.searching}")
-            delay(100)
-            state.searchResults = viewModel.getTutorials(state.query.text)
-            state.searching = false
-        }
 
         when (state.searchDisplay) {
+            // This is initial state, first time screen is opened or no query is done
             SearchDisplay.InitialResults -> {
-                HomeContent(modifier, viewModel.tutorialList, navigateToTutorial)
+                HomeContent(modifier, state.initialResults, navigateToTutorial)
             }
             SearchDisplay.NoResults -> {
                 Box(
@@ -126,6 +170,16 @@ fun HomeScreen(
             SearchDisplay.Results -> {
                 TutorialListContent(modifier, state.searchResults, navigateToTutorial)
             }
+
+            SearchDisplay.SearchInProgress -> {
+                Box(
+                    contentAlignment = Alignment.Center, modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                ) {
+//                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }
@@ -136,7 +190,6 @@ private fun SuggestionGridLayout(
     suggestions: List<SuggestionModel>,
     onSuggestionClick: (String) -> Unit
 ) {
-
 
     StaggeredGrid(
         modifier = modifier.padding(4.dp)
@@ -165,6 +218,8 @@ private fun HomeContent(
     navigateToTutorial: (String) -> Unit
 ) {
 
+    val state = SearchState<Int, Int, Int>(listOf(), listOf(), listOf())
+
     val pagerState: PagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
 
@@ -172,7 +227,7 @@ private fun HomeContent(
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
         edgePadding = 8.dp,
-        // Our selected tab is our current page
+        // selected tab is our current page
         selectedTabIndex = pagerState.currentPage,
         // Override the indicator, using the provided pagerTabIndicatorOffset modifier
         indicator = { tabPositions ->

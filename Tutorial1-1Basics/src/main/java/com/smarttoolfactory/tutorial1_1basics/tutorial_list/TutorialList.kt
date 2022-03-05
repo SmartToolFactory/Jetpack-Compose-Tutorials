@@ -1059,8 +1059,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_1_2 = TutorialSectionModel(
         title = "6-1-2 Canvas Basics2",
-        description = "Use canvas to draw arc, with path effect, stroke cap, " +
-                "stroke join, miter and other attributes and draw images with src, dst attributes",
+        description = "Use canvas to draw arc, with PathEffect, StrokeCap, " +
+                "StrokeJoin, miter and other attributes and draw images with src, dst attributes",
         action = {
             Tutorial6_1Screen2()
         },

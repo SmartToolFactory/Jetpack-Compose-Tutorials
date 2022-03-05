@@ -3,9 +3,10 @@ package com.smarttoolfactory.tutorial1_1basics.ui.components
 import android.graphics.Point
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.*
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Density
 
 /**
  * Staggered grid layout for displaying items as GridLayout in classic View
@@ -38,7 +39,7 @@ fun StaggeredGrid(
         var maxPlaceableHeight = 0
         var lastRowHeight = 0
 
-        println("😈 MyStaggeredGrid() constraintMaxWidth: $constraintMaxWidth, constraintMaxHeight: $constraintMaxHeight")
+//        println("😈 MyStaggeredGrid() constraintMaxWidth: $constraintMaxWidth, constraintMaxHeight: $constraintMaxHeight")
 
         val placeables: List<Placeable> = measurables.mapIndexed { index, measurable ->
             // Measure each child
@@ -65,11 +66,11 @@ fun StaggeredGrid(
 
                 lastRowHeight = maxPlaceableHeight
 
-                println(
-                    "🍎 Same row->  " +
-                            "currentWidthOfRow: $currentWidthOfRow, " +
-                            "placeableHeight: $placeableHeight"
-                )
+//                println(
+//                    "🍎 Same row->  " +
+//                            "currentWidthOfRow: $currentWidthOfRow, " +
+//                            "placeableHeight: $placeableHeight"
+//                )
 
             } else {
 
@@ -86,12 +87,12 @@ fun StaggeredGrid(
                 lastRowHeight = maxPlaceableHeight
                 maxPlaceableHeight = placeableHeight
 
-                println(
-                    "🍏 New column-> " +
-                            "currentWidthOfRow: $currentWidthOfRow, " +
-                            "totalHeightOfRows: $totalHeightOfRows, " +
-                            "placeableHeight: $placeableHeight"
-                )
+//                println(
+//                    "🍏 New column-> " +
+//                            "currentWidthOfRow: $currentWidthOfRow, " +
+//                            "totalHeightOfRows: $totalHeightOfRows, " +
+//                            "placeableHeight: $placeableHeight"
+//                )
             }
 
             placeableMap[index] = Point(xPos, yPos)
@@ -103,7 +104,7 @@ fun StaggeredGrid(
             .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
 
 
-        println("RowHeights: $rowHeights, finalHeight: $finalHeight")
+//        println("RowHeights: $rowHeights, finalHeight: $finalHeight")
 
         // Set the size of the layout as big as it can
         layout(maxRowWidth, finalHeight) {
