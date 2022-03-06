@@ -208,7 +208,7 @@ class SearchState<I, R, S> internal constructor(
  *
  * * **[Suggestions]** represents the state where search Composable gained focus but query is empty.
  *
- * * **{SearchInProgress}** represents initiation of search but not actively searching. For instance
+ * * **[SearchInProgress]** represents initiation of search but not actively searching. For instance
  * search might require at least 3 letters or some specific condition. After condition is passed
  * [SearchState.searching] is true. This is useful for not having a search when first Composable
  * is composed.
