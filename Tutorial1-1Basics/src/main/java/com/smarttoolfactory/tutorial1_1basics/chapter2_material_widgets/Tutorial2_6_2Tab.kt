@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Devices
@@ -229,5 +231,51 @@ fun ScrollableTextTabComponent() {
 private fun ScrollableTextTabComponentPreview() {
     ComposeTutorialsTheme {
         ScrollableTextTabComponent()
+    }
+}
+
+@Composable
+fun CustomTabs() {
+    var selectedIndex by remember { mutableStateOf(0) }
+
+    val list = listOf("Active", "Completed")
+
+    TabRow(selectedTabIndex = selectedIndex,
+        backgroundColor = Color(0xff1E76DA),
+        modifier = Modifier
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .clip(RoundedCornerShape(50))
+            .background(Color(0xff1E76DA))
+            .padding(1.dp),
+        indicator = { tabPositions: List<TabPosition> ->
+            Box {}
+        }
+    ) {
+        list.forEachIndexed { index, text ->
+            val selected = selectedIndex == index
+            Tab(
+                modifier = if (selected) Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(
+                        Color.White
+                    )
+                else Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(Color(0xff1E76DA)),
+                selected = selected,
+                onClick = { selectedIndex = index },
+                text = { Text(text = text, color = Color(0xff6FAAEE)) }
+            )
+        }
+    }
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun CustomTabsbComponentPreview() {
+    ComposeTutorialsTheme {
+        CustomTabs()
     }
 }

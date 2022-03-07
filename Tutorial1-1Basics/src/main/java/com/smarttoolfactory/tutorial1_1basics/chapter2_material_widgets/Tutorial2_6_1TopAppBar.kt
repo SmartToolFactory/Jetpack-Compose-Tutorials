@@ -123,10 +123,18 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
             item {
                 ScrollableTextTabComponent()
             }
+            item {
+                StyleableTutorialText(
+                    text = "8-) Custom tabs"
+                )
+            }
+            item {
+                CustomTabs()
+            }
 
             item {
                 StyleableTutorialText(
-                    text = "8-) TopAppBar and Tabs"
+                    text = "9-) TopAppBar and Tabs"
                 )
             }
             item {
@@ -135,7 +143,7 @@ private fun TutorialContent(onBack: (() -> Unit)? = null) {
 
             item {
                 StyleableTutorialText(
-                    text = "9-) Whatsapp TopAppbar"
+                    text = "10-) Whatsapp TopAppbar"
                 )
             }
             item {
