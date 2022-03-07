@@ -95,7 +95,7 @@ private fun GesturePropagationExample() {
     var gestureColorInner by remember { mutableStateOf(innerColor) }
 
     /*
-        FLAGS for consuming events which effects gesture propagation
+        FLAGS for consuming events which effect gesture propagation
      */
     var outerRequireUnconsumed by remember { mutableStateOf(true) }
     var outerConsumeDown by remember { mutableStateOf(false) }
@@ -151,7 +151,6 @@ private fun GesturePropagationExample() {
 
                     // Main pointer is the one that is down initially
                     var pointerId = down.id
-
 
                     while (true) {
 

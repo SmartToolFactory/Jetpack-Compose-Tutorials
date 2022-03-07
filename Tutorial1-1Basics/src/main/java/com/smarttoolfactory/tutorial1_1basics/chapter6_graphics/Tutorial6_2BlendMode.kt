@@ -69,7 +69,8 @@ private fun TutorialContent() {
                     "or manipulate pixels." +
                     "\nFirst drawn shape/image is **Destination**, second one that drawn with " +
                     "**blend mode** is **Source**",
-            bullets = false)
+            bullets = false
+        )
 
         TutorialText2(text = "Draw Shapes with Blend Mode")
         DrawShapeBlendMode()
@@ -405,7 +406,6 @@ private fun ClipImageWithBlendModeViaAnotherImage() {
         )
     }
 }
-
 
 /**
  *

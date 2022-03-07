@@ -110,8 +110,6 @@ private fun DetectTapGesturesExample() {
                 }
             )
         }
-
-
     GestureDisplayBox(pointerModifier, gestureText)
 }
 
@@ -155,8 +153,6 @@ private fun DetectPressAwaitExample() {
                 }
             )
         }
-
-
     GestureDisplayBox(pointerModifier, gestureText)
 }
 
@@ -203,8 +199,6 @@ private fun PointerIteropFilterExample() {
             }
             true
         }
-
-
 
     GestureDisplayBox(pointerModifier, gestureText)
 }
@@ -311,7 +305,6 @@ private fun DetectGesturesExample2() {
             modifier = Modifier.align(Alignment.Center),
             textAlign = TextAlign.Center
         )
-
 
         Box(
             Modifier

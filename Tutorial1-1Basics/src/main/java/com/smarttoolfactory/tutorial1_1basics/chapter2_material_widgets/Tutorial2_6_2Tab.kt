@@ -214,7 +214,8 @@ fun ScrollableTextTabComponent() {
 
     ScrollableTabRow(
         edgePadding = 8.dp,
-        selectedTabIndex = selectedIndex) {
+        selectedTabIndex = selectedIndex
+    ) {
         list.forEachIndexed { index, text ->
             Tab(selected = selectedIndex == index,
                 onClick = { selectedIndex = index },
@@ -256,9 +257,7 @@ fun CustomTabs() {
             Tab(
                 modifier = if (selected) Modifier
                     .clip(RoundedCornerShape(50))
-                    .background(
-                        Color.White
-                    )
+                    .background(Color.White)
                 else Modifier
                     .clip(RoundedCornerShape(50))
                     .background(Color(0xff1E76DA)),

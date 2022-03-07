@@ -114,8 +114,9 @@ private fun DragExample() {
                         offsetY.value = newValue.y
 
                         gestureColor = Brown400
-                        text = "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
-                                "\nnewValue: $newValue"
+                        text =
+                            "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
+                                    "\nnewValue: $newValue"
                     }
 
                     if (change == null) {
@@ -183,7 +184,6 @@ private fun HorizontalDragExample() {
             "Without awaitTouchSlopOrCancellation drag starts when awaitFirstDown is invoked."
         )
     }
-
 
     val dragModifier = Modifier
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
@@ -262,7 +262,6 @@ private fun HorizontalDragExample() {
     }
 }
 
-
 @Composable
 private fun VerticalDragExample() {
     val offsetX = remember { mutableStateOf(0f) }
@@ -336,5 +335,3 @@ private fun VerticalDragExample() {
         Box(dragModifier)
     }
 }
-
-

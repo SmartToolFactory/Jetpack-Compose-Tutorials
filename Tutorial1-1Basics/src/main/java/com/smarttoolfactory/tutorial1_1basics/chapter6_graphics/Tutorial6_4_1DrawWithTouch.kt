@@ -131,7 +131,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
     var gestureColor by remember { mutableStateOf(Color.White) }
 
     // Draw state on canvas as text when set to true
-    var debug = false
+    val debug = false
 
     // This text is drawn to Canvas
     val canvasText = remember { StringBuilder() }
@@ -306,7 +306,6 @@ private fun TouchDrawMotionEventsAndPathExample() {
 @Composable
 private fun TouchDrawWithCustomGestureModifierExample() {
 
-
     // This is motion state. Initially or when touch is completed state is at MotionEvent.Idle
     // When touch is initiated state changes to MotionEvent.Down, when pointer is moved MotionEvent.Move,
     // after removing pointer we go to MotionEvent.Up to conclude drawing and then to MotionEvent.Idle
@@ -325,7 +324,7 @@ private fun TouchDrawWithCustomGestureModifierExample() {
     var gestureColor by remember { mutableStateOf(Color.White) }
 
     // Draw state on canvas as text when set to true
-    var debug = true
+    val debug = true
 
     // This text is drawn to Canvas
     val canvasText = remember { StringBuilder() }
@@ -425,7 +424,7 @@ private fun TouchDrawWithDragGesture() {
     var gestureColor by remember { mutableStateOf(Color.White) }
 
     // Draw state on canvas as text when set to true
-    var debug = false
+    val debug = false
 
     // This text is drawn to Canvas
     val canvasText = remember { StringBuilder() }
@@ -662,7 +661,6 @@ private fun TouchDrawWithPropertiesAndEraseExample() {
             Toast.makeText(context, "Erase Mode On", Toast.LENGTH_SHORT).show()
     }
 }
-
 
 /**
  * In this example of drawing white canvas, draw on an image that drawn to canvas
@@ -1113,7 +1111,6 @@ class PathOption(
 }
 
 private fun DrawScope.drawText(text: String, x: Float, y: Float, paint: Paint) {
-
 
     val lines = text.split("\n")
     // 🔥🔥 There is not a built-in function as of 1.0.0

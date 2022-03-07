@@ -76,7 +76,6 @@ class MaterialShadow internal constructor(
 )
 
 /**
- *
  * Draws customizable shadow behind badge using software layer to have blurred shadow
  * or solid shapes only..
  *

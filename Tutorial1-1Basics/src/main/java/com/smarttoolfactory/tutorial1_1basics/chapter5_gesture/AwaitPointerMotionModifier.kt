@@ -12,7 +12,6 @@ enum class MotionEvent {
     Idle, Down, Move, Up
 }
 
-
 /**
  * Create a modifier for processing pointer motion input within the region of the modified element.
  *
@@ -174,7 +173,6 @@ fun Modifier.pointerMotionEvents(
     }
 )
 
-
 /**
  * Create a modifier for processing pointer motion input within the region of the modified element.
  *
@@ -211,7 +209,6 @@ fun Modifier.pointerMotionEvents(
     }
 )
 
-
 /**
  * Create a modifier for processing pointer motion input within the region of the modified element.
  *
@@ -247,5 +244,3 @@ fun Modifier.pointerMotionEvents(
         }
     }
 )
-
-

@@ -54,7 +54,6 @@ fun HomeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-//            .background(getRandomColor())
             .padding(4.dp)
     ) {
 
@@ -68,10 +67,6 @@ fun HomeScreen(
             ) { query: TextFieldValue ->
                 viewModel.getTutorials(query.text)
             }
-
-//        SideEffect {
-//            println("⛺️ HomeScreen() state: $state")
-//        }
 
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -173,12 +168,10 @@ fun HomeScreen(
 
             SearchDisplay.SearchInProgress -> {
                 Box(
-                    contentAlignment = Alignment.Center, modifier = Modifier
+                    modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()
-                ) {
-//                    CircularProgressIndicator()
-                }
+                )
             }
         }
     }
@@ -217,8 +210,6 @@ private fun HomeContent(
     tutorialList: List<List<TutorialSectionModel>>,
     navigateToTutorial: (String) -> Unit
 ) {
-
-    val state = SearchState<Int, Int, Int>(listOf(), listOf(), listOf())
 
     val pagerState: PagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
@@ -265,7 +256,6 @@ private fun HomeContent(
         }
     }
 }
-
 
 @Composable
 fun ComingSoonScreen() {
@@ -346,7 +336,6 @@ fun TutorialListContent(
                 },
                 modifier = Modifier.align(Alignment.BottomEnd)
             )
-
         }
     }
 }

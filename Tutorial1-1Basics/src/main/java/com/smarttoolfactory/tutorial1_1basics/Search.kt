@@ -41,15 +41,13 @@ fun SearchBar(
     modifier: Modifier = Modifier
 ) {
 
-//    SideEffect {
-//        println("🍭 SearchBar() query: ${query.text}, searching: $searching, focused: $focused")
-//    }
-
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Row(
-        modifier = modifier.fillMaxWidth().background(Color.White),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
 

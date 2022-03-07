@@ -200,7 +200,6 @@ fun CustomRippleExample() {
     }
 }
 
-
 @Composable
 fun CustomRippleThemeExample() {
 
@@ -440,7 +439,6 @@ private fun DiscreteInteractionSourceExample() {
     }
 }
 
-
 @Composable
 private fun InteractionFlowExample() {
     Column(
@@ -474,7 +472,6 @@ private fun InteractionFlowExample() {
                 color = Color.White
             )
         }
-
     }
 }
 
@@ -553,7 +550,6 @@ private fun DiscreteInteractionSourceFLowExample() {
         )
     }
 
-
     // 🔥 This interaction source is for the row we will collect interactions on this one
     // and send it to quote to mimic whatsapp message click that highlight also quote
     val interactionSourceReceivedRow = MutableInteractionSource()
@@ -568,7 +564,6 @@ private fun DiscreteInteractionSourceFLowExample() {
                 .launchIn(this)
         }
     )
-
 
     Column(
         modifier = Modifier
@@ -629,7 +624,6 @@ private fun DiscreteInteractionSourceFLowExample() {
         )
     }
 }
-
 
 private class CustomRippleTheme(val color: Color = Color.Black) : RippleTheme {
     @Composable

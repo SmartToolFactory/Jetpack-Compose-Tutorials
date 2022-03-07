@@ -705,7 +705,6 @@ private fun DrawPathOperation() {
     }
 }
 
-
 @Composable
 private fun DrawQuad() {
 
@@ -743,13 +742,11 @@ private fun DrawQuad() {
         path.moveTo(x0, y0)
         path.quadraticBezierTo(x1 = x1, y1 = y1, x2 = x2, y2 = y2)
 
-
         drawPath(
             color = Color.Blue,
             path = path,
             style = Stroke(width = 1.dp.toPx())
         )
-
 
         // Draw Control Point on screen
         drawPoints(

@@ -180,7 +180,6 @@ private fun DrawingApp() {
                         currentPath.lineTo(currentPosition.x, currentPosition.y)
 
                         // Pointer is up save current path
-//                        paths[currentPath] = currentPathProperty
                         paths.add(Pair(currentPath,currentPathProperty))
 
                         // Since paths are keys for map, use new one for each key

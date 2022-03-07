@@ -313,6 +313,7 @@ private fun AwaitPointerEventWithDelayCanvasStateExample() {
                     gestureText.clear()
                     gestureText.append("🔥 MotionEvent.Down time: ${sdf.format(System.currentTimeMillis())}\n")
 
+                    // 🔥 Without this delay Canvas misses down event
                     scope.launch {
                         delay(20)
                         waitedAfterDown = true

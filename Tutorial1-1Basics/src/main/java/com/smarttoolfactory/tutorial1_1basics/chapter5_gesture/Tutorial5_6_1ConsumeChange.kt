@@ -18,7 +18,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.*
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
+/**
+ * This tutorial is about consuming down, position, up changes and results of consuming changes.
+ *
+ * **awaitFirstDown** is the first touch event, consuming down
+ * results [PointerInputChange.changedToDown] false, but [PointerInputChange.changedToDownIgnoreConsumed]
+ * since it only cares about down event
+ *
+ * *Consuming position change with [PointerInputChange.consumePositionChange] results
+ * [PointerInputChange.positionChanged] to return false and [PointerInputChange.positionChange]
+ * return [Offset.Zero]. Also consuming position change prevents event like scrolling or
+ * dragging to commence
+ *
+ * ** Consuming down change is also done with [PointerInputChange.consumeDownChange]
+ */
 @Composable
 fun Tutorial5_6Screen1() {
     TutorialContent()
@@ -33,6 +48,11 @@ private fun TutorialContent() {
             .background(backgroundColor)
             .verticalScroll(rememberScrollState())
     ) {
+
+
+        StyleableTutorialText(
+            text = "1-) consume downChange and observe outcomes of **PointerInputChange** functions"
+        )
         ConsumeDownAndUpEventsExample()
         ConsumeDownAndMoveEventsExample()
         ConsumeDragEventsExample()
@@ -55,7 +75,7 @@ private fun ConsumeDownAndUpEventsExample() {
                 awaitPointerEventScope {
 
                     // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown(requireUnconsumed = false)
+                    val down: PointerInputChange = awaitFirstDown()
 
                     var eventChanges = ""
                     gestureColor = Orange400
@@ -71,10 +91,10 @@ private fun ConsumeDownAndUpEventsExample() {
                                 "pressed: ${down.pressed}\n" +
                                 "changedUp: ${down.changedToUp()}\n" +
                                 "positionChanged: ${down.positionChanged()}\n" +
-                                "positionChangeConsumed: ${down.positionChangeConsumed()}\n"+
+                                "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
                                 "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
 
-                                gestureText = eventChanges
+                    gestureText = eventChanges
 
                     // 🔥 Wait for Up Event, this is called if only one pointer exits
                     // when it's up or moved out of Composable bounds
@@ -96,8 +116,8 @@ private fun ConsumeDownAndUpEventsExample() {
                                     "pressed: ${upOrCancel.pressed}\n" +
                                     "changedUp: ${upOrCancel.changedToUp()}\n" +
                                     "changedToUpIgnoreConsumed: ${upOrCancel.changedToUpIgnoreConsumed()}\n" +
-                                    "positionChangeConsumed: ${upOrCancel.positionChangeConsumed()}\n"+
-                        "anyChangeConsumed: ${upOrCancel.anyChangeConsumed()}\n"
+                                    "positionChangeConsumed: ${upOrCancel.positionChangeConsumed()}\n" +
+                                    "anyChangeConsumed: ${upOrCancel.anyChangeConsumed()}\n"
                         gestureColor = Green400
                     } else {
                         eventChanges += "UP CANCEL"
@@ -163,36 +183,36 @@ private fun ConsumeDownAndMoveEventsExample() {
                         // This PointerEvent contains details including events, id, position and more
                         val event: PointerEvent = awaitPointerEvent()
 
-                            eventChanges +=
-                                "\n🍏MOVE changes size ${event.changes.size}\n"
-                            gestureText = eventChanges
+                        eventChanges +=
+                            "\n🍏MOVE changes size ${event.changes.size}\n"
+                        gestureText = eventChanges
 
-                            event.changes
-                                .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+                        event.changes
+                            .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
 
-                                    eventChanges +=
-                                        "Index: " +
-                                                "$index, id: ${pointerInputChange.id}, " +
-                                                "pressed: ${pointerInputChange.pressed}\n" +
-                                                "changedUp: ${pointerInputChange.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n" +
-                                                "position: ${pointerInputChange.position}\n" +
-                                                "positionChange: ${pointerInputChange.positionChange()}\n" +
-                                                "positionChanged: ${pointerInputChange.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${pointerInputChange.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${pointerInputChange.anyChangeConsumed()}\n"
-                                    gestureText = eventChanges
+                                eventChanges +=
+                                    "Index: " +
+                                            "$index, id: ${pointerInputChange.id}, " +
+                                            "pressed: ${pointerInputChange.pressed}\n" +
+                                            "changedUp: ${pointerInputChange.changedToUp()}\n" +
+                                            "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n" +
+                                            "position: ${pointerInputChange.position}\n" +
+                                            "positionChange: ${pointerInputChange.positionChange()}\n" +
+                                            "positionChanged: ${pointerInputChange.positionChanged()}\n" +
+                                            "positionChangeConsumed: ${pointerInputChange.positionChangeConsumed()}\n" +
+                                            "anyChangeConsumed: ${pointerInputChange.anyChangeConsumed()}\n"
+                                gestureText = eventChanges
 
 
-                                    // 🔥 calling consumePositionChange() sets
-                                    // positionChange() to 0,
-                                    // positionChanged() to false,
-                                    // positionChangeConsumed() to true.
-                                    // And any parent or pointerInput above this gets no position change
-                                    // Scrolling or detectGestures check positionChangeConsumed()
-                                    pointerInputChange.consumePositionChange()
+                                // 🔥 calling consumePositionChange() sets
+                                // positionChange() to 0,
+                                // positionChanged() to false,
+                                // positionChangeConsumed() to true.
+                                // And any parent or pointerInput above this gets no position change
+                                // Scrolling or detectGestures check positionChangeConsumed()
+                                pointerInputChange.consumePositionChange()
 
-                                }
+                            }
 
                         gestureColor = Blue400
 

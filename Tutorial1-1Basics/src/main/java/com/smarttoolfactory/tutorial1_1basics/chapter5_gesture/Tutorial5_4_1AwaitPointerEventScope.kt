@@ -4,7 +4,9 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,11 +35,21 @@ fun Tutorial5_4Screen1() {
 private fun TutorialContent() {
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            // Comment verticalScroll() when testing AwaitFirstDownExample example
+            // because it causes waitForUpOrCancellation to return null when
+            // there is a vertical gesture which consumes position change which also
+            // waitForUpOrCancellation checks in a while loop
+            // Check Consume examples to get familiar with it
+            .verticalScroll(rememberScrollState())
     ) {
 
         StyleableTutorialText(
-            text = "1-) **awaitFirstDown()** Reads events until the first down is received"
+            text = "1-) **awaitFirstDown()** Reads events until the first down is received\n" +
+                    "**Note** comment **verticalScroll** to observe " +
+                    "results of **waitForUpOrCancellation** verticalScroll consumes position change" +
+                    "which causes **waitForUpOrCancellation** to return NULL"
         )
         AwaitFirstDownExample()
         StyleableTutorialText(
@@ -163,8 +175,12 @@ private fun AwaitPointerEventExample() {
 @Composable
 private fun AwaitPointerEventExample2() {
 
-    var touchText by remember { mutableStateOf("Use single or multiple pointers.\n" +
-            "This example uses while(true) loop") }
+    var touchText by remember {
+        mutableStateOf(
+            "Use single or multiple pointers.\n" +
+                    "This example uses while(true) loop"
+        )
+    }
     var gestureColor by remember { mutableStateOf(Color.LightGray) }
 
     val pointerModifier = Modifier
@@ -179,7 +195,7 @@ private fun AwaitPointerEventExample2() {
                     // This is preferred way in default Compose gesture codes
                     // to loop gesture events and use consume or position changes to
                     // break while loop
-                    while(true) {
+                    while (true) {
                         // 🔥🔥 This PointerEvent contains details including events,
                         // id, position and more
                         // Other events such as drag are structured with consume events
@@ -192,12 +208,12 @@ private fun AwaitPointerEventExample2() {
                         if (!anyPressed) {
                             gestureColor = Green400
                             break
-                        }else {
+                        } else {
                             gestureColor = Blue400
                             var eventChanges = ""
 
                             event.changes
-                                .map {pointerInputChange: PointerInputChange ->
+                                .map { pointerInputChange: PointerInputChange ->
                                     pointerInputChange.consumePositionChange()
                                     eventChanges += "id: ${pointerInputChange.id}, " +
                                             "pos: ${pointerInputChange.position}\n"

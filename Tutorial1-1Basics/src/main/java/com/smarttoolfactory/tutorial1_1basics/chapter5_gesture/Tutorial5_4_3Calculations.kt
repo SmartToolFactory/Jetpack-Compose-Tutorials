@@ -236,7 +236,6 @@ private fun CalculatePanExample() {
             .fillMaxWidth()
 
     ImageBox(boxModifier, imageModifier, R.drawable.landscape1, text, Blue400)
-
 }
 
 @Composable

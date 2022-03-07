@@ -81,7 +81,11 @@ private fun TutorialContent() {
 
 }
 
-
+/**
+ * Adding this LaunchedEffect to composition when condition is true
+ * Same goes for if this was remember(LaunchedEffect under the hood uses `remember(key){}`
+ * when condition is met remember gets added to composition and it gets removed when it's not met
+ */
 @Composable
 private fun LaunchedEffectExample(scaffoldState: ScaffoldState) {
 

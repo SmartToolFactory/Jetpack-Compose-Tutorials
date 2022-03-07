@@ -441,7 +441,6 @@ private fun DrawCircleExample() {
                 center = Offset(space + radius + 50f, canvasHeight / 2),
             )
 
-
             drawCircle(
                 blendMode = BlendMode.DstOut,
                 color = Color.Blue,
@@ -486,7 +485,6 @@ private fun DrawRectangleExample() {
         )
     }
 
-
     TutorialText2(text = "RoundedRect")
     Canvas(modifier = canvasModifier2) {
         val canvasWidth = size.width
@@ -515,7 +513,6 @@ private fun DrawRectangleExample() {
             topLeft = Offset(3 * space + 2 * rectWidth, rectHeight / 2),
             size = Size(rectWidth, rectHeight),
             cornerRadius = CornerRadius(50f, 25f)
-
         )
     }
 
@@ -714,7 +711,6 @@ private fun DrawPointsExample() {
     }
 }
 
-
 fun getSinusoidalPoints(size: Size, horizontalOffset: Float = 0f): MutableList<Offset> {
     val points = mutableListOf<Offset>()
     val verticalCenter = size.height / 2
@@ -739,5 +735,3 @@ private val canvasModifier2 = Modifier
     .background(Color.White)
     .fillMaxSize()
     .height(100.dp)
-
-

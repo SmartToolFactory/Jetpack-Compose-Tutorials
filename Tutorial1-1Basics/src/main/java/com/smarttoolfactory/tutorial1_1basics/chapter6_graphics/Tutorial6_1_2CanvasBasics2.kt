@@ -140,7 +140,6 @@ private fun DrawArc() {
             useCenter = it
         }
     }
-
 }
 
 /**
@@ -185,7 +184,6 @@ private fun DrawNegativeArc() {
             useCenter2 = it
         }
     }
-
 }
 
 @Composable
@@ -313,7 +311,6 @@ private fun DrawMultipleArcs() {
 //            useCenterGreen = it
 //        }
     }
-
 }
 
 @Composable

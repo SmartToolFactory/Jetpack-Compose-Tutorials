@@ -33,7 +33,7 @@ class HomeViewModel : ViewModel() {
 
 //        println("🤖 ViewModel Query: $query, filteredList: ${filteredList.size}")
 
-        return  filteredList.toList()
+        return filteredList.toList()
     }
 }
 
@@ -51,7 +51,7 @@ val suggestionList = listOf(
     SuggestionModel("Recomposition"),
     SuggestionModel("SideEffect"),
     SuggestionModel("PointerInput"),
-    SuggestionModel("AwaitPointerScope"),
+    SuggestionModel("AwaitPointerEventScope"),
     SuggestionModel("Gesture"),
     SuggestionModel("Drag"),
     SuggestionModel("Transform"),

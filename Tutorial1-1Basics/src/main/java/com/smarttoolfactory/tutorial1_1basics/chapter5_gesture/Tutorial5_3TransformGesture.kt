@@ -160,7 +160,6 @@ private fun TransformGesturesZoomPanExample() {
     ImageBox(boxModifier, imageModifier, R.drawable.landscape2, transformDetailText, Green400)
 }
 
-
 @Composable
 private fun TransformGesturesZoomPanRotateExample() {
     val decimalFormat = remember { DecimalFormat("0.0") }
@@ -218,7 +217,6 @@ private fun TransformGesturesZoomPanRotateExample() {
         }
 
     ImageBox(boxModifier, imageModifier, R.drawable.landscape3, transformDetailText)
-
 }
 
 @Composable

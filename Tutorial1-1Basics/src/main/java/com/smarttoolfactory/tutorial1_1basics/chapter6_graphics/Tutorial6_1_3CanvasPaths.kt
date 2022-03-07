@@ -130,7 +130,6 @@ private fun DrawPath() {
             )
         )
 
-
         path1.addOval(Rect(left = 400f, top = 50f, right = 500f, bottom = 150f))
         path2.addArc(
             Rect(400f, top = 50f, right = 500f, bottom = 150f),
@@ -318,7 +317,6 @@ private fun DrawPathProgress() {
 
         val fullPath = Path()
 
-
         fullPath.moveTo(0f, canvasHeight / 2f)
         points.forEach { offset: Offset ->
             fullPath.lineTo(offset.x, offset.y)
@@ -333,7 +331,6 @@ private fun DrawPathProgress() {
             pathWithProgress,
             startWithMoveTo = true
         )
-//        }
 
         drawPath(
             color = Color.Red,
@@ -647,7 +644,7 @@ private fun DrawCubic() {
         path2.reset()
         path2.moveTo(x0, y0)
 
-        // TODO offset are not correct
+        // TODO offsets are not correct
         path2.relativeCubicTo(
             dx1 = x1 - x0,
             dy1 = y1 - y0,
@@ -656,7 +653,6 @@ private fun DrawCubic() {
             dx3 = y3 - y0,
             dy3 = y3 - y0
         )
-
 
         drawPath(
             color = Color.Red,

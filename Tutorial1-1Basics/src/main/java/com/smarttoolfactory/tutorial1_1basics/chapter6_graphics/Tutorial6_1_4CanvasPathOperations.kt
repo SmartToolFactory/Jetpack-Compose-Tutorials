@@ -346,8 +346,6 @@ private fun PathOpStrokeFill2() {
             )
         )
 
-
-
         drawPath(
             color = Color.Green,
             path = newPath,
@@ -389,7 +387,6 @@ private fun ClipPath() {
 
     var clipOp by remember { mutableStateOf(ClipOp.Difference) }
 
-
     Canvas(modifier = canvasModifier) {
         val canvasWidth = size.width
         val canvasHeight = size.height
@@ -411,7 +408,6 @@ private fun ClipPath() {
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(40f, 20f))
             )
         )
-
 
         // We apply clipPath operation to pah1 and draw after this operation
         /*
@@ -457,10 +453,7 @@ private fun ClipPath() {
                 end = Offset(canvasWidth, canvasHeight),
                 strokeWidth = 10f
             )
-
         }
-
-
     }
 
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
@@ -509,7 +502,6 @@ private fun ClipPath() {
         )
     }
 }
-
 
 @Composable
 private fun ClipRect() {
