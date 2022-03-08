@@ -39,7 +39,9 @@ fun SubcomposeColumn(
 //                    "placeable size: ${placeables.size} CONSTRAINTS: $constraints"
 //        )
 
-        // Remeasure every element using width of longest item as minWidth of Constraint
+
+        // Remeasure every element using width of longest item using it as min width for
+        // every composable
         if (!placeables.isNullOrEmpty() && placeables.size > 1) {
 
 //            println(

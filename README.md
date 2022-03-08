@@ -95,7 +95,7 @@ using previous searches using a database, domain with ViewModel.
 |:-------|-------|
 |<h3>5-1 Clickable&InteractionSource</h3><br/>Use clickable modifier, Indication and InteractionSource.Indication to clip ripples, or create custom ripple effects.<br><br>• clickable<br>• Indication<br>• rememberRipple<br>• InteractionSource<br>• pointerInput<br>• pointerInteropFilter<br>|<img src ="/./screenshots/tutorial5_1.gif" width=320> |
 |  |  |
-|<h3>5-2 Tap&Drag Gesture</h3><br/>Use PointerInput to listen press, tap, long press, drag gestures. detectTapGestures is used for listening for tap, longPress, doubleYap, and press gestures.<br><br>• pointerInput<br>• pointerInteropFilter<br>• detectTapGestures<br>• detectDragGestures<br>• onPress<br>• onDoubleTap<br>|<img src ="/./screenshots/tutorial5_2.gif" width=320> |
+|<h3>5-2 Tap&Drag Gesture</h3><br/>Use PointerInput to listen press, tap, long press, drag gestures. detectTapGestures is used for listening for tap, longPress, doubleTap, and press gestures.<br><br>• pointerInput<br>• pointerInteropFilter<br>• detectTapGestures<br>• detectDragGestures<br>• onPress<br>• onDoubleTap<br>|<img src ="/./screenshots/tutorial5_2.gif" width=320> |
 |  |  |
 |<h3>5-3 Transform Gestures</h3><br/>Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.<br><br>• pointerInput<br>• detectTransformGestures<br>• centroid<br>• pan<br>• zoom<br>|<img src ="/./screenshots/tutorial5_3.gif" width=320> |
 |  |  |

@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 @Composable
 fun MainScreen() {
     Scaffold { paddingValues: PaddingValues ->
-//        println("🤔 MainScreen() paddingValues: $paddingValues")
         TutorialNavGraph(modifier = Modifier.padding(paddingValues))
     }
 }

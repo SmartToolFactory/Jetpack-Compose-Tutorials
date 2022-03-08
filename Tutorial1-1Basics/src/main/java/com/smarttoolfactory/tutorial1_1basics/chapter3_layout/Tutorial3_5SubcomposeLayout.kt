@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.layout.SubcomposeMeasureScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Constraints
@@ -363,7 +364,16 @@ private fun SubComposeRowExample() {
     }
 }
 
-
+/**
+ * Layout that[SubcomposeLayout] to pass dimension of [mainContent] to [dependentContent]
+ * using [SubcomposeMeasureScope.subcompose] function.
+ *
+ * SubcomposeLayout can compose a layout in parts as name suggest by sub-composing it or
+ *  can be used to remeasure children composables, after initial measurement which you might
+ *  get longest width or height, to set every composable to required property.
+ *  When remeasuring take into consideration that new measurement must be done with new
+ *  [Constraints] that use that property as one of parameters.
+ */
 @Composable
 private fun SubComponent(
     modifier: Modifier = Modifier,
@@ -390,6 +400,7 @@ private fun SubComponent(
             println("🔥 SubcomposeLayout-> layout() maxSize width: ${maxSize.width}, height: ${maxSize.height}")
             mainPlaceables.forEach { it.placeRelative(0, 0) }
 
+            // Get List<Measurable> from subcompose function then get List<Placeable> and place them
             subcompose(SlotsEnum.Dependent) {
                 dependentContent(maxSize)
             }.forEach {
@@ -464,7 +475,8 @@ private fun SubcomposeRow(
                 )
             }
 
-        // Remeasure every element using width of longest item as minWidth of Constraint
+        // Remeasure every element using height of tallest item using it as min height for
+        // every composable
         if (!placeables.isNullOrEmpty() && placeables.size > 1) {
             placeables = subcompose(subcomposeIndex, content).map { measurable: Measurable ->
                 measurable.measure(

@@ -54,7 +54,7 @@ private fun DrawingApp() {
      * Paths that are added, this is required to have paths with different options and paths
      *  ith erase to keep over each other
      */
-    val paths = remember { mutableStateListOf<Pair<Path, PathProperties>>()  }
+    val paths = remember { mutableStateListOf<Pair<Path, PathProperties>>() }
 
     /**
      * Paths that are undone via button. These paths are restored if user pushes
@@ -180,7 +180,7 @@ private fun DrawingApp() {
                         currentPath.lineTo(currentPosition.x, currentPosition.y)
 
                         // Pointer is up save current path
-                        paths.add(Pair(currentPath,currentPathProperty))
+                        paths.add(Pair(currentPath, currentPathProperty))
 
                         // Since paths are keys for map, use new one for each key
                         // and have separate path for each down-move-up gesture cycle
@@ -312,7 +312,7 @@ private fun DrawingApp() {
                     val lastPathProperty = lastItem.second
                     paths.remove(lastItem)
 
-                    pathsUndone.add(Pair(lastPath,lastPathProperty))
+                    pathsUndone.add(Pair(lastPath, lastPathProperty))
 
                 }
             },
@@ -322,7 +322,7 @@ private fun DrawingApp() {
                     val lastPath = pathsUndone.last().first
                     val lastPathProperty = pathsUndone.last().second
                     pathsUndone.removeLast()
-                    paths.add(Pair(lastPath,lastPathProperty))
+                    paths.add(Pair(lastPath, lastPathProperty))
                 }
             },
             onPathPropertiesChange = {
