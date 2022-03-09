@@ -62,10 +62,8 @@ private fun TutorialContent() {
                     color = Color.White
                 )
             }
-
         }
     }
-
 }
 
 @Composable

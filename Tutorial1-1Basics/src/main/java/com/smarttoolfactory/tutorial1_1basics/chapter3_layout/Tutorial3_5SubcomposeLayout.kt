@@ -28,6 +28,15 @@ import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
+/**
+ *  In this tutorial [SubcomposeLayout] usage is demonstrated with examples.
+ *
+ *  SubcomposeLayout can compose a layout in parts as name suggest by sub-composing it or
+ *  can be used to remeasure children composables, after initial measurement which you might
+ *  get longest width or height, to set every composable to required property.
+ *  When remeasuring take into consideration that new measurement must be done with new
+ *  [Constraints] that use that property as one of parameters.
+ */
 @Composable
 fun Tutorial3_5Screen() {
     TutorialContent()
@@ -36,7 +45,6 @@ fun Tutorial3_5Screen() {
 @Composable
 private fun TutorialContent() {
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,10 +52,10 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "1-) **SubcomposeLayout** subcompose the actual content during the measuring " +
+            text = "1-) **SubcomposeLayout** sub-composes the actual content during the measuring " +
                     "stage for example to use the values calculated during the measurement " +
                     "as params for the composition of the children.\n" +
-                    "In this sample below we get main size to add his height as padding to second one."
+                    "In this sample below we get main size to add its height as padding to second one."
         )
         SubComposeLayoutExample1()
 
@@ -365,7 +373,7 @@ private fun SubComposeRowExample() {
 }
 
 /**
- * Layout that[SubcomposeLayout] to pass dimension of [mainContent] to [dependentContent]
+ * Layout that uses [SubcomposeLayout] to pass dimension of [mainContent] to [dependentContent]
  * using [SubcomposeMeasureScope.subcompose] function.
  *
  * SubcomposeLayout can compose a layout in parts as name suggest by sub-composing it or
@@ -383,10 +391,12 @@ private fun SubComponent(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
+        // Subcompose(compose only a section) main content and get Placeable
         val mainPlaceables: List<Placeable> = subcompose(SlotsEnum.Main, mainContent).map {
             it.measure(constraints)
         }
 
+        // Get max width and height of main component
         val maxSize =
             mainPlaceables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
                 IntSize(
@@ -406,14 +416,11 @@ private fun SubComponent(
             }.forEach {
                 it.measure(constraints).placeRelative(0, 0)
             }
-
         }
     }
 }
 
 enum class SlotsEnum { Main, Dependent }
-
-// SubComposeRow
 
 @Composable
 private fun Item(

@@ -1,7 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -17,12 +19,12 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.detectMultiplePointerTransformGestures
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import java.text.DecimalFormat
-import kotlin.math.abs
 
 @Composable
 fun Tutorial5_6Screen4() {

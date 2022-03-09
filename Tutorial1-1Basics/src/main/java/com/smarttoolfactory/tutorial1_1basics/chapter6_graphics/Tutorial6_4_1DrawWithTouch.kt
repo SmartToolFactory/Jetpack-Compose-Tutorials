@@ -33,9 +33,9 @@ import androidx.core.graphics.PathSegment
 import androidx.core.graphics.flatten
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.detectMotionEvents
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.MotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.dragMotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMotionEvents
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -300,7 +300,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
 }
 
 /**
- * This example uses [Modifier.detectMotionEvents] to get [MotionEvent] states
+ * This example uses [Modifier.pointerMotionEvents] to get [MotionEvent] states
  * and [PointerInputChange] in down, move and up states.
  */
 @Composable
@@ -338,7 +338,7 @@ private fun TouchDrawWithCustomGestureModifierExample() {
 
     val drawModifier = canvasModifier
         .background(gestureColor)
-        .detectMotionEvents(
+        .pointerMotionEvents(
             onDown = { pointerInputChange: PointerInputChange ->
                 currentPosition = pointerInputChange.position
                 motionEvent = MotionEvent.Down

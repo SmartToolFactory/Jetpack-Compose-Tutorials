@@ -209,7 +209,6 @@ interface CustomColumnScope {
 /*
 4- Create extension functions to set this ParentDataModifier in custom Layout using measurable
  */
-
 private val Measurable.childData: CustomColumnData?
     get() = parentData as? CustomColumnData
 

@@ -2,8 +2,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import android.widget.Toast
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,7 +22,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -34,7 +31,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.ChatFlexBoxLayout
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.SubcomposeColumn
 import com.smarttoolfactory.tutorial1_1basics.ui.*
-
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -147,15 +143,6 @@ fun CustomRippleExample() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-
-                }
-
-                detectTapGestures {
-
-                }
-            }
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -180,7 +167,7 @@ fun CustomRippleExample() {
 
         Box(
             contentAlignment = Alignment.Center,
-            // 🔥 Clipping with modifier also bounds ripple
+            // 🔥 Modifier.clip also bounds ripple
             modifier = modifierNoClip
                 .clickable(
                     interactionSource = MutableInteractionSource(),

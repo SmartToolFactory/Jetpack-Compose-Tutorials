@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.smarttoolfactory.tutorial1_1basics.R
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.dragMotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.MotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.dragMotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 

@@ -27,15 +27,16 @@ fun TutorialNavGraph(
 
     val mainViewModel: HomeViewModel = viewModel()
 
-    val componentTutorialList: List<TutorialSectionModel> = createComponentTutorialList {
-        navController.navigateUp()
-    }
-    val layoutTutorialList = createLayoutTutorialList()
-    val stateTutorialList = createStateTutorialList()
-    val gestureTutorialList = createGestureTutorialList()
-    val graphicsTutorialList = createGraphicsTutorialList()
-
     if (mainViewModel.tutorialList.isEmpty()) {
+
+        val componentTutorialList: List<TutorialSectionModel> = createComponentTutorialList {
+            navController.navigateUp()
+        }
+        val layoutTutorialList = createLayoutTutorialList()
+        val stateTutorialList = createStateTutorialList()
+        val gestureTutorialList = createGestureTutorialList()
+        val graphicsTutorialList = createGraphicsTutorialList()
+
         mainViewModel.tutorialList.add(componentTutorialList)
         mainViewModel.tutorialList.add(layoutTutorialList)
         mainViewModel.tutorialList.add(stateTutorialList)

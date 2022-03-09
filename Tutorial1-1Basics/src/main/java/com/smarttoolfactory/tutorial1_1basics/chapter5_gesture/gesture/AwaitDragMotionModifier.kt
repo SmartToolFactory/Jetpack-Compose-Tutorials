@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
+package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture
 
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
@@ -54,7 +54,6 @@ fun Modifier.dragMotionEvent(onTouchEvent: (MotionEvent, PointerInputChange) -> 
         }
     }
 )
-
 
 suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
     onDragStart: (PointerInputChange) -> Unit = {},

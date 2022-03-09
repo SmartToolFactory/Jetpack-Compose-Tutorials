@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.MotionEvent
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.MotionEvent
 import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText

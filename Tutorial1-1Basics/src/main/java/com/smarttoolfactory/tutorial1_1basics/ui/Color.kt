@@ -41,3 +41,13 @@ val gradientColors = listOf(
     Color.Yellow,
     Color.Red
 )
+
+val gradientColorsReversed = listOf(
+    Color.Red,
+    Color.Yellow,
+    Color.Green,
+    Color.Cyan,
+    Color.Blue,
+    Color.Magenta,
+    Color.Red
+)
