@@ -17,14 +17,26 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMotionEvents
-import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
-import com.smarttoolfactory.tutorial1_1basics.ui.Green400
-import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 
+/**
+ * This is a [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
+ * saturation and lightness selector in shape of [Rhombus](https://en.wikipedia.org/wiki/Rhombus)
+ *
+ *  * Since this is not a rectangle, initially current position of selector is
+ *  set by [setSelectorPositionFromColorParams] which limits position of saturation to a range
+ *  determined by 1-length of dimension since sum of x and y position should be equal to
+ *  **length of  rhombus**.
+ *
+ *  * On touch and selection process same principle applies to bound positions.
+ *
+ *  * Since **lightness* should be on top but position system of **Canvas** starts from top-left
+ *  corner(0,0) we need to reverse **lightness**.
+ *
+ */
 @Composable
 fun SaturationRhombus(
     modifier: Modifier = Modifier,
-    color: Color,
+    hue: Float,
     saturation: Float = 0.5f,
     lightness: Float = 0.5f,
     selectionRadius: Dp = (-1).dp,
@@ -33,49 +45,20 @@ fun SaturationRhombus(
 
     BoxWithConstraints(modifier.background(Color.LightGray)) {
 
-        var boxColor by remember { mutableStateOf(Blue400) }
-
         val density = LocalDensity.current.density
 
         val length = maxWidth.value * density
         val heightInPx = maxHeight.value * density
-        val center = length / 2
-
 
         val selectorRadius =
             if (selectionRadius > 0.dp) selectionRadius.value * density else length * .04f
 
 
-        var saturationChange by remember { mutableStateOf(saturation) }
-        var lightnessChange by remember { mutableStateOf(lightness) }
-
-        var currentPosition by remember {
-               mutableStateOf(
-                   Offset(
-                       length * saturation,
-                       length * lightness
-                   )
-
-               )
+        var currentPosition by remember(saturation, lightness) {
+            mutableStateOf(
+                setSelectorPositionFromColorParams(saturation, lightness, length)
+            )
         }
-
-//        val newOffset = Offset(
-//            length * saturation,
-//            length * lightness
-//        )
-//        currentPosition =  newOffset
-
-        println(
-            "😆 SaturationRhombus() " +
-                    "saturation: $saturation, lightness: $lightness\n" +
-                    "saturationChange: $saturationChange, lightnessChange: $lightnessChange\n" +
-//                    "newOffset: $newOffset\n" +
-                    "currentPosition: $currentPosition\n"
-//                    "minWidth: $minWidth, maxWidth: $maxWidth}\n" +
-//                    "minHeight: $minHeight, maxHeight: $maxHeight\n" +
-//                    "widthInPx: $length, heightInPx: $heightInPx"
-        )
-
 
         var isTouched by remember { mutableStateOf(false) }
 
@@ -83,7 +66,6 @@ fun SaturationRhombus(
             .size(maxWidth)
             .pointerMotionEvents(
                 onDown = {
-                    boxColor = Orange400
                     val position = it.position
 
                     val posX = position.x
@@ -91,20 +73,23 @@ fun SaturationRhombus(
 
                     // Horizontal
                     val range = getHorizontalBoundForY(length, length, posY)
+                    val range2 = getBoundsInLength(length, posY)
 
-                    isTouched = range.contains(posX)
+                    isTouched = range2.contains(posX)
 
                     if (isTouched) {
 
                         val posXInPercent = (posX / length).coerceIn(0f, 1f)
                         val posYInPercent = (posY / length).coerceIn(0f, 1f)
 
-                        onChange(posXInPercent, posYInPercent)
+                        onChange(posXInPercent, 1 - posYInPercent)
                         currentPosition = Offset(posX, posY)
 
                         println(
                             "🔥 onDown() Position: $position\n" +
-                                    "range: $range, isTouched: $isTouched\n" +
+                                    "range: $range\n" +
+                                    "range2: $range2\n" +
+                                    "isTouched: $isTouched\n" +
                                     "posXInPercent: $posXInPercent, posYInPercent: $posYInPercent\n" +
                                     "currentPosition: $currentPosition"
                         )
@@ -112,30 +97,33 @@ fun SaturationRhombus(
                 },
                 onMove = {
                     if (isTouched) {
-                        boxColor = Blue400
 
                         val position = it.position
                         val posX = position.x.coerceIn(0f, length)
                         val posY = position.y.coerceIn(0f, length)
 
                         val range = getHorizontalBoundForY(length, length, posY)
+                        val range2 = getBoundsInLength(length, posY)
+
 
                         val posXInPercent = (posX / length).coerceIn(0f, 1f)
                         val posYInPercent = (posY / heightInPx).coerceIn(0f, 1f)
 
-                        onChange(posXInPercent, posYInPercent)
+                        onChange(posXInPercent, 1 - posYInPercent)
 
-                        currentPosition = Offset(posX.coerceIn(range), posY)
+                        currentPosition = Offset(posX.coerceIn(range2), posY)
 
                         println(
-                            "🍏 onMove() " +
-                                    "posXInPercent: $posXInPercent, posYInPercent: $posYInPercent, " +
+                            "🍏 onMove()\n" +
+                                    "range: $range\n" +
+                                    "range2: $range2\n" +
+                                    "isTouched: $isTouched\n" +
+                                    "posXInPercent: $posXInPercent, posYInPercent: $posYInPercent\n" +
                                     "currentPosition: $currentPosition"
                         )
                     }
                 },
                 onUp = {
-                    boxColor = Green400
                     isTouched = false
                 }
             )
@@ -144,7 +132,7 @@ fun SaturationRhombus(
         Canvas(modifier = canvasModifier) {
 
 //            println("🚌 CANVAS height: ${size.height}, heightInPx: $heightInPx, currentPosition: $currentPosition")
-            drawPath(rhombusPath, color)
+            drawPath(rhombusPath, Color.hsl(hue, saturation = 1f, lightness = 0.5f))
 
             // Saturation and Value or Lightness selector
             drawCircle(
@@ -155,6 +143,24 @@ fun SaturationRhombus(
             )
         }
     }
+}
+
+/**
+ * This is for setting initial position of selector when saturation and lightness is set by
+ * an external Composable. Without setting a bound
+ * `saturation=1f and lightness
+ */
+private fun setSelectorPositionFromColorParams(
+    saturation: Float,
+    lightness: Float,
+    length: Float
+): Offset {
+    val range = getBoundsInLength(length, lightness*length)
+
+    val verticalPositionOnRhombus = (1-lightness) *length
+    val horizontalPositionOnRhombus = (saturation *length).coerceIn(range)
+    println("😍 saturation: $saturation, lightness: $lightness, range: $range")
+    return Offset(horizontalPositionOnRhombus, verticalPositionOnRhombus)
 }
 
 fun getHorizontalBoundForY(
@@ -174,15 +180,23 @@ fun getHorizontalBoundForY(
     }
 }
 
+/**
+ * Get range that this position can be. This is for limiting touch position inside rhombus.
+ * For instance if y position is 10, then x should either be center - 10 or center + 10 to maintain
+ * triangular bounds in both axes.
+ */
 fun getBoundsInLength(
     length: Float,
     position: Float
 ): ClosedFloatingPointRange<Float> {
-    return if (position <= length) {
-        (length - position)..(length + position)
+
+    val center = length / 2
+
+    return if (position <= center) {
+        (center - position)..(center + position)
     } else {
         val heightAfterCenter = length - position
-        (length - heightAfterCenter)..(length + heightAfterCenter)
+        (center - heightAfterCenter)..(center + heightAfterCenter)
     }
 }
 

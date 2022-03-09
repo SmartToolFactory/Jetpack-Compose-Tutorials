@@ -37,20 +37,22 @@ private fun TutorialContent() {
 
         val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
 
-        println("😡 Saturation $saturation, lightness: $lightness")
+//        println("😡 Saturation $saturation, lightness: $lightness")
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(text = "⚠️ UNDER CONSTRUCTION", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
 
-            ColorPickerWheel(modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp))
+            ColorPickerWheel(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
 
             SaturationRhombus(
                 modifier = Modifier.size(200.dp),
-                Color.Red,
+                hue = hue,
                 saturation = saturation,
                 lightness = lightness
             ) { s, l ->
