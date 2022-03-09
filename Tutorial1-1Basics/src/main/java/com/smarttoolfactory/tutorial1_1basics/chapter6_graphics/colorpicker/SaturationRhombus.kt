@@ -1,9 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.colorpicker
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.*
@@ -13,11 +12,16 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMotionEvents
+import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import kotlin.math.roundToInt
 
 // FIXME Figure how to create HSL gradient instead of drawing each point which has long loading time
@@ -46,10 +50,7 @@ fun SaturationRhombus(
     onChange: (Float, Float) -> Unit
 ) {
 
-    BoxWithConstraints(
-        modifier
-            .background(Color.LightGray)
-            .padding(8.dp)) {
+    BoxWithConstraints(modifier) {
 
         val density = LocalDensity.current.density
 
@@ -116,6 +117,7 @@ fun SaturationRhombus(
                         onChange(posXInPercent, 1 - posYInPercent)
                         currentPosition = Offset(posX, posY)
                     }
+                    it.consumeDownChange()
                 },
                 onMove = {
                     if (isTouched) {
@@ -137,9 +139,11 @@ fun SaturationRhombus(
 
                         currentPosition = Offset(posX.coerceIn(range), posY)
                     }
+                    it.consumePositionChange()
                 },
                 onUp = {
                     isTouched = false
+                    it.consumeDownChange()
                 }
             )
 
@@ -156,7 +160,6 @@ fun SaturationRhombus(
                     radius = 5f
                 )
             }
-
 
             // Saturation and Value or Lightness selector
             drawCircle(
@@ -248,7 +251,7 @@ fun getIntRangeInLength(
  */
 fun getPointsInRhombus(length: Float): MutableList<ColorPoint> {
 
-    val step = length.toInt() / 50
+    val step = length.toInt() / 100
     val colorPints = mutableListOf<ColorPoint>()
 
     for (yPos in 0..length.toInt() step step) {
@@ -291,3 +294,27 @@ val rhombusShape = GenericShape { size: Size, _: LayoutDirection ->
 }
 
 data class ColorPoint(val point: Offset, val saturation: Float, val lightness: Float)
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun SaturationRhombusPreview() {
+    ComposeTutorialsTheme {
+
+        val hue by remember { mutableStateOf(0f) }
+        var saturation by remember { mutableStateOf(0.5f) }
+        var lightness by remember { mutableStateOf(0.5f) }
+
+        SaturationRhombus(
+            modifier = Modifier.size(200.dp),
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness
+        ) { s, l ->
+            println("CHANGING sat: $s, lightness: $l")
+            saturation = s
+            lightness = l
+        }
+    }
+}
