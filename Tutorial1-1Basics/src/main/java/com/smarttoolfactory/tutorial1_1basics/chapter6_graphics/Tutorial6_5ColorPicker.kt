@@ -28,6 +28,7 @@ private fun TutorialContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(8.dp)
     ) {
 
         var hue by remember { mutableStateOf(0f) }
