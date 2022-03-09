@@ -1216,6 +1216,26 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_5 = TutorialSectionModel(
+        title = "6-5 Color Picker",
+        description = "Color Picker that calculates angle from center and gets a color " +
+                "using hue and returns a color as in HSV or RGB color model.",
+        action = {
+            Tutorial6_5Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_BLEND_MODE
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1225,6 +1245,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_2,
         tutorial6_4_0,
         tutorial6_4_1,
-        tutorial6_4_2
+        tutorial6_4_2,
+        tutorial6_5,
     )
 }
