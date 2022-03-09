@@ -58,7 +58,7 @@ fun SaturationRhombus(
          * Width and height of the rhombus is geometrically equal so it's sufficient to
          * use either width or height to have a length parameter
          */
-        val length = maxWidth.value* density
+        val length = maxWidth.value * density
 
         /**
          * This is list of points with changing [saturation] up while going from left to right
@@ -104,8 +104,15 @@ fun SaturationRhombus(
 
                     // Horizontal range for keeping x position in rhombus bounds
                     val range = getBoundsInLength(length, posY)
+                    val start = range.start - selectorRadius
+                    val end = range.endInclusive + selectorRadius
 
-                    isTouched = range.contains(posX)
+                    isTouched = posX in start..end
+
+                    println("🔥 onDown()\n" +
+                            " posX: $posX, posY: $posY\n" +
+                            "range: $range\n" +
+                            "start: $start, end: $end, isTouched: $isTouched")
 
                     if (isTouched) {
 
@@ -194,7 +201,6 @@ private fun setSelectorPositionFromColorParams(
     val horizontalPositionOnRhombus = (saturation * length).coerceIn(range)
     return Offset(horizontalPositionOnRhombus, verticalPositionOnRhombus)
 }
-
 
 /**
  * Get range that this position can be. This is for limiting touch position inside rhombus.

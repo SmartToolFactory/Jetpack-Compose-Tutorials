@@ -126,6 +126,8 @@ using previous searches using a database, domain with ViewModel.
 |  |  |
 |<h3>6-4-2 Drawing App</h3><br/>Draw to canvas using touch down, move and up events using array of paths to have erase, undo, redo actions and set properties for each path separately.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• AwaitPointerEventScope<br>• PointerInputChange<br>• BlendMode<br>|<img src ="/./screenshots/tutorial6_4_2.gif" width=320> |
 |  |  |
+|<h3>6-5 Color Picker</h3><br/>Color Picker that calculates angle from center and gets a color using hue and returns a color as in HSL or RGB color model.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• AwaitPointerEventScope<br>• PointerInputChange<br>• BlendMode<br>|<img src ="/./screenshots/tutorial6_5.gif" width=320> |
+|  |  |
 
 ### Resources and References
 [Codelab Jetpack Compose Basics](https://developer.android.com/codelabs/jetpack-compose-basics)

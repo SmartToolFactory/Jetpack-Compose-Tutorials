@@ -1219,7 +1219,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     val tutorial6_5 = TutorialSectionModel(
         title = "6-5 Color Picker",
         description = "Color Picker that calculates angle from center and gets a color " +
-                "using hue and returns a color as in HSV or RGB color model.",
+                "using hue and returns a color as in HSL or RGB color model.",
         action = {
             Tutorial6_5Screen()
         },
