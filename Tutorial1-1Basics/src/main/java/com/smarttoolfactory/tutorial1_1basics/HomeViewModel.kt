@@ -19,6 +19,10 @@ class HomeViewModel : ViewModel() {
 
             list.forEach { tutorialSectionModel ->
 
+                if (tutorialSectionModel.title.contains(query, ignoreCase = true)) {
+                    filteredList.add(tutorialSectionModel)
+                }
+
                 if (tutorialSectionModel.description.contains(query, ignoreCase = true)) {
                     filteredList.add(tutorialSectionModel)
                 }
