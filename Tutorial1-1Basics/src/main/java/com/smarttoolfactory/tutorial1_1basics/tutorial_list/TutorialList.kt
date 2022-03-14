@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.tutorial_list
 
 import Tutorial2_10Screen3
+import Tutorial2_5Screen5
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -8,8 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.R
-import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.*
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*

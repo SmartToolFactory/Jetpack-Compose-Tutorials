@@ -55,6 +55,9 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"
 
+    // Jetpack Compose Constraint Layout
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+
     implementation "androidx.activity:activity-compose:1.4.0"
 
     def nav_compose_version = "2.5.0-alpha03"
