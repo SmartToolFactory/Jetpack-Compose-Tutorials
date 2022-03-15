@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.tutorial_list
 
 import Tutorial2_10Screen3
 import Tutorial2_5Screen5
+import Tutorial2_5Screen6
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -9,7 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.R
-import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.*
+import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
@@ -207,9 +209,24 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_5_6 = TutorialSectionModel(
         title = stringResource(R.string.title2_5_6),
-        description = "Create one-line, two-line, three-line or combine other components to build list items using built-in ListItem component",
+        description = "LazyGridLayout with dynamic height",
         action = {
             Tutorial2_5Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_VERTICAL_GRID,
+            TAG_GRID_CELL,
+            TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT,
+            TAG_LAZY_COLUMN_CONTENT_PADDING
+        )
+    )
+
+    val tutorial2_5_7 = TutorialSectionModel(
+        title = stringResource(R.string.title2_5_7),
+        description = "Create one-line, two-line, three-line or combine other components to build list items using built-in ListItem component",
+        action = {
+            Tutorial2_5Screen7()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -440,6 +457,7 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         tutorial2_5_4,
         tutorial2_5_5,
         tutorial2_5_6,
+        tutorial2_5_7,
         tutorial2_6,
         tutorial2_7,
         tutorial2_8,
@@ -960,7 +978,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_ANY_CHANGE_CONSUMED,
             TAG_POSITION_CHANGE_CONSUMED
 
-            ),
+        ),
         tagColor = GestureListColor
     )
 
@@ -982,7 +1000,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_CONSUME_POSITION_CHANGE,
             TAG_ANY_CHANGE_CONSUMED,
             TAG_POSITION_CHANGE_CONSUMED
-            ),
+        ),
         tagColor = GestureListColor
     )
 
