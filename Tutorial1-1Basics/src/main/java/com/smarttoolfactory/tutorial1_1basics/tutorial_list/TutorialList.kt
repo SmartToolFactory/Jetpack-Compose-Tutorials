@@ -1026,7 +1026,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_7_1 = TutorialSectionModel(
         title = "5-7-1 Ripple Gesture Events",
-        description = "",
+        description = "Implement ripple effect on touch position with gestures.",
         action = {
             Tutorial5_7_1Screen()
         },
@@ -1038,6 +1038,21 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         ),
         tagColor = GestureListColor
     )
+
+    val tutorial5_10_1 = TutorialSectionModel(
+        title = "5-10-1 Image Touch Detection",
+        description = "Detect touch position on image and get color at touch position.",
+        action = {
+            Tutorial5_10_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_IMAGE,
+        ),
+        tagColor = GestureListColor
+    )
+
 
     return listOf(
         tutorial5_1,
@@ -1051,7 +1066,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_6_2,
         tutorial5_6_3,
         tutorial5_6_4,
-        tutorial5_7_1
+        tutorial5_7_1,
+        tutorial5_10_1
     )
 }
 
