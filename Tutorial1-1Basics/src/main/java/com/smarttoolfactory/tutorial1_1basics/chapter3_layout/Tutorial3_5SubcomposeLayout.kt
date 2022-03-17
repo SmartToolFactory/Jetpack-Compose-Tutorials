@@ -14,15 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.layout.SubcomposeMeasureScope
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.SubcomposeColumn
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
@@ -77,6 +75,12 @@ private fun TutorialContent() {
         )
         TutorialText2(text = "SubComposeRow like news column with same height")
         SubComposeRowExample()
+        StyleableTutorialText(
+            text = "4-) Resize dependent component when its width is smaller than main one and " +
+                    "place main one below text baseline and some padding"
+        )
+        BaselineExample()
+
     }
 }
 
@@ -349,7 +353,9 @@ private fun SubcomposeLayoutExample3() {
 @Composable
 private fun SubComposeRowExample() {
     SubcomposeRow(
-        modifier = Modifier.horizontalScroll(state = rememberScrollState())
+        modifier = Modifier
+            .background(Color.LightGray)
+            .horizontalScroll(state = rememberScrollState())
     ) {
         Item(
             text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy " +
@@ -460,6 +466,9 @@ private fun Item(
     }
 }
 
+/**
+ * Row that sets all of its children composables to same height like news columns.
+ */
 @Composable
 private fun SubcomposeRow(
     modifier: Modifier = Modifier,
@@ -510,6 +519,135 @@ private fun SubcomposeRow(
                 xPos += placeable.width
             }
 
+        }
+    }
+}
+
+/**
+ * In this example [BaselineDynamicWidthLayout] adjust it's width based on dependent component's
+ * width. If dependent component(green) is longer it's width is used for parent, if it's
+ * shorter than main component(black) depdendent component is resized to main one's width.
+ *
+ */
+@Composable
+private fun BaselineExample() {
+
+    var mainText by remember { mutableStateOf(TextFieldValue("Main Component")) }
+    var dependentText by remember { mutableStateOf(TextFieldValue("Dependent Component")) }
+
+    BaselineDynamicWidthLayout(
+        modifier = Modifier.background(Color.LightGray),
+        dependentContent = {
+            Box(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .background(color = Color.Green)
+                    .padding(start = 4.dp, end = 4.dp, bottom = 20.dp)
+
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(horizontal = 4.dp),
+                    text = dependentText.text,
+                    color = Color.Red,
+                    fontSize = 26.sp
+                )
+            }
+        },
+        mainContent = {
+            Text(
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .background(Color.Black)
+                    .padding(4.dp),
+                text = mainText.text,
+                color = Color.White,
+                fontSize = 28.sp
+            )
+        }
+    )
+
+    Spacer(modifier = Modifier.height(10.dp))
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = mainText,
+        label = { Text("Main") },
+        placeholder = { Text("Set text to change main width") },
+        onValueChange = { newValue: TextFieldValue ->
+            mainText = newValue
+        }
+    )
+
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        value = dependentText,
+        label = { Text("Dependent") },
+        placeholder = { Text("Set text to change dependent width") },
+        onValueChange = { newValue ->
+            dependentText = newValue
+        }
+    )
+}
+
+
+@Composable
+private fun BaselineDynamicWidthLayout(
+    modifier: Modifier = Modifier,
+    mainContent: @Composable () -> Unit,
+    dependentContent: @Composable () -> Unit
+) {
+
+    SubcomposeLayout(modifier = modifier) { constraints ->
+
+        // Based on this Composable's dimensions we set dependent components dimensions
+        val mainPlaceable: Placeable = subcompose(SlotsEnum.Main, mainContent).map {
+            it.measure(constraints)
+        }.first()
+
+        val mainWidth = mainPlaceable.measuredWidth
+        var subcomposeIndex = 0
+
+
+        var dependentPlaceable: Placeable = subcompose(subcomposeIndex++, dependentContent).map {
+            it.measure(constraints)
+        }.first()
+
+        val dependentWidth = dependentPlaceable.measuredWidth
+
+        //main placeable is bigger, so measure green again with black's width as min constraint
+        if (mainWidth > dependentWidth) {
+            dependentPlaceable = subcompose(subcomposeIndex, dependentContent).map {
+                it.measure(constraints.copy(minWidth = mainWidth, maxWidth = constraints.maxWidth))
+            }.first()
+        }
+
+        val width = dependentWidth.coerceAtLeast(mainWidth)
+
+        // Check the composable has a first baseline
+        check(dependentPlaceable[FirstBaseline] != AlignmentLine.Unspecified)
+        val firstBaseline = dependentPlaceable[FirstBaseline]
+
+        // baseline is arbitrary, you can use height of dependent composable or another calculation
+        // added it place main component below baseline of text of dependent component
+        val mainComponentY =
+            if (firstBaseline > 0) (firstBaseline + dependentPlaceable.height / 4)
+            else dependentPlaceable.height
+
+        // Total height is height of black and baseline of green
+        val height = mainPlaceable.height + mainComponentY
+
+        layout(width, height) {
+
+            // Get vertical position of main(Black) component using dependent one
+            // This can be set to baseline or fixed value
+            dependentPlaceable.placeRelative(0, 0)
+            mainPlaceable.placeRelative(0, mainComponentY)
         }
     }
 }

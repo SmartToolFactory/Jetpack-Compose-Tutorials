@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.isUnspecified
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -57,7 +58,7 @@ private fun TouchOnImageExample() {
 
     // These are for debugging
     var text by remember { mutableStateOf("") }
-    var colorInTouchPosition by remember { mutableStateOf(Color.Unspecified) }
+    var colorAtTouchPosition by remember { mutableStateOf(Color.Unspecified) }
 
     val imageModifier = Modifier
         .background(Color.LightGray)
@@ -121,7 +122,7 @@ private fun TouchOnImageExample() {
                             "scaledX: $scaledX, scaledY: $scaledY\n" +
                             "red: $red, green: $green, blue: $blue\n"
 
-                    colorInTouchPosition = Color(red, green, blue)
+                    colorAtTouchPosition = Color(red, green, blue)
                 } catch (e: Exception) {
                     println("Exception e: ${e.message}")
                 }
@@ -139,10 +140,10 @@ private fun TouchOnImageExample() {
     Box(
         modifier = Modifier
             .then(
-                if (colorInTouchPosition == Color.Unspecified) {
+                if (colorAtTouchPosition.isUnspecified) {
                     Modifier
                 } else {
-                    Modifier.background(colorInTouchPosition)
+                    Modifier.background(colorAtTouchPosition)
                 }
             )
             .size(100.dp)
