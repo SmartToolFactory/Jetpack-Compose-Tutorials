@@ -132,12 +132,3 @@ private fun BottomAppBarComponent(onBack: (() -> Unit)? = null) {
     }
 }
 
-//@Preview
-//@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Preview(device = Devices.PIXEL_C)
-//@Composable
-//private fun BottomAppBarComponentPreview() {
-//    ComposeTutorialsTheme {
-//        BottomAppBarComponent()
-//    }
-//}
