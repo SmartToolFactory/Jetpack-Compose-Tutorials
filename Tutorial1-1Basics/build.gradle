@@ -60,13 +60,13 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:1.4.0"
 
-    def nav_compose_version = "2.5.0-alpha03"
+    def nav_compose_version = "2.5.0-alpha04"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
     implementation("io.coil-kt:coil-compose:1.4.0")
 
-    def accompanist_version = "0.24.3-alpha"
+    def accompanist_version = "0.24.6-alpha"
     // Accompanist
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
