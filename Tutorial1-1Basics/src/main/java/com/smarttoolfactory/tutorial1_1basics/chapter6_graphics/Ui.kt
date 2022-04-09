@@ -48,7 +48,6 @@ fun ExposedSelectionMenu(
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[index]) }
-    var selectedIndex = remember { index }
 
     ExposedDropdownMenuBox(
         modifier = Modifier
@@ -91,8 +90,7 @@ fun ExposedSelectionMenu(
                     onClick = {
                         selectedOptionText = selectionOption
                         expanded = false
-                        selectedIndex = index
-                        onSelected(selectedIndex)
+                        onSelected(index)
                     }
                 ) {
                     Text(text = selectionOption)
