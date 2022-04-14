@@ -3,7 +3,10 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,11 +31,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
-// TODO Add Filtering and Regex
 /**
  * TextField is composable that replaces [EditText] in classic Android Views.
  *
@@ -56,7 +58,6 @@ private fun TutorialContent() {
     LazyColumn(Modifier.fillMaxSize()) {
 
         item {
-
 
 
             val fullWidthModifier =
@@ -422,9 +423,9 @@ private fun TutorialContent() {
 
 
             StyleableTutorialText(
-                text = "5-) With VisualTransformation and Regex it's possible to " +
+                text = "5-) With **VisualTransformation** and Regex it's possible to " +
                         "transform text based on a format such as masked chars, phone " +
-                        "or currency."
+                        ", currency or credit card."
             )
 
             val maskText = remember { mutableStateOf(TextFieldValue("")) }
@@ -457,6 +458,27 @@ private fun TutorialContent() {
                 visualTransformation = PhoneVisualTransformation()
             )
 
+            val creditCardText = remember { mutableStateOf(TextFieldValue("")) }
+            val maxCharCreditCard = 16
+            // this for entering number only
+            val numberRegex = "^[0-9]+\$".toRegex()
+
+            OutlinedTextField(
+                modifier = fullWidthModifier,
+                value = creditCardText.value,
+                label = { Text("Credit Card") },
+                placeholder = { Text(text = "") },
+                onValueChange = { newValue ->
+                    val text = newValue.text
+                    if (text.length <= maxCharCreditCard && numberRegex.matches(text)) {
+                        creditCardText.value = newValue
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                maxLines = 1,
+                visualTransformation = CreditCardVisualTransformation()
+            )
+
             StyleableTutorialText(
                 text = "6-) Basic composable that enables users to edit text via hardware " +
                         "or software keyboard, but provides no decorations like hint or placeholder."
@@ -467,13 +489,13 @@ private fun TutorialContent() {
                 shape = MaterialTheme.shapes.small,
                 color = Color(0xff90A4AE)
             ) {
-                var basicText by remember{mutableStateOf("BasicTextField")}
+                var basicText by remember { mutableStateOf("BasicTextField") }
                 BasicTextField(
                     modifier = Modifier.padding(8.dp),
                     value = basicText,
-                    onValueChange = {newValue->
-                    basicText =newValue
-                })
+                    onValueChange = { newValue ->
+                        basicText = newValue
+                    })
 
             }
             Spacer(modifier = Modifier.padding(bottom = 32.dp))
@@ -500,7 +522,8 @@ class PasswordMaskTransformation : VisualTransformation {
 }
 
 /**
- * VisualTransformation that transforms user input into
+ * VisualTransformation that transforms user input into in appearance, actual text is not
+ * as displayed.
  * ```
  * XXX-XXX-XXXX
  * ```
@@ -567,6 +590,19 @@ fun passwordFilter(text: AnnotatedString): TransformedText {
     )
 }
 
+/**
+ * VisualTransformation that transforms user input into in appearance, actual text is not
+ * as displayed.
+ * ```
+ * XXXX-XXXX-XXXX
+ * ```
+ */
+class CreditCardVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        return creditCardFilter(text)
+    }
+}
+
 fun creditCardFilter(text: AnnotatedString): TransformedText {
 
     // Making XXXX-XXXX-XXXX-XXXX string.
@@ -574,7 +610,7 @@ fun creditCardFilter(text: AnnotatedString): TransformedText {
     var out = ""
     for (i in trimmed.indices) {
         out += trimmed[i]
-        if (i % 4 == 3 && i != 15) out += "-"
+        if (i % 4 == 3 && i < 15) out += "-"
     }
 
     /**
