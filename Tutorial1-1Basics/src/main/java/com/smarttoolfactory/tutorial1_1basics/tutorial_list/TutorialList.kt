@@ -483,12 +483,12 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 @Composable
 fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
-    val tutorial3_1 = TutorialSectionModel(
-        title = stringResource(R.string.title3_1),
+    val tutorial3_1_1 = TutorialSectionModel(
+        title = stringResource(R.string.title3_1_1),
         description = "Create custom modifiers using layout, Measurable, Constraint, Placeable," +
                 " and LayoutModifier.",
         action = {
-            Tutorial3_1Screen()
+            Tutorial3_1Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -497,6 +497,20 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_CONSTRAINTS,
             TAG_PLACEABLE,
             TAG_LAYOUT_MODIFIER
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_1_2 = TutorialSectionModel(
+        title = stringResource(R.string.title3_1_2),
+        description = "Use Modifier.onGloballyPositioned to get position of a Composable" +
+                "in parent, root or window.",
+        action = {
+            Tutorial3_1Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER
         ),
         tagColor = LayoutListColor
     )
@@ -643,7 +657,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     return listOf(
-        tutorial3_1,
+        tutorial3_1_1,
+        tutorial3_1_2,
         tutorial3_2_1,
         tutorial3_2_2,
         tutorial3_2_3,
