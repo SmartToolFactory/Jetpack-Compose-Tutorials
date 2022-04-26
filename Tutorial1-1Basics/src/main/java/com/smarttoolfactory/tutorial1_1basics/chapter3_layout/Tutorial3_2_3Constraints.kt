@@ -179,6 +179,47 @@ private fun TutorialContent() {
                 .border(2.dp, Green400)
         ) { Content() }
 
+
+        StyleableTutorialText(
+            text = "4-) Create CustomColumns with Constraints " +
+                    "minWidth = 0, minHeight = 0"
+        )
+
+        TutorialText2(text = "Modifier.fillMaxWidth()")
+        CustomColumnWithCustomConstraints3(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(2.dp, Green400)
+        ) { Content() }
+
+        TutorialText2(text = "Modifier.width(200.dp)")
+        CustomColumnWithCustomConstraints3(
+            modifier = Modifier
+                .width(200.dp)
+                .border(2.dp, Green400)
+        ) { Content() }
+
+        TutorialText2(text = "Modifier.widthIn(min= 200.dp)")
+        CustomColumnWithCustomConstraints3(
+            modifier = Modifier
+                .widthIn(min = 200.dp)
+                .border(2.dp, Green400)
+        ) { Content() }
+
+        TutorialText2(text = "Modifier.widthIn(max= 200.dp)")
+        CustomColumnWithCustomConstraints3(
+            modifier = Modifier
+                .widthIn(max = 200.dp)
+                .border(2.dp, Green400)
+        ) { Content() }
+
+        TutorialText2(text = "Modifier.wrapContentSize()")
+        CustomColumnWithCustomConstraints3(
+            modifier = Modifier
+                .wrapContentSize()
+                .border(2.dp, Green400)
+        ) { Content() }
+
     }
 }
 
@@ -240,6 +281,24 @@ private fun CustomColumnWithCustomConstraints2(
         val looseConstraints =
             constraints.copy(
                 minWidth = constraints.minWidth, maxWidth = constraints.maxWidth
+            )
+        createCustomColumnLayout(measurables, looseConstraints)
+    }
+}
+
+@Composable
+private fun CustomColumnWithCustomConstraints3(
+    modifier: Modifier,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables: List<Measurable>, constraints: Constraints ->
+
+        val looseConstraints =
+            constraints.copy(
+                minWidth = 0, minHeight = 0
             )
         createCustomColumnLayout(measurables, looseConstraints)
     }
