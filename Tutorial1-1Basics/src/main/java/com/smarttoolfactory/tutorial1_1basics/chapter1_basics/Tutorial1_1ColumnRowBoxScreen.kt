@@ -134,7 +134,7 @@ fun ColumnExample() {
     val modifier = Modifier
         .padding(8.dp)
         .fillMaxWidth()
-        .height(160.dp)
+        .height(200.dp)
         .background(Color.LightGray)
 
     TutorialText2(text = "Arrangement.Top")

@@ -532,7 +532,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_2 = TutorialSectionModel(
-        title = "3-2-2 Custom Layout",
+        title = "3-2-2 Custom Layout2",
         description = "Create custom layout using using MeasurePolicy and use intrinsic dimensions.",
         action = {
             Tutorial3_2Screen2()
@@ -552,11 +552,28 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_2_3 = TutorialSectionModel(
         title = "3-2-3 Constraints",
+        description = "Create different Constraints to measure Measurables and observe how constraints" +
+                "effect dimensions of Placeables and parent Composable.",
+        action = {
+            Tutorial3_2Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_2_4 = TutorialSectionModel(
+        title = "3-2-4 Constraints Offset",
         description = "Constraints to measure measurables with Constraints.offset and " +
                 "Constraints.constrainWidth to limit maximum width or available " +
                 "space for Placeable",
         action = {
-            Tutorial3_2Screen3()
+            Tutorial3_2Screen4()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -662,6 +679,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_1,
         tutorial3_2_2,
         tutorial3_2_3,
+        tutorial3_2_4,
         tutorial3_3_1,
         tutorial3_4,
         tutorial3_5,

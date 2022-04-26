@@ -75,35 +75,6 @@ private fun TouchOnImageExample() {
                 val scaledX = (bitmapWidth / imageSize.width) * offsetX
                 val scaledY = (bitmapHeight / imageSize.height) * offsetY
 
-                // TODO This section needed when Bitmap does not fill Image completely
-//                // However couldn't find a solution to find spaces correctly
-//
-//                // Need to calculate spaces at edges of the bitmap inside Image Composable if
-//                // not exactly filling the bounds of Image
-//                val startImageX = 0f
-//                val startImageY = 0f
-//
-//                // End positions, this might be less than Image dimensions if bitmap doesn't fit Image
-//                val endImageX = imageSize.width - startImageX
-//                val endImageY = imageSize.height - startImageY
-//                val scaledX =
-//                    scale(
-//                        start1 = startImageX,
-//                        end1 = endImageX,
-//                        pos = offsetX,
-//                        start2 = 0f,
-//                        end2 = bitmapWidth.toFloat()
-//                    ).coerceAtMost(bitmapWidth.toFloat())
-//
-//                val scaledY =
-//                    scale(
-//                        start1 = startImageY,
-//                        end1 = endImageY,
-//                        pos = offsetY,
-//                        start2 = 0f,
-//                        end2 = bitmapHeight.toFloat()
-//                    ).coerceAtMost(bitmapHeight.toFloat())
-
                 try {
                     val pixel: Int =
                         imageBitmap
@@ -111,7 +82,6 @@ private fun TouchOnImageExample() {
                             .getPixel(scaledX.toInt(), scaledY.toInt())
 
 
-                    // Don't know if there is a Compose counterpart for this
                     val red = android.graphics.Color.red(pixel)
                     val green = android.graphics.Color.green(pixel)
                     val blue = android.graphics.Color.blue(pixel)

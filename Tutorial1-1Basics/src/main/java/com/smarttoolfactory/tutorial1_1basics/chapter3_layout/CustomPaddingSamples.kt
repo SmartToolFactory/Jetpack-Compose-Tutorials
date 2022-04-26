@@ -125,6 +125,11 @@ private class PaddingModifierWithoutOffset(
     }
 }
 
+/**
+ * This is the simplest Padding that doesn't use offset or constrain to remove area for padding
+ * from the dimensions of Composable. Without removing padding sections when dimensions of element
+ * using this modifier is equal or bigger than parent it oveflows from its parent.
+ */
 @Stable
 fun Modifier.paddingNoOffsetNoConstrain(all: Dp) =
     this.then(

@@ -48,7 +48,6 @@ private fun TutorialContent() {
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
-                .wrapContentHeight()
                 .background(Color.LightGray)
                 .padding(8.dp)
         ) {
@@ -98,16 +97,14 @@ private fun CustomColumn(
     Layout(
         modifier = modifier,
         content = content
-    ) { measurables, constraints ->
+    ) { measurables: List<Measurable>, constraints: Constraints ->
 
-        // We need to set minWidth to zero to wrap only placeable width
-        val looseConstraints = constraints.copy(
-            minWidth = 0,
-            minHeight = constraints.minHeight
-        )
+        // 🔥 We need to set minWidth to zero to wrap only placeable width
+        // If we use Default constrains each Composable gets measured with current minWidth
+        // which is equal to maxWidth when we set fillMaxWidth/Size
+        val looseConstraints = constraints.copy(minWidth = 0)
 
-        // Don't constrain child views further, measure them with given constraints
-        // List of measured children
+        //
         val placeables = measurables.map { measurable ->
             // Measure each child
             measurable.measure(looseConstraints)
@@ -116,23 +113,17 @@ private fun CustomColumn(
         // Track the y co-ord we have placed children up to
         var yPosition = 0
 
-        val totalHeight: Int = placeables.map {
+        val totalHeight: Int = placeables.sumOf {
             it.height
-        }.sum()
+        }
 
-//        println(
-//            "🤯 Constraints minWidth: ${constraints.minWidth}, " +
-//                    "minHeight: ${constraints.minHeight}, " +
-//                    "maxWidth: ${constraints.maxWidth}, " +
-//                    "maxHeight: ${constraints.maxHeight}"
-//        )
+
 
         // Set the size of the layout as big as it can
         layout(constraints.maxWidth, totalHeight) {
             // Place children in the parent layout
             placeables.forEach { placeable ->
 
-//                println("Placeable width: ${placeable.width}, measuredWidth: ${placeable.measuredWidth}")
                 // Position item on the screen
                 placeable.placeRelative(x = 0, y = yPosition)
 
@@ -201,7 +192,8 @@ fun ChipStaggeredGrid(
         var maxPlaceableHeight = 0
         var lastRowHeight = 0
 
-//        println("😈 MyStaggeredGrid() constraintMaxWidth: $constraintMaxWidth, constraintMaxHeight: $constraintMaxHeight")
+//        println("😈 MyStaggeredGrid()
+//        constraintMaxWidth: $constraintMaxWidth, constraintMaxHeight: $constraintMaxHeight")
 
         val placeables: List<Placeable> = measurables.mapIndexed { index, measurable ->
             // Measure each child
@@ -209,7 +201,8 @@ fun ChipStaggeredGrid(
             val placeableWidth = placeable.width
             val placeableHeight = placeable.height
 
-
+            // It's the same row as previous Composable if sum of current width of row and width of
+            // this placeable is smaller then constraintMaxWidth(Parent width)
             val isSameRow = (currentWidthOfRow + placeableWidth <= constraintMaxWidth)
 
             if (isSameRow) {
