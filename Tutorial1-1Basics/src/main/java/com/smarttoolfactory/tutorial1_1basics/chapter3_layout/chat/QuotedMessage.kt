@@ -158,9 +158,9 @@ private fun QuoteImageRow(
 
         val width = size.width.coerceAtLeast(constraints.minWidth)
 
-        var x = 0
         layout(width, size.height) {
 
+            var x = 0
             println("🚐 CustomRow() layout() TOTAL SIZE: $size, width: $width")
 
             placeables.forEachIndexed { index: Int, placeable: Placeable ->
