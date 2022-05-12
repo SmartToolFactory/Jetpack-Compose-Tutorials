@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.smarttoolfactory.tutorial1_1basics"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
@@ -36,14 +36,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+    namespace 'com.smarttoolfactory.tutorial1_1basics'
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
@@ -60,7 +60,7 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:1.4.0"
 
-    def nav_compose_version = "2.5.0-alpha04"
+    def nav_compose_version = "2.5.0-rc01"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
