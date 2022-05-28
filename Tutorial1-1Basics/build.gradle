@@ -56,7 +56,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime:$compose_version"
 
     // Jetpack Compose Constraint Layout
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     implementation "androidx.activity:activity-compose:1.4.0"
 
@@ -64,9 +64,9 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
-    implementation("io.coil-kt:coil-compose:1.4.0")
+    implementation("io.coil-kt:coil-compose:2.0.0")
 
-    def accompanist_version = "0.24.6-alpha"
+    def accompanist_version = "0.24.9-beta"
     // Accompanist
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
