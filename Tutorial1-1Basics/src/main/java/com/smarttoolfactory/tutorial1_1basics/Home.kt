@@ -54,7 +54,6 @@ fun HomeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(4.dp)
     ) {
 
         val context = LocalContext.current
@@ -288,7 +287,12 @@ fun TutorialListContent(
             // List of Tutorials
             LazyColumn(
                 state = scrollState,
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+                contentPadding = WindowInsets.systemBars
+                    .only(WindowInsetsSides.Bottom)
+                    .add(
+                        WindowInsets(left = 8.dp, right = 8.dp, top = 16.dp, bottom = 16.dp)
+                    )
+                    .asPaddingValues(),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
 
@@ -334,7 +338,9 @@ fun TutorialListContent(
                         scrollState.scrollToItem(0)
                     }
                 },
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .navigationBarsPadding()
             )
         }
     }

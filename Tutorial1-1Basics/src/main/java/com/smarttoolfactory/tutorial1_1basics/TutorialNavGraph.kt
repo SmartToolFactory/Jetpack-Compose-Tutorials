@@ -2,6 +2,9 @@ package com.smarttoolfactory.tutorial1_1basics
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -46,7 +49,7 @@ fun TutorialNavGraph(
 
     // Create Navigation for each Composable Page
     NavHost(
-        modifier = modifier,
+        modifier = modifier.statusBarsPadding(),
         navController = navController,
         startDestination = startDestination
     ) {
@@ -66,8 +69,13 @@ fun TutorialNavGraph(
         mainViewModel.tutorialList.forEach { list ->
             list.forEach { model ->
                 composable(route = model.title) { navBackEntryStack ->
-                    // 🔥 These are @Composable screens such as Tutorial2_1Screen()
-                    model.action?.invoke()
+                    // This column is used for setting navigation padding since
+                    // NavHost only has statusBarsPadding to let main screen list have
+                    // inset at the bottom with WindowInsetsSides.Bottom
+                  Column(Modifier.navigationBarsPadding()) {
+                      // 🔥 These are @Composable screens such as Tutorial2_1Screen()
+                      model.action?.invoke()
+                  }
                 }
             }
         }
