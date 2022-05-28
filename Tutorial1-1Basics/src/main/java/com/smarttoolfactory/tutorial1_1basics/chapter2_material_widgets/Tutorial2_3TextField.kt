@@ -47,7 +47,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 @ExperimentalComposeUiApi
 @Composable
 fun Tutorial2_3Screen() {
-    println("🚀 Tutorial2_3Screen")
     TutorialContent()
 }
 

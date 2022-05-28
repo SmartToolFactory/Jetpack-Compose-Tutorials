@@ -36,7 +36,7 @@ private fun TutorialContent() {
 
     val coroutineScope = rememberCoroutineScope()
     val drawerState: BottomDrawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
-    val openDrawer: () -> Unit = { coroutineScope.launch { drawerState.open() } }
+    val openDrawer: () -> Unit = { coroutineScope.launch { drawerState.expand() } }
     val closeDrawer: () -> Unit = { coroutineScope.launch { drawerState.close() } }
     var selectedBottomDrawerIndex by remember { mutableStateOf(0) }
 
@@ -86,6 +86,10 @@ private fun BottomDrawerComponent(
     BottomDrawer(
         gesturesEnabled = drawerState.isOpen,
         drawerState = drawerState,
+        // scrimColor color of the scrim that obscures content when the drawer is open. If the
+        // color passed is [androidx.compose.ui.graphics.Color.Unspecified],
+        // then a scrim will no longer be applied and the bottom
+//        scrimColor = Color.Unspecified,
         drawerContent = {
             DrawerContentBottom(
                 selectedUser,
@@ -160,6 +164,9 @@ fun DrawerContentBottom(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .heightIn(min = 100.dp, max = 600.dp)
+//            .height(500.dp)
+//            .fillMaxSize()
             .padding(8.dp)
     ) {
 

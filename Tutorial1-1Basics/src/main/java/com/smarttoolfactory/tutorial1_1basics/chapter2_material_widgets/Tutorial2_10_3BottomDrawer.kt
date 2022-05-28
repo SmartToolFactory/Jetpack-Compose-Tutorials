@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.toggleable
@@ -26,10 +25,12 @@ private fun TutorialContent() {
     val scope = rememberCoroutineScope()
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth().toggleable(
-                value = gesturesEnabled,
-                onValueChange = toggleGesturesEnabled
-            )
+            modifier = Modifier
+                .fillMaxWidth()
+                .toggleable(
+                    value = gesturesEnabled,
+                    onValueChange = toggleGesturesEnabled
+                )
         ) {
             Checkbox(gesturesEnabled, null)
             Text(text = if (gesturesEnabled) "Gestures Enabled" else "Gestures Disabled")
@@ -39,9 +40,15 @@ private fun TutorialContent() {
         BottomDrawer(
             gesturesEnabled = gesturesEnabled,
             drawerState = drawerState,
+            // scrimColor color of the scrim that obscures content when the drawer is open. If the
+            // color passed is [androidx.compose.ui.graphics.Color.Unspecified],
+            // then a scrim will no longer be applied and the bottom
+//            scrimColor = Color.Unspecified,
             drawerContent = {
                 Button(
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 16.dp),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 16.dp),
                     onClick = { scope.launch { drawerState.close() } },
                     content = { Text("Close Drawer") }
                 )

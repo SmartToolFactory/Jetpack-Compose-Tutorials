@@ -53,6 +53,8 @@ private fun TutorialContent() {
         sheetContent = {
             SheetContent()
         },
+        drawerGesturesEnabled = true,
+        drawerScrimColor = Color(0xff000000),
         // This is the height in collapsed state
         sheetPeekHeight = 70.dp,
         floatingActionButton = {
@@ -61,18 +63,6 @@ private fun TutorialContent() {
         floatingActionButtonPosition = FabPosition.End
     ) {
         MainContent(bottomSheetScaffoldState.bottomSheetState)
-    }
-}
-
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
-@Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-private fun TutorialContentPreview() {
-    ComposeTutorialsTheme {
-        TutorialContent()
     }
 }
 
@@ -123,22 +113,6 @@ private fun MainContent(bottomSheetState: BottomSheetState) {
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
-@Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-private fun MainContentPreview() {
-
-    val bottomSheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    ).bottomSheetState
-
-    ComposeTutorialsTheme {
-        MainContent(bottomSheetState)
-    }
-}
 
 @ExperimentalMaterialApi
 @Composable
@@ -165,26 +139,16 @@ private fun FloatingActionButtonComponent(
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
-@Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
-@Composable
-private fun FloatingActionButtonComponentPreview() {
-
-    val bottomSheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    ).bottomSheetState
-
-    ComposeTutorialsTheme {
-        FloatingActionButtonComponent(bottomSheetState)
-    }
-}
-
 @Composable
 private fun SheetContent() {
-    Column(modifier = Modifier.heightIn(min = 100.dp, max = 500.dp)) {
+    Column(
+        modifier = Modifier
+            // Min height doesn't have effect since peekHeight is
+            // used for BottomSheetValue.Collapsed
+            // max height determines how high content can be when
+            // BottomSheetValue.Expanded
+            .heightIn(min = 300.dp, max = 500.dp)
+    ) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
@@ -203,6 +167,52 @@ private fun SheetContent() {
                 PlacesToBookVerticalComponent(place = place)
             }
         }
+    }
+}
+
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun FloatingActionButtonComponentPreview() {
+
+    val bottomSheetState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+    ).bottomSheetState
+
+    ComposeTutorialsTheme {
+        FloatingActionButtonComponent(bottomSheetState)
+    }
+}
+
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun TutorialContentPreview() {
+    ComposeTutorialsTheme {
+        TutorialContent()
+    }
+}
+
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun MainContentPreview() {
+
+    val bottomSheetState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+    ).bottomSheetState
+
+    ComposeTutorialsTheme {
+        MainContent(bottomSheetState)
     }
 }
 

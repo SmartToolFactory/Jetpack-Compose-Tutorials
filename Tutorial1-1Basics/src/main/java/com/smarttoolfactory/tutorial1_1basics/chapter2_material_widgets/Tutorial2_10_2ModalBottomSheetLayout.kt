@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ fun Tutorial2_10Screen2() {
     TutorialContent()
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
@@ -45,8 +47,6 @@ private fun TutorialContent() {
         topBar = {
             TopAppBar(
                 elevation = 8.dp,
-                backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.onSurface,
                 title = {
                     Text("Modal BottomSheet")
                 },
@@ -65,13 +65,15 @@ private fun TutorialContent() {
             )
         }
     ) {
+
         ModalBottomSheetLayout(
             sheetState = modalBottomSheetState,
             sheetElevation = 8.dp,
+            scrimColor =  Color(0xccAAABBB),
             sheetContent = {
                 // 🔥 Uncomment to see states on modal bottom sheet content
-                MainContent(modalBottomSheetState, Color(0xff4CAF50))
-//                SheetContent()
+//                MainContent(modalBottomSheetState, Color(0xff4CAF50))
+                SheetContent()
             }
         ) {
             MainContent(modalBottomSheetState)
@@ -132,7 +134,14 @@ private fun MainContent(
 @ExperimentalMaterialApi
 @Composable
 private fun SheetContent() {
-    Column {
+    Column(
+        // 🔥🔥  Height of this Composable cannot be less than half height of screen
+        // if initialValue is ModalBottomSheetValue.HalfExpanded
+        // or it crashes with java.lang.IllegalArgumentException:
+        // The initial value must have an associated anchor.
+//        modifier =Modifier.height(200.dp)
+    ) {
+
         LazyColumn {
 
             items(userList) { item: String ->
