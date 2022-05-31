@@ -78,8 +78,6 @@ using previous searches using a database, domain with ViewModel.
 |:-------|-------|
 |<h3>4-1 Remember&MutableState</h3><br/>Remember and mutableState effect recomposition and states.<br><br>• remember<br>• State<br>• Recomposition<br>|<img src ="/./screenshots/tutorial4_1.png" width=320> |
 |  |  |
-|<h3>4-2-1 Recomposition</h3><br/>How recomposition happens for flat or hierarchical designs when Composables are in separate functions or stacked together.<br><br>• remember<br>• State<br>• Recomposition<br>|<img src ="/./screenshots/tutorial4_2_1.png" width=320> |
-|  |  |
 |<h3>4-2-3 Scoped Recomposition</h3><br/>How hierarchy of Composables effects Smart Composition.<br><br>• remember<br>• Recomposition<br>• State<br>|<img src ="/./screenshots/tutorial4_2_3.png" width=320> |
 |  |  |
 |<h3>4-4 Custom Remember</h3><br/>Create a custom remember and custom component to have badge that changes its shape based on properties set by custom rememberable.<br><br>• remember<br>• State<br>• Recomposition<br>• Custom Layout<br>|<img src ="/./screenshots/tutorial4_4.gif" width=320> |

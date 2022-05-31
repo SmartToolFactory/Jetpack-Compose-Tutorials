@@ -552,7 +552,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_2_3 = TutorialSectionModel(
         title = "3-2-3 Constraints",
-        description = "Create different Constraints to measure Measurables and observe how constraints" +
+        description = "Create different Constraints to measure Measurables " +
+                "and observe how constraints" +
                 "effect dimensions of Placeables and parent Composable.",
         action = {
             Tutorial3_2Screen3()
@@ -823,6 +824,37 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_6 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_6),
+        description = "Recomposition of Modifiers based on states or lambdas they read.",
+        action = {
+            Tutorial4_6Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_COMPOSE_MODIFIER,
+            TAG_RECOMPOSITION,
+        ),
+        tagColor = StateListColor
+    )
+
+    val tutorial4_7_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_7_1),
+        description = "This tutorial shows Compose phases such as Composition, Layout, and Draw" +
+                "are set based when a state is read.",
+        action = {
+            Tutorial4_7_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_COMPOSE_MODIFIER,
+            TAG_RECOMPOSITION,
+        ),
+        tagColor = StateListColor
+    )
+
     return listOf(
         tutorial4_1,
         tutorial4_2_1,
@@ -831,7 +863,9 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_3,
         tutorial4_4,
         tutorial4_5_1,
-        tutorial4_5_2
+        tutorial4_5_2,
+        tutorial4_6,
+        tutorial4_7_1,
     )
 }
 
