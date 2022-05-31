@@ -22,7 +22,10 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +42,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMo
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
+import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -172,7 +176,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
                         waitedAfterDown = true
                     }
 
-                    down.consumeDownChange()
+                    down.consume()
 
                     // ✏️ ALTERNATIVE 1, this is how default gestures do with while(true) loop
                     // Main pointer is the one that is down initially
@@ -204,7 +208,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
 
                             // This necessary to prevent other gestures or scrolling
                             // when at least one pointer is down on canvas to draw
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
 
 
                         } else {
@@ -237,7 +241,7 @@ private fun TouchDrawMotionEventsAndPathExample() {
 //                            if (pressed) {
 //                                // This necessary to prevent other gestures or scrolling
 //                                // when at least one pointer is down on canvas to draw
-//                                pointerInputChange.consumePositionChange()
+//                                pointerInputChange.consume()
 //                            }
 //                            pressed
 //                        }
@@ -343,18 +347,18 @@ private fun TouchDrawWithCustomGestureModifierExample() {
                 currentPosition = pointerInputChange.position
                 motionEvent = MotionEvent.Down
                 gestureColor = Blue400
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             },
             onMove = { pointerInputChange: PointerInputChange ->
                 currentPosition = pointerInputChange.position
                 motionEvent = MotionEvent.Move
                 gestureColor = Green400
-                pointerInputChange.consumePositionChange()
+                pointerInputChange.consume()
             },
             onUp = { pointerInputChange: PointerInputChange ->
                 motionEvent = MotionEvent.Up
                 gestureColor = Color.White
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             },
             delayAfterDownInMillis = 25L
         )
@@ -453,7 +457,7 @@ private fun TouchDrawWithDragGesture() {
                     // or it returns null if up event is triggered
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            change.consumePositionChange()
+                            change.consume()
                             gestureColor = Brown400
                         }
 
@@ -464,7 +468,7 @@ private fun TouchDrawWithDragGesture() {
                             gestureColor = Green400
                             motionEvent = MotionEvent.Move
                             currentPosition = pointerInputChange.position
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
                         }
 
                         // ✏️ Alternative 2
@@ -477,7 +481,7 @@ private fun TouchDrawWithDragGesture() {
 //                                gestureColor = Green400
 //                                motionEvent = MotionEvent.Move
 //                                currentPosition = change.position
-//                                change.consumePositionChange()
+//                                change.consume()
 //                            }
 //                        }
 
@@ -570,16 +574,16 @@ private fun TouchDrawWithPropertiesAndEraseExample() {
             onDragStart = { pointerInputChange ->
                 motionEvent = MotionEvent.Down
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             },
             onDrag = { pointerInputChange ->
                 motionEvent = MotionEvent.Move
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumePositionChange()
+                pointerInputChange.consume()
             },
             onDragEnd = { pointerInputChange ->
                 motionEvent = MotionEvent.Up
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             }
         )
 
@@ -695,16 +699,16 @@ private fun TouchDrawImageExample() {
             onDragStart = { pointerInputChange ->
                 motionEvent = MotionEvent.Down
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             },
             onDrag = { pointerInputChange ->
                 motionEvent = MotionEvent.Move
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumePositionChange()
+                pointerInputChange.consume()
             },
             onDragEnd = { pointerInputChange ->
                 motionEvent = MotionEvent.Up
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             }
         )
 
@@ -817,16 +821,16 @@ private fun TouchDrawPathSegmentsExample() {
             onDragStart = { pointerInputChange ->
                 motionEvent = MotionEvent.Down
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             },
             onDrag = { pointerInputChange ->
                 motionEvent = MotionEvent.Move
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumePositionChange()
+                pointerInputChange.consume()
             },
             onDragEnd = { pointerInputChange ->
                 motionEvent = MotionEvent.Up
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             }
         )
 
@@ -937,7 +941,7 @@ private fun TouchDrawWithMovablePathExample() {
             onDragStart = { pointerInputChange ->
                 motionEvent = MotionEvent.Down
                 currentPosition = pointerInputChange.position
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
 
                 if (drawMode == DrawMode.Touch) {
 
@@ -971,13 +975,13 @@ private fun TouchDrawWithMovablePathExample() {
                     drawPath.translate(pointerInputChange.positionChange())
                     erasePath.translate(pointerInputChange.positionChange())
                 }
-                pointerInputChange.consumePositionChange()
+                pointerInputChange.consume()
 
             },
             onDragEnd = { pointerInputChange ->
                 motionEvent = MotionEvent.Up
                 isPathTouched = false
-                pointerInputChange.consumeDownChange()
+                pointerInputChange.consume()
             }
         )
 

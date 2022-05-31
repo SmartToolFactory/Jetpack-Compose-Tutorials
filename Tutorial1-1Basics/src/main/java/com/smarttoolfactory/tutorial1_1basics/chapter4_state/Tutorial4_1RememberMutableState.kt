@@ -68,7 +68,6 @@ private fun Counter1() {
         val myData = remember { MyData() }
         var myVal = 0
 
-        println("🔥 Counter1() composition: myVal: $myVal")
         Text("myVal: $myVal, myData value: ${myData.value}")
 
         Button(
@@ -101,7 +100,6 @@ private fun Counter2() {
         val myData = remember { MyData() }
         var myVal = remember { 0 }
 
-        println("🎃 Counter2() composition: myVal: $myVal")
         Text("Counter: $counter, myVal: $myVal, myData value: ${myData.value}")
 
         Button(
@@ -110,7 +108,7 @@ private fun Counter2() {
                 .padding(vertical = 4.dp),
             onClick = {
                 counter++
-                // 🎃 MyVal do
+                // 🎃 MyVal doesn't change because we always remember 0 on each recomposition
                 myVal++
                 myData.value = myData.value + 1
             }) {
@@ -133,7 +131,6 @@ private fun Counter3() {
         val myData = remember { MyData() }
         var myVal = 0
 
-        println("🍏 Counter3() composition: myVal: $myVal")
         Text("Counter: $counter, myVal: $myVal, myData value: ${myData.value}")
 
         Button(
@@ -164,7 +161,6 @@ private fun Counter4() {
         var myData = remember { MyData() }
         var myVal = remember { 0 }
 
-        println("🍒 Counter4() composition: myVal: $myVal, myData: $myData")
         Text("Counter: $counter, myVal: $myVal, myData value: ${myData.value}")
 
         Button(
@@ -183,6 +179,4 @@ private fun Counter4() {
     }
 }
 
-
 class MyData(var value: Int = 0)
-

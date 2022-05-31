@@ -144,7 +144,7 @@ private fun TutorialContent() {
             )
 
             TutorialText2(text = "Shape")
-
+Badge()
             Surface(
                 // This sets text color for Text if not set in textFieldColors
                 contentColor = Color.White,

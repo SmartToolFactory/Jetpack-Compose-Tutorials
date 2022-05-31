@@ -296,7 +296,12 @@ fun TutorialListContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
 
-                    items(tutorialList) { item: TutorialSectionModel ->
+                    items(
+                        items = tutorialList,
+                        key = {
+                            it.title
+                        }
+                    ) { item: TutorialSectionModel ->
 
                         var isExpanded by remember(key1 = item.title) { mutableStateOf(item.expanded) }
 
