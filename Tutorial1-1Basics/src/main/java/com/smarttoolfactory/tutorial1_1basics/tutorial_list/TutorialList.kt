@@ -871,6 +871,21 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_7_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_7_3),
+        description = "This tutorial state reads or lambdas are passed to parents.",
+        action = {
+            Tutorial4_7_3Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_COMPOSE_MODIFIER,
+            TAG_RECOMPOSITION,
+        ),
+        tagColor = StateListColor
+    )
+
     return listOf(
         tutorial4_1,
         tutorial4_2_1,
@@ -882,7 +897,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_5_2,
         tutorial4_6,
         tutorial4_7_1,
-        tutorial4_7_2
+        tutorial4_7_2,
+        tutorial4_7_3
     )
 }
 

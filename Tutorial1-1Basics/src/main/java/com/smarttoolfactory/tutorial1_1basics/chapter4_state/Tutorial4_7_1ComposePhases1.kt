@@ -19,6 +19,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
+/**
+ * https://developer.android.com/jetpack/compose/phases
+ * https://developer.android.com/jetpack/compose/performance#defer-reads
+ *
+ * This tutorial shows hos deferring read of a value effects frame phases
+ */
 @Composable
 fun Tutorial4_7_1Screen() {
     TutorialContent()
