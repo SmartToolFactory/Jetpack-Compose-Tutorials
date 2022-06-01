@@ -31,9 +31,9 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         StyleableTutorialText(
-            text = "1-) In this example by changing color **Modifier.background** and " +
-                    "**Modifier.drawWithContent** reads changes in color in different phases can" +
-                    "be observed. Offset changes for both modifiers are read in **Layout** phase"
+            text = "1-) In this example by changing color **Modifier.background** or " +
+                    "**Modifier.drawWithContent**  changes in color are read in different phases can" +
+                    "be observed. Offset state change for both modifiers are read in **Layout** phase"
         )
         PhasesSample()
     }
@@ -111,8 +111,14 @@ private fun PhasesSample() {
     val modifier2 = Modifier
             // offsetX is read in Layout phase
         .offset {
-            println("🍏 modifier2 LAYOUT")
             IntOffset(x = offsetX.dp.roundToPx(), 0)
+        }
+        .layout { measurable, constraints ->
+            val placeable: Placeable = measurable.measure(constraints)
+            layout(placeable.width, placeable.height) {
+                println("🍏 modifier2 LAYOUT")
+                placeable.placeRelative(0, 0)
+            }
         }
         // 🔥 deferring color read in lambda only calls Draw and skips Composition and Layout
         .drawWithContent {

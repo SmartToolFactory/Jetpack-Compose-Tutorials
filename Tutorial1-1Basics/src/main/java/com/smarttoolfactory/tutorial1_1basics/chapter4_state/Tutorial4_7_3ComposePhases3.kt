@@ -7,7 +7,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
@@ -28,16 +30,25 @@ private fun TutorialContent() {
     ) {
         StyleableTutorialText(
             text = "1-) In this example state is deferred until **InnerDeferred** composable" +
-                    "and because of that Composables between don't get recomposed when value" +
-                    "of slider changes"
+                    " reads. Because of that Composables between don't get recomposed when value" +
+                    "of Slider changes"
         )
         DeferredComposablesSample()
+
         StyleableTutorialText(
             text = "2-) In this example value is passed directly, even if **Outer** and **Middle**" +
                     " composables don't read the value they are recomposed"
         )
         Spacer(modifier = Modifier.height(20.dp))
         NonDeferredComposablesSample()
+
+        StyleableTutorialText(
+            text = "1-) In this example state is deferred until **InnerDeferred** composable" +
+                    " reads. Even if there is no Modifier.padding{} with lambda we send lambda" +
+                    "to inner composable to makes sure only inner Composable to be recomposed"
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        DeferredPaddingComposablesSample()
     }
 }
 
@@ -45,13 +56,16 @@ private fun TutorialContent() {
 private fun DeferredComposablesSample() {
     var offsetX by remember { mutableStateOf(0f) }
 
-    Text(text = "OffsetX")
-    Slider(value = offsetX,
-        valueRange = 0f..50f,
-        onValueChange = {
-            offsetX = it
-        }
-    )
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text = "OffsetX")
+        Spacer(modifier = Modifier.width(5.dp))
+        Slider(value = offsetX,
+            valueRange = 0f..50f,
+            onValueChange = {
+                offsetX = it
+            }
+        )
+    }
 
     OuterDeferred {
         offsetX.toInt()
@@ -62,16 +76,40 @@ private fun DeferredComposablesSample() {
 private fun NonDeferredComposablesSample() {
     var offsetX by remember { mutableStateOf(0f) }
 
-    Text(text = "OffsetX")
-    Slider(value = offsetX,
-        valueRange = 0f..50f,
-        onValueChange = {
-            offsetX = it
-        }
-    )
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text = "OffsetX")
+        Spacer(modifier = Modifier.width(5.dp))
+        Slider(value = offsetX,
+            valueRange = 0f..50f,
+            onValueChange = {
+                offsetX = it
+            }
+        )
+    }
 
     Outer(offsetX.toInt())
 }
+
+@Composable
+private fun DeferredPaddingComposablesSample() {
+    var padding by remember { mutableStateOf(0f) }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text = "Padding")
+        Spacer(modifier = Modifier.width(5.dp))
+        Slider(value = padding,
+            valueRange = 0f..50f,
+            onValueChange = {
+                padding = it
+            }
+        )
+
+    }
+    PaddingOuterDeferred {
+        padding.dp
+    }
+}
+
 
 @Composable
 private fun OuterDeferred(offset: () -> Int) {
@@ -118,7 +156,6 @@ private fun InnerDeferred(offset: () -> Int) {
 }
 
 
-
 @Composable
 private fun Outer(offset: Int) {
     LogCompositions(msg = "🍋 Outer")
@@ -162,3 +199,49 @@ private fun Inner(offset: Int) {
             }
     )
 }
+
+
+@Composable
+private fun PaddingOuterDeferred(padding: () -> Dp) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(10.dp)
+    ) {
+
+        LogCompositions(msg = "😍 PaddingOuterDeferred")
+        Text("PaddingOuterDeferred")
+        PaddingMiddleDeferred(padding)
+    }
+}
+
+@Composable
+private fun PaddingMiddleDeferred(padding: () -> Dp) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(10.dp)
+    ) {
+        LogCompositions(msg = "😃 PaddingMiddleDeferred")
+        Text("PaddingMiddleDeferred")
+        PaddingInnerDeferred(padding)
+    }
+}
+
+@Composable
+private fun PaddingInnerDeferred(padding: () -> Dp) {
+
+    LogCompositions(msg = "😜 PaddingInnerDeferred")
+
+    Text(
+        text = "PaddingOuterDeferred",
+        modifier = Modifier
+            .padding(start = padding())
+            .fillMaxWidth()
+            .background(getRandomColor())
+
+    )
+}
+

@@ -35,8 +35,9 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "Since we are using separate composables(lambda functions or **Scope**) " +
                     "for Button, Column that have " +
-                    "modifiers compositions are smart compositions, not all of the tree is " +
-                    "recomposed, only **Text** are recomposed with updated values.",
+                    "modifiers compositions are scoped recompositions. " +
+                    "Only **Text**s that read values are recomposed with updated values " +
+                    "instead of whole Composable.",
             bullets = false
         )
         Sample1()
@@ -137,7 +138,8 @@ private fun Sample3() {
             }
         }
         RandomColorText(text = "Sample3")
-        // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+        // 🔥🔥 Since it's a separate function it's not recomposed
+        // without updating it with an argument
         SomeComposable()
     }
 }
@@ -172,20 +174,25 @@ private fun Sample4() {
             RandomColorColumn {
                 println("☕️ Bottom Column")
                 RandomColorText(text = "Update1: $update1")
-                // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+                // 🔥🔥 Since it's a separate function it's not recomposed
+                // without updating it with an argument
                 SomeComposable()
             }
         }
 
-        // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+        // 🔥🔥 Since it's a separate function it's not
+        // recomposed without updating it with an argument
         SomeComposable()
         Text(
-            "⚠️ SomeComposable below that observes update2 causes entire composable " +
-                    "to be recomposed because it's at same level. Wrap it with RandomColorColumn to prevent this",
+            "⚠️ SomeComposable below that reads update2 causes entire composable " +
+                    "to be recomposed because it's at same level. " +
+                    "Wrap it with RandomColorColumn to prevent this",
             color = getRandomColor()
         )
-        // 🔥🔥 It's updated since we sent an argument to it
-        // 🔥🔥⚠️ This causes whole composable to RECOMPOSED but not RandomColumn or RandomButton
+
+        // 🔥🔥 It's updated since we sent update2 to it
+        // 🔥🔥⚠️ This causes whole composable to RECOMPOSED but not when inside
+        // RandomColumn, RandomButton or another scope
         SomeComposable(update2)
     }
 }
@@ -219,15 +226,19 @@ private fun Sample5() {
             SomeComposable(update2)
         }
 
-        // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+        // 🔥🔥 Since it's a separate function it's not
+        // recomposed without updating it with an argument
         SomeComposable()
         Text(
-            "⚠️ AnotherComposable below that observes update2 causes entire composable " +
-                    "to be recomposed because it's at same level. Wrap it with RandomColorColumn to prevent this",
+            "⚠️ AnotherComposable function that reads update2 causes entire Composable " +
+                    "to be recomposed because it's at same level." +
+                    " Wrap it with RandomColorColumn to prevent this",
             color = getRandomColor()
         )
-        // 🔥🔥 It's updated since we sent an argument to it
-        // 🔥🔥⚠️ This causes whole composable to be RECOMPOSED but not RandomColumn or RandomButton
+
+        // 🔥🔥 It's updated since we sent update2 to it
+        // 🔥🔥⚠️ This causes whole composable to RECOMPOSED but not when inside
+        // RandomColumn, RandomButton or another scope
         AnotherComposable(update2)
     }
 }

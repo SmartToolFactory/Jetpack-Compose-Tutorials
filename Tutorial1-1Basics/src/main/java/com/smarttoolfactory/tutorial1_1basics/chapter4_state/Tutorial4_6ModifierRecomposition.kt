@@ -23,7 +23,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 /**
  * In this example
  * how changing a state or lambda a Modifier reads effects that Modifier is displayed.
- * Using a lambda instead of value with [Modifier.offset] defers read which causes it to be
+ * Using a lambda instead of value with [Modifier.offset] defers read which ensures it to be
  * not recomposed.
  *
  * Check the [link](https://developer.android.com/jetpack/compose/performance)
@@ -44,7 +44,7 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "Changing a state that is read by a **Modifier** causes " +
+            text = "Changing a state that is read by a **Modifier** triggers " +
                     "that section to be composed." +
                     "For instance if we change state that sets padding for " +
                     "**Modifier.padding().background().size()** " +
@@ -115,8 +115,8 @@ private fun ModifierRecompositionSample() {
 
 
     val modifier4 = Modifier
-        // 🔥 Using a lambda instead of Modifier.offset(x) defers read from composition
-        // phase as displayed in next tutorial
+        // 🔥 Using a lambda instead of Modifier.offset(x) defers read from Composition
+        // phase to Layout phase as described in next tutorial
         .offset {
             // this is only to move same amount as Modifier3, it's not for showing
             // Modifier recomposition

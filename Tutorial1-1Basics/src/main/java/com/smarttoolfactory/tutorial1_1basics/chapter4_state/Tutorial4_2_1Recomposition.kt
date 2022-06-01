@@ -35,8 +35,9 @@ private fun TutorialContent() {
         Spacer(modifier = Modifier.height(20.dp))
         StyleableTutorialText(
             text = "Recomposition happens in closest scope that reads any **State** change. In this" +
-                    "example after composition on each recomposition only scopes that read a " +
-                    "value are recomposed skipping recomposition of Composables between.",
+                    " example after composition on each recomposition only scopes that read a " +
+                    "value are recomposed skipping recomposition of Composables between.\n" +
+                    "Check logs to see which Composables get composed and how many times they do.",
             bullets = false
         )
         Spacer(modifier = Modifier.height(20.dp))

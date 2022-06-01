@@ -71,6 +71,7 @@ private fun PhasesSample1() {
     )
 
     val modifier1 = Modifier
+            // Reads value directly
         .offset(x = offsetX.dp)
         .layout { measurable, constraints ->
             val placeable: Placeable = measurable.measure(constraints)
@@ -85,13 +86,20 @@ private fun PhasesSample1() {
             drawContent()
         }
 
-    // Deferring state to Layout phase prevents
-    // Composables that have this modifier to be recomposed
+
     val modifier2 = Modifier
+        // Deferring state to Layout phase prevents
+        // Composables that have this modifier to be recomposed
         .offset {
-            println("🍏 modifier2 LAYOUT")
             val newX = offsetX.dp.roundToPx()
             IntOffset(newX, 0)
+        }
+        .layout { measurable, constraints ->
+            val placeable: Placeable = measurable.measure(constraints)
+            layout(placeable.width, placeable.height) {
+                println("🍏 modifier2 LAYOUT")
+                placeable.placeRelative(0, 0)
+            }
         }
         .background(Blue400)
         .drawWithContent {
@@ -122,9 +130,16 @@ private fun PhasesSample2() {
     )
 
     val modifier3 = Modifier
-        .offset {
-            println("🚕 modifier3 LAYOUT")
-            IntOffset(x = 0, 0)
+//        .offset {
+//            println("🚕 modifier3 LAYOUT")
+//            IntOffset(x = 0, 0)
+//        }
+        .layout { measurable, constraints ->
+            val placeable: Placeable = measurable.measure(constraints)
+            layout(placeable.width, placeable.height) {
+                println("🚕 modifier3 LAYOUT")
+                placeable.placeRelative(0, 0)
+            }
         }
         // 🔥 deferring color read in lambda only calls Draw and skips Composition and Layout
         .drawWithContent {
@@ -136,13 +151,7 @@ private fun PhasesSample2() {
         }
 
     val modifier4 = Modifier
-        .layout { measurable, constraints ->
-            val placeable: Placeable = measurable.measure(constraints)
-            layout(placeable.width, placeable.height) {
-                println("⚾️ modifier4 LAYOUT")
-                placeable.placeRelative(0, 0)
-            }
-        }
+
         .drawWithContent {
             println("🎾 modifier4 DRAW")
             drawContent()
@@ -158,7 +167,7 @@ private fun PhasesSample2() {
 @Composable
 internal fun MyBox(modifier: Modifier, title: String) {
 
-    println("🔥MyBox() COMPOSITION $title")
+    LogCompositions(msg = "🔥 MyBox() COMPOSITION $title")
 
     Column(modifier) {
 

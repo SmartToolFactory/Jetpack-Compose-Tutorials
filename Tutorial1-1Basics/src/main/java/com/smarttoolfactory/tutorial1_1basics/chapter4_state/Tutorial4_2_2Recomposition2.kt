@@ -36,34 +36,35 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "Only text in bottom is recomposed when we update **mutableState** since " +
-                    "**Text** on top does not observe.",
+            text = "Only text at the bottom is recomposed when we update **mutableState** " +
+                    "because **Text** on top doesn't read state.",
             bullets = false
         )
         Sample1()
         StyleableTutorialText(
-            text = "Only **Text**s are updated when the mutableState(s) they listen are changed.",
+            text = "Only **Text**s are updated when the mutableState(s) they read are changed.",
             bullets = false
         )
         Sample2()
         StyleableTutorialText(
             text = "**update1** mutableState causes whole Composable to be recomposed because " +
-                    "it's observed by **Text** with 🔥. Only **SomeComposable with no args** " +
+                    "it's read by **Text** with 🔥. Only **SomeComposable with no args** " +
                     "is not recomposed.",
             bullets = false
         )
         Sample3()
         StyleableTutorialText(
-            text = "**update1** mutableState causes whole Composable to be recomposed because " +
+            text = "**update1** mutableState triggers whole Composable to be recomposed because " +
                     "it's observed by **Text** with 🔥. **SomeComposable** that takes " +
-                    "**update2** as arg causing whpşe composable to be recomposed. " +
+                    "**update2** as arg causing while composable to be recomposed. " +
                     "SomeComposable that has no args is not recomposed.",
             bullets = false
         )
         Sample4()
         StyleableTutorialText(
             text = "Only separate composables, **SomeComposable with no args**, that are not " +
-                    "updated by this Composable are not recomposed. And seperat composables trigger recomposition when the mutableState they have as arg is updated.",
+                    "updated parent from Composable are not recomposed. Composables have params " +
+                    "are updated when the params they have are changed.",
             bullets = false
         )
         Sample5()
@@ -182,7 +183,6 @@ private fun Sample2() {
     }
 }
 
-
 @Composable
 private fun Sample3() {
     Column(
@@ -282,7 +282,8 @@ private fun Sample3() {
             textAlign = TextAlign.Center,
             color = getRandomColor()
         )
-        // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+        // 🔥🔥 Since it's a separate function it's not recomposed
+        // without updating it with an argument
         SomeComposable()
     }
 }
@@ -379,12 +380,14 @@ private fun Sample4() {
                     textAlign = TextAlign.Center,
                     color = getRandomColor()
                 )
-                // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+                // 🔥🔥 Since it's a separate function it's not recomposed
+                // without updating it with an argument
                 SomeComposable()
             }
         }
 
-        // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+        // 🔥🔥 Since it's a separate function it's not recomposed
+        // without updating it with an argument
         SomeComposable()
         // 🔥🔥 It's updated since we sent an argument to it
         SomeComposable(update2)
@@ -420,9 +423,7 @@ private fun Sample5() {
                 textAlign = TextAlign.Center,
                 color = getRandomColor()
             )
-
         }
-
 
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -467,13 +468,15 @@ private fun Sample5() {
                     color = getRandomColor()
                 )
             }
-            // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+            // 🔥🔥 Since it's a separate function it's not recomposed
+            // without updating it with an argument
             SomeComposable()
             // 🔥🔥 It's updated since we sent an argument to it
             SomeComposable(update2)
         }
 
-        // 🔥🔥 Since it's a separate function it does not recomposed without updating it with an argument
+        // 🔥🔥 Since it's a separate function it's not recomposed
+        // without updating it with an argument
         SomeComposable()
         // 🔥🔥 It's updated since we sent an argument to it
         AnotherComposable(update2)
