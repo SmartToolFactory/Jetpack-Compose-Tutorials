@@ -83,7 +83,7 @@ private fun TutorialContent() {
         ) {
             items(messages) { message: ChatMessage ->
 
-                // Remember random stats icon to not create at each recomposition
+                // Remember random stats icon to not create in every recomposition
                 val messageStatus = remember { MessageStatus.values()[Random.nextInt(3)] }
 
 

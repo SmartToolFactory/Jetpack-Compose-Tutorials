@@ -855,6 +855,22 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_7_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_7_2),
+        description = "This tutorial changes color or/and offset to display frame phases" +
+                "Composition->Layout->Draw in one sample.",
+        action = {
+            Tutorial4_7_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER,
+            TAG_COMPOSE_MODIFIER,
+            TAG_RECOMPOSITION,
+        ),
+        tagColor = StateListColor
+    )
+
     return listOf(
         tutorial4_1,
         tutorial4_2_1,
@@ -866,6 +882,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_5_2,
         tutorial4_6,
         tutorial4_7_1,
+        tutorial4_7_2
     )
 }
 

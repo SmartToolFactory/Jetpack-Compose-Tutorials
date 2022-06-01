@@ -45,6 +45,7 @@
     <string name="title_4_5_1">4-5-1 SideEffect1</string>
     <string name="title_4_5_2">4-5-2 SideEffect2</string>
     <string name="title_4_6">4-6 Modifier Recomposition</string>
-    <string name="title_4_7_1">4-7-1 Phases1</string>
+    <string name="title_4_7_1">4-7-1 Compose Phases1</string>
+    <string name="title_4_7_2">4-7-2 Compose Phases2</string>
     <string name="title_5_1">5-1 Clickable, InteractionSource</string>
 </resources>

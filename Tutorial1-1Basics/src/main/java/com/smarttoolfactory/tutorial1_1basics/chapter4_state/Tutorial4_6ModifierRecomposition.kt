@@ -94,7 +94,8 @@ private fun ModifierRecompositionSample() {
         .fillMaxWidth()
         .heightIn(max = 350.dp)
         .background(Red400)
-    // Using new background returns new Modifier
+    // Using new background returns new Modifier because in next recomposition of parent
+    // it reads value from getRandomColor() function.
 //        .background(getRandomColor())
 
     val modifier2 = Modifier

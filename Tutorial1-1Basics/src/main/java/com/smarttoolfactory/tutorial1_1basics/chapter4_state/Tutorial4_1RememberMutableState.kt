@@ -46,7 +46,7 @@ private fun TutorialContent() {
         Counter3()
         Spacer(modifier = Modifier.height(8.dp))
         StyleableTutorialText(
-            text = "Since **MyData** is remembered at each recomposition initial one in " +
+            text = "Since **MyData** is remembered in every recomposition initial one in " +
                     "**remember** is retained. Because of this it's initial value is " +
                     "displayed in inner composition",
             bullets = false
