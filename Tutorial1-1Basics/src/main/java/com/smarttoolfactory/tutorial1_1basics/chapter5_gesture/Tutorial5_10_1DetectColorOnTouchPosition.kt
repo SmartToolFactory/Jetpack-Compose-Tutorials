@@ -119,22 +119,3 @@ private fun TouchOnImageExample() {
             .size(100.dp)
     )
 }
-
-/**
- * Interpolate position x linearly between start and end
- */
-fun lerp(start: Float, end: Float, amount: Float): Float {
-    return start + amount * (end - start)
-}
-
-/**
- * Scale x1 from start1..end1 range to start2..end2 range
- */
-fun scale(start1: Float, end1: Float, pos: Float, start2: Float, end2: Float) =
-    lerp(start2, end2, calculateFraction(start1, end1, pos))
-
-/**
- * Calculate fraction for value between a range [end] and [start] coerced into 0f-1f range
- */
-fun calculateFraction(start: Float, end: Float, pos: Float) =
-    (if (end - start == 0f) 0f else (pos - start) / (end - start)).coerceIn(0f, 1f)

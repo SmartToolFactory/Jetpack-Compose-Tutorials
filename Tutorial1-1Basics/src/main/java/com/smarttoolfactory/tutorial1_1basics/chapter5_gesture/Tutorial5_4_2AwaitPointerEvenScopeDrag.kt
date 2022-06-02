@@ -12,7 +12,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.onSizeChanged
@@ -109,7 +108,7 @@ private fun DragExample() {
                             x = summed.x.coerceIn(0f, size.width - WIDTH.toPx()),
                             y = summed.y.coerceIn(0f, size.height - WIDTH.toPx())
                         )
-                        change.consumePositionChange()
+                        change.consume()
                         offsetX.value = newValue.x
                         offsetY.value = newValue.y
 
@@ -136,7 +135,7 @@ private fun DragExample() {
                                 y = summed.y.coerceIn(0f, size.height - WIDTH.toPx())
                             )
 
-                            it.consumePositionChange()
+                            it.consume()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
 
@@ -205,7 +204,7 @@ private fun HorizontalDragExample() {
                             val originalX = offsetX.value
                             val newValue =
                                 (originalX + over).coerceIn(0f, width - WIDTH.toPx())
-                            change.consumePositionChange()
+                            change.consume()
                             offsetX.value = newValue
 
                             gestureColor = Brown400
@@ -227,7 +226,7 @@ private fun HorizontalDragExample() {
                             val originalX = offsetX.value
                             val newValue = (originalX + it.positionChange().x)
                                 .coerceIn(0f, width - WIDTH.toPx())
-                            it.consumePositionChange()
+                            it.consume()
                             offsetX.value = newValue
 
                             gestureColor = Blue400
@@ -290,7 +289,7 @@ private fun VerticalDragExample() {
                             val originalY = offsetY.value
                             val newValue = (originalY + over)
                                 .coerceIn(0f, height - WIDTH.toPx())
-                            change.consumePositionChange()
+                            change.consume()
                             offsetY.value = newValue
 
                             gestureColor = Brown400
@@ -308,7 +307,7 @@ private fun VerticalDragExample() {
                             val originalY = offsetY.value
                             val newValue = (originalY + it.positionChange().y)
                                 .coerceIn(0f, height - WIDTH.toPx())
-                            it.consumePositionChange()
+                            it.consume()
                             offsetY.value = newValue
 
                             gestureColor = Blue400

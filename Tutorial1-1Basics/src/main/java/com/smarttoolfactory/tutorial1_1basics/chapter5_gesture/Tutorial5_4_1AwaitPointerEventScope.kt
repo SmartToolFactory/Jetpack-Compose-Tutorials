@@ -142,7 +142,7 @@ private fun AwaitPointerEventExample() {
 
                                 // 🔥🔥 If consumePositionChange() is not consumed
                                 // vertical scroll or other events interfere with current event
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
 
                                 eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
                                         "pos: ${pointerInputChange.position}\n"
@@ -214,7 +214,7 @@ private fun AwaitPointerEventExample2() {
 
                             event.changes
                                 .map { pointerInputChange: PointerInputChange ->
-                                    pointerInputChange.consumePositionChange()
+                                    pointerInputChange.consume()
                                     eventChanges += "id: ${pointerInputChange.id}, " +
                                             "pos: ${pointerInputChange.position}\n"
                                 }
@@ -296,7 +296,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
                             // function properly.
                             // Consuming position change causes
                             // change.positionChanged() to return false.
-                            change.consumePositionChange()
+                            change.consume()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
 
@@ -325,7 +325,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
                                 x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
                                 y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
-                            change.consumePositionChange()
+                            change.consume()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
 
@@ -406,7 +406,7 @@ private fun AwaitDragOrCancellationExample() {
                                 x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
                                 y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
-                            down.consumePositionChange()
+                            down.consume()
                             offsetX.value = newValue.x
                             offsetY.value = newValue.y
 

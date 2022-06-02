@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -122,7 +121,7 @@ private fun CalculateCentroidExample() {
                             This stops scrolling if there is one set to any parent Composable
                          */
                         event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
                         }
 
                     } while (event.changes.any { it.pressed })
@@ -178,7 +177,7 @@ private fun CalculateZoomExample() {
                             This stops scrolling if there is one set to any parent Composable
                          */
                         event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
                         }
                     } while (event.changes.any { it.pressed })
                 }
@@ -227,7 +226,7 @@ private fun CalculatePanExample() {
                                 This stops scrolling if there is one set to any parent Composable
                              */
                             event.changes.forEach { pointerInputChange: PointerInputChange ->
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                         } while (event.changes.any { it.pressed })
                     }
@@ -269,7 +268,7 @@ private fun CalculateRotationExample() {
                             This stops scrolling if there is one set to any parent Composable
                          */
                         event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
                         }
 
                     } while (event.changes.any { it.pressed })

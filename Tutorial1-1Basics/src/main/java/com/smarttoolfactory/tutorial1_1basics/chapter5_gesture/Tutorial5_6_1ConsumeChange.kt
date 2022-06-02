@@ -21,18 +21,19 @@ import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 /**
- * This tutorial is about consuming down, position, up changes and results of consuming changes.
+ * This tutorial is about consuming in down, move, or up  and results of consuming changes.
  *
  * **awaitFirstDown** is the first touch event, consuming down
  * results [PointerInputChange.changedToDown] false, but [PointerInputChange.changedToDownIgnoreConsumed]
  * since it only cares about down event
  *
- * *Consuming position change with [PointerInputChange.consumePositionChange] results
+ * *Consuming an event is done with [PointerInputChange.consume]
+
+ * *Consuming position change results
  * [PointerInputChange.positionChanged] to return false and [PointerInputChange.positionChange]
- * return [Offset.Zero]. Also consuming position change prevents event like scrolling or
+ * return [Offset.Zero]. Also consuming prevents event like scrolling or
  * dragging to commence
  *
- * ** Consuming down change is also done with [PointerInputChange.consumeDownChange]
  */
 @Composable
 fun Tutorial5_6Screen1() {
@@ -49,9 +50,9 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
 
-
         StyleableTutorialText(
-            text = "1-) consume downChange and observe outcomes of **PointerInputChange** functions"
+            text = "1-) consume after **awaitFirstDown** or **waitForUpOrCancellation** " +
+                    "observe outcomes of **PointerInputChange** functions"
         )
         ConsumeDownAndUpEventsExample()
         ConsumeDownAndMoveEventsExample()
@@ -77,22 +78,19 @@ private fun ConsumeDownAndUpEventsExample() {
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange = awaitFirstDown()
 
-                    var eventChanges = ""
                     gestureColor = Orange400
 
                     // Consuming down causes changeToDown to return false
                     // And other events like scroll to not interfere with this event
-                    down.consumeDownChange()
+                    down.consume()
 
-                    eventChanges =
-                        "🎃DOWN\n" +
+                    var eventChanges: String = "🎃DOWN\n" +
                                 "changedToDown: ${down.changedToDown()}, " +
                                 "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
                                 "pressed: ${down.pressed}\n" +
                                 "changedUp: ${down.changedToUp()}\n" +
                                 "positionChanged: ${down.positionChanged()}\n" +
-                                "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                                "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
+                                "isConsumed: ${down.isConsumed}\n"
 
                     gestureText = eventChanges
 
@@ -104,11 +102,6 @@ private fun ConsumeDownAndUpEventsExample() {
 
                     if (upOrCancel != null) {
 
-                        // Consume the up or down change of this PointerInputChange
-                        // if there is an up or down change to consume.
-                        // However verticalScroll() causes any vertical scroll to return NULL
-//                        up.consumeDownChange()
-
                         eventChanges +=
                             "🍒UP\n" +
                                     "changedToDown: ${upOrCancel.changedToDown()}, " +
@@ -116,8 +109,7 @@ private fun ConsumeDownAndUpEventsExample() {
                                     "pressed: ${upOrCancel.pressed}\n" +
                                     "changedUp: ${upOrCancel.changedToUp()}\n" +
                                     "changedToUpIgnoreConsumed: ${upOrCancel.changedToUpIgnoreConsumed()}\n" +
-                                    "positionChangeConsumed: ${upOrCancel.positionChangeConsumed()}\n" +
-                                    "anyChangeConsumed: ${upOrCancel.anyChangeConsumed()}\n"
+                                    "isConsumed: ${upOrCancel.isConsumed}\n"
                         gestureColor = Green400
                     } else {
                         eventChanges += "UP CANCEL"
@@ -161,22 +153,19 @@ private fun ConsumeDownAndMoveEventsExample() {
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange = awaitFirstDown()
 
-                    var eventChanges = ""
                     gestureColor = Orange400
 
                     // Consuming down causes changeToDown to return false
                     // And other events like scroll to not interfere with this event
-                    down.consumeDownChange()
+                    down.consume()
 
-                    eventChanges =
-                        "🎃DOWN id: ${down.id.value}\n" +
+                    var eventChanges: String = "🎃DOWN id: ${down.id.value}\n" +
                                 "changedToDown: ${down.changedToDown()}, " +
                                 "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
                                 "pressed: ${down.pressed}\n" +
                                 "changedUp: ${down.changedToUp()}\n" +
                                 "positionChanged: ${down.positionChanged()}\n" +
-                                "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                                "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
+                                "isConsumed: ${down.isConsumed}\n"
 
                     do {
 
@@ -189,6 +178,7 @@ private fun ConsumeDownAndMoveEventsExample() {
 
                         event.changes
                             .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+                                pointerInputChange.consume()
 
                                 eventChanges +=
                                     "Index: " +
@@ -199,18 +189,16 @@ private fun ConsumeDownAndMoveEventsExample() {
                                             "position: ${pointerInputChange.position}\n" +
                                             "positionChange: ${pointerInputChange.positionChange()}\n" +
                                             "positionChanged: ${pointerInputChange.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${pointerInputChange.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${pointerInputChange.anyChangeConsumed()}\n"
+                                            "isConsumed: ${pointerInputChange.isConsumed}\n"
                                 gestureText = eventChanges
 
 
-                                // 🔥 calling consumePositionChange() sets
-                                // positionChange() to 0,
+                                // 🔥 calling consume() sets
+                                // positionChange() to Offset(0.0,0.0),
                                 // positionChanged() to false,
                                 // positionChangeConsumed() to true.
                                 // And any parent or pointerInput above this gets no position change
                                 // Scrolling or detectGestures check positionChangeConsumed()
-                                pointerInputChange.consumePositionChange()
 
                             }
 
@@ -222,19 +210,17 @@ private fun ConsumeDownAndMoveEventsExample() {
                             // 🔥 Gets called when a pointer is up
                             if (!it.pressed) {
 
-                                // consumeDownChange()(UP here) causes changedToUp to return false
-                                it.consumeDownChange()
+                                // consume()(UP here) causes changedToUp to return false
+                                it.consume()
 
                                 eventChanges +=
                                     "\n🚀 POINTER UP id: ${down.id.value}\n" +
                                             "changedToDown: ${it.changedToDown()}, " +
                                             "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                            "pressed: ${it.pressed}\n" +
                                             "changedUp: ${it.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                             "positionChanged: ${it.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${it.anyChangeConsumed()}\n"
+                                            "isConsumed: ${it.isConsumed}\n"
 
                                 gestureText = eventChanges
 
@@ -244,12 +230,10 @@ private fun ConsumeDownAndMoveEventsExample() {
                                         "🚀 POINTER UP id: ${down.id.value}\n" +
                                                 "changedToDown: ${it.changedToDown()}, " +
                                                 "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                                "pressed: ${it.pressed}\n" +
                                                 "changedUp: ${it.changedToUp()}\n" +
                                                 "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                                 "positionChanged: ${it.positionChanged()}\n" +
-                                                "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                                "anyChangeConsumed: ${it.anyChangeConsumed()}\n",
+                                                "isConsumed: ${it.isConsumed}\n",
                                         Toast.LENGTH_SHORT
                                     )
                                     .show()
@@ -298,7 +282,7 @@ private fun ConsumeDragEventsExample() {
 
                     // Consuming down causes changeToDown to return false
                     // And other events like scroll to not interfere with this event
-                    down.consumeDownChange()
+                    down.consume()
 
                     var eventChanges =
                         "🎃DOWN\n" +
@@ -308,8 +292,7 @@ private fun ConsumeDragEventsExample() {
                                 "changedUp: ${down.changedToUp()}\n" +
                                 "changedToUpIgnoreConsumed: ${down.changedToUpIgnoreConsumed()}\n" +
                                 "positionChanged: ${down.positionChanged()}\n" +
-                                "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                                "anyChangeConsumed: ${down.anyChangeConsumed()}\n"
+                                "positionChangeConsumed: ${down.isConsumed}\n"
 
                     gestureText = eventChanges
 
@@ -324,7 +307,7 @@ private fun ConsumeDragEventsExample() {
                             // function properly.
                             // Consuming position change causes
                             // change.positionChanged() to return false.
-                            change.consumePositionChange()
+                            change.consume()
                             eventChanges +=
                                 "⛺️ awaitTouchSlopOrCancellation()\n" +
                                         "down.id: ${down.id} change.id: ${change.id}\n" +
@@ -334,8 +317,7 @@ private fun ConsumeDragEventsExample() {
                                         "changedUp: ${change.changedToUp()}\n" +
                                         "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
                                         "positionChanged: ${change.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${change.anyChangeConsumed()}\n"
+                                        "positionChangeConsumed: ${change.isConsumed}\n"
 
                             gestureColor = Brown400
                             gestureText = eventChanges
@@ -358,7 +340,7 @@ private fun ConsumeDragEventsExample() {
 
                                 // 🔥 Consuming position change causes
                                 // change.positionChanged() to return false.
-                                change.consumePositionChange()
+                                change.consume()
 
                                 eventChanges +=
                                     "🚌 awaitDragOrCancellation()  " +
@@ -371,8 +353,7 @@ private fun ConsumeDragEventsExample() {
                                             "position: ${change.position}\n" +
                                             "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${change.anyChangeConsumed()}\n"
+                                            "isConsumed: ${change.isConsumed}\n"
                             }
                         }
 

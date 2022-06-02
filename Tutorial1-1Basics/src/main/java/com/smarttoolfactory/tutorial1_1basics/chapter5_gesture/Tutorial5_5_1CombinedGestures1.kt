@@ -211,7 +211,6 @@ private fun CombinedPointerInputSample() {
     }
 }
 
-
 @Composable
 private fun CombinedPointerInputSample2() {
     var gestureText by remember { mutableStateOf("Drag pointer") }
