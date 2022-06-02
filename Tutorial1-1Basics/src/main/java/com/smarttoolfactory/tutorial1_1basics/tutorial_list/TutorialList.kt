@@ -841,8 +841,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_7_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_7_1),
-        description = "This tutorial shows Compose phases such as Composition, Layout, and Draw" +
-                "are set based when a state is read.",
+        description = "This tutorial changes color or/and offset to display frame phases" +
+                "Composition->Layout->Draw in one sample.",
         action = {
             Tutorial4_7_1Screen()
         },
@@ -857,8 +857,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_7_2 = TutorialSectionModel(
         title = stringResource(R.string.title_4_7_2),
-        description = "This tutorial changes color or/and offset to display frame phases" +
-                "Composition->Layout->Draw in one sample.",
+        description = "This tutorial shows Compose phases such as Composition, Layout, and Draw" +
+                "are set based when a state is read.",
         action = {
             Tutorial4_7_2Screen()
         },

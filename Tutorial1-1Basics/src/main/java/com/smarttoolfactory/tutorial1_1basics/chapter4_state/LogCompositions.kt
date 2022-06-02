@@ -13,5 +13,5 @@ class Ref(var value: Int)
 inline fun LogCompositions(msg: String) {
     val ref = remember { Ref(0) }
     SideEffect { ref.value++ }
-    println("$msg ${ref.value}")
+    println("$msg, recomposition: ${ref.value}")
 }

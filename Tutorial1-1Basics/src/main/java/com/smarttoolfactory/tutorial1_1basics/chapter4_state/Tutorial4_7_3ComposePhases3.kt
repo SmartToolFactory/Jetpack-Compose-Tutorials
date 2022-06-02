@@ -39,7 +39,6 @@ private fun TutorialContent() {
             text = "2-) In this example value is passed directly, even if **Outer** and **Middle**" +
                     " composables don't read the value they are recomposed"
         )
-        Spacer(modifier = Modifier.height(20.dp))
         NonDeferredComposablesSample()
 
         StyleableTutorialText(
@@ -47,7 +46,6 @@ private fun TutorialContent() {
                     " reads. Even if there is no Modifier.padding{} with lambda we send lambda" +
                     "to inner composable to makes sure only inner Composable to be recomposed"
         )
-        Spacer(modifier = Modifier.height(20.dp))
         DeferredPaddingComposablesSample()
     }
 }
@@ -236,7 +234,7 @@ private fun PaddingInnerDeferred(padding: () -> Dp) {
     LogCompositions(msg = "😜 PaddingInnerDeferred")
 
     Text(
-        text = "PaddingOuterDeferred",
+        text = "PaddingInnerDeferred",
         modifier = Modifier
             .padding(start = padding())
             .fillMaxWidth()
