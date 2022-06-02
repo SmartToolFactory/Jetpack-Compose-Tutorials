@@ -62,7 +62,7 @@ private fun TutorialContent() {
                     "has **transform** **pointerInput** but in this example image processes" +
                     "move if only **1 pointer** is down.\n" +
                     "Instead of **detectTransformGestures**, a custom function" +
-                    "**detectMultiplePointerInputTransformGestures** is used which only processes" +
+                    "**detectMultiplePointerInputTransformGestures** is used which only processes " +
                     "transform events if specified number of pointers are down"
         )
         PropagationWithDifferentPointerCountExample()
@@ -74,10 +74,10 @@ private fun TutorialContent() {
  * bottom checks down, move and up events while the one at the top is for transformation events
  * such as centroid, zoom, pan, and rotation.
  *
- * * Calling [PointerInputChange.consumeDownChange] has no effect because [detectTransformGestures]
+ * * Calling [PointerInputChange.consume] has no effect because [detectTransformGestures]
  * calls [awaitFirstDown] with false param
  *
- * ** Calling [PointerInputChange.consumePositionChange] prevents transformation events to
+ * ** Calling [PointerInputChange.consume] prevents transformation events to
  * proceed because [detectTransformGestures] checks [PointerInputChange.positionChangeConsumed]
  * to cancel these events. Consuming position change also stops other functions like
  * scrolling or dragging either.
@@ -152,7 +152,7 @@ private fun MoveAndTransformationGestureOnImageExample() {
                     gestureColor = Orange400
 
                     if (consumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃 DOWN id: ${down.id.value}\n" +
@@ -161,8 +161,7 @@ private fun MoveAndTransformationGestureOnImageExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
 
                     gestureText += downText
 
@@ -178,7 +177,7 @@ private fun MoveAndTransformationGestureOnImageExample() {
                             if (!it.pressed) {
 
                                 if (consumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
 
                                 val upText = "🚀 POINTER UP id: ${down.id.value}\n" +
@@ -188,8 +187,7 @@ private fun MoveAndTransformationGestureOnImageExample() {
                                         "changedUp: ${it.changedToUp()}\n" +
                                         "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                         "positionChanged: ${it.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${it.anyChangeConsumed()}\n\n"
+                                        "isConsumed: ${down.isConsumed}\n\n"
 
                                 gestureText += upText
                             }
@@ -205,14 +203,14 @@ private fun MoveAndTransformationGestureOnImageExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
-                            // positionChangeConsumed() to true.
+                            // isConsumed to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (consumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColor = Blue400
 
@@ -228,9 +226,8 @@ private fun MoveAndTransformationGestureOnImageExample() {
                                             "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
                                             "position: ${pointer.position}\n" +
                                             "positionChange: ${pointer.positionChange()}\n" +
-                                            "positionChanged: ${pointer.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                            "positionChanged: ${pointer.positionChanged()}\n"+
+                                            "isConsumed: ${down.isConsumed}\n\n"
                                 gestureText += moveText
                             }
 
@@ -363,7 +360,7 @@ private fun MoveAndTransformationGestureOnSeparateComposablesExample() {
                     gestureColor = Orange400
 
                     if (consumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     // Main pointer is the one that is down initially
@@ -377,7 +374,7 @@ private fun MoveAndTransformationGestureOnSeparateComposablesExample() {
 
                             if (!it.pressed) {
                                 if (consumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
                             }
                             it.pressed
@@ -392,14 +389,14 @@ private fun MoveAndTransformationGestureOnSeparateComposablesExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
-                            // positionChangeConsumed() to true.
+                            // isConsumed to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (consumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColor = Blue400
 
@@ -526,7 +523,7 @@ private fun PropagationWithDifferentPointerCountExample() {
                     gestureColor = Orange400
 
                     if (consumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     // Main pointer is the one that is down initially
@@ -543,7 +540,7 @@ private fun PropagationWithDifferentPointerCountExample() {
                             if (!it.pressed) {
 
                                 if (consumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
                             }
                             it.pressed
@@ -559,9 +556,9 @@ private fun PropagationWithDifferentPointerCountExample() {
                             pointerId = pointerInputChange.id
 
                             // 🔥 Consuming position change sets pointer.positionChange() to 0
-                            //positionChangeConsumed() to true, prevents scrolling
+                            //isConsumed to true, prevents scrolling
                             if (consumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColor = Blue400
                         } else {

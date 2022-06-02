@@ -14,8 +14,8 @@ import androidx.compose.ui.input.pointer.*
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
- * and call [PointerInputChange.consumePositionChange]
+ * receiving changes call [PointerInputChange.consume] in [onDown],
+ * and call [PointerInputChange.consume]
  * in [onMove] block.
  *
  * @param onDown is invoked when first pointer is down initially.
@@ -48,8 +48,8 @@ fun Modifier.pointerMotionEvents(
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
- * and call [PointerInputChange.consumePositionChange]
+ * receiving changes call [PointerInputChange.consume] in [onDown],
+ * and call [PointerInputChange.consume]
  * in [onMove] block.
  *
  * @param onDown is invoked when first pointer is down initially.
@@ -84,8 +84,8 @@ fun Modifier.pointerMotionEvents(
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
- * and call [PointerInputChange.consumePositionChange]
+ * receiving changes call [PointerInputChange.consume] in [onDown],
+ * and call [PointerInputChange.consume]
  * in [onMove] block.
  *
  * @param onDown is invoked when first pointer is down initially.
@@ -119,8 +119,8 @@ fun Modifier.pointerMotionEvents(
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
- * and call [PointerInputChange.consumePositionChange]
+ * receiving changes call [PointerInputChange.consume] in [onDown],
+ * and call [PointerInputChange.consume]
  * in [onMove] block.
  *
  * @param onDown is invoked when first pointer is down initially.
@@ -154,8 +154,8 @@ fun Modifier.pointerMotionEventList(
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
- * and call [PointerInputChange.consumePositionChange]
+ * receiving changes call [PointerInputChange.consume] in [onDown],
+ * and call [PointerInputChange.consume]
  * in [onMove] block.
  *
  * @param onDown is invoked when first pointer is down initially.
@@ -190,8 +190,8 @@ fun Modifier.pointerMotionEventList(
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
- * and call [PointerInputChange.consumePositionChange]
+ * receiving changes call [PointerInputChange.consume] in [onDown],
+ * and call [PointerInputChange.consume]
  * in [onMove] block.
  *
  * @param onDown is invoked when first pointer is down initially.

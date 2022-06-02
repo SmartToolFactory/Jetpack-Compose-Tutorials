@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
+ * receiving changes call [PointerInputChange.consume] in [onDown],
  * and call [PointerInputChange.consumePositionChange]
  * in [onMove] block.
  *
@@ -92,7 +92,7 @@ suspend fun PointerInputScope.detectMotionEvents(
  *
  * To prevent other pointer functions that call [awaitFirstDown] or [awaitPointerEvent]
  * (scroll, swipe, detect functions)
- * receiving changes call [PointerInputChange.consumeDownChange] in [onDown],
+ * receiving changes call [PointerInputChange.consume] in [onDown],
  * and call [PointerInputChange.consumePositionChange]
  * in [onMove] block.
  *

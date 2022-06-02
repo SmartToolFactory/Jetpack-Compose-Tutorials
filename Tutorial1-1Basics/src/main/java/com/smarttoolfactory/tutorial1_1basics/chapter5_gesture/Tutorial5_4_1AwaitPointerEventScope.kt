@@ -140,7 +140,7 @@ private fun AwaitPointerEventExample() {
                         event.changes
                             .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
 
-                                // 🔥🔥 If consumePositionChange() is not consumed
+                                // 🔥🔥 If consume() is not called
                                 // vertical scroll or other events interfere with current event
                                 pointerInputChange.consume()
 
@@ -292,7 +292,7 @@ private fun AwaitTouchSlopOrCancellationExample() {
                                 y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
                             )
 
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // 🔥🔥 If consume() is not called drag does not
                             // function properly.
                             // Consuming position change causes
                             // change.positionChanged() to return false.

@@ -252,7 +252,7 @@ private fun AwaitPointerEventCanvasStateExample() {
 
                             // This necessary to prevent other gestures or scrolling
                             // when at least one pointer is down on canvas to draw
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
 
 
                         } else {
@@ -348,7 +348,7 @@ private fun AwaitPointerEventWithDelayCanvasStateExample() {
 
                             // This necessary to prevent other gestures or scrolling
                             // when at least one pointer is down on canvas to draw
-                            pointerInputChange.consumePositionChange()
+                            pointerInputChange.consume()
 
 
                         } else {

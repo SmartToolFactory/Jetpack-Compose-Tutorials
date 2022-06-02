@@ -172,10 +172,8 @@ const val TAG_VERTICAL_DRAG = "verticalDrag"
 const val TAG_AWAIT_HORIZONTAL_TOUCH_SLOP_OR_CANCELLATION = "awaitHorizontalTouchSlopOrCancellation"
 const val TAG_AWAIT_VERTICAL_TOUCH_SLOP_OR_CANCELLATION = "awaitVerticalTouchSlopOrCancellation"
 
-const val TAG_CONSUME_DOWN_CHANGE = "consumeDownChange"
-const val TAG_CONSUME_POSITION_CHANGE = "consumePositionChange"
-const val TAG_ANY_CHANGE_CONSUMED = "anyChangeConsumed"
-const val TAG_POSITION_CHANGE_CONSUMED = "positionChangeConsumed"
+const val TAG_CONSUME = "consume"
+const val TAG_IS_CONSUMED = "isConsumed"
 
 /*
     GRAPHICS

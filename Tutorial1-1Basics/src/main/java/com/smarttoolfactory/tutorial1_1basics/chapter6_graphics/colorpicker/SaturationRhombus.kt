@@ -12,8 +12,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -124,7 +122,7 @@ fun SaturationRhombus(
                         onChange(posXInPercent, 1 - posYInPercent)
                         currentPosition = Offset(posX, posY)
                     }
-                    it.consumeDownChange()
+                    it.consume()
                 },
                 onMove = {
                     if (isTouched) {
@@ -146,11 +144,11 @@ fun SaturationRhombus(
 
                         currentPosition = Offset(posX.coerceIn(range), posY)
                     }
-                    it.consumePositionChange()
+                    it.consume()
                 },
                 onUp = {
                     isTouched = false
-                    it.consumeDownChange()
+                    it.consume()
                 }
             )
 

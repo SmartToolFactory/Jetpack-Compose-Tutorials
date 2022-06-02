@@ -170,8 +170,8 @@ private fun DetectDragGesturesPropagationExample() {
 
 /**
  * This example displays how **DRAG** events propagate, and how
- * [PointerInputChange.consumeDownChange] when a pointer is **down** or **up** or
- * [PointerInputChange.consumePositionChange] when pointer is **moving** effects
+ * [PointerInputChange.consume] when a pointer is **down** or **up** or
+ * [PointerInputChange.isConsumed] when pointer is **moving** effects
  * propagation.
  *
  * * Events propagate from child to parent unlike View touch events moving from parent to
@@ -234,7 +234,7 @@ private fun DragPropagationExample() {
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃 OUTER DOWN id: ${down.id.value}\n" +
@@ -243,17 +243,16 @@ private fun DragPropagationExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
                     gestureText += downText
                     gestureColorOuter = Purple400
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // 🔥🔥 If consume() is not called drag does not
                             // function properly.
                             // Consuming position change causes change.positionChanged() to return false.
-                            change.consumePositionChange()
+                            change.consume()
 
                         }
 
@@ -261,14 +260,14 @@ private fun DragPropagationExample() {
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
-                            // positionChangeConsumed() to true.
+                            // isConsumed to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (outerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColorOuter = Blue400
 
@@ -283,8 +282,7 @@ private fun DragPropagationExample() {
                                         "position: ${change.position}\n" +
                                         "positionChange: ${change.positionChange()}\n" +
                                         "positionChanged: ${change.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                                        "isConsumed: ${change.isConsumed}\n\n"
                             gestureText += outerText
                         }
 
@@ -318,7 +316,7 @@ private fun DragPropagationExample() {
                         awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
 
                     if (centerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃🎃 CENTER DOWN id: ${down.id.value}\n" +
@@ -327,17 +325,17 @@ private fun DragPropagationExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
+                    
                     gestureText += downText
                     gestureColorCenter = Purple400
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // 🔥🔥 If consume() is not called drag does not
                             // function properly.
                             // Consuming position change causes change.positionChanged() to return false.
-                            change.consumePositionChange()
+                            change.consume()
 
                         }
 
@@ -346,14 +344,14 @@ private fun DragPropagationExample() {
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
-                            // positionChangeConsumed() to true.
+                            // isConsumed to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (centerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColorCenter = Blue400
 
@@ -368,8 +366,7 @@ private fun DragPropagationExample() {
                                         "position: ${change.position}\n" +
                                         "positionChange: ${change.positionChange()}\n" +
                                         "positionChanged: ${change.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                                        "isConsumed: ${change.isConsumed}\n\n"
                             gestureText += centerText
                         }
 
@@ -403,7 +400,7 @@ private fun DragPropagationExample() {
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃🎃🎃 INNER DOWN id: ${down.id.value}\n" +
@@ -412,18 +409,17 @@ private fun DragPropagationExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
                     gestureText += downText
 
                     var pointerId = 0L
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // 🔥🔥 If consume() is not called drag does not
                             // function properly.
                             // Consuming position change causes change.positionChanged() to return false.
-                            change.consumePositionChange()
+                            change.consume()
                         }
 
                     if (change != null) {
@@ -431,14 +427,14 @@ private fun DragPropagationExample() {
                         // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
                         drag(change.id) { pointerInputChange: PointerInputChange ->
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
-                            // positionChangeConsumed() to true.
+                            // isConsumed to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (innerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColorInner = Blue400
 
@@ -454,8 +450,7 @@ private fun DragPropagationExample() {
                                             "position: ${change.position}\n" +
                                             "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                                            "isConsumed: ${change.isConsumed}\n\n"
                                 gestureText += innerText
                                 pointerId = change.id.value
                             }
@@ -835,7 +830,7 @@ private fun DragPropagationExample2() {
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃 OUTER DOWN id: ${down.id.value}\n" +
@@ -844,18 +839,17 @@ private fun DragPropagationExample2() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
 
                     gestureText += downText
                     gestureColorOuter = Purple400
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // 🔥🔥 If consume() is not called drag does not
                             // function properly.
                             // Consuming position change causes change.positionChanged() to return false.
-                            change.consumePositionChange()
+                            change.consume()
                         }
 
                     var pointerId = 0L
@@ -880,14 +874,14 @@ private fun DragPropagationExample2() {
                                         "OUTER OFFSET: $offsetOuter\n" +
                                         "INNER OFFSET: $offsetInner"
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
-                            // positionChangeConsumed() to true.
+                            // isConsumed to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (outerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
 
                             if (pointerId != change.id.value) {
@@ -902,8 +896,7 @@ private fun DragPropagationExample2() {
                                             "position: ${change.position}\n" +
                                             "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                                            "isConsumed: ${change.isConsumed}\n\n"
                                 gestureText += outerText
                                 pointerId = change.id.value
                             }
@@ -942,7 +935,7 @@ private fun DragPropagationExample2() {
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃🎃🎃 INNER DOWN id: ${down.id.value}\n" +
@@ -951,13 +944,12 @@ private fun DragPropagationExample2() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
                     gestureText += downText
 
                     val change: PointerInputChange? =
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            change.consumePositionChange()
+                            change.consume()
                         }
 
                     var pointerId = 0L
@@ -982,14 +974,14 @@ private fun DragPropagationExample2() {
                                         "OUTER OFFSET: $offsetOuter\n" +
                                         "INNER OFFSET: $offsetInner"
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
                             // positionChangeConsumed() to true.
                             // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check positionChangeConsumed()
+                            // Scrolling or detectGestures check isConsumed
                             if (innerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
 
                             if (pointerId != change.id.value) {
@@ -1004,8 +996,7 @@ private fun DragPropagationExample2() {
                                             "position: ${change.position}\n" +
                                             "positionChange: ${change.positionChange()}\n" +
                                             "positionChanged: ${change.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${change.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${change.anyChangeConsumed()}\n\n"
+                                            "isConsumed: ${change.isConsumed}\n\n"
                                 gestureText += innerText
                                 pointerId = change.id.value
                             }

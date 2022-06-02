@@ -46,7 +46,7 @@ private fun TutorialContent() {
     ) {
         StyleableTutorialText(
             text = "1-) This example shows how gestures are propagated " +
-                    "when **pointerInput.consumeX** functions are " +
+                    "when **pointerInput.consume** function is " +
                     "called after down, move or up.\n" +
                     "**NOTE:** The pointer input handling block will be cancelled " +
                     "and re-started when pointerInput is recomposed with any different keys."
@@ -64,8 +64,8 @@ private fun TutorialContent() {
 
 /**
  * This example displays how **MOTION** events propagate, and how
- * [PointerInputChange.consumeDownChange] when a pointer is **down** or **up** or
- * [PointerInputChange.consumePositionChange] when pointer is **moving** effects
+ * [PointerInputChange.consume] when a pointer is **down** or **up** or
+ * [PointerInputChange.consume] when pointer is **moving** effects
  * propagation.
  *
  * * Events propagate from child to parent unlike View touch events moving from parent to
@@ -133,7 +133,7 @@ private fun GesturePropagationExample() {
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃 OUTER DOWN id: ${down.id.value}\n" +
@@ -142,10 +142,8 @@ private fun GesturePropagationExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
-
-
+                            "consume: ${down.consume()}\n"
+                    
                     gestureText += downText
                     gestureColorOuter = Pink400
 
@@ -160,18 +158,16 @@ private fun GesturePropagationExample() {
 
                             if (!it.pressed) {
                                 if (outerConsumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
 
                                 val upText = "🚀 OUTER UP id: ${down.id.value}\n" +
                                         "changedToDown: ${it.changedToDown()}, " +
                                         "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                        "pressed: ${it.pressed}\n" +
                                         "changedUp: ${it.changedToUp()}\n" +
                                         "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                         "positionChanged: ${it.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${it.anyChangeConsumed()}\n\n"
+                                        "isConsumed: ${it.isConsumed}\n\n"
 
                                 gestureText += upText
                             }
@@ -187,14 +183,14 @@ private fun GesturePropagationExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
                             // positionChangeConsumed() to true.
                             // And any parent or pointerInput above this gets no position change
                             // Scrolling or detectGestures check positionChangeConsumed()
                             if (outerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColorOuter = Blue400
 
@@ -210,8 +206,7 @@ private fun GesturePropagationExample() {
                                             "position: ${pointer.position}\n" +
                                             "positionChange: ${pointer.positionChange()}\n" +
                                             "positionChanged: ${pointer.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                            "isConsumed: ${pointer.isConsumed}\n\n"
                                 gestureText += moveText
                             }
 
@@ -247,7 +242,7 @@ private fun GesturePropagationExample() {
                         awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
 
                     if (centerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃🎃 CENTER DOWN id: ${down.id.value}\n" +
@@ -256,8 +251,7 @@ private fun GesturePropagationExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
 
                     gestureText += downText
                     gestureColorCenter = Pink400
@@ -272,17 +266,15 @@ private fun GesturePropagationExample() {
                         val anyPressed = event.changes.any {
                             if (!it.pressed) {
                                 if (centerConsumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
                                 val upText = "🚀🚀 CENTER UP id: ${down.id.value}\n" +
                                         "changedToDown: ${it.changedToDown()}, " +
                                         "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                        "pressed: ${it.pressed}\n" +
                                         "changedUp: ${it.changedToUp()}\n" +
                                         "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                         "positionChanged: ${it.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${it.anyChangeConsumed()}\n\n"
+                                        "isConsumed: ${it.isConsumed}\n\n"
 
                                 gestureText += upText
                             }
@@ -298,14 +290,14 @@ private fun GesturePropagationExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
                             // positionChangeConsumed() to true.
                             // And any parent or pointerInput above this gets no position change
                             // Scrolling or detectGestures check positionChangeConsumed()
                             if (centerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColorCenter = Blue400
 
@@ -321,8 +313,7 @@ private fun GesturePropagationExample() {
                                             "position: ${pointer.position}\n" +
                                             "positionChange: ${pointer.positionChange()}\n" +
                                             "positionChanged: ${pointer.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                            "isConsumed: ${pointer.isConsumed}\n\n"
                                 gestureText += moveText
                             }
 
@@ -357,7 +348,7 @@ private fun GesturePropagationExample() {
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     val downText = "🎃🎃🎃 INNER DOWN id: ${down.id.value}\n" +
@@ -366,8 +357,7 @@ private fun GesturePropagationExample() {
                             "pressed: ${down.pressed}\n" +
                             "changedUp: ${down.changedToUp()}\n" +
                             "positionChanged: ${down.positionChanged()}\n" +
-                            "positionChangeConsumed: ${down.positionChangeConsumed()}\n" +
-                            "anyChangeConsumed: ${down.anyChangeConsumed()}\n\n"
+                            "isConsumed: ${down.isConsumed}\n\n"
 
                     gestureText += downText
                     gestureColorInner = Pink400
@@ -382,17 +372,16 @@ private fun GesturePropagationExample() {
                         val anyPressed = event.changes.any {
                             if (!it.pressed) {
                                 if (innerConsumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
                                 val upText = "🚀🚀🚀 INNER UP id: ${down.id.value}\n" +
                                         "changedToDown: ${it.changedToDown()}, " +
                                         "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                        "pressed: ${it.pressed}\n" +
                                         "changedUp: ${it.changedToUp()}\n" +
                                         "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                         "positionChanged: ${it.positionChanged()}\n" +
                                         "positionChangeConsumed: ${it.positionChangeConsumed()}\n" +
-                                        "anyChangeConsumed: ${it.anyChangeConsumed()}\n\n"
+                                        "isConsumed: ${it.isConsumed}\n\n"
 
                                 gestureText += upText
                             }
@@ -408,14 +397,14 @@ private fun GesturePropagationExample() {
                             // Next time will check same pointer with this id
                             pointerId = pointerInputChange.id
 
-                            // 🔥 calling consumePositionChange() sets
+                            // 🔥 calling consume() sets
                             // positionChange() to 0,
                             // positionChanged() to false,
                             // positionChangeConsumed() to true.
                             // And any parent or pointerInput above this gets no position change
                             // Scrolling or detectGestures check positionChangeConsumed()
                             if (innerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
                             gestureColorInner = Blue400
 
@@ -431,8 +420,7 @@ private fun GesturePropagationExample() {
                                             "position: ${pointer.position}\n" +
                                             "positionChange: ${pointer.positionChange()}\n" +
                                             "positionChanged: ${pointer.positionChanged()}\n" +
-                                            "positionChangeConsumed: ${pointer.positionChangeConsumed()}\n" +
-                                            "anyChangeConsumed: ${pointer.anyChangeConsumed()}\n\n"
+                                            "isConsumed: ${pointer.isConsumed}\n\n"
                                 gestureText += moveText
                             }
 
@@ -685,7 +673,7 @@ private fun GesturePropagationExample2() {
                         awaitFirstDown(requireUnconsumed = outerRequireUnconsumed)
 
                     if (outerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     gestureColorOuter = Pink400
@@ -700,7 +688,7 @@ private fun GesturePropagationExample2() {
 
                             if (!it.pressed) {
                                 if (outerConsumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
                             }
                             it.pressed
@@ -724,7 +712,7 @@ private fun GesturePropagationExample2() {
                             offsetOuter = newValue
 
                             if (outerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
 
                             gestureColorOuter = Blue400
@@ -761,7 +749,7 @@ private fun GesturePropagationExample2() {
                         awaitFirstDown(requireUnconsumed = innerRequireUnconsumed)
 
                     if (innerConsumeDown) {
-                        down.consumeDownChange()
+                        down.consume()
                     }
 
                     gestureColorInner = Pink400
@@ -775,7 +763,7 @@ private fun GesturePropagationExample2() {
                         val anyPressed = event.changes.any {
                             if (!it.pressed) {
                                 if (innerConsumeUp) {
-                                    it.consumeDownChange()
+                                    it.consume()
                                 }
                             }
                             it.pressed
@@ -805,7 +793,7 @@ private fun GesturePropagationExample2() {
                             offsetInner = newValue
 
                             if (innerConsumePositionChange) {
-                                pointerInputChange.consumePositionChange()
+                                pointerInputChange.consume()
                             }
 
                             gestureColorInner = Blue400

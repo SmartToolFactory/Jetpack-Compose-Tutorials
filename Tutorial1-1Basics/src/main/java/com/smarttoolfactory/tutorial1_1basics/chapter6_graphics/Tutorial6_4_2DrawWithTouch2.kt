@@ -20,8 +20,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -123,7 +121,7 @@ private fun DrawingApp() {
                 onDragStart = { pointerInputChange ->
                     motionEvent = MotionEvent.Down
                     currentPosition = pointerInputChange.position
-                    pointerInputChange.consumeDownChange()
+                    pointerInputChange.consume()
 
                 },
                 onDrag = { pointerInputChange ->
@@ -139,12 +137,12 @@ private fun DrawingApp() {
                         }
                         currentPath.translate(change)
                     }
-                    pointerInputChange.consumePositionChange()
+                    pointerInputChange.consume()
 
                 },
                 onDragEnd = { pointerInputChange ->
                     motionEvent = MotionEvent.Up
-                    pointerInputChange.consumeDownChange()
+                    pointerInputChange.consume()
                 }
             )
 

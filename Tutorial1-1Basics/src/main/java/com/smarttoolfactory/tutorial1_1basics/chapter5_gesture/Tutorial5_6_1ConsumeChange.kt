@@ -303,7 +303,7 @@ private fun ConsumeDragEventsExample() {
                         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
 
 
-                            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+                            // 🔥🔥 If consume() is not called drag does not
                             // function properly.
                             // Consuming position change causes
                             // change.positionChanged() to return false.

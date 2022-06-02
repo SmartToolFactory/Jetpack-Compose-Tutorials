@@ -1053,10 +1053,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_POINTER_INPUT_CHANGE,
             TAG_AWAIT_FIRST_DOWN,
             TAG_AWAIT_POINTER_EVENT,
-            TAG_CONSUME_DOWN_CHANGE,
-            TAG_CONSUME_POSITION_CHANGE,
-            TAG_ANY_CHANGE_CONSUMED,
-            TAG_POSITION_CHANGE_CONSUMED
+            TAG_CONSUME,
+            TAG_IS_CONSUMED
         ),
         tagColor = GestureListColor
     )
@@ -1073,11 +1071,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_POINTER_INPUT_CHANGE,
             TAG_AWAIT_FIRST_DOWN,
             TAG_AWAIT_POINTER_EVENT,
-            TAG_CONSUME_DOWN_CHANGE,
-            TAG_CONSUME_POSITION_CHANGE,
-            TAG_ANY_CHANGE_CONSUMED,
-            TAG_POSITION_CHANGE_CONSUMED
-
+            TAG_CONSUME,
+            TAG_IS_CONSUMED
         ),
         tagColor = GestureListColor
     )
@@ -1096,10 +1091,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_AWAIT_FIRST_DOWN,
             TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
             TAG_DRAG,
-            TAG_CONSUME_DOWN_CHANGE,
-            TAG_CONSUME_POSITION_CHANGE,
-            TAG_ANY_CHANGE_CONSUMED,
-            TAG_POSITION_CHANGE_CONSUMED
+            TAG_CONSUME,
+            TAG_IS_CONSUMED
         ),
         tagColor = GestureListColor
     )
@@ -1116,10 +1109,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_POINTER_INPUT_CHANGE,
             TAG_AWAIT_FIRST_DOWN,
             TAG_AWAIT_TOUCH_SLOP_OR_CANCELLATION,
-            TAG_CONSUME_DOWN_CHANGE,
-            TAG_CONSUME_POSITION_CHANGE,
-            TAG_ANY_CHANGE_CONSUMED,
-            TAG_POSITION_CHANGE_CONSUMED
+            TAG_CONSUME,
+            TAG_IS_CONSUMED
         ),
         tagColor = GestureListColor
     )

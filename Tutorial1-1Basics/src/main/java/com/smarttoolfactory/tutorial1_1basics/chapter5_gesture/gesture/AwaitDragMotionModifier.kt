@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
 
 suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
@@ -24,10 +23,10 @@ suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
     // or it returns null if up event is triggered
     val change: PointerInputChange? =
         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+            // 🔥🔥 If consume() is not called drag does not
             // function properly.
             // Consuming position change causes change.positionChanged() to return false.
-            change.consumePositionChange()
+            change.consume()
         }
 
     if (change != null) {
@@ -70,10 +69,10 @@ suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
     // or it returns null if up event is triggered
     val change: PointerInputChange? =
         awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-            // 🔥🔥 If consumePositionChange() is not consumed drag does not
+            // 🔥🔥 If consume() is not called drag does not
             // function properly.
             // Consuming position change causes change.positionChanged() to return false.
-            change.consumePositionChange()
+            change.consume()
         }
 
     if (change != null) {
