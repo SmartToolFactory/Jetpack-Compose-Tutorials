@@ -48,5 +48,7 @@
     <string name="title_4_7_1">4-7-1 Compose Phases1</string>
     <string name="title_4_7_2">4-7-2 Compose Phases2</string>
     <string name="title_4_7_3">4-7-3 Compose Phases3</string>
-    <string name="title_5_1">5-1 Clickable, InteractionSource</string>
+    <string name="title_5_1_1">5-1 Clickable</string>
+    <string name="title_5_1_2">5-1-2 InteractionSource1</string>
+    <string name="title_5_1_3">5-1-3 InteractionSource2</string>
 </resources>

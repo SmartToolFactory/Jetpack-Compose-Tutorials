@@ -848,9 +848,11 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_REMEMBER,
             TAG_COMPOSE_MODIFIER,
             TAG_RECOMPOSITION,
+            TAG_PHASE_COMPOSITION,
+            TAG_PHASE_LAYOUT,
+            TAG_PHASE_DRAW
         ),
         tagColor = StateListColor
     )
@@ -864,9 +866,11 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_REMEMBER,
             TAG_COMPOSE_MODIFIER,
             TAG_RECOMPOSITION,
+            TAG_PHASE_COMPOSITION,
+            TAG_PHASE_LAYOUT,
+            TAG_PHASE_DRAW
         ),
         tagColor = StateListColor
     )
@@ -879,9 +883,11 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_REMEMBER,
             TAG_COMPOSE_MODIFIER,
             TAG_RECOMPOSITION,
+            TAG_PHASE_COMPOSITION,
+            TAG_PHASE_LAYOUT,
+            TAG_PHASE_DRAW
         ),
         tagColor = StateListColor
     )
@@ -905,13 +911,13 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 @Composable
 fun createGestureTutorialList(): List<TutorialSectionModel> {
 
-    val tutorial5_1 = TutorialSectionModel(
-        title = stringResource(R.string.title_5_1),
+    val tutorial5_1_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_5_1_1),
         description = "Use clickable modifier, Indication and InteractionSource." +
                 "Indication to clip ripples, or create custom ripple effects. Interaction source to listen for click state" +
                 "or set state of other composable.",
         action = {
-            Tutorial5_1Screen()
+            Tutorial5_1Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -923,6 +929,35 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_1_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_5_1_2),
+        description = "Use Interaction source to collect interactions or change scale " +
+                "of Composable's based on interaction state.",
+        action = {
+            Tutorial5_1Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CLICKABLE,
+            TAG_INTERACTION_SOURCE
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_1_3= TutorialSectionModel(
+        title = stringResource(R.string.title_5_1_3),
+        description = "Use Interaction source to listen for click state" +
+                "or set state of other composable.",
+        action = {
+            Tutorial5_1Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CLICKABLE,
+            TAG_INTERACTION_SOURCE
+        ),
+        tagColor = GestureListColor
+    )
     val tutorial5_2 = TutorialSectionModel(
         title = "5-2 Tap&Drag Gestures",
         description = "Use PointerInput to listen press, tap, long press, drag gestures. " +
@@ -1146,7 +1181,9 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
 
     return listOf(
-        tutorial5_1,
+        tutorial5_1_1,
+        tutorial5_1_2,
+        tutorial5_1_3,
         tutorial5_2,
         tutorial5_3,
         tutorial5_4_1,
