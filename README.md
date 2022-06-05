@@ -8,9 +8,13 @@ SearchBar can be used to search with a tag or description available for each tut
 
 Recommended section is under constructions for now, when finished it will get recommended tags using
 previous searches using a database, domain with ViewModel.
-<img src="/./screenshots/intro.gif" align="right" width="32%"/>
 
-<br/><br/><br/>
+<br>
+<div align="center">
+<img src="/./screenshots/intro.gif" align="center" width="32%"/>
+</div>
+
+<br><br><br>
 
 | Tutorial                                                                                                                                                                                                                     | Preview                                               |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
@@ -88,7 +92,7 @@ previous searches using a database, domain with ViewModel.
 | <h3>4-5-2 SideEffect2</h3><br/>Use SideEffect, derivedStateOf, produceState and snapshotFlow.<br><br>• remember<br>• SideEffect<br>• derivedStateOf<br>• produceStateOf<br>• snapshotFlow<br>                                                                                                            | <img src ="/./screenshots/tutorial4_5_2.png" width=320> |
 |                                                                                                                                                                                                                                                                                                          |                                                         |
 | <h3>4-7-3 Compose Phases3</h3><br/>How deferring a state read changes which phases of frame(Composition, Layout, Draw) are called.<br><br>• Modifier<br>• Recomposition<br>• Composition<br>• Layout<br>• Draw<br>                                                                                       | <img src ="/./screenshots/tutorial4_7_3.gif" width=320> |
-|
+|                                                                                                                                                                                                                                                                                                          |                                                         |
 
 ### Gesture
 
