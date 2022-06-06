@@ -1154,7 +1154,52 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         title = "5-7-1 Ripple Gesture Events",
         description = "Implement ripple effect on touch position with gestures.",
         action = {
-            Tutorial5_7_1Screen()
+            Tutorial5_7Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_INDICATION,
+            TAG_INTERACTION_SOURCE
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_8_1 = TutorialSectionModel(
+        title = "5-8-1 Drag Modifier",
+        description = "Implement ripple effect on touch position with gestures.",
+        action = {
+            Tutorial5_8Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_INDICATION,
+            TAG_INTERACTION_SOURCE
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_8_2 = TutorialSectionModel(
+        title = "5-8-2 Swipe Modifier",
+        description = "Implement ripple effect on touch position with gestures.",
+        action = {
+            Tutorial5_8Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_INDICATION,
+            TAG_INTERACTION_SOURCE
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_9_1 = TutorialSectionModel(
+        title = "5-9-1 Scrollable Modifier",
+        description = "Implement ripple effect on touch position with gestures.",
+        action = {
+            Tutorial5_9Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -1195,6 +1240,9 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_6_3,
         tutorial5_6_4,
         tutorial5_7_1,
+        tutorial5_8_1,
+        tutorial5_8_2,
+        tutorial5_9_1,
         tutorial5_10_1
     )
 }

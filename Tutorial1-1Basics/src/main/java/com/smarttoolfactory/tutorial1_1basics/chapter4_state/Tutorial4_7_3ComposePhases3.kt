@@ -29,22 +29,24 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
         StyleableTutorialText(
-            text = "1-) In this example state is deferred until **InnerDeferred** composable" +
-                    " reads. Because of that Composables between don't get recomposed when value" +
+            text = "1-) In this example state is deferred until **InnerDeferred** composable " +
+                    "reads. Because of that Composables between don't get recomposed when value " +
                     "of Slider changes"
         )
         DeferredComposablesSample()
 
         StyleableTutorialText(
-            text = "2-) In this example value is passed directly, even if **Outer** and **Middle**" +
-                    " composables don't read the value they are recomposed"
+            text = "2-) In this example value is passed directly, even " +
+                    "if **Outer** and **Middle** " +
+                    "composables don't read the value they are recomposed"
         )
         NonDeferredComposablesSample()
 
         StyleableTutorialText(
-            text = "3-) In this example state is deferred until **InnerDeferred** composable" +
-                    " reads. Even if there is no Modifier.padding{} with lambda we send lambda" +
-                    "to inner composable to makes sure only inner Composable to be recomposed"
+            text = "3-) In this example state is deferred until **InnerDeferred** composable " +
+                    "reads the value. Even if there is no **Modifier.padding{}** " +
+                    "with lambda we send lambda " +
+                    "to inner composable to make sure only inner Composable is recomposed"
         )
         DeferredPaddingComposablesSample()
     }

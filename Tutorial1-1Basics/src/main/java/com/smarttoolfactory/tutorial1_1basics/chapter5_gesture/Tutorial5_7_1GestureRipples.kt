@@ -20,7 +20,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import kotlinx.coroutines.launch
 
 @Composable
-fun Tutorial5_7_1Screen() {
+fun Tutorial5_7Screen1() {
     TutorialContent()
 }
 
