@@ -103,7 +103,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
     val tutorial2_3 = TutorialSectionModel(
         title = stringResource(R.string.title2_3),
         description = "Create TextField component with regular style or outlined. Set error," +
-                " colors, state, icons, VisualTransformations for phone or credit card, and IME actions.",
+                " colors, state, icons, VisualTransformations for phone or " +
+                "credit card, and IME actions.",
         action = {
             Tutorial2_3Screen()
         },
@@ -224,7 +225,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_5_7 = TutorialSectionModel(
         title = stringResource(R.string.title2_5_7),
-        description = "Create one-line, two-line, three-line or combine other components to build list items using built-in ListItem component",
+        description = "Create one-line, two-line, three-line or combine other " +
+                "components to build list items using built-in ListItem component",
         action = {
             Tutorial2_5Screen7()
         },
@@ -237,7 +239,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_6 = TutorialSectionModel(
         title = stringResource(R.string.title2_6),
-        description = "The top app bar displays information and actions relating to the current screen.",
+        description = "The top app bar displays information and actions " +
+                "relating to the current screen.",
         action = {
             Tutorial2_6Screen(onBack)
         },
@@ -256,7 +259,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         title = stringResource(R.string.title2_7),
         description = "Material Design bottom navigation.\n" +
                 "Bottom navigation bars allow movement between primary destinations in an app.\n" +
-                "BottomNavigation should contain multiple BottomNavigationItems, each representing a singular destination.",
+                "BottomNavigation should contain multiple BottomNavigationItems, " +
+                "each representing a singular destination.",
         action = {
             Tutorial2_7Screen()
         },
@@ -282,7 +286,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_9_1 = TutorialSectionModel(
         title = stringResource(R.string.title2_9_1),
-        description = "Navigate using side navigation. Navigate after popping from stack. Open or close drawer with scaffoldState.drawerState",
+        description = "Navigate using side navigation. Navigate after popping from stack. " +
+                "Open or close drawer with scaffoldState.drawerState",
         action = {
             Tutorial2_9Screen1()
         },
@@ -296,7 +301,9 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_9_2 = TutorialSectionModel(
         title = stringResource(R.string.title2_9_2),
-        description = "Modal navigation drawers block interaction with the rest of an app’s content with a scrim. They are elevated above most of the app’s UI and don’t affect the screen’s layout grid.",
+        description = "Modal navigation drawers block interaction with the rest of " +
+                "an app’s content with a scrim. They are elevated above most of " +
+                "the app’s UI and don’t affect the screen’s layout grid.",
         action = {
             Tutorial2_9Screen2()
         },
@@ -323,7 +330,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_9_4 = TutorialSectionModel(
         title = stringResource(R.string.title2_9_4),
-        description = "Another ModalDrawer sample with Scaffold. Scaffold is inside content of ModalDrawer",
+        description = "Another ModalDrawer sample with Scaffold. Scaffold is " +
+                "inside content of ModalDrawer",
         action = {
             Tutorial2_9Screen4()
         },
@@ -337,7 +345,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_10_1 = TutorialSectionModel(
         title = stringResource(R.string.title2_10_1),
-        description = "Create bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
+        description = "Create bottom sheet using BottomSheetScaffold and " +
+                "rememberBottomSheetScaffoldState",
         action = {
             Tutorial2_10Screen1()
         },
@@ -351,7 +360,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_10_2 = TutorialSectionModel(
         title = stringResource(R.string.title2_10_2),
-        description = "Create modal bottom sheet using BottomSheetScaffold and rememberBottomSheetScaffoldState",
+        description = "Create modal bottom sheet using BottomSheetScaffold and " +
+                "rememberBottomSheetScaffoldState",
         action = {
             Tutorial2_10Screen2()
         },
@@ -364,7 +374,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_10_3 = TutorialSectionModel(
         title = stringResource(R.string.title2_10_3),
-        description = "Bottom navigation drawers are modal drawers that are anchored to the bottom of the screen.",
+        description = "Bottom navigation drawers are modal drawers that are " +
+                "anchored to the bottom of the screen.",
         action = {
             Tutorial2_10Screen3()
         },
@@ -389,7 +400,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
     )
     val tutorial2_10_5 = TutorialSectionModel(
         title = stringResource(R.string.title2_10_5),
-        description = "A backdrop appears behind all other surfaces in an app, displaying contextual and actionable content.",
+        description = "A backdrop appears behind all other surfaces in an app, displaying " +
+                "contextual and actionable content.",
         action = {
             Tutorial2_10Screen5()
         },
@@ -401,7 +413,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_11 = TutorialSectionModel(
         title = stringResource(R.string.title2_11),
-        description = "Samples for Snackbar, ProgressIndicator, Slider, CheckBox, TriStateCheckBox, RadioButton with groups, and Switch.",
+        description = "Samples for Snackbar, ProgressIndicator, Slider, CheckBox, " +
+                "TriStateCheckBox, RadioButton with groups, and Switch.",
         action = {
             Tutorial2_11Screen()
         },
@@ -420,7 +433,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 
     val tutorial2_12 = TutorialSectionModel(
         title = stringResource(R.string.title2_12),
-        description = "Create Dialog, and AlertDialogs with standard and custom layouts. Implement on dismiss logic and get result when dialog is closed.",
+        description = "Create Dialog, and AlertDialogs with standard and custom layouts. " +
+                "Implement on dismiss logic and get result when dialog is closed.",
         action = {
             Tutorial2_12Screen()
         },
@@ -517,7 +531,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_2_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_2_1),
-        description = "Create custom layout using using layout, Measurable, Constraint, Placeable.",
+        description = "Create custom layout using using layout, " +
+                "Measurable, Constraint, Placeable.",
         action = {
             Tutorial3_2Screen1()
         },
@@ -533,7 +548,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_2_2 = TutorialSectionModel(
         title = "3-2-2 Custom Layout2",
-        description = "Create custom layout using using MeasurePolicy and use intrinsic dimensions.",
+        description = "Create custom layout using using MeasurePolicy " +
+                "and use intrinsic dimensions.",
         action = {
             Tutorial3_2Screen2()
         },
@@ -641,7 +657,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_6_1 = TutorialSectionModel(
         title = stringResource(R.string.title_3_6_1),
-        description = "Custom layout like whatsapp chat layout that moves time and message read " +
+        description = "Custom layout like whatsapp chat layout that moves " +
+                "time and message read " +
                 "status layout right or bottom based on message width.",
         action = {
             Tutorial3_6Screen1()
@@ -658,7 +675,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_6_2 = TutorialSectionModel(
         title = stringResource(R.string.title_3_6_2),
-        description = "Custom layout like whatsapp chat. Added quote and name tag resized to longest " +
+        description = "Custom layout like whatsapp chat. Added quote and " +
+                "name tag resized to longest " +
                 "sibling using SubcomposeColumn from previous examples to have whole layout.",
         action = {
             Tutorial3_6Screen2()
@@ -694,7 +712,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_1),
-        description = "This tutorial shows how remember and mutableState effect recomposition and states.",
+        description = "This tutorial shows how remember and mutableState " +
+                "effect recomposition and states.",
         action = {
             Tutorial4_1Screen()
         },
@@ -740,7 +759,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_2_3 = TutorialSectionModel(
         title = stringResource(R.string.title_4_2_3),
-        description = "This tutorial shows how scopes(lambda functions) or hierarchy of Composables " +
+        description = "This tutorial shows how scopes(lambda functions) " +
+                "or hierarchy of Composables " +
                 "effects Smart Composition. " +
                 "Uses separate functions for Text, Button, and Columns with random colors are " +
                 "applied at (re)composition.",
@@ -914,7 +934,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     val tutorial5_1_1 = TutorialSectionModel(
         title = stringResource(R.string.title_5_1_1),
         description = "Use clickable modifier, Indication and InteractionSource." +
-                "Indication to clip ripples, or create custom ripple effects. Interaction source to listen for click state" +
+                "Indication to clip ripples, or create custom ripple effects. " +
+                "Interaction source to listen for click state" +
                 "or set state of other composable.",
         action = {
             Tutorial5_1Screen1()
@@ -944,7 +965,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_1_3= TutorialSectionModel(
+    val tutorial5_1_3 = TutorialSectionModel(
         title = stringResource(R.string.title_5_1_3),
         description = "Use Interaction source to listen for click state" +
                 "or set state of other composable.",
@@ -961,8 +982,10 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     val tutorial5_2 = TutorialSectionModel(
         title = "5-2 Tap&Drag Gestures",
         description = "Use PointerInput to listen press, tap, long press, drag gestures. " +
-                "detectTapGestures is used for listening for tap, longPress, doubleYap, and press gestures.\n" +
-                "detectDragGestures, detectDragAfterLongPress, detectHorizontalDrag, and detectVerticalDrag" +
+                "detectTapGestures is used for listening for tap, longPress, " +
+                "doubleYap, and press gestures.\n" +
+                "detectDragGestures, detectDragAfterLongPress, " +
+                "detectHorizontalDrag, and detectVerticalDrag" +
                 "for listening drag gestures.",
         action = {
             Tutorial5_2Screen()
@@ -983,7 +1006,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_3 = TutorialSectionModel(
         title = "5-3 Transform Gestures",
-        description = "Use PointerInput to listen for detectTransformGesture to get centroid, pan, zoom and rotate params.",
+        description = "Use PointerInput to listen for detectTransformGesture " +
+                "to get centroid, pan, zoom and rotate params.",
         action = {
             Tutorial5_3Screen()
         },
@@ -1002,8 +1026,10 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     val tutorial5_4_1 = TutorialSectionModel(
         title = "5-4-1 AwaitPointerEventScope1",
         description = "Use AwaitPointerEventScope to get awaitFirstDown for down events, " +
-                "waitForUpOrCancellation for up events, and awaitPointerEvent for move events with pointers.\n" +
-                "awaitTouchSlopOrCancellation to check whether pointer crosses touch slap threshold to start drag motion",
+                "waitForUpOrCancellation for up events, and awaitPointerEvent " +
+                "for move events with pointers.\n" +
+                "awaitTouchSlopOrCancellation to check whether pointer crosses " +
+                "touch slap threshold to start drag motion",
         action = {
             Tutorial5_4Screen1()
         },
@@ -1044,7 +1070,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_4_3 = TutorialSectionModel(
         title = "5-4-3 Centroid, Zoom, Pan, Rotation",
-        description = "Use AwaitPointerEventScope to calculate centroid position and size, zoom, pan, and rotation.",
+        description = "Use AwaitPointerEventScope to calculate centroid " +
+                "position and size, zoom, pan, and rotation.",
         action = {
             Tutorial5_4Screen3()
         },
@@ -1134,7 +1161,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_6_4 = TutorialSectionModel(
         title = "5-6-4 Transformation Propagation",
-        description = "Consume events to rotate, zoom, move or apply drag or move events on Composables.",
+        description = "Consume events to rotate, zoom, move or apply drag or " +
+                "move events on Composables.",
         action = {
             Tutorial5_6Screen4()
         },
@@ -1167,45 +1195,73 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_8_1 = TutorialSectionModel(
         title = "5-8-1 Drag Modifier",
-        description = "Implement ripple effect on touch position with gestures.",
+        description = "Use drag Modifier, rememberDraggableState",
         action = {
             Tutorial5_8Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_AWAIT_POINTER_EVENT_SCOPE,
-            TAG_INDICATION,
-            TAG_INTERACTION_SOURCE
+            TAG_DRAGGABLE,
+            TAG_REMEMBER_DRAGGABLE_STATE
         ),
         tagColor = GestureListColor
     )
 
     val tutorial5_8_2 = TutorialSectionModel(
         title = "5-8-2 Swipe Modifier",
-        description = "Implement ripple effect on touch position with gestures.",
+        description = "Use swipe modifier, rememberSwipeableState, FractionalThreshold to " +
+                "create swipeable Composables.",
         action = {
             Tutorial5_8Screen2()
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_AWAIT_POINTER_EVENT_SCOPE,
-            TAG_INDICATION,
-            TAG_INTERACTION_SOURCE
+            TAG_SWIPEABLE,
+            TAG_REMEMBER_SWIPEABLE_STATE,
+            TAG_FRACTIONAL_THRESHHOLD
         ),
         tagColor = GestureListColor
     )
 
     val tutorial5_9_1 = TutorialSectionModel(
         title = "5-9-1 Scrollable Modifier",
-        description = "Implement ripple effect on touch position with gestures.",
+        description = "Implement scrolling behavior.",
         action = {
             Tutorial5_9Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_AWAIT_POINTER_EVENT_SCOPE,
-            TAG_INDICATION,
-            TAG_INTERACTION_SOURCE
+            TAG_SCROLLABLE,
+            TAG_REMEMBER_SCROLL_STATE
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_9_2 = TutorialSectionModel(
+        title = "5-9-2 Nested Scrolling1",
+        description = "Implement nested scrolling using only vertical scrolling " +
+                "and rememberScrollState.",
+        action = {
+            Tutorial5_9Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_REMEMBER_SCROLL_STATE
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_9_3 = TutorialSectionModel(
+        title = "5-9-3 Nested Scrolling2",
+        description = "This tutorial shows how and when functions, such as onPreScroll, of " +
+                "NestedScrollConnection called when Modifier.nestedScroll is used.",
+        action = {
+            Tutorial5_9Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_NESTED_SCROLL,
+            TAG_NESTED_SCROLL_CONNECTION
         ),
         tagColor = GestureListColor
     )
@@ -1243,6 +1299,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_8_1,
         tutorial5_8_2,
         tutorial5_9_1,
+        tutorial5_9_2,
+        tutorial5_9_3,
         tutorial5_10_1
     )
 }
