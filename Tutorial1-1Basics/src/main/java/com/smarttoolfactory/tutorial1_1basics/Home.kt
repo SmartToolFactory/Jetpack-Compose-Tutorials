@@ -52,8 +52,7 @@ fun HomeScreen(
     ) {
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
 
         val context = LocalContext.current
@@ -96,32 +95,6 @@ fun HomeScreen(
                 backCallback.remove() // avoid leaks!
             }
         }
-
-        /*
-        LaunchedEffect(key1 = Unit) {
-            snapshotFlow { state.query }
-                .distinctUntilChanged()
-                .filter {
-                    it.text.isNotEmpty() && !state.sameAsPreviousQuery()
-                }
-                .map {
-                    state.searching = false
-                    state.searchInProgress = true
-                    it
-                }
-                .debounce(300)
-                .mapLatest {
-                    state.searching = true
-                    delay(300)
-                    viewModel.getTutorials(it.text)
-                }
-                .collect {
-                    state.searchResults = it
-                    state.searchInProgress = false
-                    state.searching = false
-                }
-        }
-        */
 
         SearchBar(
             query = state.query,

@@ -1266,8 +1266,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_9_4 = TutorialSectionModel(
-        title = "5-9-4 Nested Scrolling3",
-        description = "Create a collapsing toolbar using Modifier.nestedScroll " +
+        title = "5-9-4 Collapsing TopAppBar",
+        description = "Create a collapsing TopAppBar using Modifier.nestedScroll " +
                 "and NestedScrollConnection",
         action = {
             Tutorial5_9Screen4()
@@ -1281,7 +1281,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_9_5 = TutorialSectionModel(
-        title = "5-9-5 Nested Scrolling4",
+        title = "5-9-5 Draggable&Nested Scroll",
         description = "Build a Modifier.draggable " +
                 "(which doesn't have nested scroll build in by default)" +
                 "and add nested scroll support our component that contains draggable",
