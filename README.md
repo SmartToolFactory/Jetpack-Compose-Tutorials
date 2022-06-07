@@ -119,7 +119,7 @@ previous searches using a database, domain with ViewModel.
 | <h3>5-9-4 Collapsing TopAppBar</h3><br/Create a collapsing TopAppBar using Modifier.nestedScroll and NestedScrollConnection.<br>• nestedScroll<br>• NestedScrollConnection<br>                                                                                                                                                                                                                              | <img src ="/./screenshots/tutorial5_9_4.gif" width=320>  |
 |                                                                                                                                                                                                                                                                                                                                                                                                             |                                                          |
 | <h3>5-10-1 Image Touch Detection</h3><br/>Detect touch position on image and get color at touch position.<br>• Image<br>• AwaitPointerEventScope<br>                                                                                                                                                                                                                                                        | <img src ="/./screenshots/tutorial5_10_1.gif" width=320> |
-|
+ |
 
 ### Graphics
 
