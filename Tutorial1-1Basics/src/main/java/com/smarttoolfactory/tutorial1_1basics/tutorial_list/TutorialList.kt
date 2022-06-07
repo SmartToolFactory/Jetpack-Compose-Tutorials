@@ -491,7 +491,6 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
 }
 
 @ExperimentalAnimationApi
-@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
@@ -1266,6 +1265,39 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_9_4 = TutorialSectionModel(
+        title = "5-9-4 Nested Scrolling3",
+        description = "Create a collapsing toolbar using Modifier.nestedScroll " +
+                "and NestedScrollConnection",
+        action = {
+            Tutorial5_9Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_NESTED_SCROLL,
+            TAG_NESTED_SCROLL_CONNECTION
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_9_5 = TutorialSectionModel(
+        title = "5-9-5 Nested Scrolling4",
+        description = "Build a Modifier.draggable " +
+                "(which doesn't have nested scroll build in by default)" +
+                "and add nested scroll support our component that contains draggable",
+        action = {
+            Tutorial5_9Screen5()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_NESTED_SCROLL,
+            TAG_NESTED_SCROLL_CONNECTION,
+            TAG_NESTED_SCROLL_DISPATCHER,
+            TAG_DRAGGABLE,
+        ),
+        tagColor = GestureListColor
+    )
+
     val tutorial5_10_1 = TutorialSectionModel(
         title = "5-10-1 Image Touch Detection",
         description = "Detect touch position on image and get color at touch position.",
@@ -1301,6 +1333,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_9_1,
         tutorial5_9_2,
         tutorial5_9_3,
+        tutorial5_9_4,
+        tutorial5_9_5,
         tutorial5_10_1
     )
 }

@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
@@ -21,6 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 
+/**
+ * Check official nested scroll source
+ * https://developer.android.com/reference/kotlin/androidx/compose/ui/input/nestedscroll/package-summary#(androidx.compose.ui.Modifier).nestedScroll(androidx.compose.ui.input.nestedscroll.NestedScrollConnection,androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher)
+ */
 @Composable
 fun Tutorial5_9Screen3() {
     TutorialContent()
@@ -42,8 +45,6 @@ private fun ColumnScope.NestedScrollExample() {
 
     var text by remember { mutableStateOf("") }
 
-    val nestedScrollDispatcher = NestedScrollDispatcher()
-
     //  Interface to connect to the nested scroll system.
     //
     //  Pass this connection to the [nestedScroll] modifier to participate in the nested scroll
@@ -51,6 +52,38 @@ private fun ColumnScope.NestedScrollExample() {
     //  by the scrolling child
     //  (scrolling child - the element that actually receives scrolling events
     //  and dispatches them via  [NestedScrollDispatcher]).
+
+    /*
+        Pre-scroll. This callback is triggered when the descendant is about to perform a scroll
+        operation and gives parent an opportunity to consume part of child's delta beforehand.
+        This pass should happen every time scrollable components receives delta and dispatches
+        it via NestedScrollDispatcher. Dispatching child should take into account how much
+        all ancestors above the hierarchy consumed and adjust the consumption accordingly.
+
+        Post-scroll. This callback is triggered when the descendant consumed the delta
+        already (after taking into account what parents pre-consumed in 1.) and wants to
+        notify the ancestors with the amount of delta unconsumed.
+        This pass should happen every time scrollable components receives delta and dispatches
+        it via NestedScrollDispatcher. Any parent that receives
+        NestedScrollConnection.onPostScroll should consume no more than
+        left and return the amount consumed.
+
+        Pre-fling. Pass that happens when the scrolling descendant stopped dragging
+        and about to fling with the some velocity.
+        This callback allows ancestors to consume part of the velocity.
+        This pass should happen before the fling itself happens.
+        Similar to pre-scroll, parent can consume part of the velocity
+        and nodes below (including the dispatching child) should adjust their
+        logic to accommodate only the velocity left.
+
+        Post-fling. Pass that happens after the scrolling descendant stopped
+        flinging and wants to notify ancestors about that fact, providing
+        velocity left to consume as a part of this. This pass should happen
+        after the fling itself happens on the scrolling child.
+        Ancestors of the dispatching node will have opportunity to fling themselves
+        with the velocityLeft provided. Parent must call notifySelfFinish callback
+        in order to continue the propagation of the velocity that is left to ancestors above.
+     */
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
