@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        compose_version = '1.2.0-beta02'
+        compose_version = '1.2.0-beta03'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
