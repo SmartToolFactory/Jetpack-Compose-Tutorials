@@ -17,7 +17,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.colorpicker.Colo
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.colorpicker.SaturationRhombus
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 
-// FIXME There are bugs with ColorWheel and SaturationRhombus
 @Composable
 fun Tutorial6_5Screen() {
     TutorialContent()

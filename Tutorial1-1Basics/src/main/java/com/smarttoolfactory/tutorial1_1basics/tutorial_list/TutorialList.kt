@@ -1434,6 +1434,24 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_1_6 = TutorialSectionModel(
+        title = "6-1-6 Canvas PathEffect",
+        description = "Use PathEffects such as dashedPathEffect, cornerPathEffect, " +
+                "chainPathEffect and  stompedPathEffect" +
+                "to draw shapes or add path effects around Composables.",
+        action = {
+            Tutorial6_1Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_PATH_EFFECT
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_2 = TutorialSectionModel(
         title = "6-2 Blend Modes(Porter-Duff)",
         description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
@@ -1544,6 +1562,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_3,
         tutorial6_1_4,
         tutorial6_1_5,
+        tutorial6_1_6,
         tutorial6_2,
         tutorial6_4_0,
         tutorial6_4_1,
