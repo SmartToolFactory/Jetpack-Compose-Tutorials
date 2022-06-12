@@ -528,6 +528,21 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_1_3 = TutorialSectionModel(
+        title = stringResource(R.string.title3_1_3),
+        description = "Use Modifier.offset{} and Modifier.graphicsLayer{} to scale, translate or " +
+                "change other properties of a Composable",
+        action = {
+            Tutorial3_1Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER,
+        ),
+        tagColor = LayoutListColor
+    )
+
     val tutorial3_2_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_2_1),
         description = "Create custom layout using using layout, " +
@@ -694,6 +709,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     return listOf(
         tutorial3_1_1,
         tutorial3_1_2,
+        tutorial3_1_3,
         tutorial3_2_1,
         tutorial3_2_2,
         tutorial3_2_3,

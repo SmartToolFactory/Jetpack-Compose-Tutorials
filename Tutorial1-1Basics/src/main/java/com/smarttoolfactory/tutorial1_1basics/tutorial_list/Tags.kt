@@ -5,6 +5,7 @@ package com.smarttoolfactory.tutorial1_1basics.tutorial_list
  */
 const val TAG_COMPOSE = "Compose"
 const val TAG_COMPOSE_MODIFIER = "Modifier"
+const val TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER = "graphicsLayer"
 const val TAG_COMPOSE_COLUMN = "Column"
 const val TAG_COMPOSE_ROW = "Row"
 const val TAG_COMPOSE_BOX = "Box"

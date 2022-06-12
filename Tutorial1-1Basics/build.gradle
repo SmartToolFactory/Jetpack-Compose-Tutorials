@@ -64,7 +64,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation("io.coil-kt:coil-compose:2.1.0")
 
     def accompanist_version = "0.24.9-beta"
     // Accompanist

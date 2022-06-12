@@ -86,6 +86,8 @@ private fun DashedEffectExample() {
         phase = phase
     )
 
+    DrawPathEffect(pathEffect = pathEffect)
+
     Text(text = "onInterval ${onInterval.roundToInt()}")
     Slider(
         value = onInterval,
@@ -107,9 +109,6 @@ private fun DashedEffectExample() {
         onValueChange = { phase = it },
         valueRange = 0f..100f,
     )
-
-    DrawPathEffect(pathEffect = pathEffect)
-
 }
 
 @Composable
@@ -141,16 +140,15 @@ private fun CornerPathEffectExample() {
 
     var cornerRadius by remember { mutableStateOf(20f) }
 
+    val pathEffect = PathEffect.cornerPathEffect(cornerRadius)
+    DrawRect(pathEffect)
+
     Text(text = "cornerRadius ${cornerRadius.roundToInt()}")
     Slider(
         value = cornerRadius,
         onValueChange = { cornerRadius = it },
         valueRange = 0f..100f,
     )
-
-    val pathEffect = PathEffect.cornerPathEffect(cornerRadius)
-    DrawRect(pathEffect)
-
 }
 
 @Composable
@@ -169,6 +167,8 @@ private fun ChainPathEffectExample() {
 
     val pathEffect2 = PathEffect.cornerPathEffect(cornerRadius)
     val pathEffect = PathEffect.chainPathEffect(outer = pathEffect1, inner = pathEffect2)
+
+    DrawRect(pathEffect)
 
     Text(text = "onInterval1 ${onInterval1.roundToInt()}")
     Slider(
@@ -198,8 +198,6 @@ private fun ChainPathEffectExample() {
         onValueChange = { cornerRadius = it },
         valueRange = 0f..100f,
     )
-
-    DrawRect(pathEffect)
 }
 
 @Composable
@@ -220,6 +218,15 @@ private fun StompedPathEffectExample() {
             lineTo(0f, 10f)
         }
     }
+
+    val pathEffect = PathEffect.stampedPathEffect(
+        shape = path,
+        advance = advance,
+        phase = phase,
+        style = stompedPathEffectStyle
+    )
+
+    DrawPathEffect(pathEffect = pathEffect)
 
     Text(text = "advance ${advance.roundToInt()}")
     Slider(
@@ -253,14 +260,6 @@ private fun StompedPathEffectExample() {
         }
     )
 
-    val pathEffect = PathEffect.stampedPathEffect(
-        shape = path,
-        advance = advance,
-        phase = phase,
-        style = stompedPathEffectStyle
-    )
-
-    DrawPathEffect(pathEffect = pathEffect)
 }
 
 
