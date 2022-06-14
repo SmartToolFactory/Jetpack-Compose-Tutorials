@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.widget.Toast
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
@@ -10,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +41,8 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
             .padding(8.dp)
     ) {
+        Spacer(modifier = Modifier.height(40.dp))
+
         StyleableTutorialText(
             text = "1-) Modifier.Element that makes content draw into a draw layer. " +
                     "The draw layer can be\n" +
@@ -80,6 +85,24 @@ private fun TutorialContent() {
         ) {
             ScaledAndTranslateStartExample()
         }
+
+        StyleableTutorialText(
+            text = "5-) rotation variables of **Modifier.graphicsLayer{}** can be used to rotate" +
+                    "a composable in respective axis."
+        )
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            RotationExample()
+        }
+
+        StyleableTutorialText(
+            text = "6-) **TransformOrigin** determines which position transformation events" +
+                    "such as scale or translate should be applied at."
+        )
+        TransformOriginExample()
     }
 }
 
@@ -88,15 +111,6 @@ private fun OffsetAndTranslationExample() {
     val context = LocalContext.current
 
     var value by remember { mutableStateOf(0f) }
-
-    Text("Offset/Translation: ${value.round2Digits()}")
-    Slider(
-        value = value,
-        onValueChange = {
-            value = it
-        },
-        valueRange = 0f..1000f
-    )
 
 
     Row(modifier = Modifier.border(2.dp, Color.Red)) {
@@ -160,6 +174,16 @@ private fun OffsetAndTranslationExample() {
                 }
         )
     }
+
+    Spacer(modifier = Modifier.height(5.dp))
+    Text("Offset/Translation: ${value.round2Digits()}")
+    Slider(
+        value = value,
+        onValueChange = {
+            value = it
+        },
+        valueRange = 0f..1000f
+    )
 }
 
 @Composable
@@ -167,26 +191,7 @@ private fun GraphicsLayerExample() {
     val context = LocalContext.current
 
     var offsetX by remember { mutableStateOf(0f) }
-
-    Text("translationX: ${offsetX.round2Digits()}")
-    Slider(
-        value = offsetX,
-        onValueChange = {
-            offsetX = it
-        },
-        valueRange = 0f..1000f
-    )
-
     var sclX by remember { mutableStateOf(1f) }
-
-    Text("scaleX: ${sclX.round2Digits()}")
-    Slider(
-        value = sclX,
-        onValueChange = {
-            sclX = it
-        },
-        valueRange = 0.3f..3f
-    )
 
     Row(modifier = Modifier.border(2.dp, Color.Red)) {
         Image(
@@ -199,10 +204,18 @@ private fun GraphicsLayerExample() {
                 .border(2.dp, Color.Green)
                 .zIndex(2f)
                 .size(120.dp)
-                .clickable {
-                    Toast
-                        .makeText(context, "Image is clicked", Toast.LENGTH_SHORT)
-                        .show()
+                // Order of clickable respect to graphicsLayer matters, in which
+                // position clickable is and how it's dimensions are calculated
+                // no matter what scale is touch position is corresponds to same value
+                // end of image always returns same value as offset for instance
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            Toast
+                                .makeText(context, "Clicked position: $it", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    )
                 },
             painter = painterResource(id = R.drawable.landscape1),
             contentDescription = null,
@@ -221,14 +234,8 @@ private fun GraphicsLayerExample() {
                 }
         )
     }
-}
 
-@Composable
-private fun WidthChangeExample() {
-    val context = LocalContext.current
-
-    var offsetX by remember { mutableStateOf(0f) }
-
+    Spacer(modifier = Modifier.height(5.dp))
     Text("translationX: ${offsetX.round2Digits()}")
     Slider(
         value = offsetX,
@@ -238,16 +245,23 @@ private fun WidthChangeExample() {
         valueRange = 0f..1000f
     )
 
-    var width by remember { mutableStateOf(100f) }
 
-    Text("width: ${width.round2Digits()}dp")
+    Text("scaleX: ${sclX.round2Digits()}")
     Slider(
-        value = width,
+        value = sclX,
         onValueChange = {
-            width = it
+            sclX = it
         },
-        valueRange = 0f..500f
+        valueRange = 0.3f..3f
     )
+}
+
+@Composable
+private fun WidthChangeExample() {
+    val context = LocalContext.current
+
+    var offsetX by remember { mutableStateOf(0f) }
+    var width by remember { mutableStateOf(100f) }
 
     Row(modifier = Modifier.border(2.dp, Color.Red)) {
         Image(
@@ -281,6 +295,26 @@ private fun WidthChangeExample() {
                 }
         )
     }
+
+    Spacer(modifier = Modifier.height(5.dp))
+    Text("translationX: ${offsetX.round2Digits()}")
+    Slider(
+        value = offsetX,
+        onValueChange = {
+            offsetX = it
+        },
+        valueRange = 0f..1000f
+    )
+
+
+    Text("width: ${width.round2Digits()}dp")
+    Slider(
+        value = width,
+        onValueChange = {
+            width = it
+        },
+        valueRange = 0f..500f
+    )
 }
 
 @Composable
@@ -289,15 +323,6 @@ private fun ScaledAndTranslateEndExample() {
 
     var sclX by remember { mutableStateOf(1f) }
     var width by remember { mutableStateOf(0f) }
-
-    Text("End Scale: ${(sclX.round2Digits())}")
-    Slider(
-        value = sclX,
-        onValueChange = {
-            sclX = it
-        },
-        valueRange = 0f..10f
-    )
 
     Row(modifier = Modifier.border(2.dp, Color.Red)) {
         Image(
@@ -321,6 +346,16 @@ private fun ScaledAndTranslateEndExample() {
             contentScale = ContentScale.FillBounds
         )
     }
+
+    Spacer(modifier = Modifier.height(5.dp))
+    Text("End Scale: ${(sclX.round2Digits())}")
+    Slider(
+        value = sclX,
+        onValueChange = {
+            sclX = it
+        },
+        valueRange = 0f..10f
+    )
 }
 
 @Composable
@@ -330,14 +365,7 @@ private fun ScaledAndTranslateStartExample() {
     var sclX by remember { mutableStateOf(1f) }
     var width by remember { mutableStateOf(0f) }
 
-    Text("Start Scale: ${(sclX.round2Digits())}")
-    Slider(
-        value = sclX,
-        onValueChange = {
-            sclX = it
-        },
-        valueRange = 0f..10f
-    )
+
 
     Row(modifier = Modifier.border(2.dp, Color.Red)) {
         Image(
@@ -361,7 +389,169 @@ private fun ScaledAndTranslateStartExample() {
             contentScale = ContentScale.FillBounds
         )
     }
+
+    Spacer(modifier = Modifier.height(5.dp))
+    Text("Start Scale: ${(sclX.round2Digits())}")
+    Slider(
+        value = sclX,
+        onValueChange = {
+            sclX = it
+        },
+        valueRange = 0f..10f
+    )
 }
 
-private fun Float.round2Digits() = (this * 100).roundToInt() /100f
+@Composable
+private fun RotationExample() {
+    val context = LocalContext.current
+    var angleX by remember { mutableStateOf(0f) }
+    var angleY by remember { mutableStateOf(0f) }
+    var angleZ by remember { mutableStateOf(0f) }
+
+    var camDistance by remember { mutableStateOf(5f) }
+
+
+    Row(modifier = Modifier.border(2.dp, Color.Red)) {
+        Image(
+            modifier = Modifier
+                .graphicsLayer {
+                    rotationX = angleX
+                    rotationY = angleY
+                    rotationZ = angleZ
+                    cameraDistance = camDistance
+                }
+
+                .size(120.dp)
+                .clickable {
+                    Toast
+                        .makeText(context, "Image is clicked", Toast.LENGTH_SHORT)
+                        .show()
+                },
+            painter = painterResource(id = R.drawable.landscape1),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds
+        )
+    }
+
+    Spacer(modifier=Modifier.height(5.dp))
+    Text("angleX: ${angleX.round2Digits()}")
+    Slider(
+        value = angleX,
+        onValueChange = {
+            angleX = it
+        },
+        valueRange = 0f..360f
+    )
+
+    Text("angleY: ${angleY.round2Digits()}")
+    Slider(
+        value = angleY,
+        onValueChange = {
+            angleY = it
+        },
+        valueRange = 0f..360f
+    )
+
+    Text("angleZ: ${angleZ.round2Digits()}")
+    Slider(
+        value = angleZ,
+        onValueChange = {
+            angleZ = it
+        },
+        valueRange = 0f..360f
+    )
+
+    Text("camDistance: ${camDistance.round2Digits()}")
+    Slider(
+        value = camDistance,
+        onValueChange = {
+            camDistance = it
+        },
+        valueRange = 0f..10f
+    )
+}
+
+@Composable
+private fun TransformOriginExample() {
+    val context = LocalContext.current
+
+    var sclX by remember { mutableStateOf(1f) }
+    var offsetX by remember { mutableStateOf(0f) }
+    var angleX by remember { mutableStateOf(0f) }
+    var angleY by remember { mutableStateOf(0f) }
+
+    var pivotFractionX by remember { mutableStateOf(0.5f) }
+
+    Row(modifier = Modifier.border(2.dp, Color.Red)) {
+        Image(
+            modifier = Modifier
+                .graphicsLayer {
+                    translationX = offsetX
+                    scaleX = sclX
+                    rotationX = angleX
+                    rotationY = angleY
+                    transformOrigin =
+                        TransformOrigin(pivotFractionX = pivotFractionX, pivotFractionY = 0.5f)
+                }
+
+                .size(120.dp)
+                .clickable {
+                    Toast
+                        .makeText(context, "Image is clicked", Toast.LENGTH_SHORT)
+                        .show()
+                },
+            painter = painterResource(id = R.drawable.landscape1),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds
+        )
+    }
+
+    Spacer(modifier=Modifier.height(5.dp))
+    Text("translationX: ${offsetX.round2Digits()}")
+    Slider(
+        value = offsetX,
+        onValueChange = {
+            offsetX = it
+        },
+        valueRange = 0f..1000f
+    )
+
+    Text("scaleX: ${sclX.round2Digits()}")
+    Slider(
+        value = sclX,
+        onValueChange = {
+            sclX = it
+        },
+        valueRange = 0.3f..3f
+    )
+
+    Text("angleX: ${angleX.round2Digits()}")
+    Slider(
+        value = angleX,
+        onValueChange = {
+            angleX = it
+        },
+        valueRange = 0f..360f
+    )
+
+    Text("angleY: ${angleY.round2Digits()}")
+    Slider(
+        value = angleY,
+        onValueChange = {
+            angleY = it
+        },
+        valueRange = 0f..360f
+    )
+
+
+    Text("pivotFractionX: ${(pivotFractionX.round2Digits())}")
+    Slider(
+        value = pivotFractionX,
+        onValueChange = {
+            pivotFractionX = it
+        }
+    )
+}
+
+private fun Float.round2Digits() = (this * 100).roundToInt() / 100f
 
