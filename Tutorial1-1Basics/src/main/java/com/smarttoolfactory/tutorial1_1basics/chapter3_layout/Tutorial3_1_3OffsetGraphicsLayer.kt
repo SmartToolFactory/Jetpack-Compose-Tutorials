@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
@@ -58,7 +57,8 @@ private fun TutorialContent() {
         OffsetAndTranslationExample()
         StyleableTutorialText(
             text = "2-) Changing scale via **Modifier.graphicsLayer{}** doesn't change " +
-                    "the bounds of Composable."
+                    "size and bounds of a Composable but it's **position in parent** " +
+                    "might change based on where it's translated with scale."
         )
         GraphicsLayerExample()
         Spacer(modifier = Modifier.height(20.dp))
@@ -193,13 +193,15 @@ private fun GraphicsLayerExample() {
     var offsetX by remember { mutableStateOf(0f) }
     var sclX by remember { mutableStateOf(1f) }
 
+    var textSize by remember { mutableStateOf("") }
+    var textPosition by remember { mutableStateOf("") }
+
     Row(modifier = Modifier.border(2.dp, Color.Red)) {
         Image(
             modifier = Modifier
                 .graphicsLayer {
                     translationX = offsetX
                     scaleX = sclX
-                    cameraDistance
                 }
                 .border(2.dp, Color.Green)
                 .zIndex(2f)
@@ -216,6 +218,14 @@ private fun GraphicsLayerExample() {
                                 .show()
                         }
                     )
+                }
+                .onSizeChanged {
+                    textSize = "Size: $it\n"
+                }
+                .onGloballyPositioned {
+                    textPosition =
+                        "positionInParent: ${it.positionInParent()}\n" +
+                                "positionInRoot: ${it.positionInRoot()}\n"
                 },
             painter = painterResource(id = R.drawable.landscape1),
             contentDescription = null,
@@ -234,6 +244,8 @@ private fun GraphicsLayerExample() {
                 }
         )
     }
+
+    Text(textSize + textPosition)
 
     Spacer(modifier = Modifier.height(5.dp))
     Text("translationX: ${offsetX.round2Digits()}")
@@ -433,7 +445,7 @@ private fun RotationExample() {
         )
     }
 
-    Spacer(modifier=Modifier.height(5.dp))
+    Spacer(modifier = Modifier.height(5.dp))
     Text("angleX: ${angleX.round2Digits()}")
     Slider(
         value = angleX,
@@ -506,7 +518,7 @@ private fun TransformOriginExample() {
         )
     }
 
-    Spacer(modifier=Modifier.height(5.dp))
+    Spacer(modifier = Modifier.height(5.dp))
     Text("translationX: ${offsetX.round2Digits()}")
     Slider(
         value = offsetX,
