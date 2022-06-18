@@ -539,6 +539,8 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_COMPOSE_MODIFIER,
             TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER,
+            TAG_SCALE,
+            TAG_TRANSLATE,
         ),
         tagColor = LayoutListColor
     )
@@ -1328,6 +1330,25 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_11 = TutorialSectionModel(
+        title = "5-11 Zoomable LazyColum",
+        description = "Zoom images inside a LazyColum.",
+        action = {
+            Tutorial5_11Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
+            TAG_IMAGE,
+            TAG_ZOOM,
+            TAG_SCALE,
+        ),
+        tagColor = GestureListColor
+    )
+
+
 
     return listOf(
         tutorial5_1_1,
@@ -1351,7 +1372,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_9_3,
         tutorial5_9_4,
         tutorial5_9_5,
-        tutorial5_10_1
+        tutorial5_10_1,
+        tutorial5_11
     )
 }
 
@@ -1572,6 +1594,26 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_6 = TutorialSectionModel(
+        title = "6-6 Scale/Translation Edit",
+        description = "Editable Composable that changes position and scale when touched and dragged" +
+                "from handles or changes position when touched inside.",
+        action = {
+            Tutorial6_6Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_SCALE,
+            TAG_TRANSLATE,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1584,5 +1626,6 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_4_1,
         tutorial6_4_2,
         tutorial6_5,
+        tutorial6_6
     )
 }

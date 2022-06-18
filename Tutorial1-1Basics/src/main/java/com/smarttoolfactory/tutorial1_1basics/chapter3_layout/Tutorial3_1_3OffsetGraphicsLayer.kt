@@ -491,6 +491,7 @@ private fun TransformOriginExample() {
     var offsetX by remember { mutableStateOf(0f) }
     var angleX by remember { mutableStateOf(0f) }
     var angleY by remember { mutableStateOf(0f) }
+    var angleZ by remember { mutableStateOf(0f) }
 
     var pivotFractionX by remember { mutableStateOf(0.5f) }
 
@@ -502,15 +503,19 @@ private fun TransformOriginExample() {
                     scaleX = sclX
                     rotationX = angleX
                     rotationY = angleY
+                    rotationZ = angleZ
                     transformOrigin =
                         TransformOrigin(pivotFractionX = pivotFractionX, pivotFractionY = 0.5f)
                 }
-
                 .size(120.dp)
-                .clickable {
-                    Toast
-                        .makeText(context, "Image is clicked", Toast.LENGTH_SHORT)
-                        .show()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            Toast
+                                .makeText(context, "Clicked position: $it", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    )
                 },
             painter = painterResource(id = R.drawable.landscape1),
             contentDescription = null,
@@ -555,6 +560,14 @@ private fun TransformOriginExample() {
         valueRange = 0f..360f
     )
 
+    Text("angleZ: ${angleZ.round2Digits()}")
+    Slider(
+        value = angleZ,
+        onValueChange = {
+            angleZ = it
+        },
+        valueRange = 0f..360f
+    )
 
     Text("pivotFractionX: ${(pivotFractionX.round2Digits())}")
     Slider(

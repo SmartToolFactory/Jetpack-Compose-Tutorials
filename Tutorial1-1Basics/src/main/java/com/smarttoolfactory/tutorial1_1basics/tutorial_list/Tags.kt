@@ -161,6 +161,8 @@ const val TAG_CENTROID = "centroid"
 const val TAG_PAN = "pan"
 const val TAG_ZOOM = "zoom"
 const val TAG_ROTATE = "rotate"
+const val TAG_SCALE = "scale"
+const val TAG_TRANSLATE = "translate"
 
 const val TAG_AWAIT_POINTER_EVENT_SCOPE = "AwaitPointerEventScope"
 const val TAG_POINTER_INPUT_CHANGE = "PointerInputChange"
