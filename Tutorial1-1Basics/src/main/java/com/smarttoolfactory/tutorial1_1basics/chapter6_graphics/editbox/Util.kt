@@ -2,12 +2,12 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.editbox
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.dp
 
-/**
- * Check if any handle has been touched inside this rectangles corners or sides. If any
- * handle is not touched check if touch is inside this rectangle
- */
-fun getTouchRegion(
+internal fun getTouchRegion(
     position: Offset,
     rect: Rect,
     threshold: Float
@@ -46,7 +46,7 @@ fun getTouchRegion(
  * Check if [target] which is power of 2 of actual value to not use square to make this
  * operation cheaper
  */
- fun inDistanceSquared(offset1: Offset, offset2: Offset, target: Float): Boolean {
+internal fun inDistanceSquared(offset1: Offset, offset2: Offset, target: Float): Boolean {
     val x1 = offset1.x
     val y1 = offset1.y
 
@@ -56,3 +56,12 @@ fun getTouchRegion(
     val distance = ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
     return distance < target
 }
+
+internal fun DrawScope.drawBorderCircle(
+    radius: Float,
+    center: Offset
+) {
+    drawCircle(color = Color.White.copy(alpha = .7f), radius = radius, center = center)
+    drawCircle(color = Color.White, radius = radius, center = center, style = Stroke(1.dp.toPx()))
+}
+

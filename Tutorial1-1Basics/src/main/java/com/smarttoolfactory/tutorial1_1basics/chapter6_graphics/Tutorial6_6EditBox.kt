@@ -3,15 +3,13 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.editbox.ScaleEditBox
 
@@ -28,32 +26,52 @@ private fun TutorialContent() {
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Spacer(modifier = Modifier.height(100.dp))
+        // In this example we use a Composable that scales, translates its scope
+        EditScaleDemo()
+    }
+}
 
-        Column(modifier = Modifier.fillMaxSize()) {
 
-            var text by remember { mutableStateOf("") }
+@Composable
+private fun EditScaleDemo() {
+    Column(
+        modifier = Modifier
+            .background(Color(0xff424242))
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
 
-            val density = LocalDensity.current
-            val size = (1000 / density.density).dp
 
-            ScaleEditBox(
-                modifier = Modifier
-                    .size(size),
-                onTextChange = {
-                    text = it
-                }
-            ) {
-                Image(
-                    modifier = Modifier
-                        .size(size),
-                    painter = painterResource(id = R.drawable.landscape1),
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = ""
-                )
-            }
+        Spacer(modifier = Modifier.height(40.dp))
 
-            Text(text, color = Color.White, fontSize = 12.sp)
+
+        val density = LocalDensity.current
+        val size = (1000 / density.density).dp
+
+        ScaleEditBox(
+            modifier = Modifier.size(size),
+            enabled = true
+        ) {
+            Image(
+                modifier=Modifier.fillMaxSize(),
+                painter = painterResource(id = R.drawable.landscape3),
+                contentScale = ContentScale.FillBounds,
+                contentDescription = "",
+            )
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        ScaleEditBox(
+            handleRadius = 20.dp,
+            enabled = true
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.landscape2),
+                contentScale = ContentScale.FillBounds,
+                contentDescription = ""
+            )
+        }
+
+
     }
 }
