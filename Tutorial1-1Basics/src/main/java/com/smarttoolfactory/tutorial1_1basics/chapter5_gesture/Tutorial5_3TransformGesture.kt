@@ -65,6 +65,12 @@ private fun TutorialContent() {
             modifier = Modifier.padding(top = 20.dp)
         )
         TransformGesturesZoomPanRotateExample()
+
+        TutorialText2(
+            text = "Limit pan to image bounds",
+            modifier = Modifier.padding(top = 20.dp)
+        )
+        LimitedPanImageExample()
     }
 }
 
@@ -218,6 +224,50 @@ private fun TransformGesturesZoomPanRotateExample() {
 
     ImageBox(boxModifier, imageModifier, R.drawable.landscape3, transformDetailText)
 }
+
+@Composable
+private fun LimitedPanImageExample() {
+
+    var zoom by remember { mutableStateOf(1f) }
+    var pan by remember { mutableStateOf(Offset.Zero) }
+
+    val imageModifier = boxModifier
+        .pointerInput(Unit) {
+            detectTransformGestures { _, panChange, zoomChange, _ ->
+
+                zoom = (zoom * zoomChange).coerceIn(1f, 5f)
+
+
+                val maxX = (size.width * (zoom - 1) / 2f)
+                    .coerceAtLeast(0f)
+                val maxY = (size.height * (zoom - 1) / 2f)
+                    .coerceAtLeast(0f)
+
+                val newOffset = pan + panChange.times(zoom)
+
+                // This for TransformOrigin(0.5, 0.5f)
+                // For TransformOrigin(0f, 0f) it's  coerceIn(0f, 2*Max)
+                pan = Offset(
+                    newOffset.x.coerceIn(-maxX, maxX),
+                    newOffset.y.coerceIn(-maxY, maxY)
+                )
+            }
+        }
+        .graphicsLayer {
+            this.scaleX = zoom
+            this.scaleY = zoom
+            this.translationX = pan.x
+            this.translationY = pan.y
+        }
+
+    Image(
+        modifier = imageModifier,
+        painter = painterResource(id = R.drawable.landscape5),
+        contentScale = ContentScale.FillBounds,
+        contentDescription = null
+    )
+}
+
 
 @Composable
 fun ImageBox(

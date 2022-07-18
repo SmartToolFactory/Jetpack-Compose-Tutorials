@@ -42,7 +42,14 @@ private fun TutorialContent() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                .padding(
+                    PaddingValues(
+                        top = 8.dp,
+                        start = 8.dp,
+                        end = 8.dp,
+                        bottom = 8.dp + it.calculateBottomPadding()
+                    )
+                )
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -448,6 +455,7 @@ private fun DisposableEffectWithLifeCycle(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                else -> {}
             }
         }
 
