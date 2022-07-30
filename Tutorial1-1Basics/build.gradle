@@ -28,7 +28,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
     buildFeatures {
         compose true
@@ -46,7 +45,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
 
     // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
 
     // Jetpack Compose
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -58,15 +57,15 @@ dependencies {
     // Jetpack Compose Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    implementation "androidx.activity:activity-compose:1.5.0"
+    implementation "androidx.activity:activity-compose:1.5.1"
 
-    def nav_compose_version = "2.5.0-rc01"
+    def nav_compose_version = "2.5.1"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.1.0")
 
-    def accompanist_version = "0.24.9-beta"
+    def accompanist_version = "0.25.0"
     // Accompanist
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
