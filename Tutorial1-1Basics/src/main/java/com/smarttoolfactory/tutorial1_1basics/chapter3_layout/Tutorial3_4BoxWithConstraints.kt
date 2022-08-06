@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -32,6 +33,7 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
         TutorialHeader(text = "BoxWithConstraints")
         StyleableTutorialText(
             text = "1-) **BoxWithConstraints** is Composable that defines its own content according " +
@@ -76,8 +78,148 @@ private fun TutorialContent() {
                     "change based on how Modifier dimensions are set"
         )
         BoxWithConstraintsSample3()
+        Spacer(modifier = Modifier.height(8.dp))
+        BoxWithConstraintsSample4()
     }
 }
+
+@Composable
+private fun ConstrainsSample1() {
+    TutorialText2(text = "Fixed Size")
+    BoxWithConstraints(
+        modifier = Modifier
+            .size(100.dp)
+            .border(3.dp, Color.Green)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .background(Color.Red)
+        )
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+    BoxWithConstraints(
+        modifier = Modifier
+            .size(100.dp)
+            .border(3.dp, Color.Green)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(150.dp)
+                .background(Color.Red)
+        )
+    }
+
+    TutorialText2(text = "widthIn(min)")
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .widthIn(min = 100.dp)
+            .border(3.dp, Color.Green)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .background(Color.Red)
+        )
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+    BoxWithConstraints(
+        modifier = Modifier
+            .widthIn(min = 100.dp)
+            .border(3.dp, Color.Green)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(150.dp)
+                .background(Color.Red)
+        )
+    }
+
+
+    TutorialText2(text = "widthIn(max)")
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .widthIn(max = 100.dp)
+            .border(3.dp, Color.Green)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .background(Color.Red)
+        )
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+    BoxWithConstraints(
+        modifier = Modifier
+            .widthIn(max = 100.dp)
+            .border(3.dp, Color.Green)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(150.dp)
+                .background(Color.Red)
+        )
+    }
+}
+
+@Composable
+private fun ConstrainsSample2() {
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(30.dp)
+        .border(4.dp, Color.Cyan)) {
+
+        TutorialText2(text = "Chaining size modifiers")
+        Box(modifier = Modifier
+            .size(50.dp)
+            .background(Color.Yellow))
+        Box(modifier = Modifier
+            .size(50.dp)
+            .size(100.dp)
+            .background(Color.Red))
+        Box(modifier = Modifier
+            .size(50.dp)
+            .requiredSizeIn(100.dp)
+            .background(Color.Green))
+
+
+        TutorialText2(text = "widthIn(max)")
+
+        BoxWithConstraints(
+            modifier = Modifier
+                .width(100.dp)
+                .border(3.dp, Color.Green)
+        ) {
+            Box(
+                modifier = Modifier
+                    .requiredWidthIn(min = 20.dp, max = 50.dp)
+                    .height(50.dp)
+                    .background(Color.Red)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        BoxWithConstraints(
+            modifier = Modifier
+                .width(100.dp)
+                .border(3.dp, Color.Green)
+        ) {
+            Box(
+                modifier = Modifier
+                    .requiredWidthIn(min = 150.dp, max = 200.dp)
+                    .height(50.dp)
+                    .background(Color.Red)
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun BoxWithConstraintsExample(modifier: Modifier = Modifier) {
@@ -218,7 +360,35 @@ fun BoxWithConstraintsSample3() {
         }
 
         Spacer(modifier = Modifier.height(10.dp))
+        TutorialText2(text = "wrapContentSize()")
+        BoxWithConstraints(
+            modifier = Modifier
+                .wrapContentSize()
+                .background(Orange400)
+        ) {
 
+            val hasBoundedWidth = constraints.hasBoundedWidth
+            val hasFixedWidth = constraints.hasFixedWidth
+            val minWidth = constraints.minWidth
+            val maxWidth = constraints.maxWidth
+
+            val hasBoundedHeight = constraints.hasBoundedHeight
+            val hasFixedHeight = constraints.hasFixedHeight
+            val minHeight = constraints.minHeight
+            val maxHeight = constraints.maxHeight
+            Text(
+                "minWidth: $minWidth, maxWidth: $maxWidth\n" +
+                        "hasBoundedWidth: $hasBoundedWidth\n" +
+                        "hasFixedWidth: $hasFixedWidth\n" +
+                        "minHeight: $minHeight\n" +
+                        "maxHeight: $maxHeight\n" +
+                        "hasBoundedHeight: $hasBoundedHeight\n" +
+                        "hasFixedHeight: $hasFixedHeight",
+                color = Color.White
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
         TutorialText2(text = "200.dp Width and Height")
         BoxWithConstraints(
             modifier = Modifier
@@ -244,83 +414,110 @@ fun BoxWithConstraintsSample3() {
                 color = Color.White
             )
         }
+    }
+}
 
-        TutorialText2(text = "200.dp WidthIn(min) and HeightIn(min)")
-        BoxWithConstraints(
-            modifier = Modifier
-                .widthIn(min = 200.dp)
-                .heightIn(200.dp)
-                .background(Blue400)
-        ) {
+@Composable
+private fun BoxWithConstraintsSample4() {
+    TutorialText2(text = "200.dp WidthIn(min) and HeightIn(min)")
+    BoxWithConstraints(
+        modifier = Modifier
+            .widthIn(min = 200.dp)
+            .heightIn(200.dp)
+            .background(Blue400)
+    ) {
 
-            val hasBoundedWidth = constraints.hasBoundedWidth
-            val hasFixedWidth = constraints.hasFixedWidth
-            val minWidth = constraints.minWidth
-            val maxWidth = constraints.maxWidth
+        val hasBoundedWidth = constraints.hasBoundedWidth
+        val hasFixedWidth = constraints.hasFixedWidth
+        val minWidth = constraints.minWidth
+        val maxWidth = constraints.maxWidth
 
-            val hasBoundedHeight = constraints.hasBoundedHeight
-            val hasFixedHeight = constraints.hasFixedHeight
-            val minHeight = constraints.minHeight
-            val maxHeight = constraints.maxHeight
-            Text(
-                "minWidth: $minWidth, maxWidth: $maxWidth\n" +
-                        "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
-                        "minHeight: $minHeight, maxHeight: $maxHeight\n" +
-                        "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
-                color = Color.White
-            )
-        }
+        val hasBoundedHeight = constraints.hasBoundedHeight
+        val hasFixedHeight = constraints.hasFixedHeight
+        val minHeight = constraints.minHeight
+        val maxHeight = constraints.maxHeight
+        Text(
+            "minWidth: $minWidth, maxWidth: $maxWidth\n" +
+                    "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
+                    "minHeight: $minHeight, maxHeight: $maxHeight\n" +
+                    "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
+            color = Color.White
+        )
+    }
 
+    TutorialText2(text = "200.dp requiredWidth(min) and requiredHeight(min)")
+    BoxWithConstraints(
+        modifier = Modifier
+            .requiredWidthIn(min = 200.dp)
+            .requiredHeightIn(200.dp)
+            .background(Pink400)
+    ) {
 
-        TutorialText2(text = "200.dp WidthIn(max)")
-        BoxWithConstraints(
-            modifier = Modifier
-                .widthIn(max = 200.dp)
-                .background(Purple400)
-        ) {
+        val hasBoundedWidth = constraints.hasBoundedWidth
+        val hasFixedWidth = constraints.hasFixedWidth
+        val minWidth = constraints.minWidth
+        val maxWidth = constraints.maxWidth
 
-            val hasBoundedWidth = constraints.hasBoundedWidth
-            val hasFixedWidth = constraints.hasFixedWidth
-            val minWidth = constraints.minWidth
-            val maxWidth = constraints.maxWidth
+        val hasBoundedHeight = constraints.hasBoundedHeight
+        val hasFixedHeight = constraints.hasFixedHeight
+        val minHeight = constraints.minHeight
+        val maxHeight = constraints.maxHeight
+        Text(
+            "minWidth: $minWidth, maxWidth: $maxWidth\n" +
+                    "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
+                    "minHeight: $minHeight, maxHeight: $maxHeight\n" +
+                    "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
+            color = Color.White
+        )
+    }
 
-            val hasBoundedHeight = constraints.hasBoundedHeight
-            val hasFixedHeight = constraints.hasFixedHeight
-            val minHeight = constraints.minHeight
-            val maxHeight = constraints.maxHeight
-            Text(
-                "minWidth: $minWidth, maxWidth: $maxWidth\n" +
-                        "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
-                        "minHeight: $minHeight, maxHeight: $maxHeight\n" +
-                        "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
-                color = Color.White
-            )
-        }
+    TutorialText2(text = "200.dp defaultMinSize()")
+    BoxWithConstraints(
+        modifier = Modifier
+            .defaultMinSize(200.dp)
+            .background(Pink400)
+    ) {
 
-        TutorialText2(text = "wrapContentSize()")
-        BoxWithConstraints(
-            modifier = Modifier
-                .wrapContentSize()
-                .background(Orange400)
-        ) {
+        val hasBoundedWidth = constraints.hasBoundedWidth
+        val hasFixedWidth = constraints.hasFixedWidth
+        val minWidth = constraints.minWidth
+        val maxWidth = constraints.maxWidth
 
-            val hasBoundedWidth = constraints.hasBoundedWidth
-            val hasFixedWidth = constraints.hasFixedWidth
-            val minWidth = constraints.minWidth
-            val maxWidth = constraints.maxWidth
+        val hasBoundedHeight = constraints.hasBoundedHeight
+        val hasFixedHeight = constraints.hasFixedHeight
+        val minHeight = constraints.minHeight
+        val maxHeight = constraints.maxHeight
+        Text(
+            "minWidth: $minWidth, maxWidth: $maxWidth\n" +
+                    "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
+                    "minHeight: $minHeight, maxHeight: $maxHeight\n" +
+                    "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
+            color = Color.White
+        )
+    }
 
-            val hasBoundedHeight = constraints.hasBoundedHeight
-            val hasFixedHeight = constraints.hasFixedHeight
-            val minHeight = constraints.minHeight
-            val maxHeight = constraints.maxHeight
-            Text(
-                "minWidth: $minWidth, maxWidth: $maxWidth\n" +
-                        "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
-                        "minHeight: $minHeight, maxHeight: $maxHeight\n" +
-                        "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
-                color = Color.White
-            )
-        }
+    TutorialText2(text = "200.dp WidthIn(max)")
+    BoxWithConstraints(
+        modifier = Modifier
+            .widthIn(max = 200.dp)
+            .background(Purple400)
+    ) {
 
+        val hasBoundedWidth = constraints.hasBoundedWidth
+        val hasFixedWidth = constraints.hasFixedWidth
+        val minWidth = constraints.minWidth
+        val maxWidth = constraints.maxWidth
+
+        val hasBoundedHeight = constraints.hasBoundedHeight
+        val hasFixedHeight = constraints.hasFixedHeight
+        val minHeight = constraints.minHeight
+        val maxHeight = constraints.maxHeight
+        Text(
+            "minWidth: $minWidth, maxWidth: $maxWidth\n" +
+                    "hasBoundedWidth: $hasBoundedWidth, hasFixedWidth: $hasFixedWidth\n" +
+                    "minHeight: $minHeight, maxHeight: $maxHeight\n" +
+                    "hasBoundedHeight: $hasBoundedHeight, hasFixedHeight: $hasFixedHeight",
+            color = Color.White
+        )
     }
 }
