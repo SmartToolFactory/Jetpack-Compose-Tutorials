@@ -471,7 +471,7 @@ private fun SliderExample() {
     var sliderPosition5 by remember { mutableStateOf(.1f..(.3f)) }
 
     RangeSlider(
-        values = sliderPosition5,
+        value = sliderPosition5,
         onValueChange = {
             sliderPosition5 = it
         },
@@ -553,7 +553,6 @@ private fun CheckBoxWithText(label: String, state: Boolean, onStateChange: (Bool
 ) {
 
     // Checkbox with text on right side
-    val interactionSource = remember { MutableInteractionSource() }
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp)

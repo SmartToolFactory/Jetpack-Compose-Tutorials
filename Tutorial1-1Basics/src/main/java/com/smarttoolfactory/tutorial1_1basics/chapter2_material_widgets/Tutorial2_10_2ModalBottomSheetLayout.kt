@@ -43,39 +43,32 @@ private fun TutorialContent() {
     )
     val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                elevation = 8.dp,
-                title = {
-                    Text("Modal BottomSheet")
-                },
+    Scaffold(topBar = {
+        TopAppBar(elevation = 8.dp, title = {
+            Text("Modal BottomSheet")
+        },
 
-                actions = {
-                    IconButton(onClick = {
-                        if (modalBottomSheetState.isVisible) {
-                            coroutineScope.launch { modalBottomSheetState.hide() }
-                        } else {
-                            coroutineScope.launch { modalBottomSheetState.show() }
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Filled.Expand, contentDescription = null)
+            actions = {
+                IconButton(onClick = {
+                    if (modalBottomSheetState.isVisible) {
+                        coroutineScope.launch { modalBottomSheetState.hide() }
+                    } else {
+                        coroutineScope.launch { modalBottomSheetState.show() }
                     }
+                }) {
+                    Icon(imageVector = Icons.Filled.Expand, contentDescription = null)
                 }
-            )
-        }
-    ) {
+            })
+    }) {
 
-        ModalBottomSheetLayout(
-            sheetState = modalBottomSheetState,
+        ModalBottomSheetLayout(sheetState = modalBottomSheetState,
             sheetElevation = 8.dp,
-            scrimColor =  Color(0xccAAABBB),
+            scrimColor = Color(0xccAAABBB),
             sheetContent = {
                 // 🔥 Uncomment to see states on modal bottom sheet content
 //                MainContent(modalBottomSheetState, Color(0xff4CAF50))
                 SheetContent()
-            }
-        ) {
+            }) {
             MainContent(modalBottomSheetState)
         }
     }
@@ -84,10 +77,12 @@ private fun TutorialContent() {
 @ExperimentalMaterialApi
 @Composable
 private fun MainContent(
-    modalBottomSheetState: ModalBottomSheetState,
-    color: Color = Color(0xffE91E63)
+    modalBottomSheetState: ModalBottomSheetState, color: Color = Color(0xffE91E63)
 ) {
 
+    // 🔥🔥 Don't read from state in recomposition use derivedStateOf instead
+    // This is for demonstrating properties modalBottomSheetState
+    // Check Tutorial 4-5-2 for derivedStateOf
     val direction = modalBottomSheetState.direction
     val currentValue: ModalBottomSheetValue = modalBottomSheetState.currentValue
     val targetValue: ModalBottomSheetValue = modalBottomSheetState.targetValue
@@ -107,25 +102,20 @@ private fun MainContent(
     ) {
         Text(
             color = Color.White,
-            text = "direction:$direction\n" +
-                    "isExpanded: ${modalBottomSheetState.isVisible}\n" +
-                    "isAnimationRunning: ${modalBottomSheetState.isAnimationRunning}"
+            text = "direction:$direction\n" + "isExpanded: ${modalBottomSheetState.isVisible}\n"
+                    + "isAnimationRunning: ${modalBottomSheetState.isAnimationRunning}"
         )
 
         Text(
             color = Color.White,
-            text = "currentValue: ${currentValue}\n" +
-                    "targetValue: ${targetValue}\n" +
-                    "overflow: ${overflow}\n" +
-                    "offset: $offset"
+            text = "currentValue: ${currentValue}\n" + "targetValue: ${targetValue}\n"
+                    + "overflow: ${overflow}\n" + "offset: $offset"
         )
 
         Text(
             color = Color.White,
-            text = "progress: $progress\n" +
-                    "fraction: ${fraction}\n" +
-                    "from: ${from}\n" +
-                    "to: $to"
+            text = "progress: $progress\n" + "fraction: ${fraction}\n"
+                    + "from: ${from}\n" + "to: $to"
         )
     }
 }
@@ -145,20 +135,17 @@ private fun SheetContent() {
         LazyColumn {
 
             items(userList) { item: String ->
-                ListItem(
-                    icon = {
-                        Image(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape),
-                            painter = painterResource(id = R.drawable.avatar_1_raster),
-                            contentDescription = null
-                        )
-                    },
-                    secondaryText = {
-                        Text(text = "Secondary text")
-                    }
-                ) {
+                ListItem(icon = {
+                    Image(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape),
+                        painter = painterResource(id = R.drawable.avatar_1_raster),
+                        contentDescription = null
+                    )
+                }, secondaryText = {
+                    Text(text = "Secondary text")
+                }) {
                     Text(text = item, fontSize = 18.sp)
                 }
             }

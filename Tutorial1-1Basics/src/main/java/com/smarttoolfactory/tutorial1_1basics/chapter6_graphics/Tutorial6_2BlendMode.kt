@@ -232,31 +232,31 @@ private fun DrawImageBlendMode() {
     val dstImage = ImageBitmap.imageResource(id = R.drawable.composite_dst)
     val srcImage = ImageBitmap.imageResource(id = R.drawable.composite_src)
 
-    Canvas(modifier = canvasModifier) {
+Canvas(modifier = canvasModifier) {
 
-        val canvasWidth = size.width.roundToInt()
-        val canvasHeight = size.height.roundToInt()
+    val canvasWidth = size.width.roundToInt()
+    val canvasHeight = size.height.roundToInt()
 
-        with(drawContext.canvas.nativeCanvas) {
-            val checkPoint = saveLayer(null, null)
+    with(drawContext.canvas.nativeCanvas) {
+        val checkPoint = saveLayer(null, null)
 
-            // Destination
-            drawImage(
-                image = dstImage,
-                srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
-                dstSize = IntSize(canvasWidth, canvasHeight),
-            )
+        // Destination
+        drawImage(
+            image = dstImage,
+            srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
+            dstSize = IntSize(canvasWidth, canvasHeight),
+        )
 
-            // Source
-            drawImage(
-                image = srcImage,
-                srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
-                dstSize = IntSize(canvasWidth, canvasHeight),
-                blendMode = blendMode
-            )
-            restoreToCount(checkPoint)
-        }
+        // Source
+        drawImage(
+            image = srcImage,
+            srcSize = IntSize(canvasWidth / 2, canvasHeight / 2),
+            dstSize = IntSize(canvasWidth, canvasHeight),
+            blendMode = blendMode
+        )
+        restoreToCount(checkPoint)
     }
+}
 
     Text(
         text = "Src BlendMode: $blendMode",

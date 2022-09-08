@@ -1,12 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.graphics.Point
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -20,9 +17,6 @@ import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.random.Random
 
 @Composable
@@ -34,54 +28,22 @@ fun Tutorial3_2Screen1() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
+            .border(3.dp, Color.Red)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        TutorialHeader(text = "Custom Layout")
-        StyleableTutorialText(
-            text = "1-) Using measurables to get Placeable and placing these placeables inside " +
-                    "layout it's possible to create custom layouts."
-        )
 
-        TutorialText2(text = "Custom Column")
-        CustomColumn(
+        ChipStaggeredGrid(
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray)
-                .padding(8.dp)
+//                .fillMaxWidth()
+                .width(250.dp)
+                .border(3.dp, Color.Green)
         ) {
-            Text(
-                "CustomColumn",
-                modifier = Modifier
-                    .background(Color(0xffF44336)),
-                color = Color.White
-            )
-            Text(
-                "places items",
-                modifier = Modifier
-                    .background(Color(0xff9C27B0)),
-                color = Color.White
-            )
-            Text(
-                "vertically.",
-                modifier = Modifier
-                    .background(Color(0xff2196F3)),
-                color = Color.White
-            )
-            Text(
-                "We've done it by hand!",
-                modifier = Modifier
-                    .background(Color(0xff8BC34A)),
-                color = Color.White
-            )
-        }
-
-        TutorialText2(text = "Staggered layout with random sized chips")
-        ChipStaggeredGrid {
             for (topic in topics) {
                 Chip(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .border(3.dp, Color.Cyan)
+                        .padding(8.dp),
                     text = topic
                 )
             }
@@ -116,7 +78,6 @@ private fun CustomColumn(
         val totalHeight: Int = placeables.sumOf {
             it.height
         }
-
 
 
         // Set the size of the layout as big as it can
@@ -176,7 +137,6 @@ fun ChipStaggeredGrid(
     ) { measurables: List<Measurable>, constraints: Constraints ->
 
         val constraintMaxWidth = constraints.maxWidth
-        val constraintMaxHeight = constraints.maxHeight
 
         var maxRowWidth = 0
 
@@ -192,12 +152,12 @@ fun ChipStaggeredGrid(
         var maxPlaceableHeight = 0
         var lastRowHeight = 0
 
-//        println("😈 MyStaggeredGrid()
-//        constraintMaxWidth: $constraintMaxWidth, constraintMaxHeight: $constraintMaxHeight")
-
         val placeables: List<Placeable> = measurables.mapIndexed { index, measurable ->
+
             // Measure each child
-            val placeable = measurable.measure(constraints)
+            val placeable =
+                measurable.measure(constraints.copy(minWidth = 0, maxWidth = Constraints.Infinity))
+
             val placeableWidth = placeable.width
             val placeableHeight = placeable.height
 
@@ -221,12 +181,6 @@ fun ChipStaggeredGrid(
 
                 lastRowHeight = maxPlaceableHeight
 
-//                println(
-//                    "🍎 Same row->  index: ${topics[index]}|| " +
-//                            "currentWidthOfRow: $currentWidthOfRow, " +
-//                            "placeableHeight: $placeableHeight, " +
-//                            "maxPlaceableHeight: $maxPlaceableHeight"
-//                )
 
             } else {
 
@@ -242,14 +196,6 @@ fun ChipStaggeredGrid(
 
                 lastRowHeight = maxPlaceableHeight
                 maxPlaceableHeight = placeableHeight
-
-//                println(
-//                    "🍏 New column-> index: ${topics[index]}|| " +
-//                            "currentWidthOfRow: $currentWidthOfRow, " +
-//                            "totalHeightOfRows: $totalHeightOfRows, " +
-//                            "placeableHeight: $placeableHeight, " +
-//                            "maxPlaceableHeight: $maxPlaceableHeight"
-//                )
             }
 
             placeableMap[index] = Point(xPos, yPos)
@@ -260,8 +206,10 @@ fun ChipStaggeredGrid(
         val finalHeight = (rowHeights.sumOf { it } + lastRowHeight)
             .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
 
-
-//        println("RowHeights: $rowHeights, finalHeight: $finalHeight")
+        // Constraints can be bigger than max width
+        if (constraints.hasFixedWidth && constraints.hasBoundedWidth) {
+            maxRowWidth = maxRowWidth.coerceAtLeast(constraints.maxWidth)
+        }
 
         // Set the size of the layout as big as it can
         layout(maxRowWidth, finalHeight) {

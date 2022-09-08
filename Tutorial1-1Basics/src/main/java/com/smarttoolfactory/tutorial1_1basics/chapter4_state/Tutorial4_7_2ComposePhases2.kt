@@ -165,7 +165,7 @@ private fun PhasesSample2() {
         .layout { measurable, constraints ->
             val placeable: Placeable = measurable.measure(constraints)
             layout(placeable.width, placeable.height) {
-                println("⚾️ modifier3 LAYOUT")
+                println("⚾️ modifier4 LAYOUT")
                 placeable.placeRelative(0, 0)
             }
         }
