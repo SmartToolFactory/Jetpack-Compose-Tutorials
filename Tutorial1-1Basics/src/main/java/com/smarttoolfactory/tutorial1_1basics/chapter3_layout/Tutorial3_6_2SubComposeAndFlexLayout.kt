@@ -2,10 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -123,6 +120,7 @@ private fun TutorialContent() {
         }
 
         ChatInput(
+            modifier=Modifier.imePadding(),
             onMessageChange = { messageContent ->
                 messages.add(
                     ChatMessage(

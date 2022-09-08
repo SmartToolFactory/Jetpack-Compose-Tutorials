@@ -107,7 +107,9 @@ private fun TutorialContent() {
             }
         }
 
-        ChatInput(onMessageChange = { messageContent ->
+        ChatInput(
+            modifier=Modifier.imePadding(),
+            onMessageChange = { messageContent ->
             messages.add(
                 ChatMessage(
                     (messages.size + 1).toLong(),
