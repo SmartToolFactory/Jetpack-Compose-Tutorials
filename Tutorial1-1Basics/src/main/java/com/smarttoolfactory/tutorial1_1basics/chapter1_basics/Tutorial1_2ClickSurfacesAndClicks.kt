@@ -2,7 +2,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter1_basics
 
 import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,12 +23,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Composable
 fun Tutorial1_2Screen() {
-    println("🚀 Tutorial1_2Screen")
     TutorialContent()
 }
 
@@ -46,17 +44,22 @@ private fun TutorialContent() {
                         "**clickable area smaller than component's total area**."
             )
             ClickableModifierExample()
-
+        }
+        item {
             TutorialHeader(text = "Surface")
             StyleableTutorialText(text = "2-) Surface can clips it's children to selected shape.")
             SurfaceShapeExample()
+        }
 
+        item {
             StyleableTutorialText(text = "3-) Surface can set Z index and border of it's children.")
             SurfaceZIndexExample()
-
+        }
+        item {
             StyleableTutorialText(text = "4-) Surface can set content color for Text and Image.")
             SurfaceContentColorExample()
-
+        }
+        item {
             StyleableTutorialText(
                 text = "5-) Components can have offset in both x and y axes. Surface inside" +
                         " another surface gets clipped when it overflows from it's parent."
@@ -64,7 +67,6 @@ private fun TutorialContent() {
             SurfaceClickPropagationExample()
         }
     }
-
 }
 
 
@@ -152,9 +154,9 @@ fun ClickableModifierExample() {
  * 3) Borders: If [shape] has a border, then it will also be drawn.
  *
  * 4) Background: Surface fills the shape specified by [shape] with the [color]. If [color] is
- * [Colors.surface], the [ElevationOverlay] from [AmbientElevationOverlay] will be used to apply
+ * [Colors.surface], the [ElevationOverlay] from [LocalElevationOverlay] will be used to apply
  * an overlay - by default this will only occur in dark theme. The color of the overlay depends
- * on the [elevation] of this Surface, and the [AmbientAbsoluteElevation] set by any parent
+ * on the [elevation] of this Surface, and the [LocalAbsoluteElevation] set by any parent
  * surfaces. This ensures that a Surface never appears to have a lower elevation overlay than its
  * ancestors, by summing the elevation of all previous Surfaces.
  *

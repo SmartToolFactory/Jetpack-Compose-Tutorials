@@ -54,6 +54,9 @@ const val TAG_LAZY_VERTICAL_GRID = "LazyVerticalGrid"
 const val TAG_GRID_CELL = "GridCell"
 const val TAG_LIST_ITEM = "ListItem"
 
+const val TAG_LAZY_LIST_LAYOUT_INFO = "LazyListLayoutInfo"
+const val TAG_LAZY_LIST_ITEM_INFO = "LazyListItemInfo"
+
 // TopAppbar
 const val TAG_TOP_APP_BAR = "TopAppBar"
 const val TAG_TOP_APP_BAR_MENU = "Menu"

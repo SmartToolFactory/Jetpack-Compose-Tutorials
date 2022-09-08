@@ -11,8 +11,9 @@
     <string name="title2_5_3">2-5-3 LazyRow</string>
     <string name="title2_5_4">2-5-4 StickyHeader</string>
     <string name="title2_5_5">2-5-5 LazyVerticalGrid</string>
-    <string name="title2_5_6">2-5-6Dynamic LazyVerticalGrid</string>
+    <string name="title2_5_6">2-5-6 Dynamic LazyVerticalGrid</string>
     <string name="title2_5_7">2-5-7 ListItem</string>
+    <string name="title2_5_8">2-5-8 LazyListLayoutInfo</string>
     <string name="title2_6"><![CDATA[2-6 TopAppbar&Tabs]]></string>
     <string name="title2_7">2-7 BottomNavigation</string>
     <string name="title2_8">2-8 BottomAppBar</string>

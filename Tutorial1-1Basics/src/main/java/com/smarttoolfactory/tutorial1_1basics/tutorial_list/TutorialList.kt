@@ -237,6 +237,23 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         )
     )
 
+
+    val tutorial2_5_8 = TutorialSectionModel(
+        title = stringResource(R.string.title2_5_8),
+        description = "Get meta data about LazyRow/Column by using LazyLayoutState's " +
+                "LazyListLayoutInfo",
+        action = {
+            Tutorial2_5Screen8()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_ROW,
+            TAG_LAZY_COLUMN,
+            TAG_LAZY_LIST_LAYOUT_INFO,
+            TAG_LAZY_LIST_ITEM_INFO
+        )
+    )
+
     val tutorial2_6 = TutorialSectionModel(
         title = stringResource(R.string.title2_6),
         description = "The top app bar displays information and actions " +
@@ -472,6 +489,7 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         tutorial2_5_5,
         tutorial2_5_6,
         tutorial2_5_7,
+        tutorial2_5_8,
         tutorial2_6,
         tutorial2_7,
         tutorial2_8,
