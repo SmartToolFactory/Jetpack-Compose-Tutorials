@@ -33,16 +33,16 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
     namespace 'com.smarttoolfactory.tutorial1_1basics'
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
@@ -57,9 +57,9 @@ dependencies {
     // Jetpack Compose Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    implementation "androidx.activity:activity-compose:1.5.1"
+    implementation "androidx.activity:activity-compose:1.6.0"
 
-    def nav_compose_version = "2.5.1"
+    def nav_compose_version = "2.5.2"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
@@ -67,7 +67,6 @@ dependencies {
 
     def accompanist_version = "0.25.0"
     // Accompanist
-    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
