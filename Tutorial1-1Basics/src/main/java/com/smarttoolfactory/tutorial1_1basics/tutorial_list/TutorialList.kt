@@ -1632,6 +1632,26 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_7 = TutorialSectionModel(
+        title = "6-7 Gooey Effect",
+        description = "Create basic Gooey Effect with static circles " +
+                "and one with moves with touch",
+        action = {
+            Tutorial6_7Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_GOOEY,
+            TAG_TRANSLATE,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1644,6 +1664,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_4_1,
         tutorial6_4_2,
         tutorial6_5,
-        tutorial6_6
+        tutorial6_6,
+        tutorial6_7
     )
 }
