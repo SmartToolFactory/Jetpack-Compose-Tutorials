@@ -54,6 +54,10 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"
 
+    // Util Functions of Jetpack Compose
+    implementation "androidx.compose.ui:ui-util:$compose_version"
+
+
     // Jetpack Compose Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 

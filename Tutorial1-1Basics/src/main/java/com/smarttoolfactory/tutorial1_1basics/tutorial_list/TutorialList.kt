@@ -1666,6 +1666,21 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_9_1 = TutorialSectionModel(
+        title = "6-9-1 Neon Glow Effect",
+        description = "Use paint.asFrameworkPaint() to create blur effect to mimic neon glow " +
+                "and infinite animation to dim and glow infinitely",
+        action = {
+            Tutorial6_9Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_NEON_GLOW,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1681,5 +1696,6 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_6,
         tutorial6_7,
         tutorial6_8_1,
+        tutorial6_9_1,
     )
 }
