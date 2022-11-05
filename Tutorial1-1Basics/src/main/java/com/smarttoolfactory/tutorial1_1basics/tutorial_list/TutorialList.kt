@@ -1652,6 +1652,20 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_8_1 = TutorialSectionModel(
+        title = "6-8-1 Cutout Arc Shape",
+        description = "Use Path.cubicTo, Path.arcTo to draw cutout shape.",
+        action = {
+            Tutorial6_8Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_PATH,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1665,6 +1679,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_4_2,
         tutorial6_5,
         tutorial6_6,
-        tutorial6_7
+        tutorial6_7,
+        tutorial6_8_1,
     )
 }
