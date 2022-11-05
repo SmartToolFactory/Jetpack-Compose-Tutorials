@@ -4,6 +4,7 @@ import android.graphics.ComposePathEffect
 import android.graphics.CornerPathEffect
 import android.graphics.DiscretePathEffect
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
@@ -29,14 +31,19 @@ fun Tutorial6_7Screen() {
 @Composable
 private fun TutorialContent() {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
     ) {
         StyleableTutorialText(
-            text = "Gooey Effect is combination of paths with path operation",
+            text = "Gooey Effect is combination of paths with path operation. **Blue** path " +
+                    "is the original path without any operation. Other paths are drawn using" +
+                    "**Path.combine** and **PathEffect**s to create gooey effect.",
             bullets = false
         )
         GooeyEffectSample()
-        StyleableTutorialText(text = "Gooey Effect with touch", bullets = false)
+        StyleableTutorialText(text = "Gooey Effect with touch. Touch on Canvas to move " +
+                "one of the circles", bullets = false)
         GooeyEffectSample2()
     }
 }
@@ -52,14 +59,14 @@ private fun GooeyEffectSample() {
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(4/3f)
+            .aspectRatio(4 / 3f)
     ) {
         val center = size.center
 
         if (pathLeft.isEmpty) {
             pathLeft.addOval(
                 Rect(
-                    center = Offset(center.x, center.y),
+                    center = Offset(center.x - 90f, center.y),
                     radius = 200f
                 )
             )
@@ -68,7 +75,7 @@ private fun GooeyEffectSample() {
         if (pathRight.isEmpty) {
             pathRight.addOval(
                 Rect(
-                    center = Offset(center.x + 100f, center.y),
+                    center = Offset(center.x + 90f, center.y),
                     radius = 200f
                 )
             )
@@ -117,37 +124,33 @@ private fun GooeyEffectSample() {
 @Composable
 private fun GooeyEffectSample2() {
 
-    val pathLeft = remember { Path() }
-    val pathRight = remember { Path() }
+    val pathDynamic = remember { Path() }
+    val pathStatic = remember { Path() }
 
     /**
      * Current position of the pointer that is pressed or being moved
      */
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
 
-
     val segmentCount = 20
     val pathMeasure = remember {
         PathMeasure()
     }
 
-
     val modifier = Modifier
         .pointerInput(Unit) {
-            detectDragGestures { change, dragAmount ->
+            detectDragGestures { change, _ ->
                 currentPosition = change.position
             }
         }
-        .fillMaxWidth()
-        .aspectRatio(1f)
+        .fillMaxSize()
 
-    val brush = remember {
-        Brush.linearGradient(
-            colors = listOf(
-                Color.Red,
-                Color.Green
-            )
-        )
+    val paint = remember {
+        Paint()
+    }
+
+    var isPaintSetUp by remember {
+        mutableStateOf(false)
     }
 
     Canvas(modifier = modifier) {
@@ -157,22 +160,23 @@ private fun GooeyEffectSample2() {
             center
         } else currentPosition
 
-        pathLeft.reset()
-        pathLeft.addOval(
+        pathDynamic.reset()
+        pathDynamic.addOval(
             Rect(
                 center = position,
-                radius = 200f
+                radius = 100f
             )
         )
 
-
-        pathRight.reset()
-        pathRight.addOval(
+        pathStatic.reset()
+        pathStatic.addOval(
             Rect(
                 center = Offset(center.x, center.y),
-                radius = 200f
+                radius = 150f
             )
         )
+
+        pathMeasure.setPath(pathDynamic, true)
 
         val discretePathEffect = DiscretePathEffect(pathMeasure.length / segmentCount, 0f)
         val cornerPathEffect = CornerPathEffect(50f)
@@ -183,18 +187,28 @@ private fun GooeyEffectSample2() {
             inner = discretePathEffect.toComposePathEffect()
         )
 
-        pathLeft.op(pathLeft, pathRight, PathOperation.Union)
+        if (!isPaintSetUp) {
 
-        pathMeasure.setPath(pathLeft, true)
-
-        drawPath(
-            path = pathLeft,
-            brush = brush,
-            style = Stroke(
-                4.dp.toPx(),
-                pathEffect = chainPathEffect
+            paint.shader = LinearGradientShader(
+                from = Offset.Zero,
+                to = Offset(size.width, size.height),
+                colors = listOf(
+                    Color(0xffFFEB3B),
+                    Color(0xffE91E63)
+                ),
+                tileMode = TileMode.Clamp
             )
-        )
+            isPaintSetUp = true
+            paint.pathEffect = chainPathEffect
+        }
 
+        val newPath = Path.combine(PathOperation.Union, pathDynamic, pathStatic)
+
+        with(drawContext.canvas) {
+            this.drawPath(
+                newPath,
+                paint
+            )
+        }
     }
 }
