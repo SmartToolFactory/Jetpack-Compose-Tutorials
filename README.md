@@ -150,9 +150,9 @@ previous searches using a database, domain with ViewModel.
 | <h3>6-6 Scale/Translation Edit</h3><br/>Editable Composable that changes position and scale when touched and dragged from handles or changes position when touched inside.<br><br>• Canvas<br>• DrawScope<br>• Scale<br>• Translate<br>• AwaitPointerEventScope<br>• PointerInputChange<br>            | <img src ="/./screenshots/tutorial6_6.gif" width=200>   |
 |                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-7 Gooey Effect</h3><br/>Create basic Gooey Effect with static circles and one with moves with touch.<br><br>• Canvas<br>• DrawScope<br>• Gooey<br>• Translate<br>• AwaitPointerEventScope<br>• PointerInputChange<br>                                                                            | <img src ="/./screenshots/tutorial6_7.gif" width=200>   |
-|
+|                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-8-1 Cutout Arc Shape</h3><br/>Use Path.cubicTo, Path.arcTo to draw cutout shape.<br><br>• Canvas<br>• Path<br>• Scale<br>                                                                                                                                                                        | <img src ="/./screenshots/tutorial6_8_1.png" width=200> |
-|
+ 
 ### Resources and References
 
 [Codelab Jetpack Compose Basics](https://developer.android.com/codelabs/jetpack-compose-basics)
