@@ -3,6 +3,7 @@ package com.smarttoolfactory.tutorial1_1basics.ui.components
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsPadding
 
 private enum class Visibility {
     VISIBLE,
@@ -26,10 +26,10 @@ private enum class Visibility {
 }
 
 /**
- * Shows a button that lets the user scroll to the bottom.
+ * Shows a button that lets the user scroll to the top.
  */
 @Composable
-fun JumpToBottom(
+fun JumpToTopButton(
     enabled: Boolean,
     onClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -54,8 +54,6 @@ fun JumpToBottom(
                 pressedElevation = 8.dp
             ),
             backgroundColor = Color(0xffF06292),
-//                    backgroundColor = MaterialTheme.colors.surface,
-//                    contentColor = MaterialTheme.colors.onSurface,
             modifier = modifier
                 .padding(end = 10.dp)
                 .size(48.dp)
@@ -77,5 +75,5 @@ fun JumpToBottom(
 @Preview(device = Devices.PIXEL_C)
 @Composable
 fun JumpToBottomPreview() {
-    JumpToBottom(enabled = true, onClicked = {})
+    JumpToTopButton(enabled = true, onClicked = {})
 }

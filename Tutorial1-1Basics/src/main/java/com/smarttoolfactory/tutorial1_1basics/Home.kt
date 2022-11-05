@@ -31,7 +31,7 @@ import com.google.accompanist.pager.*
 import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
-import com.smarttoolfactory.tutorial1_1basics.ui.components.JumpToBottom
+import com.smarttoolfactory.tutorial1_1basics.ui.components.JumpToTopButton
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StaggeredGrid
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
 import kotlinx.coroutines.launch
@@ -309,7 +309,7 @@ fun TutorialListContent(
             }
 
             val coroutineScope = rememberCoroutineScope()
-            JumpToBottom(
+            JumpToTopButton(
                 enabled = jumpToBottomButtonEnabled,
                 onClicked = {
                     coroutineScope.launch {
