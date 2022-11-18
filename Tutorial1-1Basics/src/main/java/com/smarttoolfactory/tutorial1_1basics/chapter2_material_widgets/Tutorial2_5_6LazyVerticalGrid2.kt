@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,10 +14,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.Snack
 import com.smarttoolfactory.tutorial1_1basics.model.snacks
@@ -74,11 +77,12 @@ fun GridSnackCardWithTitle(
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable { },
-            painter = rememberImagePainter(
-                data = snack.imageUrl,
-                builder = {
-                    placeholder(drawableResId = R.drawable.placeholder)
-                }
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        placeholder(drawableResId = R.drawable.placeholder)
+                    }
+                    ).build()
             ),
             contentDescription = null
         )

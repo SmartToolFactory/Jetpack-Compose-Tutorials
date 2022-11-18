@@ -18,12 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.Snack
 import com.smarttoolfactory.tutorial1_1basics.model.snacks
@@ -43,9 +45,7 @@ fun SnackCard(
     Card(
         modifier = Modifier
             .background(Color.White)
-            .clickable(
-                onClick = {}
-            ),
+            .clickable(onClick = {}),
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -57,12 +57,12 @@ fun SnackCard(
                 Image(
                     contentScale = ContentScale.Crop,
                     modifier = modifier,
-                    painter = rememberImagePainter(
-                        data = snack.imageUrl,
-                        builder = {
-                            crossfade(true)
-                            placeholder(drawableResId = R.drawable.placeholder)
-                        }
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+                            .apply(block = fun ImageRequest.Builder.() {
+                                crossfade(true)
+                                placeholder(drawableResId = R.drawable.placeholder)
+                            }).build()
                     ),
                     contentDescription = null
                 )
@@ -112,11 +112,11 @@ fun HorizontalSnackCard(
                     .size(160.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .clickable { },
-                painter = rememberImagePainter(
-                    data = snack.imageUrl,
-                    builder = {
-                        placeholder(drawableResId = R.drawable.placeholder)
-                    }
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            placeholder(drawableResId = R.drawable.placeholder)
+                        }).build()
                 ),
                 contentDescription = null
             )
@@ -154,11 +154,11 @@ fun GridSnackCard(
                 .size(120.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable { },
-            painter = rememberImagePainter(
-                data = snack.imageUrl,
-                builder = {
-                    placeholder(drawableResId = R.drawable.placeholder)
-                }
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        placeholder(drawableResId = R.drawable.placeholder)
+                    }).build()
             ),
             contentDescription = null
         )

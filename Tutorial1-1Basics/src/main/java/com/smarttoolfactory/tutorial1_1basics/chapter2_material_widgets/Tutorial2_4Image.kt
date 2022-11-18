@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -578,8 +578,8 @@ fun ImageDownloadWithCoilExample() {
         Image(
             modifier = Modifier
                 .height(180.dp),
-            painter = rememberImagePainter(
-                data = url
+            painter = rememberAsyncImagePainter(
+                model = url
             ),
             contentDescription = null
         )
