@@ -1681,6 +1681,27 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+
+    val tutorial6_10 = TutorialSectionModel(
+        title = "6-10 Ripple on Canvas",
+        description = "Create ripple effect when user touchs specific area using Animatable and" +
+                "keyFrames to create ripple effect",
+        action = {
+            Tutorial6_10Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_INDICATION,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_WAIT_UP_OR_CANCELLATION
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1697,5 +1718,6 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_7,
         tutorial6_8_1,
         tutorial6_9_1,
+        tutorial6_10
     )
 }
