@@ -45,7 +45,7 @@ import kotlin.math.sin
 
  */
 @Composable
-fun Tutorial6_2Screen() {
+fun Tutorial6_2Screen1() {
     TutorialContent()
 }
 

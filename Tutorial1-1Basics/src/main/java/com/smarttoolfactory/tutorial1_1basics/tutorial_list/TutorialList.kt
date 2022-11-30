@@ -1525,17 +1525,36 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
-    val tutorial6_2 = TutorialSectionModel(
-        title = "6-2 Blend Modes(Porter-Duff)",
+    val tutorial6_2_1 = TutorialSectionModel(
+        title = "6-2-1 Blend Modes(Porter-Duff)",
         description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
                 "or clip based on blend mode, and manipulate pixels.",
         action = {
-            Tutorial6_2Screen()
+            Tutorial6_2Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
+            TAG_BLEND_MODE,
+            TAG_PATH
+        ),
+        tagColor = GraphicsListColor
+    )
+
+
+    val tutorial6_2_2 = TutorialSectionModel(
+        title = "6-2-2 Canvas(ImageBitmap) & Paint",
+        description = "Use blend(Porter-Duff) modes with androidx.compose.ui.graphics.Canvas " +
+                "to change drawing source/destination " +
+                "or clip based on blend mode, and manipulate pixels.",
+        action = {
+            Tutorial6_2Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ACTUAL_CANVAS,
+            TAG_PAINT,
             TAG_BLEND_MODE,
             TAG_PATH
         ),
@@ -1701,7 +1720,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_10 = TutorialSectionModel(
         title = "6-10 Ripple on Canvas",
-        description = "Create ripple effect when user touchs specific area using Animatable and" +
+        description = "Create ripple effect when user touches specific area using Animatable and" +
                 "keyFrames to create ripple effect",
         action = {
             Tutorial6_10Screen()
@@ -1726,7 +1745,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_4,
         tutorial6_1_5,
         tutorial6_1_6,
-        tutorial6_2,
+        tutorial6_2_1,
+        tutorial6_2_2,
         tutorial6_4_0,
         tutorial6_4_1,
         tutorial6_4_2,

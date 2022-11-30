@@ -25,8 +25,7 @@ fun BlendModeSelection(
     onBlendModeSelected: (Int, BlendMode) -> Unit
 ) {
     val radioOptions = blendModes.keys.toList()
-
-
+    
     val (selectedOption: String, onOptionSelected: (String) -> Unit) = remember {
         mutableStateOf(
             radioOptions[selectedIndex]
