@@ -8,7 +8,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_11Screen
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 
 /**
@@ -30,8 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             ComposeTutorialsTheme {
-//                MainScreen()
-                Tutorial6_11Screen()
+                MainScreen()
             }
         }
     }
