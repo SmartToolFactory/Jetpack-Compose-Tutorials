@@ -266,6 +266,7 @@ previous searches using a database, domain with ViewModel.
 [Image Cropper](https://stackoverflow.com/a/73819758/5457853)<br>
 [Vertical scroll on Canvas (Jetpack Compose)](https://stackoverflow.com/a/73225175/5457853)<br>
 [Why can I draw a line out of the canvas when I use Jetpack Compose?](https://stackoverflow.com/a/73303026/5457853)<br>
+[implement a spinning activity indicator with Jetpack Compose](https://stackoverflow.com/a/74199392/5457853)
 
 ### Resources and References
 
