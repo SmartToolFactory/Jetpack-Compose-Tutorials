@@ -1738,6 +1738,24 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_11 = TutorialSectionModel(
+        title = "6-11 Canvas Erase Percentage",
+        description = "Use blend(Porter-Duff) modes with androidx.compose.ui.graphics.Canvas " +
+                "to erase and compare pixels with erased Bitmap to find out " +
+                "percentage of erased area.",
+        action = {
+            Tutorial6_11Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ACTUAL_CANVAS,
+            TAG_PAINT,
+            TAG_BLEND_MODE,
+            TAG_PATH
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1755,6 +1773,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_7,
         tutorial6_8_1,
         tutorial6_9_1,
-        tutorial6_10
+        tutorial6_10,
+        tutorial6_11
     )
 }
