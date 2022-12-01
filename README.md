@@ -157,6 +157,103 @@ previous searches using a database, domain with ViewModel.
 |                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-11 Canvas Erase Percentage</h3><br/>Use blend(Porter-Duff) modes with androidx.compose.ui.graphics.Canvas to erase and compare pixels with erased Bitmap to find ou percentage of erased area.<br><br>• ActualCanvas<br>• Path<br>• Neon<br>• AwaitPointerEventScope<br>• PointerInputChange<br> | <img src ="/./screenshots/tutorial6_11.gif" width=200>  |
 
+### Some of the answers i posted on Stackoverflow
+
+#### Composable Functions, Recomposition
+[Difference Between Composable and Normal Functions](https://stackoverflow.com/questions/73220189/what-are-differents-between-composable-function-and-normal-function-in-android/73261429#73261429)
+[What does Jetpack Compose remember actually do, how does it work under the hood?](https://stackoverflow.com/a/69961175/5457853)
+[Scoped/Smart Recomposition](https://stackoverflow.com/a/71016788/5457853)
+[Why does mutableStateOf without remember work sometimes?](https://stackoverflow.com/a/71047185/5457853)
+[Lambdas, Scopes, and Recomposition](https://stackoverflow.com/a/73681007/5457853)
+[MutableState vs MutableStateFlow](https://stackoverflow.com/a/70217911/5457853)
+[Destructuring MutableState](https://stackoverflow.com/a/71970915/5457853)
+[Does a 0dp sized composable even get composed](https://stackoverflow.com/questions/73179090/does-a-0dp-sized-composable-even-get-composed/73181512#73181512)
+[** Jetpack Compose - Recomposition ignoring function parameter](https://stackoverflow.com/a/73610519/5457853)
+[Unable to call @Composable function from remember block](https://stackoverflow.com/a/74363923/5457853)
+
+#### Composables
+[How can I select only 3 element in a grid/list (jetpack compose)?](https://stackoverflow.com/a/73501341/5457853)
+[Remove default padding from CheckBox](https://stackoverflow.com/a/71609165/5457853)
+
+#### LaunchedEffect, SideEffect, DerivedStateOf, snapshotFlow
+[Using SnapshotFlow to observe MutableState changes](https://stackoverflow.com/a/69235908/5457853)
+[Callback function can be changed in Compose? rememberUpdatedState](https://stackoverflow.com/a/72873305/5457853)
+[How can I launch a function only onetime when I use Jetpack Compose?](https://stackoverflow.com/questions/72946503/how-can-i-launch-a-function-only-onetime-when-i-use-jetpack-compose/72946980#72946980)
+[Does lazyColumn listen for events when items enter or leave the screen](https://stackoverflow.com/a/73077507/5457853)
+[Why do I need use derivedStateOf in Compose?](https://stackoverflow.com/a/73132540/5457853)
+[Click a close button on a bottomsheet to hide it in compose](https://stackoverflow.com/a/73552425/5457853)
+[How to show a composable just for e few seconds?](https://stackoverflow.com/a/73333356/5457853)
+[What would be the most 'lightweight' way to observe current time for a an android composable?](https://stackoverflow.com/a/73333458/5457853)
+[Difference between remember and rememberUpdatedState in Jetpack Compose?](https://stackoverflow.com/a/70223293/5457853)
+[Use of LaunchedEffect vs SideEffect in jetpack compose](https://stackoverflow.com/a/73802448/5457853)
+[Jetpack Compose - avoid unnecessary recomposition](https://stackoverflow.com/a/74363723/5457853)
+[Jetpack Compose recomposition race condition](https://stackoverflow.com/a/74242627/5457853)
+
+#### Modifiers
+[Create Custom Modifier](https://stackoverflow.com/a/70439902/5457853)
+[Composed Modifier](https://stackoverflow.com/a/70169164/5457853)
+[Why are the modifier sizes not overwritten?](https://stackoverflow.com/a/71678948/5457853)
+[How to achieve layout with where icon is position absolute on column layout Modifier.offset](https://stackoverflow.com/a/73091505/5457853)
+[Define Custom Boundaries for a Composable GraphicsLayer](https://stackoverflow.com/a/73470355/5457853)
+[Modifier- Is there a way to create and apply a style to multiple elements in Compose like we do with CSS](https://stackoverflow.com/a/73654523/5457853)
+[JetPack Compose - weight() in Row in Card doesn't work](https://stackoverflow.com/a/73643865/5457853)
+
+#### Layout, Constraints, SubcomposeLayout
+[Creating a SearchView](https://stackoverflow.com/a/69605371/5457853)
+[Create custom badges with size and colorful shadows](https://stackoverflow.com/a/70143863/5457853)
+[How to align one item to bottom using weight or Layout](https://stackoverflow.com/a/70905004/5457853)
+[How to create chat bubbles](https://stackoverflow.com/a/70938029/5457853)
+[Custom Tabs](https://stackoverflow.com/a/71377299/5457853)
+[Take screenshot of a Composable](https://stackoverflow.com/a/71902319/5457853)
+[Make last Item of the Compose LazyColumn fill rest of the screen](https://stackoverflow.com/questions/72936954/make-last-item-of-the-compose-lazycolumn-fill-rest-of-the-screen/72937753#72937753)
+[Row IntrinsicSize.Min not working when the children are async loading images SubcomposeLayout](https://stackoverflow.com/a/73105010/5457853)
+[Observing position of item in Lazy Column in Jetpack Compose](https://stackoverflow.com/a/73148733/5457853)
+[Jetpack Compose width / height / size modifier vs requiredWidth / requiredHeight / requiredSize](https://stackoverflow.com/a/73316247/5457853)
+[Jetpack Compose - layouting reusable components](https://stackoverflow.com/a/74286507/5457853)
+
+#### SubcomposeLayout
+[How does SubcomposeLayout work?](https://stackoverflow.com/a/70383694/5457853)
+[How to create a Slider with SubcomposeLayout](https://stackoverflow.com/a/71792822/5457853)
+[Setting width of 2 buttons with SubcomposeLayout](https://stackoverflow.com/a/72940620/5457853)
+[How to adjust size of component to it's child and remain unchanged when it's child size will change?](https://stackoverflow.com/a/73706182/5457853)
+[Get information about size before is drawn in Compose](https://stackoverflow.com/a/73802696/5457853)
+
+#### Animation
+[Animating with single recomposition with Canvas](https://stackoverflow.com/a/73274631/5457853)
+[Android Compose create shake animation](https://stackoverflow.com/a/73631379/5457853)
+
+
+#### Gestures
+[How gestures work in Jetpack Compose and onTouchEvent](https://stackoverflow.com/a/70847531/5457853)
+[Detect which section of image is touched](https://stackoverflow.com/a/71491531/5457853)
+[Detect when the user lifts their finger (off the screen)](https://stackoverflow.com/a/72210341/5457853)
+[How to detect the end of transform gesture in Jetpack Compose?](https://stackoverflow.com/a/72897829/5457853)
+[Combine detectTapGestures and detectDragGesturesAfterLongPress?](https://stackoverflow.com/a/72897829/5457853)
+[What is clickable indication in jetpack compose?](https://stackoverflow.com/a/73175067/5457853)
+[Prevent dragging box out of the screen with Jetpack Compose](https://stackoverflow.com/a/73307256/5457853)
+[JetPack Compose: Adding click duration](https://stackoverflow.com/a/73419818/5457853)
+[compose gestures, zoom in zoom out move and rotation](https://stackoverflow.com/a/73542156/5457853)
+[How to set Double back press Exit in Jetpack Compose?](https://stackoverflow.com/a/73754359/5457853)
+
+#### Canvas, DrawScope
+[How to apply Porter-Duff mode to image?](https://stackoverflow.com/a/69790654/5457853)
+[How to create drawing app with Jetpack Compose?](https://stackoverflow.com/a/71090112/5457853)
+[How to create HSL saturation and lightness change gradient or brush editor with Jetpack Compose?](https://stackoverflow.com/a/71496228/5457853)
+[How to create Angular gradient in Jetpack compose?](https://stackoverflow.com/a/71705164/5457853)
+[Angled gradient background in Jetpack Compose](https://stackoverflow.com/a/71716708/5457853)
+[how to draw a square with stroke and neon glow with Jetpack Compose Canvas?](https://stackoverflow.com/a/72975726/5457853)
+[Jetpack compose Drawing over shapes in a path](https://stackoverflow.com/a/72969383/5457853)
+[Cubic with Canvas](https://stackoverflow.com/a/73469065/5457853)
+[What is the unit of Canvas's size when I use Compose?](https://stackoverflow.com/a/73233376/5457853)
+[How to draw a multicolored bar with Canvas in Jetpack Compose?](https://stackoverflow.com/a/73547525/5457853)
+[How to clip or cut a Composable with BlendModes?](https://stackoverflow.com/a/73590696/5457853)
+[How to center Text in Canvas in Jetpack compose?](https://stackoverflow.com/a/73352227/5457853)
+[How to divide the stroke of a circle at equal intervals in Jetpack compose canvas?](https://stackoverflow.com/a/73677601/5457853)
+[Jetpack compose custom shape with pie effect](https://stackoverflow.com/a/73950607/5457853)
+[How to apply PathEffect without using Stroke with Jetpack Compose?](https://stackoverflow.com/a/74327086/5457853)
+[Jetpack Compose - CardView with Arc Shape on border](https://stackoverflow.com/a/74285035/5457853)
+[Jetpack Compose: how to cut out card shape?](https://stackoverflow.com/a/74076087/5457853)
+
 ### Resources and References
 
 [Codelab Jetpack Compose Basics](https://developer.android.com/codelabs/jetpack-compose-basics)
