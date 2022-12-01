@@ -170,6 +170,7 @@ previous searches using a database, domain with ViewModel.
 [Does a 0dp sized composable even get composed](https://stackoverflow.com/questions/73179090/does-a-0dp-sized-composable-even-get-composed/73181512#73181512)
 [** Jetpack Compose - Recomposition ignoring function parameter](https://stackoverflow.com/a/73610519/5457853)
 [Unable to call @Composable function from remember block](https://stackoverflow.com/a/74363923/5457853)
+[Composable doesn't re-compose on button click](https://stackoverflow.com/a/74588794/5457853)
 
 #### Composables
 [How can I select only 3 element in a grid/list (jetpack compose)?](https://stackoverflow.com/a/73501341/5457853)
@@ -188,6 +189,7 @@ previous searches using a database, domain with ViewModel.
 [Use of LaunchedEffect vs SideEffect in jetpack compose](https://stackoverflow.com/a/73802448/5457853)
 [Jetpack Compose - avoid unnecessary recomposition](https://stackoverflow.com/a/74363723/5457853)
 [Jetpack Compose recomposition race condition](https://stackoverflow.com/a/74242627/5457853)
+[how can I do resend email timer LaunchedEffect](https://stackoverflow.com/a/74633185/5457853)
 
 #### Modifiers
 [Create Custom Modifier](https://stackoverflow.com/a/70439902/5457853)
@@ -197,8 +199,11 @@ previous searches using a database, domain with ViewModel.
 [Define Custom Boundaries for a Composable GraphicsLayer](https://stackoverflow.com/a/73470355/5457853)
 [Modifier- Is there a way to create and apply a style to multiple elements in Compose like we do with CSS](https://stackoverflow.com/a/73654523/5457853)
 [JetPack Compose - weight() in Row in Card doesn't work](https://stackoverflow.com/a/73643865/5457853)
+[How to calculate empty space in lazy column after last visible item](https://stackoverflow.com/a/74011277/5457853)
+[How To Get The Absolute Position Of My Composable Function/Children?](https://stackoverflow.com/a/74434621/5457853)
+[Use of LaunchedEffect vs SideEffect in jetpack compose](https://stackoverflow.com/a/73802448/5457853)
 
-#### Layout, Constraints, SubcomposeLayout
+#### Layout, Constraints
 [Creating a SearchView](https://stackoverflow.com/a/69605371/5457853)
 [Create custom badges with size and colorful shadows](https://stackoverflow.com/a/70143863/5457853)
 [How to align one item to bottom using weight or Layout](https://stackoverflow.com/a/70905004/5457853)
@@ -210,6 +215,8 @@ previous searches using a database, domain with ViewModel.
 [Observing position of item in Lazy Column in Jetpack Compose](https://stackoverflow.com/a/73148733/5457853)
 [Jetpack Compose width / height / size modifier vs requiredWidth / requiredHeight / requiredSize](https://stackoverflow.com/a/73316247/5457853)
 [Jetpack Compose - layouting reusable components](https://stackoverflow.com/a/74286507/5457853)
+[Can't represent a size of 357913941 in Constraints in Jetpack Compose](https://stackoverflow.com/a/74575756/5457853)
+[Android compose, Indicator size problem with coil](https://stackoverflow.com/a/74491759/5457853)
 
 #### SubcomposeLayout
 [How does SubcomposeLayout work?](https://stackoverflow.com/a/70383694/5457853)
@@ -221,7 +228,8 @@ previous searches using a database, domain with ViewModel.
 #### Animation
 [Animating with single recomposition with Canvas](https://stackoverflow.com/a/73274631/5457853)
 [Android Compose create shake animation](https://stackoverflow.com/a/73631379/5457853)
-
+[Issue with jetpack compose animation performance](https://stackoverflow.com/a/74588077/5457853)
+[animation o a lazycolumn android](https://stackoverflow.com/a/73325826/5457853)
 
 #### Gestures
 [How gestures work in Jetpack Compose and onTouchEvent](https://stackoverflow.com/a/70847531/5457853)
@@ -253,6 +261,11 @@ previous searches using a database, domain with ViewModel.
 [How to apply PathEffect without using Stroke with Jetpack Compose?](https://stackoverflow.com/a/74327086/5457853)
 [Jetpack Compose - CardView with Arc Shape on border](https://stackoverflow.com/a/74285035/5457853)
 [Jetpack Compose: how to cut out card shape?](https://stackoverflow.com/a/74076087/5457853)
+[Jetpack Compose: How to create a rating bar?](https://stackoverflow.com/a/73996333/5457853)
+[Watermark or write on Bitmap with androidx.compose.ui.graphics.Canvas?](https://stackoverflow.com/a/74603521/5457853)
+[Image Cropper](https://stackoverflow.com/a/73819758/5457853)
+[Vertical scroll on Canvas (Jetpack Compose)](https://stackoverflow.com/a/73225175/5457853)
+[Why can I draw a line out of the canvas when I use Jetpack Compose?](https://stackoverflow.com/a/73303026/5457853)
 
 ### Resources and References
 
