@@ -203,6 +203,7 @@ previous searches using a database, domain with ViewModel.
 [MutableState callback in non-Composable](https://stackoverflow.com/a/73347171/5457853)<br>
 
 #### Modifiers
+[Jetpack Compose - Order of Modifiers](https://stackoverflow.com/a/74145347/5457853)<br>
 [Create Custom Modifier](https://stackoverflow.com/a/70439902/5457853)<br>
 [Composed Modifier](https://stackoverflow.com/a/70169164/5457853)<br>
 [Why are the modifier sizes not overwritten?](https://stackoverflow.com/a/71678948/5457853)<br>
