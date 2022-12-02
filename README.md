@@ -172,11 +172,19 @@ previous searches using a database, domain with ViewModel.
 [Unable to call @Composable function from remember block](https://stackoverflow.com/a/74363923/5457853)<br>
 [Composable doesn't re-compose on button click](https://stackoverflow.com/a/74588794/5457853)<br>
 [Jetpack Compose - avoid unnecessary recomposition](https://stackoverflow.com/a/74363723/5457853)<br>
+[In compose, why modify the properties of the List element, LazyColumn does not refresh](https://stackoverflow.com/a/74506067/5457853)<br>
 
 #### Composables
+[How to get exact size without recomposition?](https://stackoverflow.com/a/73357119/5457853)<br>
 [When should I use Android Jetpack Compose Surface composable?](https://stackoverflow.com/a/73030914/5457853)<br>
 [How can I select only 3 element in a grid/list (jetpack compose)?](https://stackoverflow.com/a/73501341/5457853)<br>
+[Android Compose: Difference between LazyColumn and Column with verticalScroll](https://stackoverflow.com/a/73735069/5457853)<br>
 [Remove default padding from CheckBox](https://stackoverflow.com/a/71609165/5457853)<br>
+[How to give different color to textDecoration?](https://stackoverflow.com/a/73570822/5457853)<br>
+[Jetpack compose custom snackbar material 3](https://stackoverflow.com/a/73369351/5457853)<br>
+[How to place hanging icon in upper right corner of Card composable](https://stackoverflow.com/a/73182325/54578533)<br>
+[Icon drawable inside IconButton is black despite it being white](https://stackoverflow.com/a/73180131/5457853)<br>
+[What is clickable indication in jetpack compose?](https://stackoverflow.com/a/73175067/5457853)<br>
 
 #### LaunchedEffect, SideEffect, DerivedStateOf, snapshotFlow
 [Using SnapshotFlow to observe MutableState changes](https://stackoverflow.com/a/69235908/5457853)<br>
@@ -192,6 +200,7 @@ previous searches using a database, domain with ViewModel.
 [Jetpack Compose recomposition race condition](https://stackoverflow.com/a/74242627/5457853)<br>
 [how can I do resend email timer LaunchedEffect](https://stackoverflow.com/a/74633185/5457853)<br>
 [LaunchedEffect vs rememberCoroutineScope. This explanation makes me confused. Please make it clear to me](https://stackoverflow.com/a/72824656/5457853)<br>
+[MutableState callback in non-Composable](https://stackoverflow.com/a/73347171/5457853)<br>
 
 #### Modifiers
 [Create Custom Modifier](https://stackoverflow.com/a/70439902/5457853)<br>
@@ -226,12 +235,14 @@ previous searches using a database, domain with ViewModel.
 [Setting width of 2 buttons with SubcomposeLayout](https://stackoverflow.com/a/72940620/5457853)<br>
 [How to adjust size of component to it's child and remain unchanged when it's child size will change?](https://stackoverflow.com/a/73706182/5457853)<br>
 [Get information about size before is drawn in Compose](https://stackoverflow.com/a/73802696/5457853)<br>
+[How to animate Rect position with Animatable?](https://stackoverflow.com/q/73555446/5457853)<br>
 
 #### Animation
 [Animating with single recomposition with Canvas](https://stackoverflow.com/a/73274631/5457853)<br>
 [Android Compose create shake animation](https://stackoverflow.com/a/73631379/5457853)<br>
 [Issue with jetpack compose animation performance](https://stackoverflow.com/a/74588077/5457853)<br>
 [animation o a lazycolumn android](https://stackoverflow.com/a/73325826/5457853)<br>
+[Rotate Animation Compose](https://stackoverflow.com/a/73291875/5457853)<br>
 
 #### Gestures
 [How gestures work in Jetpack Compose and onTouchEvent](https://stackoverflow.com/a/70847531/5457853)<br>
@@ -244,6 +255,8 @@ previous searches using a database, domain with ViewModel.
 [JetPack Compose: Adding click duration](https://stackoverflow.com/a/73419818/5457853)<br>
 [compose gestures, zoom in zoom out move and rotation](https://stackoverflow.com/a/73542156/5457853)<br>
 [How to set Double back press Exit in Jetpack Compose?](https://stackoverflow.com/a/73754359/5457853)<br>
+[Jetpack Compose detect drag gesture and detect Interaction source](https://stackoverflow.com/a/73488761/5457853)<br>
+[How can one composible's clicks pass through to a composible underneath?](https://stackoverflow.com/a/73444016/5457853)<br>
 
 #### Canvas, DrawScope
 [How to apply Porter-Duff mode to image?](https://stackoverflow.com/a/69790654/5457853)<br>
