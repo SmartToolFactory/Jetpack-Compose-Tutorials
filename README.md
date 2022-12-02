@@ -171,8 +171,10 @@ previous searches using a database, domain with ViewModel.
 [** Jetpack Compose - Recomposition ignoring function parameter](https://stackoverflow.com/a/73610519/5457853)<br>
 [Unable to call @Composable function from remember block](https://stackoverflow.com/a/74363923/5457853)<br>
 [Composable doesn't re-compose on button click](https://stackoverflow.com/a/74588794/5457853)<br>
+[Jetpack Compose - avoid unnecessary recomposition](https://stackoverflow.com/a/74363723/5457853)<br>
 
 #### Composables
+[When should I use Android Jetpack Compose Surface composable?](https://stackoverflow.com/a/73030914/5457853)<br>
 [How can I select only 3 element in a grid/list (jetpack compose)?](https://stackoverflow.com/a/73501341/5457853)<br>
 [Remove default padding from CheckBox](https://stackoverflow.com/a/71609165/5457853)<br>
 
@@ -187,9 +189,9 @@ previous searches using a database, domain with ViewModel.
 [What would be the most 'lightweight' way to observe current time for a an android composable?](https://stackoverflow.com/a/73333458/5457853)<br>
 [Difference between remember and rememberUpdatedState in Jetpack Compose?](https://stackoverflow.com/a/70223293/5457853)<br>
 [Use of LaunchedEffect vs SideEffect in jetpack compose](https://stackoverflow.com/a/73802448/5457853)<br>
-[Jetpack Compose - avoid unnecessary recomposition](https://stackoverflow.com/a/74363723/5457853)<br>
 [Jetpack Compose recomposition race condition](https://stackoverflow.com/a/74242627/5457853)<br>
 [how can I do resend email timer LaunchedEffect](https://stackoverflow.com/a/74633185/5457853)<br>
+[LaunchedEffect vs rememberCoroutineScope. This explanation makes me confused. Please make it clear to me](https://stackoverflow.com/a/72824656/5457853)<br>
 
 #### Modifiers
 [Create Custom Modifier](https://stackoverflow.com/a/70439902/5457853)<br>
