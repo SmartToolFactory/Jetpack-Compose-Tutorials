@@ -35,6 +35,7 @@
     <string name="title3_1_4">3-1-4 Segmented Custom Border</string>
     <string name="title3_2_1">3-2-1 Custom Layout</string>
     <string name="title_3_3_1">3-3-1 Scope and ParentDataModifier</string>
+    <string name="title_3_3_2">3-3-2 LayoutId Modifier</string>
     <string name="title_3_4">3-4 BoxWithConstraints</string>
     <string name="title_3_5">3-5 SubcomposeLayout</string>
     <string name="title_3_6_1">3-6-1 Custom Layout Samples1</string>

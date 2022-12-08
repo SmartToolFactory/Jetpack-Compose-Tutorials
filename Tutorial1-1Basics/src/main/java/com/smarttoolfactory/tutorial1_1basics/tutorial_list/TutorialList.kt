@@ -670,6 +670,25 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_3_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_3_2),
+        description = "Use Modifier.layoutId to get a measurable, and use it to measure another" +
+                "measurable to match dimensions.",
+        action = {
+            Tutorial3_3Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SCOPE,
+            TAG_LAYOUT_ID_MODIFIER,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
     val tutorial3_4 = TutorialSectionModel(
         title = stringResource(R.string.title_3_4),
         description = "BoxWithConstraints is a composable that defines its own content " +
@@ -752,6 +771,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_3,
         tutorial3_2_4,
         tutorial3_3_1,
+        tutorial3_3_2,
         tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,

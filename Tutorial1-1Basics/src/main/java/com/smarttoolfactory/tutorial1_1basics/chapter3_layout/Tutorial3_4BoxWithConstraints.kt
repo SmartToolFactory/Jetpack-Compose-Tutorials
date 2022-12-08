@@ -220,7 +220,6 @@ private fun ConstrainsSample2() {
     }
 }
 
-
 @Composable
 private fun BoxWithConstraintsExample(modifier: Modifier = Modifier) {
 
