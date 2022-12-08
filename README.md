@@ -236,7 +236,6 @@ previous searches using a database, domain with ViewModel.
 [Setting width of 2 buttons with SubcomposeLayout](https://stackoverflow.com/a/72940620/5457853)<br>
 [How to adjust size of component to it's child and remain unchanged when it's child size will change?](https://stackoverflow.com/a/73706182/5457853)<br>
 [Get information about size before is drawn in Compose](https://stackoverflow.com/a/73802696/5457853)<br>
-[How to animate Rect position with Animatable?](https://stackoverflow.com/q/73555446/5457853)<br>
 
 #### Animation
 [Animating with single recomposition with Canvas](https://stackoverflow.com/a/73274631/5457853)<br>
@@ -244,6 +243,7 @@ previous searches using a database, domain with ViewModel.
 [Issue with jetpack compose animation performance](https://stackoverflow.com/a/74588077/5457853)<br>
 [animation o a lazycolumn android](https://stackoverflow.com/a/73325826/5457853)<br>
 [Rotate Animation Compose](https://stackoverflow.com/a/73291875/5457853)<br>
+[How to animate Rect position with Animatable?](https://stackoverflow.com/q/73555446/5457853)<br>
 
 #### Gestures
 [How gestures work in Jetpack Compose and onTouchEvent](https://stackoverflow.com/a/70847531/5457853)<br>
