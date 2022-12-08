@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package com.smarttoolfactory.tutorial1_1basics
 
@@ -7,11 +7,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.pager.*
 import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
@@ -41,7 +44,7 @@ internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Graph
 /**
  * This is Home Screen that contains Search bar, Tabs, and tutorial pages in Pager
  */
-@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
+@OptIn( ExperimentalComposeUiApi::class)
 @ExperimentalAnimationApi
 @Composable
 fun HomeScreen(
@@ -174,7 +177,6 @@ private fun SuggestionGridLayout(
     }
 }
 
-@ExperimentalPagerApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun HomeContent(
@@ -193,11 +195,7 @@ private fun HomeContent(
         // selected tab is our current page
         selectedTabIndex = pagerState.currentPage,
         // Override the indicator, using the provided pagerTabIndicatorOffset modifier
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
-        }
+
     ) {
         // Add tabs for all of our pages
         tabList.forEachIndexed { index, title ->
@@ -215,7 +213,8 @@ private fun HomeContent(
 
     HorizontalPager(
         state = pagerState,
-        count = tabList.size
+        pageCount = tabList.size,
+        beyondBoundsPageCount = 2
     ) { page: Int ->
 
         when (page) {
