@@ -1804,6 +1804,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_TEXT_MEASURER,
             TAG_IMAGE,
             TAG_COMPOSE_MODIFIER,
             TAG_COMPOSED_MODIFIER,
