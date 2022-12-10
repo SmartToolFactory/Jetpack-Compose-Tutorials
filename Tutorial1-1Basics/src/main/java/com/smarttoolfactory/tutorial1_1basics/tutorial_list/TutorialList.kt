@@ -652,6 +652,25 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_2_5 = TutorialSectionModel(
+        title = "3-2-5 Modifier.layout&Constraints",
+        description = "Constraints to measure measurables with Constraints.offset and " +
+                "Constraints.constrainWidth to limit maximum width or available " +
+                "space for Placeable and use Modifier.layout",
+        action = {
+            Tutorial3_2Screen5()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+
     val tutorial3_3_1 = TutorialSectionModel(
         title = stringResource(R.string.title_3_3_1),
         description = "Add custom modifiers to Composable inside a custom layout using it's scope.",
@@ -770,6 +789,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_2,
         tutorial3_2_3,
         tutorial3_2_4,
+        tutorial3_2_5,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_4,
@@ -1776,6 +1796,23 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_12 = TutorialSectionModel(
+        title = "6-12 Diagonal Price Tag",
+        description = "Use Modifier.drawBehind and Modifier.composed to draw diagonal price tag with shimmer effect",
+        action = {
+            Tutorial6_12Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_IMAGE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_COMPOSED_MODIFIER,
+            TAG_CANVAS,
+            TAG_BRUSH
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1794,6 +1831,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_8_1,
         tutorial6_9_1,
         tutorial6_10,
-        tutorial6_11
+        tutorial6_11,
+        tutorial6_12
     )
 }
