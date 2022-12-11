@@ -1798,7 +1798,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_12 = TutorialSectionModel(
         title = "6-12 Diagonal Price Tag",
-        description = "Use Modifier.drawBehind and Modifier.composed to draw diagonal price tag with shimmer effect",
+        description = "Use Modifier.drawWithContent, Modifier.composed, " +
+                "TextMeasurer to draw diagonal price tag with shimmer effect",
         action = {
             Tutorial6_12Screen()
         },
