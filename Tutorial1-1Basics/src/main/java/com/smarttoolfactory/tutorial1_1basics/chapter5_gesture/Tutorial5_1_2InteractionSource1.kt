@@ -62,6 +62,8 @@ private fun TutorialContent() {
         CollectPressedStateExample()
         TutorialText2(text = "Collect interactionSource.interactions")
         InteractionFlowExample()
+        TutorialText2(text = "Collect interactionSource.interactions with list")
+        CollectInteractionsExample()
         TutorialText2(text = "Sample with collectIsPressedAsState")
         InteractionButtonSample()
         TutorialText2(text = "Scale based on collectIsPressedAsState")
@@ -84,9 +86,56 @@ private fun CollectPressedStateExample() {
     }
 }
 
+@Composable
+private fun InteractionButtonSample() {
+    PressIconButton(
+        onClick = {},
+        icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = null) },
+        text = { Text("Add to cart") }
+    )
+}
 
 @Composable
-private fun CollectStatesExample() {
+private fun InteractionFlowExample() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+
+        val interactionSource = MutableInteractionSource()
+        val context = LocalContext.current
+
+        LaunchedEffect(interactionSource) {
+            interactionSource.interactions
+                .onEach { interaction: Interaction ->
+                    Toast.makeText(
+                        context,
+                        "Interaction: $interaction",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .launchIn(this)
+        }
+
+        Box(
+            modifierWithClip
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = rememberRipple(),
+                    onClick = {}
+                ),
+            contentAlignment = Alignment.Center) {
+            Text(
+                text = "Collect Interactions",
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+private fun CollectInteractionsExample() {
 
     val interactionSource = remember { MutableInteractionSource() }
     val interactions = remember { mutableStateListOf<Interaction>() }
@@ -142,53 +191,6 @@ private fun CollectStatesExample() {
     }
 }
 
-@Composable
-private fun InteractionButtonSample() {
-    PressIconButton(
-        onClick = {},
-        icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = null) },
-        text = { Text("Add to cart") }
-    )
-}
-
-@Composable
-private fun InteractionFlowExample() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-
-        val interactionSource = MutableInteractionSource()
-        val context = LocalContext.current
-
-        LaunchedEffect(interactionSource) {
-            interactionSource.interactions
-                .onEach { interaction: Interaction ->
-                    Toast.makeText(
-                        context,
-                        "Interaction: $interaction",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                .launchIn(this)
-        }
-
-        Box(
-            modifierWithClip
-                .clickable(
-                    interactionSource = interactionSource,
-                    indication = rememberRipple(),
-                    onClick = {}
-                ),
-            contentAlignment = Alignment.Center) {
-            Text(
-                text = "Collect Interactions",
-                color = Color.White
-            )
-        }
-    }
-}
 
 @Composable
 fun PressIconButton(
