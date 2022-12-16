@@ -81,7 +81,6 @@ fun SearchBar(
  * and clear and loading [IconButton]s to clear query or show progress indicator when
  * a query is in progress.
  */
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchTextField(
     query: TextFieldValue,
@@ -129,7 +128,6 @@ fun SearchTextField(
                             .fillMaxHeight()
                             .weight(1f)
                             .onFocusChanged {
-//                                println("🍒 SEARCH FOCUS: $it")
                                 onSearchFocusChange(it.isFocused)
                             }
                             .focusRequester(focusRequester)
