@@ -88,8 +88,9 @@ private fun DefaultConstraintsSample() {
         Logs: For a device with 1080x1920 resolution and density 2.625
         🍉 CustomColumnWithDefaultConstraints() constraints:
         Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithDefaultConstraints(
@@ -102,9 +103,9 @@ private fun DefaultConstraintsSample() {
     /*
         🍉 CustomColumnWithDefaultConstraints() constraints:
         Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 525
-        minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
      */
     CustomColumnWithDefaultConstraints(
         modifier = Modifier
@@ -116,8 +117,9 @@ private fun DefaultConstraintsSample() {
     /*
         🍉 CustomColumnWithDefaultConstraints() constraints:
         Constraints(minWidth = 525, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 525
-        minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithDefaultConstraints(
@@ -131,8 +133,9 @@ private fun DefaultConstraintsSample() {
     /*
         🍉 CustomColumnWithDefaultConstraints() constraints:
         Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 265
-        minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithDefaultConstraints(
@@ -145,8 +148,9 @@ private fun DefaultConstraintsSample() {
     /*
         🍉 CustomColumnWithDefaultConstraints() constraints:
         Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 265
-        minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithDefaultConstraints(
@@ -170,7 +174,9 @@ private fun CustomConstraintsSample() {
         constraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints(
@@ -185,7 +191,9 @@ private fun CustomConstraintsSample() {
         constraints: Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 525
-        minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints(
@@ -201,7 +209,9 @@ private fun CustomConstraintsSample() {
         constraints: Constraints(minWidth = 525, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints(
@@ -217,7 +227,9 @@ private fun CustomConstraintsSample() {
         constraints: Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 525
-        minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints(
@@ -233,7 +245,9 @@ private fun CustomConstraintsSample() {
         constraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints(
@@ -250,17 +264,19 @@ private fun CustomConstraintsSample2() {
                 "Measure with **Constraints.fixedWidth(), 250.dp** is used. " +
                 "If Constraints we measure with are not in bounds of " +
                 "default Constraints, composable " +
-                "is placed at position (maxWidth-composableWidth)/2"
+                "is placed at position (Constraints.maxWidth-layout width)/2"
     )
 
     TutorialText2(text = "Modifier.fillMaxWidth()")
 
     /*
-        🍏 CustomColumnWithCustomConstraints3()
-        constraints: Constraints(minWidth = 1028, maxWidth = 1028, minHeight = 0, maxHeight = Infinity)
-        updatedConstraints: Constraints(minWidth = 0, maxWidth = 1028, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 1028
-        minWidth 0, maxWidth: 1028, boundedWidth: true, fixedWidth: false
+        🍋 CustomColumnWithCustomConstraints2()
+        constraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
+        updatedConstraints: Constraints(minWidth = 656, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
+        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 656, maxWidth: 656, boundedWidth: true, fixedWidth: true
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints2(
@@ -270,6 +286,17 @@ private fun CustomConstraintsSample2() {
     ) { Content() }
 
     TutorialText2(text = "Modifier.width(200.dp)")
+
+    /*
+        🍋 CustomColumnWithCustomConstraints2()
+        constraints: Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
+        updatedConstraints: Constraints(minWidth = 656, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
+        🔥 CustomColumn Constraints ACTUAL WIDTH 525
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 656, maxWidth: 656, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+     */
     CustomColumnWithCustomConstraints2(
         modifier = Modifier
             .width(200.dp)
@@ -277,6 +304,17 @@ private fun CustomConstraintsSample2() {
     ) { Content() }
 
     TutorialText2(text = "Modifier.widthIn(min= 200.dp)")
+
+    /*
+        🍋 CustomColumnWithCustomConstraints2()
+        constraints: Constraints(minWidth = 525, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
+        updatedConstraints: Constraints(minWidth = 656, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
+        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 656, maxWidth: 656, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+     */
     CustomColumnWithCustomConstraints2(
         modifier = Modifier
             .widthIn(min = 200.dp)
@@ -284,6 +322,16 @@ private fun CustomConstraintsSample2() {
     ) { Content() }
 
     TutorialText2(text = "Modifier.widthIn(max= 200.dp)")
+    /*
+        🍋 CustomColumnWithCustomConstraints2()
+        constraints: Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
+        updatedConstraints: Constraints(minWidth = 656, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
+        🔥 CustomColumn Constraints ACTUAL WIDTH 525
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 656, maxWidth: 656, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+     */
     CustomColumnWithCustomConstraints2(
         modifier = Modifier
             .widthIn(max = 200.dp)
@@ -291,6 +339,16 @@ private fun CustomConstraintsSample2() {
     ) { Content() }
 
     TutorialText2(text = "Modifier.wrapContentSize()")
+    /*
+        🍋 CustomColumnWithCustomConstraints2()
+        constraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
+        updatedConstraints: Constraints(minWidth = 656, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
+        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 656, maxWidth: 656, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+     */
     CustomColumnWithCustomConstraints2(
         modifier = Modifier
             .wrapContentSize()
@@ -311,7 +369,9 @@ private fun CustomConstraintsSample3() {
         constraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints3(
@@ -327,7 +387,9 @@ private fun CustomConstraintsSample3() {
         constraints: Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 525
-        minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints3(
@@ -343,7 +405,9 @@ private fun CustomConstraintsSample3() {
         constraints: Constraints(minWidth = 525, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints3(
@@ -359,7 +423,9 @@ private fun CustomConstraintsSample3() {
         constraints: Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 525
-        minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints3(
@@ -375,7 +441,9 @@ private fun CustomConstraintsSample3() {
         constraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         🔥 CustomColumn Constraints ACTUAL WIDTH 1080
-        minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints3(
@@ -389,23 +457,24 @@ private fun CustomConstraintsSample3() {
 private fun CustomConstraintsSample4() {
     StyleableTutorialText(
         text = "5-) 🌽 Create CustomColumns with **Constraints** " +
-                "** minWidth = 100.dp**, and **maxWidth=250.dp**. Child composables can be " +
-                "set at least 150.dp width because of measuring with 100.dp min, max width depends" +
+                "** minWidth = 150.dp**, and **maxWidth=250.dp**. Child composables can be " +
+                "set at least 150.dp width because of measuring with 150.dp min, max width depends" +
                 "on content.\n" +
                 "If Constraints we measure with are not in bounds of " +
                 "default Constraints composable " +
-                "is placed at position (maxWidth-composableWidth)/2"
+                "is placed at position (Constraints.maxWidth-layout width)/2"
     )
 
     TutorialText2(text = "Modifier.fillMaxWidth()")
 
-    // This composable is placed at (1080-250.dp *density)/2
     /*
         🌽 CustomColumnWithCustomConstraints4()
         constraints: Constraints(minWidth = 1080, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 394, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 656
-        minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
+        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 1080, maxWidth: 1080, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
 
@@ -421,8 +490,10 @@ private fun CustomConstraintsSample4() {
         🌽 CustomColumnWithCustomConstraints4()
         constraints: Constraints(minWidth = 525, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 394, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 656
-        minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
+        🔥 CustomColumn Constraints ACTUAL WIDTH 525
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 525, boundedWidth: true, fixedWidth: true
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
 
@@ -438,8 +509,10 @@ private fun CustomConstraintsSample4() {
         🌽 CustomColumnWithCustomConstraints4()
         constraints: Constraints(minWidth = 525, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 394, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 656
-        minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
+        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 525, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints4(
@@ -454,8 +527,10 @@ private fun CustomConstraintsSample4() {
         🌽 CustomColumnWithCustomConstraints4()
         constraints: Constraints(minWidth = 0, maxWidth = 525, minHeight = 0, maxHeight = Infinity)
         updatedConstraints: Constraints(minWidth = 394, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
-        🔥 CustomColumn Constraints ACTUAL WIDTH 656
-        minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
+        🔥 CustomColumn Constraints ACTUAL WIDTH 525
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 525, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints4(
@@ -468,12 +543,14 @@ private fun CustomConstraintsSample4() {
 
 
     /*
-         🌽 CustomColumnWithCustomConstraints4()
-         constraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
-         updatedConstraints: Constraints(minWidth = 394, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
-         🔥 CustomColumn Constraints ACTUAL WIDTH 656
-         minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
-         minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        🌽 CustomColumnWithCustomConstraints4()
+        constraints: Constraints(minWidth = 0, maxWidth = 1080, minHeight = 0, maxHeight = Infinity)
+        updatedConstraints: Constraints(minWidth = 394, maxWidth = 656, minHeight = 0, maxHeight = Infinity)
+        🔥 CustomColumn Constraints ACTUAL WIDTH 1080
+        ⚠️ ORIGINAL CONSTRAINTS: minWidth 0, maxWidth: 1080, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
+        ⚠️⚠️️️ Updated CONSTRAINTS: minWidth 394, maxWidth: 656, boundedWidth: true, fixedWidth: false
+        minHeight: 0, maxHeight: 2147483647, hasBoundedHeight: false, hasFixedHeight: false
      */
     CustomColumnWithCustomConstraints4(
         modifier = Modifier
@@ -529,7 +606,7 @@ private fun CustomColumnWithCustomConstraints(
  * Measure with Constraints.fixedWidth(), 250.dp is used for demonstration.
  * If Constraints we measure with are not in bounds of
  * default Constraints composable
- * is placed at position (maxWidth-composableWidth)/2
+ * is placed at position (Constraints.maxWidth-layout width)/2"
  */
 @Composable
 private fun CustomColumnWithCustomConstraints2(
@@ -561,7 +638,7 @@ private fun CustomColumnWithCustomConstraints2(
  * Measure with minWidth = 0
  * If Constraints we measure with are not in bounds of
  * default Constraints composable
- * is placed at position (maxWidth-composableWidth)/2
+ * is placed at position (Constraints.maxWidth-layout width)/2"
  */
 @Composable
 private fun CustomColumnWithCustomConstraints3(
@@ -588,7 +665,7 @@ private fun CustomColumnWithCustomConstraints3(
  * Measure with minWidth = 150.dp, maxWidth = widthInDp, 250.dp is used for demonstration.
  * If Constraints we measure with are not in bounds of
  * default Constraints composable
- * is placed at position (maxWidth-composableWidth)/2
+ * is placed at position (Constraints.maxWidth-layout width)/2"
  */
 @Composable
 private fun CustomColumnWithCustomConstraints4(
@@ -663,13 +740,28 @@ private fun MeasureScope.createCustomColumnLayout(
     // 🔥 Uncomment to see how it changes layout
 //    val contentWidth = updatedConstraints.maxWidth
 
+    println("🔥 CustomColumn Constraints ACTUAL WIDTH $contentWidth\n")
     println(
-        "🔥 CustomColumn Constraints ACTUAL WIDTH $contentWidth\n" +
-                "minWidth ${updatedConstraints.minWidth}, maxWidth: ${updatedConstraints.maxWidth}, " +
-                "boundedWidth: ${updatedConstraints.hasBoundedWidth}, fixedWidth: ${updatedConstraints.hasFixedWidth}\n" +
-                "minHeight: ${updatedConstraints.minHeight}, maxHeight: ${updatedConstraints.maxHeight}, " +
-                "hasBoundedHeight: ${updatedConstraints.hasBoundedHeight}, hasFixedHeight: ${updatedConstraints.hasFixedHeight}\n"
+        "⚠️ ORIGINAL CONSTRAINTS: minWidth ${constraints.minWidth}, " +
+                "maxWidth: ${constraints.maxWidth}, " +
+                "boundedWidth: ${constraints.hasBoundedWidth}, " +
+                "fixedWidth: ${constraints.hasFixedWidth}\n" +
+                "minHeight: ${constraints.minHeight}, " +
+                "maxHeight: ${constraints.maxHeight}, " +
+                "hasBoundedHeight: ${constraints.hasBoundedHeight}, " +
+                "hasFixedHeight: ${constraints.hasFixedHeight}\n"
     )
+    println(
+        "⚠️⚠️️️ Updated CONSTRAINTS: minWidth ${updatedConstraints.minWidth}, " +
+                "maxWidth: ${updatedConstraints.maxWidth}, " +
+                "boundedWidth: ${updatedConstraints.hasBoundedWidth}, " +
+                "fixedWidth: ${updatedConstraints.hasFixedWidth}\n" +
+                "minHeight: ${updatedConstraints.minHeight}, " +
+                "maxHeight: ${updatedConstraints.maxHeight}, " +
+                "hasBoundedHeight: ${updatedConstraints.hasBoundedHeight}, " +
+                "hasFixedHeight: ${updatedConstraints.hasFixedHeight}\n"
+    )
+
 
     // Set the size of the layout as big as it can
     return layout(contentWidth, totalHeight) {
