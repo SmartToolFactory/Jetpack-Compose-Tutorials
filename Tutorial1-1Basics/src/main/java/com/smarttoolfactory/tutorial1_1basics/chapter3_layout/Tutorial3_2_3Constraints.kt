@@ -40,7 +40,12 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "Constraints determine how children of a Composable is measured, " +
                     "default Constraints use minWidth, maxWidth, minHeight, maxHeight of the " +
-                    "layout based on the Modifier.\n",
+                    "layout based on the Modifier.\n" +
+                    "In examples below we measure child Composables with Constraints with different" +
+                    "minWidth and maxWidth to show how they are measured.\n" +
+                    "Green border is wrapped around parent" +
+                    " and layout width is set **Constraints.maxWidth**. You can change layout " +
+                    "width to examine how measurement of parent changes based on layout width",
             bullets = false
         )
 
@@ -77,7 +82,7 @@ private fun Content() {
 
 @Composable
 private fun DefaultConstraintsSample() {
-    StyleableTutorialText(text = "1-) 🍉Create CustomColumns with default Constraints")
+    StyleableTutorialText(text = "1-) 🍉Create CustomColumns with default Constraints.")
 
     TutorialText2(text = "Modifier.fillMaxWidth()")
     // 🔥🔥🔥 Unlike Column this one sets children width to max when fillMaxWidth() is set
@@ -261,10 +266,7 @@ private fun CustomConstraintsSample() {
 private fun CustomConstraintsSample2() {
     StyleableTutorialText(
         text = "3-) 🍋 Create CustomColumns with Constraints " +
-                "Measure with **Constraints.fixedWidth(), 250.dp** is used. " +
-                "If Constraints we measure with are not in bounds of " +
-                "default Constraints, composable " +
-                "is placed at position (Constraints.maxWidth-layout width)/2"
+                "Measure with **Constraints.fixedWidth(), 250.dp** is used."
     )
 
     TutorialText2(text = "Modifier.fillMaxWidth()")
@@ -459,10 +461,7 @@ private fun CustomConstraintsSample4() {
         text = "5-) 🌽 Create CustomColumns with **Constraints** " +
                 "** minWidth = 150.dp**, and **maxWidth=250.dp**. Child composables can be " +
                 "set at least 150.dp width because of measuring with 150.dp min, max width depends" +
-                "on content.\n" +
-                "If Constraints we measure with are not in bounds of " +
-                "default Constraints composable " +
-                "is placed at position (Constraints.maxWidth-layout width)/2"
+                "on content.\n"
     )
 
     TutorialText2(text = "Modifier.fillMaxWidth()")
@@ -604,9 +603,6 @@ private fun CustomColumnWithCustomConstraints(
 
 /**
  * Measure with Constraints.fixedWidth(), 250.dp is used for demonstration.
- * If Constraints we measure with are not in bounds of
- * default Constraints composable
- * is placed at position (Constraints.maxWidth-layout width)/2"
  */
 @Composable
 private fun CustomColumnWithCustomConstraints2(
@@ -636,9 +632,6 @@ private fun CustomColumnWithCustomConstraints2(
 
 /**
  * Measure with minWidth = 0
- * If Constraints we measure with are not in bounds of
- * default Constraints composable
- * is placed at position (Constraints.maxWidth-layout width)/2"
  */
 @Composable
 private fun CustomColumnWithCustomConstraints3(
@@ -663,9 +656,6 @@ private fun CustomColumnWithCustomConstraints3(
 
 /**
  * Measure with minWidth = 150.dp, maxWidth = widthInDp, 250.dp is used for demonstration.
- * If Constraints we measure with are not in bounds of
- * default Constraints composable
- * is placed at position (Constraints.maxWidth-layout width)/2"
  */
 @Composable
 private fun CustomColumnWithCustomConstraints4(
@@ -724,7 +714,6 @@ private fun MeasureScope.createCustomColumnLayout(
     }
 
     // 🔥 This can be sum or longest of Composable widths, or maxWidth of Constraints
-    // Change this to
 //    val contentWidth: Int = placeables.maxOf {
 //        it.width
 //    }
@@ -738,6 +727,9 @@ private fun MeasureScope.createCustomColumnLayout(
     val contentWidth = constraints.maxWidth
 
     // 🔥 Uncomment to see how it changes layout
+    // 🔥🔥 Layout position is set as (constraints.maxWidth-layout width)/2
+    // If this width doesn't match original Constraints max width composable is moved as
+    // half of the difference between to widths
 //    val contentWidth = updatedConstraints.maxWidth
 
     println("🔥 CustomColumn Constraints ACTUAL WIDTH $contentWidth\n")

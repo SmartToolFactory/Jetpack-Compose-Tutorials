@@ -1,44 +1,23 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.*
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
-import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
-
-val textBackgroundColor = Color(0xff2196F3)
-val composableBackgroundColor = Color(0xffFF9800)
-
-/**
- * This tutorial shows when and how to use [Constraints.offset] or [Constraints.constrainWidth].
- *
- * First section is for setting padding with or without these functions and how they effect layout
- * especially when our Composable dimensions are at same size of or bigger than its Parent.
- *
- * In second section Blue rectangle is the total area of our Composable. Red
- * rectangle is the **imaginary space** we set for drawing a
- * chat bubble's nip for instance.
- * While the Composable covers content + nip area(this is how it's laid out relative to siblings),
- * only area available to our content is the one right side of the nip like chat messages.
- * This is the inner area after we remove nip's dimensions and padding dimensions like in padding
- * example in first section.
- */
 @Composable
 fun Tutorial3_2Screen4() {
     TutorialContent()
@@ -46,488 +25,217 @@ fun Tutorial3_2Screen4() {
 
 @Composable
 private fun TutorialContent() {
-    var message by remember { mutableStateOf("Type to monitor overflow") }
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .verticalScroll(
+                rememberScrollState()
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ConstraintsSample()
+    }
+}
+
+@Composable
+private fun ConstraintsSample() {
+
+    val density = LocalDensity.current
+    val containerWidth = with(density) {
+        700f.toDp()
+    }
+
+
+    Column(
+        modifier = Modifier
+            .width(containerWidth)
+            .fillMaxHeight()
+            .border(1.dp, Color.Red)
     ) {
 
-        Column(
-            modifier = Modifier
-                .padding(vertical = 4.dp, horizontal = 50.dp)
-                .background(Color(0xffFBE9E7))
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
+        StyleableTutorialText(
+            text = "When layout width is set different than **Constraints.maxWidth** " +
+                    "Parent is placed at (Constraints.maxWidth-layout width)/2\n" +
+                    "Constraints used for measuring measurables determine size " +
+                    "of child Composables.\n" +
+                    "Setting layout width determines where parent will be positioned and which" +
+                    "size it will cover",
+            bullets = false
+        )
 
-            StyleableTutorialText(
-                text = "Custom padding modifiers use **Constraints.offset** and/or " +
-                        "**Constraints.constrainWidth** to set usable area by any Composable. When" +
-                        "offset or constraints are not used Composable can overflow from its parent.",
-                bullets = false
-            )
-            CustomPaddingSamples(message)
+        StyleableTutorialText(
+            text = "1-) In this example child composables are measured with " +
+                    "**constraints** which limits maxWidth to **containerWidth=700**",
+        )
+        MyLayout(
+            modifier = Modifier.border(3.dp, Green400)
+        ) { Content() }
 
-            StyleableTutorialText(
-                text = "In second section Blue rectangle is the total area " +
-                        "of Composable. Red  rectangle is the **imaginary space** we set for drawing a " +
-                        "chat bubble's nip for instance.\n" +
-                        " While our Composable covers content + nip area(this is how it's laid out " +
-                        "relative to siblings), only area available to our content is the one " +
-                        "right side of the nip like chat messages.\n" +
-                        " This is the inner area after we remove nip's dimensions and padding " +
-                        "dimensions like in padding example in first section.",
-                bullets = false
-            )
+        Spacer(modifier = Modifier.height(10.dp))
 
-            StyleableTutorialText(
-                text = "only **measurable.measure(constraint)** called for the layouts below. " +
-                        "Padding requires offset to measure placeable without the " +
-                        "region reserved for padding",
-                bullets = false
-            )
-            LayoutOnlySamples(message)
+        StyleableTutorialText(
+            text = "2-) In this example child composables are measured with " +
+                    "**constraints.copy(minWidth = 750, maxWidth = 900)**\n" +
+                    "Since child Composables' widths are bigger than container they overflow from" +
+                    "parent Composable.",
+        )
 
-            StyleableTutorialText(
-                text = "**Constraints.constrainWidth()** restrains max width " +
-                        "placeables of this composable can have. Since we constrain width " +
-                        "to maxWidth - red area width" +
-                        " placeables can grow more than required.",
-                bullets = false
-            )
-            ConstrainWidthSamples(message)
+        MyLayout2(
+            modifier = Modifier.border(3.dp, Green400)
+        ) { Content() }
 
-            StyleableTutorialText(
-                text = "**Constraints.offset(x,y)** is used to limit measure placeable without the " +
-                        "area used for red area and padding",
-                bullets = false
-            )
-            ConstraintsOffsetSample(message)
+        Spacer(modifier = Modifier.height(10.dp))
+
+
+        StyleableTutorialText(
+            text = "2-) In this example child composables are measured with " +
+                    "**constraints.copy(minWidth = 750, maxWidth = 900)**\n" +
+                    "Since child Composables' widths are bigger than container they overflow from" +
+                    "parent Composable.\n" +
+                    "MyLayout3(green border) " +
+                    "overflows from parent as **(Constraints.maxWidth-layout width) " +
+                    "maxWidth is 700px while layout width is 900px because of this **MyLayout3** " +
+                    "is moved to right by 100px.",
+        )
+
+        MyLayout3(modifier = Modifier.border(3.dp, Green400)) {
+            Content()
+        }
+    }
+}
+
+@Composable
+private fun Content() {
+
+    val density = LocalDensity.current
+
+    val child1Width = with(density) {
+        800.toDp()
+    }
+
+    val child2Width = with(density) {
+        600.toDp()
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .width(child1Width)
+            .background(Pink400)
+            .clickable {}
+    ) {
+        Text("constraints1: $constraints", color = Color.White)
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .width(child2Width)
+            .background(Blue400)
+            .clickable {}
+    ) {
+        Text("constraints2: $constraints", color = Color.White)
+    }
+}
+
+@Composable
+private fun MyLayout(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables: List<Measurable>, constraints: Constraints ->
+
+        val placeables = measurables.map { measurable: Measurable ->
+            measurable.measure(constraints)
         }
 
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            value = message,
-            label = { Text("Main") },
-            placeholder = { Text("Set text to change main width") },
-            onValueChange = { newValue: String ->
-                message = newValue
+        val totalHeight = placeables.sumOf { it.height }
+
+        var posY = 0
+        layout(constraints.maxWidth, totalHeight) {
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, posY)
+                posY += placeable.height
             }
-        )
+        }
     }
 }
 
 @Composable
-private fun CustomPaddingSamples(message: String) {
-
-    TutorialText2(text = "paddingNoOffsetNoConstrain")
-    Column(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .background(composableBackgroundColor)
-            .paddingNoOffsetNoConstrain(10.dp)
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    TutorialText2(text = "paddingWithConstrainOnly")
-    Column(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .background(composableBackgroundColor)
-            .paddingWithConstrainOnly(10.dp)
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    TutorialText2(text = "paddingWithOffsetAndConstrain")
-    Column(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .background(composableBackgroundColor)
-            .paddingWithOffsetAndConstrain(10.dp)
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-}
-
-@Composable
-private fun LayoutOnlySamples(message: String) {
-
-    ComposableLayoutOnly(
-        modifier = Modifier.padding(vertical = 4.dp),
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableLayoutOnly(
-        modifier = Modifier.padding(vertical = 4.dp),
-        paddingStart = 20,
-        paddingTop = 20,
-        paddingBottom = 20,
-        paddingEnd = 20,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableLayoutOnly(
-        modifier = Modifier.padding(vertical = 4.dp),
-        reservedSpaceWidth = 0,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableLayoutOnly(
-        modifier = Modifier.padding(vertical = 4.dp),
-        reservedSpaceWidth = 0,
-        paddingStart = 20,
-        paddingTop = 20,
-        paddingBottom = 20,
-        paddingEnd = 20,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-}
-
-@Composable
-private fun ConstrainWidthSamples(message: String) {
-    ComposableWithConstrainWidth(
-        modifier = Modifier
-            .padding(vertical = 4.dp),
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableWithConstrainWidth(
-        modifier = Modifier
-            .padding(vertical = 4.dp),
-        paddingStart = 20,
-        paddingTop = 20,
-        paddingBottom = 20,
-        paddingEnd = 20,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableWithConstrainWidth(
-        modifier = Modifier
-            .padding(vertical = 4.dp),
-        reservedSpaceWidth = 0,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableWithConstrainWidth(
-        modifier = Modifier.padding(vertical = 4.dp),
-        reservedSpaceWidth = 0,
-        paddingStart = 20,
-        paddingTop = 20,
-        paddingBottom = 20,
-        paddingEnd = 20,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-}
-
-@Composable
-private fun ConstraintsOffsetSample(message: String) {
-    ComposableConstraintsOffset(
-        modifier = Modifier.padding(vertical = 4.dp),
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableConstraintsOffset(
-        modifier = Modifier.padding(vertical = 4.dp),
-        paddingStart = 20,
-        paddingTop = 20,
-        paddingBottom = 20,
-        paddingEnd = 20,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableConstraintsOffset(
-        modifier = Modifier.padding(vertical = 4.dp),
-        reservedSpaceWidth = 0,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-
-    ComposableConstraintsOffset(
-        modifier = Modifier.padding(vertical = 4.dp),
-        reservedSpaceWidth = 0,
-        paddingStart = 20,
-        paddingTop = 20,
-        paddingBottom = 20,
-        paddingEnd = 20,
-    ) {
-        Text(
-            text = message, color = Color.White,
-            modifier = Modifier.background(textBackgroundColor)
-        )
-    }
-}
-
-@Composable
-private fun ComposableLayoutOnly(
+private fun MyLayout2(
     modifier: Modifier = Modifier,
-    reservedSpaceWidth: Int = 70,
-    paddingStart: Int = 0,
-    paddingTop: Int = 0,
-    paddingEnd: Int = 0,
-    paddingBottom: Int = 0,
     content: @Composable () -> Unit
 ) {
 
-    val rect = remember { CustomRect() }
-    val contentRect = remember { CustomRect() }
-
     Layout(
-        modifier = modifier.drawBackgroundRectangles(rect, contentRect),
+        modifier = modifier,
         content = content
     ) { measurables: List<Measurable>, constraints: Constraints ->
-        val offsetX: Int = (paddingStart + paddingEnd) + reservedSpaceWidth
-        val offsetY: Int = (paddingTop + paddingBottom)
+
+        // Measure with Constraints bigger than parent has.
+        val updatedConstraints = constraints.copy(minWidth = 750, maxWidth = 900)
 
         val placeables = measurables.map { measurable: Measurable ->
-            measurable.measure(constraints)
+            measurable.measure(updatedConstraints)
         }
 
-        val desiredWidth: Int = (placeables.maxOf { it.width } + offsetX)
-        val desiredHeight: Int = (placeables.sumOf { it.height } + offsetY)
-
-        createLayout(
-            rect,
-            desiredWidth,
-            desiredHeight,
-            contentRect,
-            reservedSpaceWidth,
-            paddingStart,
-            paddingTop,
-            placeables
+        println(
+            "🔥 MyLayout2\n" +
+                    "constraints: $constraints\n" +
+                    "updatedConstraints: $updatedConstraints\n"
         )
+
+        val totalHeight = placeables.sumOf { it.height }
+
+        var posY = 0
+
+        layout(constraints.maxWidth, totalHeight) {
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, posY)
+                posY += placeable.height
+            }
+        }
     }
 }
 
 @Composable
-private fun ComposableWithConstrainWidth(
+private fun MyLayout3(
     modifier: Modifier = Modifier,
-    reservedSpaceWidth: Int = 70,
-    paddingStart: Int = 0,
-    paddingTop: Int = 0,
-    paddingEnd: Int = 0,
-    paddingBottom: Int = 0,
     content: @Composable () -> Unit
 ) {
 
-    val rect = remember { CustomRect() }
-    val contentRect = remember { CustomRect() }
-
     Layout(
-        modifier = modifier.drawBackgroundRectangles(rect, contentRect),
-        content = content
-    ) { measurables: List<Measurable>, constraints: Constraints ->
-        val offsetX: Int = (paddingStart + paddingEnd) + reservedSpaceWidth
-        val offsetY: Int = (paddingTop + paddingBottom)
-
-        val placeables = measurables.map { measurable: Measurable ->
-            measurable.measure(constraints)
-        }
-
-        // 🔥🔥 Constraint width+offsetX to maxWidth and height+offsetY to maxHeight of constraints
-        val desiredWidth: Int =
-            constraints.constrainWidth(placeables.maxOf { it.width } + offsetX)
-        val desiredHeight: Int =
-            constraints.constrainHeight(placeables.sumOf { it.height } + offsetY)
-
-        createLayout(
-            rect,
-            desiredWidth,
-            desiredHeight,
-            contentRect,
-            reservedSpaceWidth,
-            paddingStart,
-            paddingTop,
-            placeables
-        )
-    }
-}
-
-@Composable
-private fun ComposableConstraintsOffset(
-    modifier: Modifier = Modifier,
-    reservedSpaceWidth: Int = 70,
-    paddingStart: Int = 0,
-    paddingTop: Int = 0,
-    paddingEnd: Int = 0,
-    paddingBottom: Int = 0,
-    content: @Composable () -> Unit
-) {
-
-    val rect = remember { CustomRect() }
-    val contentRect = remember { CustomRect() }
-
-    Layout(
-        modifier = modifier.drawBackgroundRectangles(rect, contentRect),
+        modifier = modifier,
         content = content
     ) { measurables: List<Measurable>, constraints: Constraints ->
 
-        val offsetX: Int = (paddingStart + paddingEnd) + reservedSpaceWidth
-        val offsetY: Int = (paddingTop + paddingBottom)
+        val updatedConstraints = constraints.copy(minWidth = 750, maxWidth = 900)
 
         val placeables = measurables.map { measurable: Measurable ->
-            // 🔥 With constraints.offset we limit placeable width/height to maxWidth/Height - offsetX/Y
-            // Even without arrow it's required to limit width/height for placeable to take space
-            // when padding is applied
-            measurable.measure(constraints.offset(-offsetX, -offsetY))
+            measurable.measure(updatedConstraints)
         }
 
-        val desiredWidth: Int = placeables.maxOf { it.width } + offsetX
-        val desiredHeight: Int = placeables.sumOf { it.height } + offsetY
-
-        createLayout(
-            rect,
-            desiredWidth,
-            desiredHeight,
-            contentRect,
-            reservedSpaceWidth,
-            paddingStart,
-            paddingTop,
-            placeables
-        )
-    }
-}
-
-private fun MeasureScope.createLayout(
-    rect: CustomRect,
-    desiredWidth: Int,
-    desiredHeight: Int,
-    contentRect: CustomRect,
-    reservedSpaceWidth: Int,
-    paddingStart: Int,
-    paddingTop: Int,
-    placeables: List<Placeable>
-): MeasureResult {
-    rect.set(0f, 0f, desiredWidth.toFloat(), desiredHeight.toFloat())
-    contentRect.set(
-        reservedSpaceWidth.toFloat(),
-        0f,
-        desiredWidth.toFloat(),
-        desiredHeight.toFloat()
-    )
-
-
-    val xPos = paddingStart + reservedSpaceWidth
-    val yPos = paddingTop
-    var yNext = 0
-    return layout(desiredWidth, desiredHeight) {
-
-        placeables.forEach { placeable: Placeable ->
-            placeable.placeRelative(xPos, yPos + yNext)
-            yNext += placeable.height
-        }
-    }
-}
-
-private fun Modifier.drawBackgroundRectangles(
-    rect: CustomRect,
-    contentRect: CustomRect
-) = this
-    .drawBehind {
-        drawRoundRect(color = Color.White, cornerRadius = CornerRadius(30f, 30f))
-
-        // This rectangle is drawn behind our whole composable
-        drawRect(
-            color = Color.Red,
-            topLeft = Offset(rect.left, rect.top),
-            size = Size(rect.width, rect.height),
-            style = Stroke(3f)
+        println(
+            "🔥 MyLayout2\n" +
+                    "constraints: $constraints\n" +
+                    "updatedConstraints: $updatedConstraints\n"
         )
 
-        // This rectangle is drawn behind our content(imaginary arrow is excluded)
-        // to show how offset and constraintWidth effects layout
+        val totalHeight = placeables.sumOf { it.height }
 
-        drawRect(
-            color = Color.Blue,
-            topLeft = Offset(contentRect.left, contentRect.top),
-            size = Size(contentRect.width, contentRect.height),
-            style = Stroke(3f)
-        )
+        var posY = 0
 
-    }
 
-private data class CustomRect(
-    var left: Float = 0f,
-    var top: Float = 0f,
-    var right: Float = 0f,
-    var bottom: Float = 0f
-) {
-
-    fun set(left: Float, top: Float, right: Float, bottom: Float) {
-        this.left = left
-        this.top = top
-        this.right = right
-        this.bottom = bottom
-    }
-
-    val height: Float
-        get() {
-            return bottom - top
+        // 🔥🔥 Changing  width changes where this Compoasble is positioned if it's not
+        // in parents bounds
+        layout(width = 900, height = totalHeight) {
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, posY)
+                posY += placeable.height
+            }
         }
-
-    val width: Float
-        get() {
-            return right - left
-        }
-
-    override fun toString(): String {
-        return "left: $left, top: $top, right: $right, bottom: $bottom, " +
-                "width: $width, height: $height"
     }
 }

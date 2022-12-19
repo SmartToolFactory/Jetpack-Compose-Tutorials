@@ -191,14 +191,19 @@ private fun CustomLayout(
 
         println(
             "🔥 CustomLayout Constraints\n" +
-                    "minWidth ${constraints.minWidth}, maxWidth: ${constraints.maxWidth}, " +
-                    "boundedWidth: ${constraints.hasBoundedWidth}, fixedWidth: ${constraints.hasFixedWidth}\n" +
-                    "minHeight ${constraints.minHeight}, maxHeight: ${constraints.maxHeight}, " +
-                    "hasBoundedHeight: ${constraints.hasBoundedHeight}, hasFixedHeight: ${constraints.hasFixedHeight}\n"
+                    "minWidth ${constraints.minWidth}, " +
+                    "maxWidth: ${constraints.maxWidth}, " +
+                    "boundedWidth: ${constraints.hasBoundedWidth}, " +
+                    "fixedWidth: ${constraints.hasFixedWidth}\n" +
+                    "minHeight ${constraints.minHeight}, " +
+                    "maxHeight: ${constraints.maxHeight}, " +
+                    "hasBoundedHeight: ${constraints.hasBoundedHeight}, " +
+                    "hasFixedHeight: ${constraints.hasFixedHeight}\n"
         )
 
-        // measurables contains one element corresponding to each of our layout children.
-        // constraints are the constraints that our parent is currently measuring us with.
+        // measurables contain each element corresponding to each of our layout children.
+        // Constraints object contains min/max bounds that our parent is currently measuring
+        // child Composables with.
         val childConstraints = Constraints(
             minWidth = constraints.minWidth,
             minHeight = constraints.minHeight
