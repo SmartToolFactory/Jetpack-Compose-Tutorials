@@ -50,8 +50,8 @@ private fun ConstraintsSample() {
     Column(
         modifier = Modifier
             .width(containerWidth)
+            .background(Color(0xffFBE9E7))
             .fillMaxHeight()
-            .border(1.dp, Color.Red)
     ) {
 
         StyleableTutorialText(
@@ -94,7 +94,7 @@ private fun ConstraintsSample() {
                     "Since child Composables' widths are bigger than container they overflow from" +
                     "parent Composable.\n" +
                     "MyLayout3(green border) " +
-                    "overflows from parent as **(Constraints.maxWidth-layout width) " +
+                    "overflows from parent as **(Constraints.maxWidth-layout width)** " +
                     "maxWidth is 700px while layout width is 900px because of this **MyLayout3** " +
                     "is moved to right by 100px.",
         )

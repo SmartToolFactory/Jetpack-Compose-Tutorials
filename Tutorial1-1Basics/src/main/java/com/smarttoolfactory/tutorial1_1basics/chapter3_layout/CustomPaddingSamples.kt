@@ -42,15 +42,19 @@ private class PaddingModifier(
         val horizontal = start.roundToPx() + end.roundToPx()
         val vertical = top.roundToPx() + bottom.roundToPx()
 
-        val placeable = measurable.measure(constraints.offset(-horizontal, -vertical))
+        val offsetConstraints = constraints.offset(-horizontal, -vertical)
+        val placeable = measurable.measure(offsetConstraints)
 
         val width = constraints.constrainWidth(placeable.width + horizontal)
         val height = constraints.constrainHeight(placeable.height + vertical)
 
         println(
-            "😁 PaddingModifier() " +
+            "😁 PaddingModifier()\n" +
+                    "constraints: $constraints\n" +
+                    "offsetConstraints: $offsetConstraints\n" +
                     "horizontal: $horizontal, " +
-                    "vertical: $vertical, placeable width: ${placeable.width}"
+                    "placeable width: ${placeable.width}, " +
+                    "constrainedWidth: $width"
         )
 
         return layout(width, height) {
@@ -65,7 +69,7 @@ private class PaddingModifier(
 
 /**
  * This modifier is similar to **padding** modifier but
- * `measurable.measure(constraint)` used instead of
+ * `measurable.measure(constraint)`used instead of
  * `measurable.measure(constraints.offset(-horizontal, -vertical))`.
  * offset only reserves area after padding is applied. With this modifier if parent dimensions
  * are bigger we break padding.
@@ -78,7 +82,7 @@ private class PaddingModifier(
 @Stable
 fun Modifier.paddingWithConstrainOnly(all: Dp) =
     this.then(
-        PaddingModifierWithoutOffset(
+        PaddingModifierWitConstrain(
             start = all,
             top = all,
             end = all,
@@ -88,7 +92,7 @@ fun Modifier.paddingWithConstrainOnly(all: Dp) =
     )
 
 // Implementation detail
-private class PaddingModifierWithoutOffset(
+private class PaddingModifierWitConstrain(
     val start: Dp = 0.dp,
     val top: Dp = 0.dp,
     val end: Dp = 0.dp,
@@ -110,9 +114,65 @@ private class PaddingModifierWithoutOffset(
         val height = constraints.constrainHeight(placeable.height + vertical)
 
         println(
-            "🤡 PaddingModifierWithoutOffset() " +
+            "🤡 PaddingModifierWitConstrainOnly()\n" +
+                    "constraints: $constraints\n" +
                     "horizontal: $horizontal, " +
-                    "vertical: $vertical, placeable width: ${placeable.width}"
+                    "placeable width: ${placeable.width}, " +
+                    "constrainedWidth: $width"
+        )
+
+        return layout(width, height) {
+            if (rtlAware) {
+                placeable.placeRelative(start.roundToPx(), top.roundToPx())
+            } else {
+                placeable.place(start.roundToPx(), top.roundToPx())
+            }
+        }
+    }
+}
+
+
+/**
+ * This modifier is similar to **padding** modifier. Uses Constraints.offset() to measure placeable
+ * without the area reserved for padding. When size of the Composable is bigger than parent
+ * Composable offset limits area to placeable width + horizontal padding when setting width
+ */
+@Stable
+fun Modifier.paddingWithOffsetOnly(all: Dp) =
+    this.then(
+        PaddingModifierWitOffset(start = all, top = all, end = all, bottom = all, rtlAware = true)
+    )
+
+// Implementation detail
+private class PaddingModifierWitOffset(
+    val start: Dp = 0.dp,
+    val top: Dp = 0.dp,
+    val end: Dp = 0.dp,
+    val bottom: Dp = 0.dp,
+    val rtlAware: Boolean,
+) : LayoutModifier {
+
+    override fun MeasureScope.measure(
+        measurable: Measurable,
+        constraints: Constraints
+    ): MeasureResult {
+
+        val horizontal = start.roundToPx() + end.roundToPx()
+        val vertical = top.roundToPx() + bottom.roundToPx()
+
+        val offsetConstraints = constraints.offset(-horizontal, -vertical)
+        val placeable = measurable.measure(offsetConstraints)
+
+        val width = (placeable.width + horizontal)
+        val height = (placeable.height + vertical)
+
+        println(
+            "😱 PaddingModifierWitOffsetOnly()\n" +
+                    "constraints: $constraints\n" +
+                    "offsetConstraints: $offsetConstraints\n" +
+                    "horizontal: $horizontal, " +
+                    "placeable width: ${placeable.width}, " +
+                    "width: $width"
         )
 
         return layout(width, height) {
@@ -165,9 +225,11 @@ private class PaddingModifierPlain(
         val height = (placeable.height + vertical)
 
         println(
-            "😍 PaddingModifierPlain() " +
+            "😍 PaddingModifierPlain()\n" +
+                    "constraints: $constraints\n" +
                     "horizontal: $horizontal, " +
-                    "vertical: $vertical, placeable width: ${placeable.width}"
+                    "placeable width: ${placeable.width}, " +
+                    "width: $width"
         )
 
         return layout(width, height) {
