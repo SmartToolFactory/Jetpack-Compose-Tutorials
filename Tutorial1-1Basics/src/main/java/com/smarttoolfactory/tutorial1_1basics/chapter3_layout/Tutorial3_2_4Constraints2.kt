@@ -46,7 +46,6 @@ private fun ConstraintsSample() {
         700f.toDp()
     }
 
-
     Column(
         modifier = Modifier
             .width(containerWidth)
@@ -87,9 +86,8 @@ private fun ConstraintsSample() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-
         StyleableTutorialText(
-            text = "2-) In this example child composables are measured with " +
+            text = "3-) In this example child composables are measured with " +
                     "**constraints.copy(minWidth = 750, maxWidth = 900)**\n" +
                     "Since child Composables' widths are bigger than container they overflow from" +
                     "parent Composable.\n" +
