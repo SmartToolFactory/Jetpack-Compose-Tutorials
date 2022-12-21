@@ -635,7 +635,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_4 = TutorialSectionModel(
-        title = "3-2-4 Constraints2",
+        title = "3-2-4 Constraints Bounds",
         description = "Update default constraints with or out of bounds of original Constraints" +
                 ", and change layout width out of Constraints bounds to observe how a Composable" +
                 " is laid out",
@@ -826,7 +826,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_4,
         tutorial3_2_5,
         tutorial3_2_6,
-        tutorial3_2_7,
+//        tutorial3_2_7,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_4,

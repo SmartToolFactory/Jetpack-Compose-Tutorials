@@ -56,8 +56,8 @@ private fun ConstraintsSample() {
         StyleableTutorialText(
             text = "When layout width is not in bounds of " +
                     "**Constraints.minWidth**..**Constraints.maxWidth** " +
-                    "Parent is placed at (Constraints.maxWidth-layout width)/2 or " +
-                    "(Constraints.minWidth-layout width)/2\n" +
+                    "Parent is placed at (layout width-Constraints.maxWidth)/2 or " +
+                    "(layout width-Constraints.minWidth)/2\n" +
                     "Constraints used for measuring measurables determine size " +
                     "of child Composables.\n" +
                     "Setting layout width determines where parent will be positioned and which" +
@@ -94,7 +94,7 @@ private fun ConstraintsSample() {
                     "Since child Composables' widths are bigger than container they overflow from" +
                     "parent Composable.\n" +
                     "MyLayout3(green border) " +
-                    "overflows from parent as **(Constraints.maxWidth-layout width)** " +
+                    "overflows from parent as **(layout width -Constraints.maxWidth)/2** " +
                     "maxWidth is 700px while layout width is 900px because of this **MyLayout3** " +
                     "is moved to right by 100px.",
         )
@@ -107,12 +107,11 @@ private fun ConstraintsSample() {
             700f.toDp()
         }
 
-
         StyleableTutorialText(
-            text = "3-) In this example layout width is 400px while " +
+            text = "4-) In this example layout width is 400px while " +
                     "**Constraints.minWidth = 500f**, Constrains.maxWidth = 1080f\n" +
                     "MyLayout3(green border) " +
-                    "overflows from parent as **(layout width -Constraints.minWidth)**.\n" +
+                    "overflows from parent as **(layout width -Constraints.minWidth)/2**.\n" +
                     "Also child Composable is measured with " +
                     "**constraints.copy(minWidth = 100, maxWidth = 500)**",
         )

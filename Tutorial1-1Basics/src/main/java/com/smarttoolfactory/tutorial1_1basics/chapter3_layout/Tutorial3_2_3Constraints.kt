@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,8 @@ import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
@@ -24,6 +27,14 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
 fun Tutorial3_2Screen3() {
+    TutorialContent()
+}
+
+@Preview
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_C)
+@Composable
+private fun Tutorial3_2_3Preview() {
     TutorialContent()
 }
 
