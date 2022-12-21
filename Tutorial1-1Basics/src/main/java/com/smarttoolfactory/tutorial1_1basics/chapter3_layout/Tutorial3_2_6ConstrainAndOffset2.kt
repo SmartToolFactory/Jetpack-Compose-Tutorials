@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 /**
- * Blue rectangle is the total area of our Composable. Red
+ * Green rectangle is the total area of our Composable. Red
  * rectangle is the **imaginary space** we set for drawing a
  * chat bubble's nip for instance.
  * While the Composable covers content + nip area(this is how it's laid out relative to siblings),
@@ -60,7 +60,7 @@ private fun TutorialContent() {
         ) {
 
             StyleableTutorialText(
-                text = "Blue rectangle is the total area " +
+                text = "Green rectangle is the total area " +
                         "of Composable. Red  rectangle is the **imaginary space** we set for drawing a " +
                         "chat bubble's nip for instance.\n" +
                         " While our Composable covers content + nip area(this is how it's laid out " +
@@ -413,7 +413,6 @@ private fun MeasureScope.createLayout(
         desiredHeight.toFloat()
     )
 
-
     val xPos = paddingStart + reservedSpaceWidth
     val yPos = paddingTop
     var yNext = 0
@@ -431,26 +430,31 @@ private fun Modifier.drawBackgroundRectangles(
     contentRect: CustomRect
 ) = this
     .drawBehind {
-        drawRoundRect(color = Color.White, cornerRadius = CornerRadius(30f, 30f))
+        drawRoundRect(
+            color = Color.White,
+            topLeft = Offset(contentRect.left, contentRect.top),
+            size = Size(contentRect.width, contentRect.height),
+            cornerRadius = CornerRadius(40f, 40f)
+        )
 
         // This rectangle is drawn behind our whole composable
         drawRect(
             color = Color.Red,
             topLeft = Offset(rect.left, rect.top),
             size = Size(rect.width, rect.height),
-            style = Stroke(3f)
+            style = Stroke(2f)
         )
+
 
         // This rectangle is drawn behind our content(imaginary arrow is excluded)
         // to show how offset and constraintWidth effects layout
 
         drawRect(
-            color = Color.Blue,
+            color = Color.Green,
             topLeft = Offset(contentRect.left, contentRect.top),
             size = Size(contentRect.width, contentRect.height),
-            style = Stroke(3f)
+            style = Stroke(2f)
         )
-
     }
 
 private data class CustomRect(

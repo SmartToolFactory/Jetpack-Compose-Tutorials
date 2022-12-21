@@ -54,8 +54,10 @@ private fun ConstraintsSample() {
     ) {
 
         StyleableTutorialText(
-            text = "When layout width is set different than **Constraints.maxWidth** " +
-                    "Parent is placed at (Constraints.maxWidth-layout width)/2\n" +
+            text = "When layout width is not in bounds of " +
+                    "**Constraints.minWidth**..**Constraints.maxWidth** " +
+                    "Parent is placed at (Constraints.maxWidth-layout width)/2 or " +
+                    "(Constraints.minWidth-layout width)/2\n" +
                     "Constraints used for measuring measurables determine size " +
                     "of child Composables.\n" +
                     "Setting layout width determines where parent will be positioned and which" +
@@ -99,6 +101,33 @@ private fun ConstraintsSample() {
 
         MyLayout3(modifier = Modifier.border(3.dp, Green400)) {
             Content()
+        }
+
+        val minWidth = with(density) {
+            700f.toDp()
+        }
+
+
+        StyleableTutorialText(
+            text = "3-) In this example layout width is 400px while " +
+                    "**Constraints.minWidth = 500f**, Constrains.maxWidth = 1080f\n" +
+                    "MyLayout3(green border) " +
+                    "overflows from parent as **(layout width -Constraints.minWidth)**.\n" +
+                    "Also child Composable is measured with " +
+                    "**constraints.copy(minWidth = 100, maxWidth = 500)**",
+        )
+        MyLayout4(
+            modifier = Modifier
+                .widthIn(min = minWidth)
+                .border(3.dp, Green400)
+        ) {
+            BoxWithConstraints {
+                Text(
+                    text = "Constraints: $constraints",
+                    color = Color.White,
+                    modifier = Modifier.background(Pink400)
+                )
+            }
         }
     }
 }
@@ -217,7 +246,7 @@ private fun MyLayout3(
         }
 
         println(
-            "🔥 MyLayout2\n" +
+            "🔥 MyLayout3\n" +
                     "constraints: $constraints\n" +
                     "updatedConstraints: $updatedConstraints\n"
         )
@@ -227,9 +256,48 @@ private fun MyLayout3(
         var posY = 0
 
 
-        // 🔥🔥 Changing  width changes where this Compoasble is positioned if it's not
+        // 🔥🔥 Changing  width changes where this Composable is positioned if it's not
         // in parents bounds
         layout(width = 900, height = totalHeight) {
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, posY)
+                posY += placeable.height
+            }
+        }
+    }
+}
+
+@Composable
+private fun MyLayout4(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables: List<Measurable>, constraints: Constraints ->
+
+        val updatedConstraints = constraints.copy(minWidth = 100, maxWidth = 500)
+
+        val placeables = measurables.map { measurable: Measurable ->
+            measurable.measure(updatedConstraints)
+        }
+
+        println(
+            "🔥 MyLayout4\n" +
+                    "constraints: $constraints\n" +
+                    "updatedConstraints: $updatedConstraints\n"
+        )
+
+        val totalHeight = placeables.sumOf { it.height }
+
+        var posY = 0
+
+
+        // 🔥🔥 Changing  width changes where this Composable is positioned if it's not
+        // in parents bounds
+        layout(width = 500, height = totalHeight) {
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, posY)
                 posY += placeable.height
