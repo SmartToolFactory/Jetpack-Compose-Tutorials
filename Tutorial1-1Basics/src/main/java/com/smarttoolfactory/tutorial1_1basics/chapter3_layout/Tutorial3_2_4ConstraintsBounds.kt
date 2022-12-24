@@ -2,10 +2,13 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Slider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
@@ -15,8 +18,10 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
 fun Tutorial3_2Screen4() {
@@ -94,9 +99,9 @@ private fun ConstraintsSample() {
                     "Since child Composables' widths are bigger than container they overflow from" +
                     "parent Composable.\n" +
                     "MyLayout3(green border) " +
-                    "overflows from parent as **(layout width -Constraints.maxWidth)/2** " +
+                    "overflows from parent as **(Constraints.maxWidth-layout width)/2** " +
                     "maxWidth is 700px while layout width is 900px because of this **MyLayout3** " +
-                    "is moved to right by 100px.",
+                    "is moved to left by 100px.",
         )
 
         MyLayout3(modifier = Modifier.border(3.dp, Green400)) {
@@ -111,7 +116,7 @@ private fun ConstraintsSample() {
             text = "4-) In this example layout width is 400px while " +
                     "**Constraints.minWidth = 500f**, Constrains.maxWidth = 1080f\n" +
                     "MyLayout3(green border) " +
-                    "overflows from parent as **(layout width -Constraints.minWidth)/2**.\n" +
+                    "overflows from parent as **(layout width-Constraints.minWidth)/2**.\n" +
                     "Also child Composable is measured with " +
                     "**constraints.copy(minWidth = 100, maxWidth = 500)**",
         )
@@ -124,10 +129,115 @@ private fun ConstraintsSample() {
                 Text(
                     text = "Constraints: $constraints",
                     color = Color.White,
-                    modifier = Modifier.background(Pink400)
+                    modifier = Modifier
+                        .shadow(2.dp, RoundedCornerShape(8.dp))
+                        .background(Pink400)
                 )
             }
         }
+
+        StyleableTutorialText(
+            text = "5-) In this example min/max width of modifier in px, constraint min/max width" +
+                    " in px and layout width is adjustable via sliders to observe how " +
+                    "child Composables and parent Composable is laid out",
+        )
+
+        ConstraintsOffsetAndBoundsSample()
+    }
+}
+
+@Composable
+private fun ConstraintsOffsetAndBoundsSample() {
+
+    var minWidth by remember { mutableStateOf(100f) }
+    var maxWidth by remember { mutableStateOf(700f) }
+    var constraintsMinWidth by remember { mutableStateOf(100f) }
+    var constraintsMaxWidth by remember { mutableStateOf(700f) }
+    var layoutWidth by remember { mutableStateOf(700f) }
+
+    LayoutWidthWidthParams(
+        minWidth = minWidth.toInt(),
+        maxWidth = maxWidth.toInt(),
+        constraintsMinWidth = constraintsMinWidth.toInt(),
+        constraintsMaxWidth = constraintsMaxWidth.toInt(),
+        layoutWidth = layoutWidth.toInt()
+    ) {
+        BoxWithConstraints {
+            Text(
+                text = "Constraints: $constraints",
+                color = Color.White,
+                modifier = Modifier
+                    .shadow(2.dp, RoundedCornerShape(8.dp))
+                    .background(Orange400)
+            )
+        }
+    }
+
+    TutorialText2(
+        text = "Modifier min and max widths, " +
+                "Original Constraints are derived from min/max width values"
+    )
+
+    SliderWithLabel(
+        label = "MinWidth: ${minWidth.toInt()}",
+        value = minWidth
+    ) {
+        if (it <= maxWidth) {
+            minWidth = it
+        }
+    }
+
+    SliderWithLabel(
+        label = "MaxWidth: ${maxWidth.toInt()}",
+        value = maxWidth
+    ) {
+        if (it >= minWidth) {
+            maxWidth = it
+        }
+    }
+
+    TutorialText2(
+        text = "Width of the parent Composable. If it's out of original Constraints " +
+                "parent is placed difference between layout width and (min/max) constraints width"
+    )
+
+    SliderWithLabel(
+        label = "Layout Width: ${layoutWidth.toInt()}",
+        value = layoutWidth
+    ) {
+        layoutWidth = it
+    }
+
+    TutorialText2(text = "Child composable are measured with these values")
+
+    SliderWithLabel(
+        label = "Child Constraints MinWidth: ${constraintsMinWidth.toInt()}",
+        value = constraintsMinWidth
+    ) {
+        if (it <= constraintsMaxWidth) {
+            constraintsMinWidth = it
+        }
+    }
+
+    SliderWithLabel(
+        label = "Child Constraints MaxWidth: ${constraintsMaxWidth.toInt()}",
+        value = constraintsMaxWidth
+    ) {
+        if (it >= constraintsMinWidth) {
+            constraintsMaxWidth = it
+        }
+    }
+}
+
+@Composable
+private fun SliderWithLabel(label: String, value: Float, onValueChange: (Float) -> Unit) {
+    Column {
+        Text(label)
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = 0f..1000f
+        )
     }
 }
 
@@ -146,6 +256,7 @@ private fun Content() {
 
     BoxWithConstraints(
         modifier = Modifier
+            .shadow(2.dp, RoundedCornerShape(8.dp))
             .width(child1Width)
             .background(Pink400)
             .clickable {}
@@ -155,6 +266,7 @@ private fun Content() {
 
     BoxWithConstraints(
         modifier = Modifier
+            .shadow(2.dp, RoundedCornerShape(8.dp))
             .width(child2Width)
             .background(Blue400)
             .clickable {}
@@ -297,6 +409,48 @@ private fun MyLayout4(
         // 🔥🔥 Changing  width changes where this Composable is positioned if it's not
         // in parents bounds
         layout(width = 500, height = totalHeight) {
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, posY)
+                posY += placeable.height
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun LayoutWidthWidthParams(
+    minWidth: Int,
+    maxWidth: Int,
+    constraintsMinWidth: Int,
+    constraintsMaxWidth: Int,
+    layoutWidth: Int,
+    content: @Composable () -> Unit
+) {
+
+    val density = LocalDensity.current
+    val minWidthDp = density.run { minWidth.toDp() }
+    val maxWidthDp = density.run { maxWidth.toDp() }
+
+    Layout(
+        modifier = Modifier
+            .widthIn(min = minWidthDp, max = maxWidthDp)
+            .border(3.dp, Green400),
+        content = content
+    ) { measurables: List<Measurable>, constraints: Constraints ->
+
+        val updatedConstraints =
+            constraints.copy(minWidth = constraintsMinWidth, maxWidth = constraintsMaxWidth)
+
+        val placeables = measurables.map { measurable: Measurable ->
+            measurable.measure(updatedConstraints)
+        }
+
+        val totalHeight = placeables.sumOf { it.height }
+        var posY = 0
+        // 🔥🔥 Changing  width changes where this Composable is positioned if it's not
+        // in parents bounds
+        layout(width = layoutWidth, height = totalHeight) {
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, posY)
                 posY += placeable.height
