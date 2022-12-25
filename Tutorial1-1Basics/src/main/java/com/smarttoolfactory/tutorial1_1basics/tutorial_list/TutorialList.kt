@@ -826,7 +826,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_4,
         tutorial3_2_5,
         tutorial3_2_6,
-//        tutorial3_2_7,
+        tutorial3_2_7,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_4,
