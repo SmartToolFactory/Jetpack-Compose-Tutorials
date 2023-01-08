@@ -5,9 +5,9 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -214,8 +214,7 @@ private fun AwaitPointerEventCanvasStateExample() {
     val drawModifier = canvasModifier
         .background(Color.White)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
                     // Wait for at least one pointer to press down, and set first contact position
                     val down: PointerInputChange = awaitFirstDown()
@@ -262,7 +261,6 @@ private fun AwaitPointerEventCanvasStateExample() {
                             break
                         }
                     }
-                }
             }
         }
 
@@ -300,9 +298,7 @@ private fun AwaitPointerEventWithDelayCanvasStateExample() {
     val drawModifier = canvasModifier
         .background(Color.White)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
-
+            awaitEachGesture {
                     var waitedAfterDown = false
 
                     // Wait for at least one pointer to press down, and set first contact position
@@ -358,7 +354,6 @@ private fun AwaitPointerEventWithDelayCanvasStateExample() {
                             break
                         }
                     }
-                }
             }
         }
 

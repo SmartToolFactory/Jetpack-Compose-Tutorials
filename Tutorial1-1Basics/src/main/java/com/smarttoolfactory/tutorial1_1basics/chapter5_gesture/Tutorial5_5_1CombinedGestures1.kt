@@ -2,10 +2,10 @@ package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -143,33 +143,30 @@ private fun CombinedPointerInputSample() {
         .height(150.dp)
         .background(gestureColor)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down = awaitFirstDown()
 
-                    val down = awaitFirstDown()
+                gestureText = "DOWN $down"
+                Toast
+                    .makeText(context, gestureText, Toast.LENGTH_SHORT)
+                    .show()
 
-                    gestureText = "DOWN $down"
-                    Toast
-                        .makeText(context, gestureText, Toast.LENGTH_SHORT)
-                        .show()
+                do {
+                    val event: PointerEvent = awaitPointerEvent()
+                    gestureColor = Blue400
+                    var eventChanges = "MOVE\n"
 
-                    do {
-                        val event: PointerEvent = awaitPointerEvent()
-                        gestureColor = Blue400
-                        var eventChanges = "MOVE\n"
+                    event.changes
+                        .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+                            eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
+                                    "pos: ${pointerInputChange.position}\n"
+                        }
 
-                        event.changes
-                            .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
-                                eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
-                                        "pos: ${pointerInputChange.position}\n"
-                            }
+                    gestureText += "EVENT changes size ${event.changes.size}\n" + eventChanges
+                } while (event.changes.any { it.pressed })
 
-                        gestureText += "EVENT changes size ${event.changes.size}\n" + eventChanges
-                    } while (event.changes.any { it.pressed })
-
-                    gestureColor = Green400
-                    gestureText = "UP"
-                }
+                gestureColor = Green400
+                gestureText = "UP"
             }
         }
         .pointerInput(Unit) {
@@ -256,34 +253,31 @@ private fun CombinedPointerInputSample2() {
             )
         }
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down = awaitFirstDown()
 
-                    val down = awaitFirstDown()
+                gestureText = "DOWN $down"
+                Toast
+                    .makeText(context, gestureText, Toast.LENGTH_SHORT)
+                    .show()
 
-                    gestureText = "DOWN $down"
-                    Toast
-                        .makeText(context, gestureText, Toast.LENGTH_SHORT)
-                        .show()
+                do {
+                    val event: PointerEvent = awaitPointerEvent()
+                    gestureColor = Blue400
+                    var eventChanges = "MOVE\n"
 
-                    do {
-                        val event: PointerEvent = awaitPointerEvent()
-                        gestureColor = Blue400
-                        var eventChanges = "MOVE\n"
+                    event.changes
+                        .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+                            eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
+                                    "pos: ${pointerInputChange.position}\n"
+                        }
 
-                        event.changes
-                            .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
-                                eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
-                                        "pos: ${pointerInputChange.position}\n"
-                            }
-
-                        gestureText += "EVENT changes size ${event.changes.size}\n" + eventChanges
-                    } while (event.changes.any { it.pressed })
+                    gestureText += "EVENT changes size ${event.changes.size}\n" + eventChanges
+                } while (event.changes.any { it.pressed })
 
 
-                    gestureColor = Green400
-                    gestureText = "UP"
-                }
+                gestureColor = Green400
+                gestureText = "UP"
             }
         }
 

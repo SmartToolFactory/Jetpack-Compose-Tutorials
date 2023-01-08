@@ -72,52 +72,49 @@ private fun ConsumeDownAndUpEventsExample() {
     val pointerModifier = gestureModifier
         .background(gestureColor)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                // Wait for at least one pointer to press down, and set first contact position
+                val down: PointerInputChange = awaitFirstDown()
 
-                    // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown()
+                gestureColor = Orange400
 
-                    gestureColor = Orange400
+                // Consuming down causes changeToDown to return false
+                // And other events like scroll to not interfere with this event
+                down.consume()
 
-                    // Consuming down causes changeToDown to return false
-                    // And other events like scroll to not interfere with this event
-                    down.consume()
+                var eventChanges: String = "🎃DOWN\n" +
+                        "changedToDown: ${down.changedToDown()}, " +
+                        "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
+                        "pressed: ${down.pressed}\n" +
+                        "changedUp: ${down.changedToUp()}\n" +
+                        "positionChanged: ${down.positionChanged()}\n" +
+                        "isConsumed: ${down.isConsumed}\n"
 
-                    var eventChanges: String = "🎃DOWN\n" +
-                                "changedToDown: ${down.changedToDown()}, " +
-                                "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                "pressed: ${down.pressed}\n" +
-                                "changedUp: ${down.changedToUp()}\n" +
-                                "positionChanged: ${down.positionChanged()}\n" +
-                                "isConsumed: ${down.isConsumed}\n"
+                gestureText = eventChanges
 
-                    gestureText = eventChanges
+                // 🔥 Wait for Up Event, this is called if only one pointer exits
+                // when it's up or moved out of Composable bounds
+                // When multiple pointers touch Composable it requires only one to be
+                // out of Composable bounds
+                val upOrCancel: PointerInputChange? = waitForUpOrCancellation()
 
-                    // 🔥 Wait for Up Event, this is called if only one pointer exits
-                    // when it's up or moved out of Composable bounds
-                    // When multiple pointers touch Composable it requires only one to be
-                    // out of Composable bounds
-                    val upOrCancel: PointerInputChange? = waitForUpOrCancellation()
+                if (upOrCancel != null) {
 
-                    if (upOrCancel != null) {
-
-                        eventChanges +=
-                            "🍒UP\n" +
-                                    "changedToDown: ${upOrCancel.changedToDown()}, " +
-                                    "changedToDownIgnoreConsumed: ${upOrCancel.changedToDownIgnoreConsumed()}\n" +
-                                    "pressed: ${upOrCancel.pressed}\n" +
-                                    "changedUp: ${upOrCancel.changedToUp()}\n" +
-                                    "changedToUpIgnoreConsumed: ${upOrCancel.changedToUpIgnoreConsumed()}\n" +
-                                    "isConsumed: ${upOrCancel.isConsumed}\n"
-                        gestureColor = Green400
-                    } else {
-                        eventChanges += "UP CANCEL"
-                        gestureColor = Red400
-                    }
-
-                    gestureText = eventChanges
+                    eventChanges +=
+                        "🍒UP\n" +
+                                "changedToDown: ${upOrCancel.changedToDown()}, " +
+                                "changedToDownIgnoreConsumed: ${upOrCancel.changedToDownIgnoreConsumed()}\n" +
+                                "pressed: ${upOrCancel.pressed}\n" +
+                                "changedUp: ${upOrCancel.changedToUp()}\n" +
+                                "changedToUpIgnoreConsumed: ${upOrCancel.changedToUpIgnoreConsumed()}\n" +
+                                "isConsumed: ${upOrCancel.isConsumed}\n"
+                    gestureColor = Green400
+                } else {
+                    eventChanges += "UP CANCEL"
+                    gestureColor = Red400
                 }
+
+                gestureText = eventChanges
             }
         }
 
@@ -147,105 +144,103 @@ private fun ConsumeDownAndMoveEventsExample() {
     val pointerModifier = gestureModifier
         .background(gestureColor)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown()
+                // Wait for at least one pointer to press down, and set first contact position
+                val down: PointerInputChange = awaitFirstDown()
 
-                    gestureColor = Orange400
+                gestureColor = Orange400
 
-                    // Consuming down causes changeToDown to return false
-                    // And other events like scroll to not interfere with this event
-                    down.consume()
+                // Consuming down causes changeToDown to return false
+                // And other events like scroll to not interfere with this event
+                down.consume()
 
-                    var eventChanges: String = "🎃DOWN id: ${down.id.value}\n" +
-                                "changedToDown: ${down.changedToDown()}, " +
-                                "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                "pressed: ${down.pressed}\n" +
-                                "changedUp: ${down.changedToUp()}\n" +
-                                "positionChanged: ${down.positionChanged()}\n" +
-                                "isConsumed: ${down.isConsumed}\n"
+                var eventChanges: String = "🎃DOWN id: ${down.id.value}\n" +
+                        "changedToDown: ${down.changedToDown()}, " +
+                        "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
+                        "pressed: ${down.pressed}\n" +
+                        "changedUp: ${down.changedToUp()}\n" +
+                        "positionChanged: ${down.positionChanged()}\n" +
+                        "isConsumed: ${down.isConsumed}\n"
 
-                    do {
+                do {
 
-                        // This PointerEvent contains details including events, id, position and more
-                        val event: PointerEvent = awaitPointerEvent()
+                    // This PointerEvent contains details including events, id, position and more
+                    val event: PointerEvent = awaitPointerEvent()
 
-                        eventChanges +=
-                            "\n🍏MOVE changes size ${event.changes.size}\n"
-                        gestureText = eventChanges
+                    eventChanges +=
+                        "\n🍏MOVE changes size ${event.changes.size}\n"
+                    gestureText = eventChanges
 
-                        event.changes
-                            .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
-                                pointerInputChange.consume()
+                    event.changes
+                        .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+                            pointerInputChange.consume()
 
-                                eventChanges +=
-                                    "Index: " +
-                                            "$index, id: ${pointerInputChange.id}, " +
-                                            "pressed: ${pointerInputChange.pressed}\n" +
-                                            "changedUp: ${pointerInputChange.changedToUp()}\n" +
-                                            "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n" +
-                                            "position: ${pointerInputChange.position}\n" +
-                                            "positionChange: ${pointerInputChange.positionChange()}\n" +
-                                            "positionChanged: ${pointerInputChange.positionChanged()}\n" +
-                                            "isConsumed: ${pointerInputChange.isConsumed}\n"
-                                gestureText = eventChanges
+                            eventChanges +=
+                                "Index: " +
+                                        "$index, id: ${pointerInputChange.id}, " +
+                                        "pressed: ${pointerInputChange.pressed}\n" +
+                                        "changedUp: ${pointerInputChange.changedToUp()}\n" +
+                                        "changedToUpIgnoreConsumed: ${pointerInputChange.changedToUpIgnoreConsumed()}\n" +
+                                        "position: ${pointerInputChange.position}\n" +
+                                        "positionChange: ${pointerInputChange.positionChange()}\n" +
+                                        "positionChanged: ${pointerInputChange.positionChanged()}\n" +
+                                        "isConsumed: ${pointerInputChange.isConsumed}\n"
+                            gestureText = eventChanges
 
 
-                                // 🔥 calling consume() sets
-                                // positionChange() to Offset(0.0,0.0),
-                                // positionChanged() to false,
-                                // positionChangeConsumed() to true.
-                                // And any parent or pointerInput above this gets no position change
-                                // Scrolling or detectGestures check positionChangeConsumed()
+                            // 🔥 calling consume() sets
+                            // positionChange() to Offset(0.0,0.0),
+                            // positionChanged() to false,
+                            // positionChangeConsumed() to true.
+                            // And any parent or pointerInput above this gets no position change
+                            // Scrolling or detectGestures check positionChangeConsumed()
 
-                            }
+                        }
 
-                        gestureColor = Blue400
+                    gestureColor = Blue400
 
-                    } while (
-                        event.changes.any {
+                } while (
+                    event.changes.any {
 
-                            // 🔥 Gets called when a pointer is up
-                            if (!it.pressed) {
+                        // 🔥 Gets called when a pointer is up
+                        if (!it.pressed) {
 
-                                // consume()(UP here) causes changedToUp to return false
-                                it.consume()
+                            // consume()(UP here) causes changedToUp to return false
+                            it.consume()
 
-                                eventChanges +=
-                                    "\n🚀 POINTER UP id: ${down.id.value}\n" +
+                            eventChanges +=
+                                "\n🚀 POINTER UP id: ${down.id.value}\n" +
+                                        "changedToDown: ${it.changedToDown()}, " +
+                                        "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
+                                        "changedUp: ${it.changedToUp()}\n" +
+                                        "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
+                                        "positionChanged: ${it.positionChanged()}\n" +
+                                        "isConsumed: ${it.isConsumed}\n"
+
+                            gestureText = eventChanges
+
+                            Toast
+                                .makeText(
+                                    context,
+                                    "🚀 POINTER UP id: ${down.id.value}\n" +
                                             "changedToDown: ${it.changedToDown()}, " +
                                             "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
                                             "changedUp: ${it.changedToUp()}\n" +
                                             "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
                                             "positionChanged: ${it.positionChanged()}\n" +
-                                            "isConsumed: ${it.isConsumed}\n"
-
-                                gestureText = eventChanges
-
-                                Toast
-                                    .makeText(
-                                        context,
-                                        "🚀 POINTER UP id: ${down.id.value}\n" +
-                                                "changedToDown: ${it.changedToDown()}, " +
-                                                "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                                "changedUp: ${it.changedToUp()}\n" +
-                                                "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
-                                                "positionChanged: ${it.positionChanged()}\n" +
-                                                "isConsumed: ${it.isConsumed}\n",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                    .show()
+                                            "isConsumed: ${it.isConsumed}\n",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
 
 
-                            }
-                            it.pressed
                         }
-                    )
+                        it.pressed
+                    }
+                )
 
-                    gestureColor = Green400
-                }
+                gestureColor = Green400
             }
         }
 
@@ -273,93 +268,91 @@ private fun ConsumeDragEventsExample() {
     val pointerModifier = gestureModifier
         .background(gestureColor)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    val down: PointerInputChange = awaitFirstDown().also {
-                        gestureColor = Orange400
+                val down: PointerInputChange = awaitFirstDown().also {
+                    gestureColor = Orange400
+                }
+
+                // Consuming down causes changeToDown to return false
+                // And other events like scroll to not interfere with this event
+                down.consume()
+
+                var eventChanges =
+                    "🎃DOWN\n" +
+                            "changedToDown: ${down.changedToDown()}, " +
+                            "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
+                            "pressed: ${down.pressed}\n" +
+                            "changedUp: ${down.changedToUp()}\n" +
+                            "changedToUpIgnoreConsumed: ${down.changedToUpIgnoreConsumed()}\n" +
+                            "positionChanged: ${down.positionChanged()}\n" +
+                            "positionChangeConsumed: ${down.isConsumed}\n"
+
+                gestureText = eventChanges
+
+
+                // 🔥 Waits for drag threshold to be passed by pointer
+                // or it returns null if up event is triggered
+                var change: PointerInputChange? =
+                    awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
+
+
+                        // 🔥🔥 If consume() is not called drag does not
+                        // function properly.
+                        // Consuming position change causes
+                        // change.positionChanged() to return false.
+                        change.consume()
+                        eventChanges +=
+                            "⛺️ awaitTouchSlopOrCancellation()\n" +
+                                    "down.id: ${down.id} change.id: ${change.id}\n" +
+                                    "changedToDown: ${change.changedToDown()}\n" +
+                                    "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
+                                    "pressed: ${change.pressed}\n" +
+                                    "changedUp: ${change.changedToUp()}\n" +
+                                    "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                    "positionChanged: ${change.positionChanged()}\n" +
+                                    "positionChangeConsumed: ${change.isConsumed}\n"
+
+                        gestureColor = Brown400
+                        gestureText = eventChanges
                     }
 
-                    // Consuming down causes changeToDown to return false
-                    // And other events like scroll to not interfere with this event
-                    down.consume()
 
-                    var eventChanges =
-                        "🎃DOWN\n" +
-                                "changedToDown: ${down.changedToDown()}, " +
-                                "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                                "pressed: ${down.pressed}\n" +
-                                "changedUp: ${down.changedToUp()}\n" +
-                                "changedToUpIgnoreConsumed: ${down.changedToUpIgnoreConsumed()}\n" +
-                                "positionChanged: ${down.positionChanged()}\n" +
-                                "positionChangeConsumed: ${down.isConsumed}\n"
+                if (change == null) {
+                    gestureColor = Red400
+                    gestureText += "awaitTouchSlopOrCancellation() is NULL"
+                } else {
 
-                    gestureText = eventChanges
+                    while (change != null && change.pressed) {
 
+                        // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
+                        change = awaitDragOrCancellation(change.id)
 
-                    // 🔥 Waits for drag threshold to be passed by pointer
-                    // or it returns null if up event is triggered
-                    var change: PointerInputChange? =
-                        awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
+                        if (change != null && change.pressed) {
 
+                            gestureColor = Blue400
 
-                            // 🔥🔥 If consume() is not called drag does not
-                            // function properly.
-                            // Consuming position change causes
+                            // 🔥 Consuming position change causes
                             // change.positionChanged() to return false.
                             change.consume()
+
                             eventChanges +=
-                                "⛺️ awaitTouchSlopOrCancellation()\n" +
+                                "🚌 awaitDragOrCancellation()  " +
                                         "down.id: ${down.id} change.id: ${change.id}\n" +
                                         "changedToDown: ${change.changedToDown()}\n" +
                                         "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
                                         "pressed: ${change.pressed}\n" +
                                         "changedUp: ${change.changedToUp()}\n" +
                                         "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
+                                        "position: ${change.position}\n" +
+                                        "positionChange: ${change.positionChange()}\n" +
                                         "positionChanged: ${change.positionChanged()}\n" +
-                                        "positionChangeConsumed: ${change.isConsumed}\n"
-
-                            gestureColor = Brown400
-                            gestureText = eventChanges
+                                        "isConsumed: ${change.isConsumed}\n"
                         }
-
-
-                    if (change == null) {
-                        gestureColor = Red400
-                        gestureText += "awaitTouchSlopOrCancellation() is NULL"
-                    } else {
-
-                        while (change != null && change.pressed) {
-
-                            // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
-                            change = awaitDragOrCancellation(change.id)
-
-                            if (change != null && change.pressed) {
-
-                                gestureColor = Blue400
-
-                                // 🔥 Consuming position change causes
-                                // change.positionChanged() to return false.
-                                change.consume()
-
-                                eventChanges +=
-                                    "🚌 awaitDragOrCancellation()  " +
-                                            "down.id: ${down.id} change.id: ${change.id}\n" +
-                                            "changedToDown: ${change.changedToDown()}\n" +
-                                            "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
-                                            "pressed: ${change.pressed}\n" +
-                                            "changedUp: ${change.changedToUp()}\n" +
-                                            "changedToUpIgnoreConsumed: ${change.changedToUpIgnoreConsumed()}\n" +
-                                            "position: ${change.position}\n" +
-                                            "positionChange: ${change.positionChange()}\n" +
-                                            "positionChanged: ${change.positionChanged()}\n" +
-                                            "isConsumed: ${change.isConsumed}\n"
-                            }
-                        }
-
-                        gestureText = eventChanges
-                        gestureColor = Green400
                     }
+
+                    gestureText = eventChanges
+                    gestureColor = Green400
                 }
             }
         }

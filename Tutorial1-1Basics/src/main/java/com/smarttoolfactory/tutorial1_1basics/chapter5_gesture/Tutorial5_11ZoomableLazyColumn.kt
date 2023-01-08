@@ -1,10 +1,10 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateZoom
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -73,54 +73,52 @@ private fun ZoomableList(snacks: List<Snack>) {
                         scaleY = zoom
                     }
                     .pointerInput(Unit) {
-                        forEachGesture {
-                            awaitPointerEventScope {
-                                // Wait for at least one pointer to press down
-                                awaitFirstDown()
-                                do {
+                        awaitEachGesture {
+                            // Wait for at least one pointer to press down
+                            awaitFirstDown()
+                            do {
 
-                                    val event = awaitPointerEvent()
-                                    // Calculate gestures and consume pointerInputChange
-                                    // only size of pointers down is 2
-                                    if (event.changes.size == 2) {
-                                        var zoom = item.zoom.value
-                                        zoom *= event.calculateZoom()
-                                        // Limit zoom between 100% and 300%
-                                        zoom = zoom.coerceIn(1f, 3f)
-                                        item.zoom.value = zoom
+                                val event = awaitPointerEvent()
+                                // Calculate gestures and consume pointerInputChange
+                                // only size of pointers down is 2
+                                if (event.changes.size == 2) {
+                                    var zoom = item.zoom.value
+                                    zoom *= event.calculateZoom()
+                                    // Limit zoom between 100% and 300%
+                                    zoom = zoom.coerceIn(1f, 3f)
+                                    item.zoom.value = zoom
 
-                                        val offset = event.calculatePan()
-                                        val currentOffset = if (zoom == 1f) {
-                                            Offset.Zero
-                                        } else {
-                                            val temp = item.offset.value + offset
-                                            println("🔥Temp $temp, zoom: $zoom, size: $size")
+                                    val offset = event.calculatePan()
+                                    val currentOffset = if (zoom == 1f) {
+                                        Offset.Zero
+                                    } else {
+                                        val temp = item.offset.value + offset
+                                        println("🔥Temp $temp, zoom: $zoom, size: $size")
 
-                                            val scaledWidth = size.width / zoom
-                                            val scaledHeight = size.height / zoom
-                                            Offset(
-                                                x = temp.x.coerceIn(
-                                                    -scaledWidth / 2,
-                                                    scaledWidth / 2
-                                                ),
-                                                y = temp.y.coerceIn(
-                                                    -scaledHeight / 2,
-                                                    scaledHeight / 2
-                                                )
+                                        val scaledWidth = size.width / zoom
+                                        val scaledHeight = size.height / zoom
+                                        Offset(
+                                            x = temp.x.coerceIn(
+                                                -scaledWidth / 2,
+                                                scaledWidth / 2
+                                            ),
+                                            y = temp.y.coerceIn(
+                                                -scaledHeight / 2,
+                                                scaledHeight / 2
                                             )
-                                        }
+                                        )
+                                    }
 
-                                        item.offset.value = currentOffset
-                                        /*
+                                    item.offset.value = currentOffset
+                                    /*
                                             Consumes position change if there is any
                                             This stops scrolling if there is one set to any parent Composable
                                          */
-                                        event.changes.forEach { pointerInputChange: PointerInputChange ->
-                                            pointerInputChange.consume()
-                                        }
+                                    event.changes.forEach { pointerInputChange: PointerInputChange ->
+                                        pointerInputChange.consume()
                                     }
-                                } while (event.changes.any { it.pressed })
-                            }
+                                }
+                            } while (event.changes.any { it.pressed })
                         }
                     }
                     .onSizeChanged {

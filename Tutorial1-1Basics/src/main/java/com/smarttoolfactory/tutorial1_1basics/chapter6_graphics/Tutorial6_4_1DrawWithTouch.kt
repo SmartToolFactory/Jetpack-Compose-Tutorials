@@ -4,10 +4,10 @@ import android.graphics.Paint
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.drag
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +42,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMo
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
-import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -160,66 +159,64 @@ private fun TouchDrawMotionEventsAndPathExample() {
 
 //        .background(getRandomColor())
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                // Wait for at least one pointer to press down, and set first contact position
+                val down: PointerInputChange = awaitFirstDown()
 
-                    // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange = awaitFirstDown()
+                var waitedAfterDown = false
+                currentPosition = down.position
+                motionEvent = MotionEvent.Down
+                gestureColor = Blue400
 
-                    var waitedAfterDown = false
-                    currentPosition = down.position
-                    motionEvent = MotionEvent.Down
-                    gestureColor = Blue400
+                scope.launch {
+                    delay(20)
+                    waitedAfterDown = true
+                }
 
-                    scope.launch {
-                        delay(20)
-                        waitedAfterDown = true
-                    }
+                down.consume()
 
-                    down.consume()
+                // ✏️ ALTERNATIVE 1, this is how default gestures do with while(true) loop
+                // Main pointer is the one that is down initially
+                var pointerId = down.id
 
-                    // ✏️ ALTERNATIVE 1, this is how default gestures do with while(true) loop
-                    // Main pointer is the one that is down initially
-                    var pointerId = down.id
+                while (true) {
 
-                    while (true) {
+                    val event: PointerEvent = awaitPointerEvent()
 
-                        val event: PointerEvent = awaitPointerEvent()
+                    val anyPressed = event.changes.any { it.pressed }
 
-                        val anyPressed = event.changes.any { it.pressed }
+                    if (anyPressed) {
 
-                        if (anyPressed) {
+                        // Get pointer that is down, if first pointer is up
+                        // get another and use it if other pointers are also down
+                        // event.changes.first() doesn't return same order
+                        val pointerInputChange =
+                            event.changes.firstOrNull { it.id == pointerId }
+                                ?: event.changes.first()
 
-                            // Get pointer that is down, if first pointer is up
-                            // get another and use it if other pointers are also down
-                            // event.changes.first() doesn't return same order
-                            val pointerInputChange =
-                                event.changes.firstOrNull { it.id == pointerId }
-                                    ?: event.changes.first()
+                        // Next time will check same pointer with this id
+                        pointerId = pointerInputChange.id
 
-                            // Next time will check same pointer with this id
-                            pointerId = pointerInputChange.id
-
-                            if (waitedAfterDown) {
-                                currentPosition = pointerInputChange.position
-                                motionEvent = MotionEvent.Move
-                                gestureColor = Green400
-                            }
-
-                            // This necessary to prevent other gestures or scrolling
-                            // when at least one pointer is down on canvas to draw
-                            pointerInputChange.consume()
-
-
-                        } else {
-                            // All of the pointers are up
-                            motionEvent = MotionEvent.Up
-                            gestureColor = Color.White
-                            break
+                        if (waitedAfterDown) {
+                            currentPosition = pointerInputChange.position
+                            motionEvent = MotionEvent.Move
+                            gestureColor = Green400
                         }
-                    }
 
-                    /*
+                        // This necessary to prevent other gestures or scrolling
+                        // when at least one pointer is down on canvas to draw
+                        pointerInputChange.consume()
+
+
+                    } else {
+                        // All of the pointers are up
+                        motionEvent = MotionEvent.Up
+                        gestureColor = Color.White
+                        break
+                    }
+                }
+
+                /*
                         ✏️ ALTERNATIVE 2, this is how official docs on  do it
                         https://developer.android.google.cn/reference/kotlin/androidx/compose/foundation/gestures/
                         package-summary#(androidx.compose.ui.input.pointer.PointerEvent).calculateCentroid(kotlin.Boolean)
@@ -248,7 +245,6 @@ private fun TouchDrawMotionEventsAndPathExample() {
 //                    )
 //                    motionEvent = MotionEvent.Up
 //                    gestureColor = Color.White
-                }
             }
         }
 
@@ -444,34 +440,32 @@ private fun TouchDrawWithDragGesture() {
         .background(gestureColor)
 //        .background(getRandomColor())
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down: PointerInputChange = awaitFirstDown().also {
+                    motionEvent = MotionEvent.Down
+                    currentPosition = it.position
+                    gestureColor = Blue400
+                }
 
-                    val down: PointerInputChange = awaitFirstDown().also {
-                        motionEvent = MotionEvent.Down
-                        currentPosition = it.position
-                        gestureColor = Blue400
+                // 🔥 Waits for drag threshold to be passed by pointer
+                // or it returns null if up event is triggered
+                val change: PointerInputChange? =
+                    awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
+                        change.consume()
+                        gestureColor = Brown400
                     }
 
-                    // 🔥 Waits for drag threshold to be passed by pointer
-                    // or it returns null if up event is triggered
-                    val change: PointerInputChange? =
-                        awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-                            change.consume()
-                            gestureColor = Brown400
-                        }
+                if (change != null) {
+                    // ✏️ Alternative 1
+                    // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
+                    drag(change.id) { pointerInputChange: PointerInputChange ->
+                        gestureColor = Green400
+                        motionEvent = MotionEvent.Move
+                        currentPosition = pointerInputChange.position
+                        pointerInputChange.consume()
+                    }
 
-                    if (change != null) {
-                        // ✏️ Alternative 1
-                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
-                        drag(change.id) { pointerInputChange: PointerInputChange ->
-                            gestureColor = Green400
-                            motionEvent = MotionEvent.Move
-                            currentPosition = pointerInputChange.position
-                            pointerInputChange.consume()
-                        }
-
-                        // ✏️ Alternative 2
+                    // ✏️ Alternative 2
 //                        while (change != null && change.pressed) {
 //
 //                            // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
@@ -485,15 +479,14 @@ private fun TouchDrawWithDragGesture() {
 //                            }
 //                        }
 
-                        // All of the pointers are up
-                        motionEvent = MotionEvent.Up
-                        gestureColor = Color.White
+                    // All of the pointers are up
+                    motionEvent = MotionEvent.Up
+                    gestureColor = Color.White
 
-                    } else {
-                        // Drag threshold is not passed and last pointer is up
-                        gestureColor = Yellow400
-                        motionEvent = MotionEvent.Up
-                    }
+                } else {
+                    // Drag threshold is not passed and last pointer is up
+                    gestureColor = Yellow400
+                    motionEvent = MotionEvent.Up
                 }
             }
         }

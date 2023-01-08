@@ -91,63 +91,61 @@ private fun DragExample() {
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    val down = awaitFirstDown()
-                    gestureColor = Orange400
-                    text = "awaitFirstDown() id: ${down.id}"
+                val down = awaitFirstDown()
+                gestureColor = Orange400
+                text = "awaitFirstDown() id: ${down.id}"
 
-                    // 🔥 Function to detect if our down pointer passed
-                    // viewConfiguration.pointerSlop(pointerType)
-                    val change = awaitTouchSlopOrCancellation(down.id) { change, over ->
+                // 🔥 Function to detect if our down pointer passed
+                // viewConfiguration.pointerSlop(pointerType)
+                val change = awaitTouchSlopOrCancellation(down.id) { change, over ->
 
+                    val original = Offset(offsetX.value, offsetY.value)
+                    val summed = original + over
+                    val newValue = Offset(
+                        x = summed.x.coerceIn(0f, size.width - WIDTH.toPx()),
+                        y = summed.y.coerceIn(0f, size.height - WIDTH.toPx())
+                    )
+                    change.consume()
+                    offsetX.value = newValue.x
+                    offsetY.value = newValue.y
+
+                    gestureColor = Brown400
+                    text =
+                        "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
+                                "\nnewValue: $newValue"
+                }
+
+                if (change == null) {
+                    gestureColor = Red400
+                    text = "awaitTouchSlopOrCancellation() is NULL"
+
+                }
+
+                if (change != null) {
+
+                    // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
+                    drag(change.id) {
                         val original = Offset(offsetX.value, offsetY.value)
-                        val summed = original + over
+                        val summed = original + it.positionChange()
                         val newValue = Offset(
                             x = summed.x.coerceIn(0f, size.width - WIDTH.toPx()),
                             y = summed.y.coerceIn(0f, size.height - WIDTH.toPx())
                         )
-                        change.consume()
+
+                        it.consume()
                         offsetX.value = newValue.x
                         offsetY.value = newValue.y
 
-                        gestureColor = Brown400
-                        text =
-                            "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
-                                    "\nnewValue: $newValue"
+                        gestureColor = Blue400
+                        text = "drag()  down.id: ${down.id} change.id: ${change.id}" +
+                                "\nnewValue: $newValue"
                     }
+                }
 
-                    if (change == null) {
-                        gestureColor = Red400
-                        text = "awaitTouchSlopOrCancellation() is NULL"
-
-                    }
-
-                    if (change != null) {
-
-                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
-                        drag(change.id) {
-                            val original = Offset(offsetX.value, offsetY.value)
-                            val summed = original + it.positionChange()
-                            val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - WIDTH.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - WIDTH.toPx())
-                            )
-
-                            it.consume()
-                            offsetX.value = newValue.x
-                            offsetY.value = newValue.y
-
-                            gestureColor = Blue400
-                            text = "drag()  down.id: ${down.id} change.id: ${change.id}" +
-                                    "\nnewValue: $newValue"
-                        }
-                    }
-
-                    if (gestureColor != Red400) {
-                        gestureColor = Color.LightGray
-                    }
+                if (gestureColor != Red400) {
+                    gestureColor = Color.LightGray
                 }
             }
         }
@@ -190,54 +188,51 @@ private fun HorizontalDragExample() {
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down = awaitFirstDown()
+                gestureColor = Orange400
+                text = "awaitFirstDown() id: ${down.id}"
 
-                    val down = awaitFirstDown()
-                    gestureColor = Orange400
-                    text = "awaitFirstDown() id: ${down.id}"
+                // 🔥 Function to detect if our down pointer passed
+                // viewConfiguration.pointerSlop(pointerType)
+                val change =
+                    awaitHorizontalTouchSlopOrCancellation(down.id) { change, over ->
+                        val originalX = offsetX.value
+                        val newValue =
+                            (originalX + over).coerceIn(0f, width - WIDTH.toPx())
+                        change.consume()
+                        offsetX.value = newValue
 
-                    // 🔥 Function to detect if our down pointer passed
-                    // viewConfiguration.pointerSlop(pointerType)
-                    val change =
-                        awaitHorizontalTouchSlopOrCancellation(down.id) { change, over ->
-                            val originalX = offsetX.value
-                            val newValue =
-                                (originalX + over).coerceIn(0f, width - WIDTH.toPx())
-                            change.consume()
-                            offsetX.value = newValue
+                        gestureColor = Brown400
 
-                            gestureColor = Brown400
-
-                            text = "awaitHorizontalTouchSlopOrCancellation()" +
-                                    "\nnewValue: $newValue"
-                        }
-
-                    if (change == null) {
-                        gestureColor = Red400
-                        text = "awaitHorizontalTouchSlopOrCancellation() is NULL"
-
+                        text = "awaitHorizontalTouchSlopOrCancellation()" +
+                                "\nnewValue: $newValue"
                     }
 
-                    if (change != null) {
+                if (change == null) {
+                    gestureColor = Red400
+                    text = "awaitHorizontalTouchSlopOrCancellation() is NULL"
 
-                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
-                        horizontalDrag(change.id) {
-                            val originalX = offsetX.value
-                            val newValue = (originalX + it.positionChange().x)
-                                .coerceIn(0f, width - WIDTH.toPx())
-                            it.consume()
-                            offsetX.value = newValue
+                }
 
-                            gestureColor = Blue400
-                            text = "horizontalDrag()" +
-                                    "\nnewValue: $newValue"
-                        }
+                if (change != null) {
+
+                    // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
+                    horizontalDrag(change.id) {
+                        val originalX = offsetX.value
+                        val newValue = (originalX + it.positionChange().x)
+                            .coerceIn(0f, width - WIDTH.toPx())
+                        it.consume()
+                        offsetX.value = newValue
+
+                        gestureColor = Blue400
+                        text = "horizontalDrag()" +
+                                "\nnewValue: $newValue"
                     }
+                }
 
-                    if (gestureColor != Red400) {
-                        gestureColor = Color.LightGray
-                    }
+                if (gestureColor != Red400) {
+                    gestureColor = Color.LightGray
                 }
             }
         }
@@ -276,48 +271,45 @@ private fun VerticalDragExample() {
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down = awaitFirstDown()
+                gestureColor = Orange400
 
-                    val down = awaitFirstDown()
-                    gestureColor = Orange400
+                // 🔥 Function to detect if our down pointer passed
+                // viewConfiguration.pointerSlop(pointerType)
+                val change =
+                    awaitVerticalTouchSlopOrCancellation(down.id) { change, over ->
+                        val originalY = offsetY.value
+                        val newValue = (originalY + over)
+                            .coerceIn(0f, height - WIDTH.toPx())
+                        change.consume()
+                        offsetY.value = newValue
 
-                    // 🔥 Function to detect if our down pointer passed
-                    // viewConfiguration.pointerSlop(pointerType)
-                    val change =
-                        awaitVerticalTouchSlopOrCancellation(down.id) { change, over ->
-                            val originalY = offsetY.value
-                            val newValue = (originalY + over)
-                                .coerceIn(0f, height - WIDTH.toPx())
-                            change.consume()
-                            offsetY.value = newValue
-
-                            gestureColor = Brown400
-                        }
-
-                    if (change == null) {
-                        gestureColor = Red400
-
+                        gestureColor = Brown400
                     }
 
-                    if (change != null) {
+                if (change == null) {
+                    gestureColor = Red400
 
-                        // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
-                        verticalDrag(change.id) {
-                            val originalY = offsetY.value
-                            val newValue = (originalY + it.positionChange().y)
-                                .coerceIn(0f, height - WIDTH.toPx())
-                            it.consume()
-                            offsetY.value = newValue
+                }
 
-                            gestureColor = Blue400
-                        }
+                if (change != null) {
 
+                    // 🔥 Calls  awaitDragOrCancellation(pointer) in a while loop
+                    verticalDrag(change.id) {
+                        val originalY = offsetY.value
+                        val newValue = (originalY + it.positionChange().y)
+                            .coerceIn(0f, height - WIDTH.toPx())
+                        it.consume()
+                        offsetY.value = newValue
+
+                        gestureColor = Blue400
                     }
 
-                    if (gestureColor != Red400) {
-                        gestureColor = Color.LightGray
-                    }
+                }
+
+                if (gestureColor != Red400) {
+                    gestureColor = Color.LightGray
                 }
             }
         }

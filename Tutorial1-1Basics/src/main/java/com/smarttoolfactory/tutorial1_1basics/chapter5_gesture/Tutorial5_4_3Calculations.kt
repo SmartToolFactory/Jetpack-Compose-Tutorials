@@ -90,44 +90,42 @@ private fun CalculateCentroidExample() {
             drawCircle(Pink400, centroidSize, center = position)
         }
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    // Wait for at least one pointer to press down, and set first contact position
-                    awaitFirstDown().also {
-                        position = it.position
+                // Wait for at least one pointer to press down, and set first contact position
+                awaitFirstDown().also {
+                    position = it.position
+                }
+
+                gestureColor = Blue400
+
+                do {
+
+                    // This PointerEvent contains details including events, id, position and more
+                    val event: PointerEvent = awaitPointerEvent()
+
+
+                    val size: Float = event.calculateCentroidSize()
+                    if (size != 0f) {
+                        centroidSize = event.calculateCentroidSize()
                     }
 
-                    gestureColor = Blue400
+                    val centroid: Offset = event.calculateCentroid()
+                    if (centroid != Offset.Unspecified) {
+                        position = centroid
+                    }
 
-                    do {
-
-                        // This PointerEvent contains details including events, id, position and more
-                        val event: PointerEvent = awaitPointerEvent()
-
-
-                        val size: Float = event.calculateCentroidSize()
-                        if (size != 0f) {
-                            centroidSize = event.calculateCentroidSize()
-                        }
-
-                        val centroid: Offset = event.calculateCentroid()
-                        if (centroid != Offset.Unspecified) {
-                            position = centroid
-                        }
-
-                        /*
+                    /*
                             Consumes position change if there is any
                             This stops scrolling if there is one set to any parent Composable
                          */
-                        event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            pointerInputChange.consume()
-                        }
+                    event.changes.forEach { pointerInputChange: PointerInputChange ->
+                        pointerInputChange.consume()
+                    }
 
-                    } while (event.changes.any { it.pressed })
+                } while (event.changes.any { it.pressed })
 
-                    gestureColor = Green400
-                }
+                gestureColor = Green400
             }
         }
 
@@ -162,25 +160,23 @@ private fun CalculateZoomExample() {
         .graphicsLayer(scaleX = zoom, scaleY = zoom)
         .background(Color.Blue)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
-                    // Wait for at least one pointer to press down
-                    awaitFirstDown()
-                    do {
+            awaitEachGesture {
+                // Wait for at least one pointer to press down
+                awaitFirstDown()
+                do {
 
-                        val event = awaitPointerEvent()
-                        zoom *= event.calculateZoom()
-                        text = "Zoom $zoom"
+                    val event = awaitPointerEvent()
+                    zoom *= event.calculateZoom()
+                    text = "Zoom $zoom"
 
-                        /*
-                            Consumes position change if there is any
-                            This stops scrolling if there is one set to any parent Composable
-                         */
-                        event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            pointerInputChange.consume()
-                        }
-                    } while (event.changes.any { it.pressed })
-                }
+                    /*
+                        Consumes position change if there is any
+                        This stops scrolling if there is one set to any parent Composable
+                     */
+                    event.changes.forEach { pointerInputChange: PointerInputChange ->
+                        pointerInputChange.consume()
+                    }
+                } while (event.changes.any { it.pressed })
             }
         }
         .fillMaxWidth()
@@ -206,30 +202,27 @@ private fun CalculatePanExample() {
             .graphicsLayer()
             .background(Color.Blue)
             .pointerInput(Unit) {
-                forEachGesture {
-                    awaitPointerEventScope {
+                awaitEachGesture {
+                    // Wait for at least one pointer to press down
+                    awaitFirstDown()
 
-                        // Wait for at least one pointer to press down
-                        awaitFirstDown()
+                    do {
 
-                        do {
+                        val event = awaitPointerEvent()
+                        val offset = event.calculatePan()
+                        offsetX.value += offset.x
+                        offsetY.value += offset.y
 
-                            val event = awaitPointerEvent()
-                            val offset = event.calculatePan()
-                            offsetX.value += offset.x
-                            offsetY.value += offset.y
+                        text = "Pan $offset"
 
-                            text = "Pan $offset"
-
-                            /*
+                        /*
                                 Consumes position change if there is any
                                 This stops scrolling if there is one set to any parent Composable
                              */
-                            event.changes.forEach { pointerInputChange: PointerInputChange ->
-                                pointerInputChange.consume()
-                            }
-                        } while (event.changes.any { it.pressed })
-                    }
+                        event.changes.forEach { pointerInputChange: PointerInputChange ->
+                            pointerInputChange.consume()
+                        }
+                    } while (event.changes.any { it.pressed })
                 }
             }
             .fillMaxWidth()
@@ -249,30 +242,28 @@ private fun CalculateRotationExample() {
         .graphicsLayer(rotationZ = angle)
         .background(Color.Blue)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    // Wait for at least one pointer to press down
-                    awaitFirstDown()
+                // Wait for at least one pointer to press down
+                awaitFirstDown()
 
-                    do {
+                do {
 
-                        val event = awaitPointerEvent()
-                        val rotation = event.calculateRotation()
-                        angle += rotation
+                    val event = awaitPointerEvent()
+                    val rotation = event.calculateRotation()
+                    angle += rotation
 
-                        text = "Angle $angle"
+                    text = "Angle $angle"
 
-                        /*
+                    /*
                             Consumes position change if there is any
                             This stops scrolling if there is one set to any parent Composable
                          */
-                        event.changes.forEach { pointerInputChange: PointerInputChange ->
-                            pointerInputChange.consume()
-                        }
+                    event.changes.forEach { pointerInputChange: PointerInputChange ->
+                        pointerInputChange.consume()
+                    }
 
-                    } while (event.changes.any { it.pressed })
-                }
+                } while (event.changes.any { it.pressed })
             }
         }
         .fillMaxWidth()

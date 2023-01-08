@@ -1,9 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -141,102 +141,99 @@ private fun MoveAndTransformationGestureOnImageExample() {
         }
         // This PointerInput gets events first
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                // before this one consumes down, awaitFirstDown gets triggered nonetheless
+                // Wait for at least one pointer to press down, and set first contact position
+                val down: PointerInputChange =
+                    awaitFirstDown(requireUnconsumed = requireUnconsumed)
+                gestureColor = Orange400
 
-                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
-                    // before this one consumes down, awaitFirstDown gets triggered nonetheless
-                    // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange =
-                        awaitFirstDown(requireUnconsumed = requireUnconsumed)
-                    gestureColor = Orange400
+                if (consumeDown) {
+                    down.consume()
+                }
 
-                    if (consumeDown) {
-                        down.consume()
+                val downText = "🎃 DOWN id: ${down.id.value}\n" +
+                        "changedToDown: ${down.changedToDown()}\n" +
+                        "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
+                        "pressed: ${down.pressed}\n" +
+                        "changedUp: ${down.changedToUp()}\n" +
+                        "positionChanged: ${down.positionChanged()}\n" +
+                        "isConsumed: ${down.isConsumed}\n\n"
+
+                gestureText += downText
+
+                // Main pointer is the one that is down initially
+                var pointerId = down.id
+
+                while (true) {
+
+                    val event: PointerEvent = awaitPointerEvent()
+
+                    val anyPressed = event.changes.any {
+
+                        if (!it.pressed) {
+
+                            if (consumeUp) {
+                                it.consume()
+                            }
+
+                            val upText = "🚀 POINTER UP id: ${down.id.value}\n" +
+                                    "changedToDown: ${it.changedToDown()}, " +
+                                    "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
+                                    "pressed: ${it.pressed}\n" +
+                                    "changedUp: ${it.changedToUp()}\n" +
+                                    "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
+                                    "positionChanged: ${it.positionChanged()}\n" +
+                                    "isConsumed: ${down.isConsumed}\n\n"
+
+                            gestureText += upText
+                        }
+                        it.pressed
                     }
 
-                    val downText = "🎃 DOWN id: ${down.id.value}\n" +
-                            "changedToDown: ${down.changedToDown()}\n" +
-                            "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
-                            "pressed: ${down.pressed}\n" +
-                            "changedUp: ${down.changedToUp()}\n" +
-                            "positionChanged: ${down.positionChanged()}\n" +
-                            "isConsumed: ${down.isConsumed}\n\n"
+                    if (anyPressed) {
 
-                    gestureText += downText
+                        val pointerInputChange =
+                            event.changes.firstOrNull { it.id == pointerId }
+                                ?: event.changes.first()
 
-                    // Main pointer is the one that is down initially
-                    var pointerId = down.id
+                        // Next time will check same pointer with this id
+                        pointerId = pointerInputChange.id
 
-                    while (true) {
+                        // 🔥 calling consume() sets
+                        // positionChange() to 0,
+                        // positionChanged() to false,
+                        // isConsumed to true.
+                        // And any parent or pointerInput above this gets no position change
+                        // Scrolling or detectGestures check isConsumed
+                        if (consumePositionChange) {
+                            pointerInputChange.consume()
+                        }
+                        gestureColor = Blue400
 
-                        val event: PointerEvent = awaitPointerEvent()
-
-                        val anyPressed = event.changes.any {
-
-                            if (!it.pressed) {
-
-                                if (consumeUp) {
-                                    it.consume()
-                                }
-
-                                val upText = "🚀 POINTER UP id: ${down.id.value}\n" +
-                                        "changedToDown: ${it.changedToDown()}, " +
-                                        "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
-                                        "pressed: ${it.pressed}\n" +
-                                        "changedUp: ${it.changedToUp()}\n" +
-                                        "changedToUpIgnoreConsumed: ${it.changedToUpIgnoreConsumed()}\n" +
-                                        "positionChanged: ${it.positionChanged()}\n" +
+                        event.changes.forEach { pointer ->
+                            val moveText =
+                                "🍏 MOVE changes size ${event.changes.size}\n" +
+                                        "id: ${pointer.id.value}, " +
+                                        "changedToDown: ${pointer.changedToDown()}, " +
+                                        "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
+                                        "pressed: ${pointer.pressed}\n" +
+                                        "previousPressed: ${pointer.previousPressed}\n" +
+                                        "changedUp: ${pointer.changedToUp()}\n" +
+                                        "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
+                                        "position: ${pointer.position}\n" +
+                                        "positionChange: ${pointer.positionChange()}\n" +
+                                        "positionChanged: ${pointer.positionChanged()}\n" +
                                         "isConsumed: ${down.isConsumed}\n\n"
-
-                                gestureText += upText
-                            }
-                            it.pressed
+                            gestureText += moveText
                         }
 
-                        if (anyPressed) {
-
-                            val pointerInputChange =
-                                event.changes.firstOrNull { it.id == pointerId }
-                                    ?: event.changes.first()
-
-                            // Next time will check same pointer with this id
-                            pointerId = pointerInputChange.id
-
-                            // 🔥 calling consume() sets
-                            // positionChange() to 0,
-                            // positionChanged() to false,
-                            // isConsumed to true.
-                            // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check isConsumed
-                            if (consumePositionChange) {
-                                pointerInputChange.consume()
-                            }
-                            gestureColor = Blue400
-
-                            event.changes.forEach { pointer ->
-                                val moveText =
-                                    "🍏 MOVE changes size ${event.changes.size}\n" +
-                                            "id: ${pointer.id.value}, " +
-                                            "changedToDown: ${pointer.changedToDown()}, " +
-                                            "changedToDownIgnoreConsumed: ${pointer.changedToDownIgnoreConsumed()}\n" +
-                                            "pressed: ${pointer.pressed}\n" +
-                                            "previousPressed: ${pointer.previousPressed}\n" +
-                                            "changedUp: ${pointer.changedToUp()}\n" +
-                                            "changedToUpIgnoreConsumed: ${pointer.changedToUpIgnoreConsumed()}\n" +
-                                            "position: ${pointer.position}\n" +
-                                            "positionChange: ${pointer.positionChange()}\n" +
-                                            "positionChanged: ${pointer.positionChanged()}\n"+
-                                            "isConsumed: ${down.isConsumed}\n\n"
-                                gestureText += moveText
-                            }
-
-                        } else {
-                            // All of the pointers are up
-                            gestureText += "ALL UP\n\n"
-                            gestureColor = Color.White
-                            break
-                        }
+                    } else {
+                        // All of the pointers are up
+                        gestureText += "ALL UP\n\n"
+                        gestureColor = Color.White
+                        break
                     }
                 }
             }
@@ -349,62 +346,60 @@ private fun MoveAndTransformationGestureOnSeparateComposablesExample() {
     val imageModifier = imageModifier
         .border(4.dp, color = gestureColor)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
-                    // before this one consumes down, awaitFirstDown gets triggered nonetheless
-                    // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange =
-                        awaitFirstDown(requireUnconsumed = requireUnconsumed)
-                    gestureColor = Orange400
+                // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                // before this one consumes down, awaitFirstDown gets triggered nonetheless
+                // Wait for at least one pointer to press down, and set first contact position
+                val down: PointerInputChange =
+                    awaitFirstDown(requireUnconsumed = requireUnconsumed)
+                gestureColor = Orange400
 
-                    if (consumeDown) {
-                        down.consume()
+                if (consumeDown) {
+                    down.consume()
+                }
+
+                // Main pointer is the one that is down initially
+                var pointerId = down.id
+
+                while (true) {
+
+                    val event: PointerEvent = awaitPointerEvent()
+
+                    val anyPressed = event.changes.any {
+
+                        if (!it.pressed) {
+                            if (consumeUp) {
+                                it.consume()
+                            }
+                        }
+                        it.pressed
                     }
 
-                    // Main pointer is the one that is down initially
-                    var pointerId = down.id
+                    if (anyPressed) {
 
-                    while (true) {
+                        val pointerInputChange =
+                            event.changes.firstOrNull { it.id == pointerId }
+                                ?: event.changes.first()
 
-                        val event: PointerEvent = awaitPointerEvent()
+                        // Next time will check same pointer with this id
+                        pointerId = pointerInputChange.id
 
-                        val anyPressed = event.changes.any {
-
-                            if (!it.pressed) {
-                                if (consumeUp) {
-                                    it.consume()
-                                }
-                            }
-                            it.pressed
+                        // 🔥 calling consume() sets
+                        // positionChange() to 0,
+                        // positionChanged() to false,
+                        // isConsumed to true.
+                        // And any parent or pointerInput above this gets no position change
+                        // Scrolling or detectGestures check isConsumed
+                        if (consumePositionChange) {
+                            pointerInputChange.consume()
                         }
+                        gestureColor = Blue400
 
-                        if (anyPressed) {
-
-                            val pointerInputChange =
-                                event.changes.firstOrNull { it.id == pointerId }
-                                    ?: event.changes.first()
-
-                            // Next time will check same pointer with this id
-                            pointerId = pointerInputChange.id
-
-                            // 🔥 calling consume() sets
-                            // positionChange() to 0,
-                            // positionChanged() to false,
-                            // isConsumed to true.
-                            // And any parent or pointerInput above this gets no position change
-                            // Scrolling or detectGestures check isConsumed
-                            if (consumePositionChange) {
-                                pointerInputChange.consume()
-                            }
-                            gestureColor = Blue400
-
-                        } else {
-                            // All of the pointers are up
-                            gestureColor = Color.White
-                            break
-                        }
+                    } else {
+                        // All of the pointers are up
+                        gestureColor = Color.White
+                        break
                     }
                 }
             }
@@ -512,60 +507,58 @@ private fun PropagationWithDifferentPointerCountExample() {
     val imageModifier = imageModifier
         .border(4.dp, color = gestureColor)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
-                    // before this one consumes down, awaitFirstDown gets triggered nonetheless
-                    // Wait for at least one pointer to press down, and set first contact position
-                    val down: PointerInputChange =
-                        awaitFirstDown(requireUnconsumed = requireUnconsumed)
-                    gestureColor = Orange400
+                // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
+                // before this one consumes down, awaitFirstDown gets triggered nonetheless
+                // Wait for at least one pointer to press down, and set first contact position
+                val down: PointerInputChange =
+                    awaitFirstDown(requireUnconsumed = requireUnconsumed)
+                gestureColor = Orange400
 
-                    if (consumeDown) {
-                        down.consume()
+                if (consumeDown) {
+                    down.consume()
+                }
+
+                // Main pointer is the one that is down initially
+                var pointerId = down.id
+
+                while (true) {
+
+                    val event: PointerEvent = awaitPointerEvent()
+
+                    val pointerCount = event.changes.size
+
+                    val anyPressed = event.changes.any {
+
+                        if (!it.pressed) {
+
+                            if (consumeUp) {
+                                it.consume()
+                            }
+                        }
+                        it.pressed
                     }
 
-                    // Main pointer is the one that is down initially
-                    var pointerId = down.id
+                    if (anyPressed && pointerCount == 1) {
 
-                    while (true) {
+                        val pointerInputChange =
+                            event.changes.firstOrNull { it.id == pointerId }
+                                ?: event.changes.first()
 
-                        val event: PointerEvent = awaitPointerEvent()
+                        // Next time will check same pointer with this id
+                        pointerId = pointerInputChange.id
 
-                        val pointerCount = event.changes.size
-
-                        val anyPressed = event.changes.any {
-
-                            if (!it.pressed) {
-
-                                if (consumeUp) {
-                                    it.consume()
-                                }
-                            }
-                            it.pressed
+                        // 🔥 Consuming position change sets pointer.positionChange() to 0
+                        //isConsumed to true, prevents scrolling
+                        if (consumePositionChange) {
+                            pointerInputChange.consume()
                         }
-
-                        if (anyPressed && pointerCount == 1) {
-
-                            val pointerInputChange =
-                                event.changes.firstOrNull { it.id == pointerId }
-                                    ?: event.changes.first()
-
-                            // Next time will check same pointer with this id
-                            pointerId = pointerInputChange.id
-
-                            // 🔥 Consuming position change sets pointer.positionChange() to 0
-                            //isConsumed to true, prevents scrolling
-                            if (consumePositionChange) {
-                                pointerInputChange.consume()
-                            }
-                            gestureColor = Blue400
-                        } else {
-                            // All of the pointers are up
-                            gestureColor = Color.White
-                            break
-                        }
+                        gestureColor = Blue400
+                    } else {
+                        // All of the pointers are up
+                        gestureColor = Color.White
+                        break
                     }
                 }
             }

@@ -1,9 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture
 
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.drag
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
@@ -46,10 +46,8 @@ suspend fun AwaitPointerEventScope.awaitDragMotionEvent(
 
 fun Modifier.dragMotionEvent(onTouchEvent: (MotionEvent, PointerInputChange) -> Unit) = this.then(
     Modifier.pointerInput(Unit) {
-        forEachGesture {
-            awaitPointerEventScope {
-                awaitDragMotionEvent(onTouchEvent)
-            }
+        awaitEachGesture {
+            awaitDragMotionEvent(onTouchEvent)
         }
     }
 )
@@ -96,10 +94,8 @@ fun Modifier.dragMotionEvent(
     onDragEnd: (PointerInputChange) -> Unit = {}
 ) = this.then(
     Modifier.pointerInput(Unit) {
-        forEachGesture {
-            awaitPointerEventScope {
-                awaitDragMotionEvent(onDragStart, onDrag, onDragEnd)
-            }
+        awaitEachGesture {
+            awaitDragMotionEvent(onDragStart, onDrag, onDragEnd)
         }
     }
 )

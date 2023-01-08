@@ -32,28 +32,27 @@ suspend fun PointerInputScope.detectMotionEvents(
     delayAfterDownInMillis: Long = 0L
 ) {
     coroutineScope {
-        forEachGesture {
-            awaitPointerEventScope {
-                // Wait for at least one pointer to press down, and set first contact position
-                val down: PointerInputChange = awaitFirstDown()
-                onDown(down)
+        awaitEachGesture {
+            // Wait for at least one pointer to press down, and set first contact position
+            val down: PointerInputChange = awaitFirstDown()
+            onDown(down)
 
-                var pointer = down
-                // Main pointer is the one that is down initially
-                var pointerId = down.id
+            var pointer = down
+            // Main pointer is the one that is down initially
+            var pointerId = down.id
 
-                // If a move event is followed fast enough down is skipped, especially by Canvas
-                // to prevent it we add delay after first touch
-                var waitedAfterDown = false
+            // If a move event is followed fast enough down is skipped, especially by Canvas
+            // to prevent it we add delay after first touch
+            var waitedAfterDown = false
 
-                launch {
-                    delay(delayAfterDownInMillis)
-                    waitedAfterDown = true
-                }
+            launch {
+                delay(delayAfterDownInMillis)
+                waitedAfterDown = true
+            }
 
-                while (true) {
+            while (true) {
 
-                    val event: PointerEvent = awaitPointerEvent()
+                val event: PointerEvent = awaitPointerEvent()
 
                     val anyPressed = event.changes.any { it.pressed }
 
@@ -79,7 +78,6 @@ suspend fun PointerInputScope.detectMotionEvents(
                         break
                     }
                 }
-            }
         }
     }
 }
@@ -111,18 +109,17 @@ suspend fun PointerInputScope.detectMotionEventsAsList(
 ) {
 
     coroutineScope {
-        forEachGesture {
-            awaitPointerEventScope {
-                // Wait for at least one pointer to press down, and set first contact position
-                val down: PointerInputChange = awaitFirstDown()
-                onDown(down)
+        awaitEachGesture {
+            // Wait for at least one pointer to press down, and set first contact position
+            val down: PointerInputChange = awaitFirstDown()
+            onDown(down)
 
-                var pointer = down
-                // Main pointer is the one that is down initially
-                var pointerId = down.id
+            var pointer = down
+            // Main pointer is the one that is down initially
+            var pointerId = down.id
 
-                // If a move event is followed fast enough down is skipped, especially by Canvas
-                // to prevent it we add delay after first touch
+            // If a move event is followed fast enough down is skipped, especially by Canvas
+            // to prevent it we add delay after first touch
                 var waitedAfterDown = false
 
                 launch {
@@ -158,7 +155,6 @@ suspend fun PointerInputScope.detectMotionEventsAsList(
                         onUp(pointer)
                         break
                     }
-                }
             }
         }
     }

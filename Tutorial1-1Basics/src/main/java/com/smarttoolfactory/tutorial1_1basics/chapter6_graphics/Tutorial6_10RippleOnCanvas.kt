@@ -4,8 +4,8 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -75,61 +75,58 @@ private fun RippleOnCanvasSample() {
                 val size = this.size
                 val radius = size.width.coerceAtLeast(size.height) / 2
 
-                forEachGesture {
-                    awaitPointerEventScope {
+                awaitEachGesture {
+                    val down: PointerInputChange = awaitFirstDown(requireUnconsumed = true)
 
-                        val down: PointerInputChange = awaitFirstDown(requireUnconsumed = true)
+                    val position = down.position
 
-                        val position = down.position
+                    if (rectangleCoordinates.contains(position)) {
 
-                        if (rectangleCoordinates.contains(position)) {
+                        touchPosition = position
 
-                            touchPosition = position
-
-                            coroutineScope.launch {
-                                animatableAlpha.animateTo(
-                                    targetValue = .3f,
-                                    animationSpec = keyframes {
-                                        durationMillis = 150
-                                        0.0f at 0 with LinearOutSlowInEasing
-                                        0.2f at 75 with FastOutLinearInEasing
-                                        0.25f at 100
-                                        0.3f at 150
-                                    }
-                                )
-                            }
-
-                            coroutineScope.launch {
-                                animatableRadius.animateTo(
-                                    targetValue = radius.toFloat(),
-                                    animationSpec = keyframes {
-                                        durationMillis = 150
-                                        0.0f at 0 with LinearOutSlowInEasing
-                                        radius * 0.4f at 30 with FastOutLinearInEasing
-                                        radius * 0.5f at 75 with FastOutLinearInEasing
-                                        radius * 0.7f at 100
-                                        radius * 1f at 150
-                                    }
-                                )
-                            }
-
-                            isTouched = true
+                        coroutineScope.launch {
+                            animatableAlpha.animateTo(
+                                targetValue = .3f,
+                                animationSpec = keyframes {
+                                    durationMillis = 150
+                                    0.0f at 0 with LinearOutSlowInEasing
+                                    0.2f at 75 with FastOutLinearInEasing
+                                    0.25f at 100
+                                    0.3f at 150
+                                }
+                            )
                         }
 
-                        waitForUpOrCancellation()
-
-                        if (isTouched && touchPosition.isSpecified && touchPosition.isFinite) {
-                            coroutineScope.launch {
-                                animatableAlpha.animateTo(
-                                    targetValue = 0f,
-                                    animationSpec = tween(150)
-                                )
-                                animatableRadius.snapTo(0f)
-                            }
+                        coroutineScope.launch {
+                            animatableRadius.animateTo(
+                                targetValue = radius.toFloat(),
+                                animationSpec = keyframes {
+                                    durationMillis = 150
+                                    0.0f at 0 with LinearOutSlowInEasing
+                                    radius * 0.4f at 30 with FastOutLinearInEasing
+                                    radius * 0.5f at 75 with FastOutLinearInEasing
+                                    radius * 0.7f at 100
+                                    radius * 1f at 150
+                                }
+                            )
                         }
 
-                        isTouched = false
+                        isTouched = true
                     }
+
+                    waitForUpOrCancellation()
+
+                    if (isTouched && touchPosition.isSpecified && touchPosition.isFinite) {
+                        coroutineScope.launch {
+                            animatableAlpha.animateTo(
+                                targetValue = 0f,
+                                animationSpec = tween(150)
+                            )
+                            animatableRadius.snapTo(0f)
+                        }
+                    }
+
+                    isTouched = false
                 }
             }
 

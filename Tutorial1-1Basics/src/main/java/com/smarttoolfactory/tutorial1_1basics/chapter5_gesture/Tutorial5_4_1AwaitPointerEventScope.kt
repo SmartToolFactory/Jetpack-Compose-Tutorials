@@ -15,7 +15,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
@@ -87,26 +90,24 @@ private fun AwaitFirstDownExample() {
         .background(gestureColor)
         .height(90.dp)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    val down: PointerInputChange = awaitFirstDown(requireUnconsumed = true)
-                    touchText = "DOWN Pointer down position: ${down.position}"
-                    gestureColor = Orange400
+                val down: PointerInputChange = awaitFirstDown(requireUnconsumed = true)
+                touchText = "DOWN Pointer down position: ${down.position}"
+                gestureColor = Orange400
 
-                    // 🔥 Wait for Up Event, this is called if only one pointer exits
-                    // when it's up or moved out of Composable bounds
-                    // When multiple pointers touch Composable it requires only one to be
-                    // out of Composable bounds
-                    val upOrCancel: PointerInputChange? = waitForUpOrCancellation()
+                // 🔥 Wait for Up Event, this is called if only one pointer exits
+                // when it's up or moved out of Composable bounds
+                // When multiple pointers touch Composable it requires only one to be
+                // out of Composable bounds
+                val upOrCancel: PointerInputChange? = waitForUpOrCancellation()
 
-                    if (upOrCancel?.position != null) {
-                        touchText = "UP Pointer up.position: ${(upOrCancel.position)}"
-                        gestureColor = Green400
-                    } else {
-                        touchText = "UP CANCEL"
-                        gestureColor = Red400
-                    }
+                if (upOrCancel?.position != null) {
+                    touchText = "UP Pointer up.position: ${(upOrCancel.position)}"
+                    gestureColor = Green400
+                } else {
+                    touchText = "UP CANCEL"
+                    gestureColor = Red400
                 }
             }
         }
@@ -121,8 +122,6 @@ private fun AwaitPointerEventExample() {
 
     val pointerModifier = Modifier
         .pointerInput(Unit) {
-            forEachGesture {
-
                 awaitPointerEventScope {
 
                     awaitFirstDown()
@@ -154,7 +153,6 @@ private fun AwaitPointerEventExample() {
 
                     gestureColor = Green400
                 }
-            }
         }
 
     Box(
@@ -185,7 +183,6 @@ private fun AwaitPointerEventExample2() {
 
     val pointerModifier = Modifier
         .pointerInput(Unit) {
-            forEachGesture {
 
                 awaitPointerEventScope {
 
@@ -222,7 +219,6 @@ private fun AwaitPointerEventExample2() {
                             touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
                         }
                     }
-                }
             }
         }
 
@@ -261,83 +257,80 @@ private fun AwaitTouchSlopOrCancellationExample() {
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down: PointerInputChange = awaitFirstDown()
+                gestureColor = Orange400
+                text = "awaitFirstDown() id: ${down.id}"
+                println("🍏 DOWN: ${down.position}")
 
-                    val down: PointerInputChange = awaitFirstDown()
-                    gestureColor = Orange400
-                    text = "awaitFirstDown() id: ${down.id}"
-                    println("🍏 DOWN: ${down.position}")
+                // 🔥🔥 Waits for drag threshold to be passed by pointer
+                // or it returns null if up event is triggered
+                var change: PointerInputChange? =
+                    awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
 
-                    // 🔥🔥 Waits for drag threshold to be passed by pointer
-                    // or it returns null if up event is triggered
-                    var change: PointerInputChange? =
-                        awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
-
-                            Toast
-                                .makeText(
-                                    context,
-                                    "awaitTouchSlopOrCancellation(down.id) passed for " +
-                                            "id: ${down.id}, ${change.position}, over: $over",
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-
-                            println("⛺️ awaitTouchSlopOrCancellation ${change.position}, over: $over")
-                            val original = Offset(offsetX.value, offsetY.value)
-                            val summed = original + over
-
-                            val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
+                        Toast
+                            .makeText(
+                                context,
+                                "awaitTouchSlopOrCancellation(down.id) passed for " +
+                                        "id: ${down.id}, ${change.position}, over: $over",
+                                Toast.LENGTH_SHORT
                             )
+                            .show()
 
-                            // 🔥🔥 If consume() is not called drag does not
-                            // function properly.
-                            // Consuming position change causes
-                            // change.positionChanged() to return false.
-                            change.consume()
-                            offsetX.value = newValue.x
-                            offsetY.value = newValue.y
+                        println("⛺️ awaitTouchSlopOrCancellation ${change.position}, over: $over")
+                        val original = Offset(offsetX.value, offsetY.value)
+                        val summed = original + over
 
-                            gestureColor = Brown400
-                            text =
-                                "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
-                                        "\nnewValue: $newValue"
-                        }
+                        val newValue = Offset(
+                            x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                            y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
+                        )
 
-                    if (change == null) {
-                        gestureColor = Red400
-                        text = "awaitTouchSlopOrCancellation() is NULL"
+                        // 🔥🔥 If consume() is not called drag does not
+                        // function properly.
+                        // Consuming position change causes
+                        // change.positionChanged() to return false.
+                        change.consume()
+                        offsetX.value = newValue.x
+                        offsetY.value = newValue.y
+
+                        gestureColor = Brown400
+                        text =
+                            "awaitTouchSlopOrCancellation()  down.id: ${down.id} change.id: ${change.id}" +
+                                    "\nnewValue: $newValue"
                     }
 
-                    while (change != null && change.pressed) {
+                if (change == null) {
+                    gestureColor = Red400
+                    text = "awaitTouchSlopOrCancellation() is NULL"
+                }
 
-                        gestureColor = Blue400
+                while (change != null && change.pressed) {
 
-                        // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
-                        change = awaitDragOrCancellation(change.id)
+                    gestureColor = Blue400
 
-                        if (change != null && change.pressed) {
-                            val original = Offset(offsetX.value, offsetY.value)
-                            val summed = original + change.positionChange()
-                            val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
-                            )
-                            change.consume()
-                            offsetX.value = newValue.x
-                            offsetY.value = newValue.y
+                    // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
+                    change = awaitDragOrCancellation(change.id)
 
-                            text =
-                                "awaitDragOrCancellation() down.id: ${down.id} change.id: ${change.id}" +
-                                        "\nnewValue: $newValue"
-                        }
+                    if (change != null && change.pressed) {
+                        val original = Offset(offsetX.value, offsetY.value)
+                        val summed = original + change.positionChange()
+                        val newValue = Offset(
+                            x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                            y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
+                        )
+                        change.consume()
+                        offsetX.value = newValue.x
+                        offsetY.value = newValue.y
+
+                        text =
+                            "awaitDragOrCancellation() down.id: ${down.id} change.id: ${change.id}" +
+                                    "\nnewValue: $newValue"
                     }
+                }
 
-                    if (gestureColor != Red400) {
-                        gestureColor = Color.LightGray
-                    }
+                if (gestureColor != Red400) {
+                    gestureColor = Color.LightGray
                 }
             }
         }
@@ -380,45 +373,42 @@ private fun AwaitDragOrCancellationExample() {
         .shadow(2.dp, RoundedCornerShape(8.dp))
         .background(Yellow400)
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                var down: PointerInputChange? = awaitFirstDown()
 
-                    var down: PointerInputChange? = awaitFirstDown()
+                gestureColor = Orange400
+                text = "awaitFirstDown() id: ${down?.id}"
 
-                    gestureColor = Orange400
-                    text = "awaitFirstDown() id: ${down?.id}"
+                while (down != null && down.pressed) {
 
-                    while (down != null && down.pressed) {
+                    // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
+                    down = awaitDragOrCancellation(down.id)
 
-                        // 🔥 Calls awaitPointerEvent() in a while loop and checks drag change
-                        down = awaitDragOrCancellation(down.id)
-
-                        if (down == null) {
-                            gestureColor = Red400
-                            text = "awaitDragOrCancellation() is NULL"
-                        }
-
-                        if (down != null && down.pressed) {
-
-                            val original = Offset(offsetX.value, offsetY.value)
-                            val summed = original + down.positionChange()
-                            val newValue = Offset(
-                                x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
-                                y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
-                            )
-                            down.consume()
-                            offsetX.value = newValue.x
-                            offsetY.value = newValue.y
-
-                            gestureColor = Blue400
-                            text = "awaitDragOrCancellation()  down.id: ${down.id}" +
-                                    "\nnewValue: $newValue"
-                        }
+                    if (down == null) {
+                        gestureColor = Red400
+                        text = "awaitDragOrCancellation() is NULL"
                     }
 
-                    if (gestureColor != Red400) {
-                        gestureColor = Color.LightGray
+                    if (down != null && down.pressed) {
+
+                        val original = Offset(offsetX.value, offsetY.value)
+                        val summed = original + down.positionChange()
+                        val newValue = Offset(
+                            x = summed.x.coerceIn(0f, size.width - 80.dp.toPx()),
+                            y = summed.y.coerceIn(0f, size.height - 80.dp.toPx())
+                        )
+                        down.consume()
+                        offsetX.value = newValue.x
+                        offsetY.value = newValue.y
+
+                        gestureColor = Blue400
+                        text = "awaitDragOrCancellation()  down.id: ${down.id}" +
+                                "\nnewValue: $newValue"
                     }
+                }
+
+                if (gestureColor != Red400) {
+                    gestureColor = Color.LightGray
                 }
             }
         }

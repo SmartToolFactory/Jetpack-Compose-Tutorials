@@ -1,9 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -108,30 +108,25 @@ private fun AwaitPointerEventScopeIndicationSample() {
         .background(Color(0xffBDBDBD))
         .indication(interactionSource, rememberRipple())
         .pointerInput(Unit) {
-            forEachGesture {
-                awaitPointerEventScope {
+            awaitEachGesture {
+                val down = awaitFirstDown()
+                val press = PressInteraction.Press(down.position)
+                coroutineScope.launch {
+                    interactionSource.emit(press)
+                }
 
+                gestureText = "DOWN"
+                val up = waitForUpOrCancellation()
 
-                    val down = awaitFirstDown()
-                    val press = PressInteraction.Press(down.position)
-                    coroutineScope.launch {
-                        interactionSource.emit(press)
-                    }
+                gestureText = if (up?.position != null) {
+                    "UP Pointer up.position: ${(up.position)}"
+                } else {
+                    "UP CANCEL"
+                }
 
-                    gestureText = "DOWN"
-                    val up = waitForUpOrCancellation()
-
-                    gestureText = if (up?.position != null) {
-                        "UP Pointer up.position: ${(up.position)}"
-                    } else {
-                        "UP CANCEL"
-                    }
-
-                    // We emit a release press interaction here
-                    coroutineScope.launch {
-                        interactionSource.emit(PressInteraction.Release(press))
-                    }
-
+                // We emit a release press interaction here
+                coroutineScope.launch {
+                    interactionSource.emit(PressInteraction.Release(press))
                 }
             }
         }

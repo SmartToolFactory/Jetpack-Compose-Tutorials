@@ -21,18 +21,17 @@ suspend fun PointerInputScope.detectMultiplePointerTransformGestures(
     onGesture: (centroid: Offset, pan: Offset, zoom: Float, rotation: Float) -> Unit,
 
     ) {
-    forEachGesture {
-        awaitPointerEventScope {
-            var rotation = 0f
-            var zoom = 1f
-            var pan = Offset.Zero
-            var pastTouchSlop = false
-            val touchSlop = viewConfiguration.touchSlop
-            var lockedToPanZoom = false
+    awaitEachGesture {
+        var rotation = 0f
+        var zoom = 1f
+        var pan = Offset.Zero
+        var pastTouchSlop = false
+        val touchSlop = viewConfiguration.touchSlop
+        var lockedToPanZoom = false
 
-            awaitFirstDown(requireUnconsumed = false)
+        awaitFirstDown(requireUnconsumed = false)
 
-            do {
+        do {
                 val event = awaitPointerEvent()
 
                 val downPointerCount = event.changes.size
@@ -85,5 +84,4 @@ suspend fun PointerInputScope.detectMultiplePointerTransformGestures(
                 }
             } while (!canceled && event.changes.any { it.pressed })
         }
-    }
 }
