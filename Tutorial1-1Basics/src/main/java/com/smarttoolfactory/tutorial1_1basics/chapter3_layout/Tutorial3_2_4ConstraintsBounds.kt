@@ -1,11 +1,26 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -84,7 +99,7 @@ private fun ConstraintsSample() {
             text = "2-) In this example child composables are measured with " +
                     "**constraints.copy(minWidth = 750, maxWidth = 900)**\n" +
                     "Since child Composables' widths are bigger than container they overflow from" +
-                    "parent Composable.",
+                    " parent Composable.",
         )
 
         MyLayout2(
@@ -97,7 +112,7 @@ private fun ConstraintsSample() {
             text = "3-) In this example child composables are measured with " +
                     "**constraints.copy(minWidth = 750, maxWidth = 900)**\n" +
                     "Since child Composables' widths are bigger than container they overflow from" +
-                    "parent Composable.\n" +
+                    " parent Composable.\n" +
                     "MyLayout3(green border) " +
                     "overflows from parent as **(Constraints.maxWidth-layout width)/2** " +
                     "maxWidth is 700px while layout width is 900px because of this **MyLayout3** " +
