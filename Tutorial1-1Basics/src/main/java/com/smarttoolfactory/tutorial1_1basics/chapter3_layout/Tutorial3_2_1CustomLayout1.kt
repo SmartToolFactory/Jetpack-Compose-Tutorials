@@ -1,9 +1,22 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.graphics.Point
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -37,6 +50,22 @@ private fun TutorialContent() {
             modifier = Modifier
 //                .fillMaxWidth()
                 .width(250.dp)
+                .border(3.dp, Color.Green)
+        ) {
+            for (topic in topics) {
+                Chip(
+                    modifier = Modifier
+                        .border(3.dp, Color.Cyan)
+                        .padding(8.dp),
+                    text = topic
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
+        ChipStaggeredGrid(
+            modifier = Modifier
+                .fillMaxWidth()
                 .border(3.dp, Color.Green)
         ) {
             for (topic in topics) {
@@ -202,13 +231,17 @@ fun ChipStaggeredGrid(
             placeable
         }
 
-
         val finalHeight = (rowHeights.sumOf { it } + lastRowHeight)
             .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
 
-        // Constraints can be bigger than max width
+        // Constraints can be bigger or smaller than max width
+        // Limit max width of layout in Constraints' min-max range
         if (constraints.hasFixedWidth && constraints.hasBoundedWidth) {
-            maxRowWidth = maxRowWidth.coerceAtLeast(constraints.maxWidth)
+            maxRowWidth =
+                maxRowWidth.coerceIn(
+                    minimumValue = constraints.minWidth,
+                    maximumValue = constraints.maxWidth
+                )
         }
 
         // Set the size of the layout as big as it can
