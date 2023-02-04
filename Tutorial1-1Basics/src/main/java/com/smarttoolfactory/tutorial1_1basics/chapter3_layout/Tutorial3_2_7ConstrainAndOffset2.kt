@@ -30,7 +30,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
  * example in first section.
  */
 @Composable
-fun Tutorial3_2Screen6() {
+fun Tutorial3_2Screen7() {
     TutorialContent()
 }
 

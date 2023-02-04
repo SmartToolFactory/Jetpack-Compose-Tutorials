@@ -1,26 +1,11 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -170,7 +155,7 @@ private fun ConstraintsOffsetAndBoundsSample() {
     var constraintsMaxWidth by remember { mutableStateOf(700f) }
     var layoutWidth by remember { mutableStateOf(700f) }
 
-    LayoutWidthWidthParams(
+    LayoutWithWidthParams(
         minWidth = minWidth.toInt(),
         maxWidth = maxWidth.toInt(),
         constraintsMinWidth = constraintsMinWidth.toInt(),
@@ -245,7 +230,7 @@ private fun ConstraintsOffsetAndBoundsSample() {
 }
 
 @Composable
-private fun SliderWithLabel(label: String, value: Float, onValueChange: (Float) -> Unit) {
+internal fun SliderWithLabel(label: String, value: Float, onValueChange: (Float) -> Unit) {
     Column {
         Text(label)
         Slider(
@@ -434,7 +419,7 @@ private fun MyLayout4(
 
 
 @Composable
-private fun LayoutWidthWidthParams(
+private fun LayoutWithWidthParams(
     minWidth: Int,
     maxWidth: Int,
     constraintsMinWidth: Int,

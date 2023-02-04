@@ -24,7 +24,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.SentMessageColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
-fun Tutorial3_2Screen7() {
+fun Tutorial3_2Screen8() {
     TutorialContent()
 }
 

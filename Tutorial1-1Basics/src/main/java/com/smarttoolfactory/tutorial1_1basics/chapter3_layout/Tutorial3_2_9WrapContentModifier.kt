@@ -24,7 +24,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Composable
-fun Tutorial3_2Screen8() {
+fun Tutorial3_2Screen9() {
     TutorialContent()
 }
 

@@ -652,12 +652,10 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-
     val tutorial3_2_5 = TutorialSectionModel(
-        title = "3-2-5 Constrain&Offset",
-        description = "Use Constraints.offset and/or Constraints.constrainWidth to limit a " +
-                "Measurable inside parent bounds by creating padding Modifiers " +
-                "with different variations",
+        title = "3-2-5 Sibling Constraints",
+        description = "Inspect how Constraints and assigned width of a layout effects " +
+                "position of a sibling Composable",
         action = {
             Tutorial3_2Screen5()
         },
@@ -671,10 +669,12 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+
     val tutorial3_2_6 = TutorialSectionModel(
-        title = "3-2-6 Constrain&Offset2",
-        description = "Constraints to measure measurables with Constraints.offset and " +
-                "Constraints.constrainWidth to limit maximum width or available.",
+        title = "3-2-6 Constrain&Offset",
+        description = "Use Constraints.offset and/or Constraints.constrainWidth to limit a " +
+                "Measurable inside parent bounds by creating padding Modifiers " +
+                "with different variations",
         action = {
             Tutorial3_2Screen6()
         },
@@ -689,10 +689,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_7 = TutorialSectionModel(
-        title = "3-2-7 Constraints & Modifier.layout",
+        title = "3-2-7 Constrain&Offset2",
         description = "Constraints to measure measurables with Constraints.offset and " +
-                "Constraints.constrainWidth to limit maximum width or available " +
-                "space for Placeable",
+                "Constraints.constrainWidth to limit maximum width or available.",
         action = {
             Tutorial3_2Screen7()
         },
@@ -707,11 +706,29 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_8 = TutorialSectionModel(
-        title = "3-2-8 Modifier.wrapContentSize",
+        title = "3-2-8 Constraints & Modifier.layout",
+        description = "Constraints to measure measurables with Constraints.offset and " +
+                "Constraints.constrainWidth to limit maximum width or available " +
+                "space for Placeable",
+        action = {
+            Tutorial3_2Screen8()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_2_9 = TutorialSectionModel(
+        title = "3-2-9 Modifier.wrapContentSize",
         description = "Use Modifier.wrapContentSize/Width/Height to use content constraints " +
                 "instead of Constraints forced by parent.",
         action = {
-            Tutorial3_2Screen8()
+            Tutorial3_2Screen9()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -844,6 +861,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_6,
         tutorial3_2_7,
         tutorial3_2_8,
+        tutorial3_2_9,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_4,
