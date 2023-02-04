@@ -706,6 +706,22 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_2_8 = TutorialSectionModel(
+        title = "3-2-8 Modifier.wrapContentSize",
+        description = "Use Modifier.wrapContentSize/Width/Height to use content constraints " +
+                "instead of Constraints forced by parent.",
+        action = {
+            Tutorial3_2Screen8()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS
+        ),
+        tagColor = LayoutListColor
+    )
+
     val tutorial3_3_1 = TutorialSectionModel(
         title = stringResource(R.string.title_3_3_1),
         description = "Add custom modifiers to Composable inside a custom layout using it's scope.",
@@ -827,6 +843,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_5,
         tutorial3_2_6,
         tutorial3_2_7,
+        tutorial3_2_8,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_4,
