@@ -70,16 +70,10 @@ private fun TutorialContent() {
 @Composable
 private fun MainContent(bottomSheetState: BottomSheetState) {
 
-    val direction = bottomSheetState.direction
     val currentValue: BottomSheetValue = bottomSheetState.currentValue
-    val targetValue: BottomSheetValue = bottomSheetState.targetValue
-    val overflow = bottomSheetState.overflow.value
-    val offset = bottomSheetState.offset.value
+    val offset = bottomSheetState.requireOffset()
 
     val progress = bottomSheetState.progress
-    val fraction = progress.fraction
-    val from = progress.from.name
-    val to = progress.to.name
 
     Column(
         modifier = Modifier
@@ -89,26 +83,19 @@ private fun MainContent(bottomSheetState: BottomSheetState) {
     ) {
         Text(
             color = Color.White,
-            text = "direction:$direction\n" +
-                    "isExpanded: ${bottomSheetState.isExpanded}\n" +
-                    "isCollapsed: ${bottomSheetState.isCollapsed}\n" +
-                    "isAnimationRunning: ${bottomSheetState.isAnimationRunning}"
+            text = "isExpanded: ${bottomSheetState.isExpanded}\n" +
+                    "isCollapsed: ${bottomSheetState.isCollapsed}"
         )
 
         Text(
             color = Color.White,
             text = "currentValue: ${currentValue}\n" +
-                    "targetValue: ${targetValue}\n" +
-                    "overflow: ${overflow}\n" +
                     "offset: $offset"
         )
 
         Text(
             color = Color.White,
-            text = "progress: $progress\n" +
-                    "fraction: ${fraction}\n" +
-                    "from: ${from}\n" +
-                    "to: $to"
+            text = "progress: $progress"
         )
     }
 }
