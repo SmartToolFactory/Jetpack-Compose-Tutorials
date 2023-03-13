@@ -1673,6 +1673,23 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_2_3 = TutorialSectionModel(
+        title = "6-2-3 Multi-Color VectorDrawable",
+        description = "Use blend(Porter-Duff) to create multi colored VectorDrawables or" +
+                " VectorDrawables with fill/empty animations",
+        action = {
+            Tutorial6_2Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_BLEND_MODE,
+            TAG_VECTOR_DRAWABLE
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_4_0 = TutorialSectionModel(
         title = "6-4-0 Canvas Touch Events",
         description = "Test touch down, move and up events and invocations on Canvas",
@@ -1896,6 +1913,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_6,
         tutorial6_2_1,
         tutorial6_2_2,
+        tutorial6_2_3,
         tutorial6_4_0,
         tutorial6_4_1,
         tutorial6_4_2,

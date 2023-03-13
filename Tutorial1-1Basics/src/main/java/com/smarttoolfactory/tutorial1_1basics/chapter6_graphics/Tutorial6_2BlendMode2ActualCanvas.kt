@@ -82,9 +82,6 @@ private enum class SaveLayer {
     Paint, BlendModePaint, NoPaint
 }
 
-/**
- *
- */
 @Composable
 private fun DrawShapeBlendMode() {
 
