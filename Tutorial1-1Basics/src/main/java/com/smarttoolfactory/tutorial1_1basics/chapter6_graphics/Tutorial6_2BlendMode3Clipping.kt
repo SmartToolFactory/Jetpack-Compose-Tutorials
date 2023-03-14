@@ -206,7 +206,6 @@ private fun ShimmerIconSample() {
 
     val vectorRes2: Painter = painterResource(id = R.drawable.vd_clock_alarm)
 
-
     val transition = rememberInfiniteTransition()
 
     val progress by transition.animateFloat(

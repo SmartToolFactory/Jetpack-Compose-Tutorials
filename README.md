@@ -143,6 +143,8 @@ previous searches using a database, domain with ViewModel.
 |                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-2-1 Blend(Porter-Duff) Modes</h3><br/>Use blend(Porter-Duff) modes to change drawing source/destination or clip based on blend mode ,and manipulate pixels.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• Path Effect<br>• BlendMode<br>                                                         | <img src ="/./screenshots/tutorial6_2_1.gif" width=200> |
 |                                                                                                                                                                                                                                                                                                        |                                                         |
+| <h3>6-2-3 Multi-Color VectorDrawable</h3><br/>Use blend(Porter-Duff) to create multi colored VectorDrawables or VectorDrawables with fill/empty animations<br><br>• Canvas<br>• DrawScope<br>• VectorDrawable<br>• BlendMode<br>                                                                       | <img src ="/./screenshots/tutorial6_2_1.gif" width=200> |
+|                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-4-2 Drawing App</h3><br/>Draw to canvas using touch down, move and up events using array of paths to have erase, undo, redo actions and set properties for each path separately.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• AwaitPointerEventScope<br>• PointerInputChange<br>• BlendMode<br> | <img src ="/./screenshots/tutorial6_4_2.gif" width=200> |
 |                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-5 Color Picker</h3><br/>Color Picker that calculates angle from center and gets a color using hue and returns a color as in HSL or RGB color model.<br><br>• Canvas<br>• DrawScope<br>• Path<br>• AwaitPointerEventScope<br>• PointerInputChange<br>• BlendMode<br>                              | <img src ="/./screenshots/tutorial6_5.gif" width=200>   |
@@ -162,6 +164,7 @@ previous searches using a database, domain with ViewModel.
 ### Some of the answers i posted on Stackoverflow
 
 #### Composable Functions, Recomposition
+
 [Difference Between Composable and Normal Functions](https://stackoverflow.com/questions/73220189/what-are-differents-between-composable-function-and-normal-function-in-android/73261429#73261429)<br>
 [What does Jetpack Compose remember actually do, how does it work under the hood?](https://stackoverflow.com/a/69961175/5457853)<br>
 [Scoped/Smart Recomposition](https://stackoverflow.com/a/71016788/5457853)<br>
@@ -177,6 +180,7 @@ previous searches using a database, domain with ViewModel.
 [In compose, why modify the properties of the List element, LazyColumn does not refresh](https://stackoverflow.com/a/74506067/5457853)<br>
 
 #### Composables
+
 [How to get exact size without recomposition?](https://stackoverflow.com/a/73357119/5457853)<br>
 [When should I use Android Jetpack Compose Surface composable?](https://stackoverflow.com/a/73030914/5457853)<br>
 [How can I select only 3 element in a grid/list (jetpack compose)?](https://stackoverflow.com/a/73501341/5457853)<br>
@@ -189,6 +193,7 @@ previous searches using a database, domain with ViewModel.
 [What is clickable indication in jetpack compose?](https://stackoverflow.com/a/73175067/5457853)<br>
 
 #### LaunchedEffect, SideEffect, DerivedStateOf, snapshotFlow
+
 [Using SnapshotFlow to observe MutableState changes](https://stackoverflow.com/a/69235908/5457853)<br>
 [Callback function can be changed in Compose? rememberUpdatedState](https://stackoverflow.com/a/72873305/5457853)<br>
 [How can I launch a function only onetime when I use Jetpack Compose?](https://stackoverflow.com/questions/72946503/how-can-i-launch-a-function-only-onetime-when-i-use-jetpack-compose/72946980#72946980)<br>
@@ -205,6 +210,7 @@ previous searches using a database, domain with ViewModel.
 [MutableState callback in non-Composable](https://stackoverflow.com/a/73347171/5457853)<br>
 
 #### Modifiers
+
 [Jetpack Compose - Order of Modifiers](https://stackoverflow.com/a/74145347/5457853)<br>
 [Create Custom Modifier](https://stackoverflow.com/a/70439902/5457853)<br>
 [Composed Modifier](https://stackoverflow.com/a/70169164/5457853)<br>
@@ -218,6 +224,7 @@ previous searches using a database, domain with ViewModel.
 [Use of LaunchedEffect vs SideEffect in jetpack compose](https://stackoverflow.com/a/73802448/5457853)<br>
 
 #### Layout, Constraints
+
 [Creating a SearchView](https://stackoverflow.com/a/69605371/5457853)<br>
 [Create custom badges with size and colorful shadows](https://stackoverflow.com/a/70143863/5457853)<br>
 [How to align one item to bottom using weight or Layout](https://stackoverflow.com/a/70905004/5457853)<br>
@@ -233,6 +240,7 @@ previous searches using a database, domain with ViewModel.
 [Android compose, Indicator size problem with coil](https://stackoverflow.com/a/74491759/5457853)<br>
 
 #### SubcomposeLayout
+
 [How does SubcomposeLayout work?](https://stackoverflow.com/a/70383694/5457853)<br>
 [How to create a Slider with SubcomposeLayout](https://stackoverflow.com/a/71792822/5457853)<br>
 [Setting width of 2 buttons with SubcomposeLayout](https://stackoverflow.com/a/72940620/5457853)<br>
@@ -240,6 +248,7 @@ previous searches using a database, domain with ViewModel.
 [Get information about size before is drawn in Compose](https://stackoverflow.com/a/73802696/5457853)<br>
 
 #### Animation
+
 [Animating with single recomposition with Canvas](https://stackoverflow.com/a/73274631/5457853)<br>
 [Android Compose create shake animation](https://stackoverflow.com/a/73631379/5457853)<br>
 [Issue with jetpack compose animation performance](https://stackoverflow.com/a/74588077/5457853)<br>
@@ -248,6 +257,7 @@ previous searches using a database, domain with ViewModel.
 [How to animate Rect position with Animatable?](https://stackoverflow.com/q/73555446/5457853)<br>
 
 #### Gestures
+
 [How gestures work in Jetpack Compose and onTouchEvent](https://stackoverflow.com/a/70847531/5457853)<br>
 [Detect which section of image is touched](https://stackoverflow.com/a/71491531/5457853)<br>
 [Detect when the user lifts their finger (off the screen)](https://stackoverflow.com/a/72210341/5457853)<br>
@@ -262,6 +272,7 @@ previous searches using a database, domain with ViewModel.
 [How can one composible's clicks pass through to a composible underneath?](https://stackoverflow.com/a/73444016/5457853)<br>
 
 #### Canvas, DrawScope
+
 [How to apply Porter-Duff mode to image?](https://stackoverflow.com/a/69790654/5457853)<br>
 [How to create drawing app with Jetpack Compose?](https://stackoverflow.com/a/71090112/5457853)<br>
 [How to create HSL saturation and lightness change gradient or brush editor with Jetpack Compose?](https://stackoverflow.com/a/71496228/5457853)<br>
