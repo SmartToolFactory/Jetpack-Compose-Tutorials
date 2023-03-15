@@ -86,7 +86,7 @@ private fun TutorialContent() {
                     path.addRoundRect(
                         RoundRect(
                             Rect(offset = Offset.Zero, size),
-                            cornerRadius = CornerRadius(100.dp.toPx(), 100.dp.toPx())
+                            cornerRadius = CornerRadius(60.dp.toPx(), 60.dp.toPx())
                         )
                     )
                 }
@@ -133,7 +133,7 @@ private fun TutorialContent() {
                     path.addRoundRect(
                         RoundRect(
                             Rect(offset = Offset.Zero, size),
-                            cornerRadius = CornerRadius(100.dp.toPx(), 100.dp.toPx())
+                            cornerRadius = CornerRadius(60.dp.toPx(), 60.dp.toPx())
                         )
                     )
                 }
@@ -180,7 +180,7 @@ private fun TutorialContent() {
                     path.addRoundRect(
                         RoundRect(
                             Rect(offset = Offset.Zero, size),
-                            cornerRadius = CornerRadius(100.dp.toPx(), 100.dp.toPx())
+                            cornerRadius = CornerRadius(60.dp.toPx(), 60.dp.toPx())
                         )
                     )
                 }
