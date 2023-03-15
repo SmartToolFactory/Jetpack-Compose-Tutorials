@@ -59,6 +59,8 @@ private fun TutorialContent() {
         DrawRoundedRectangleWithArc()
         TutorialText2(text = "Draw path with progress")
         DrawPathProgress()
+        TutorialText2(text = "Draw Rect path with progress")
+        DrawPathProgress2()
         TutorialText2(text = "Polygon Path and CornerRadius")
         DrawPolygonPath()
         TutorialText2(text = "Polygon Path Progress")
@@ -321,6 +323,78 @@ private fun DrawPathProgress() {
         points.forEach { offset: Offset ->
             fullPath.lineTo(offset.x, offset.y)
         }
+
+        pathWithProgress.reset()
+
+        pathMeasure.setPath(fullPath, forceClosed = false)
+        pathMeasure.getSegment(
+            startDistance = pathMeasure.length * progressStart / 100f,
+            stopDistance = pathMeasure.length * progressEnd / 100f,
+            pathWithProgress,
+            startWithMoveTo = true
+        )
+
+        drawPath(
+            color = Color.Red,
+            path = fullPath,
+            style = Stroke(
+                width = 2.dp.toPx(),
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
+            )
+        )
+
+        drawPath(
+            color = Color.Blue,
+            path = pathWithProgress,
+            style = Stroke(
+                width = 2.dp.toPx(),
+            )
+        )
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+        Text(text = "Progress Start ${progressStart.roundToInt()}%")
+        Slider(
+            value = progressStart,
+            onValueChange = { progressStart = it },
+            valueRange = 0f..100f,
+        )
+
+        Text(text = "Progress End ${progressEnd.roundToInt()}%")
+        Slider(
+            value = progressEnd,
+            onValueChange = { progressEnd = it },
+            valueRange = 0f..100f,
+        )
+    }
+}
+
+@Composable
+private fun DrawPathProgress2() {
+
+    var progressStart by remember { mutableStateOf(20f) }
+    var progressEnd by remember { mutableStateOf(80f) }
+
+
+    // This is the progress path which wis changed using path measure
+    val pathWithProgress by remember {
+        mutableStateOf(Path())
+    }
+
+    // using path
+    val pathMeasure by remember { mutableStateOf(PathMeasure()) }
+
+    val fullPath = remember {
+        roundedRectanglePath(
+            topLeft = Offset(100f, 100f),
+            size = Size(400f, 300f),
+            cornerRadius = 20f
+        )
+    }
+
+    Canvas(modifier = canvasModifier) {
+
 
         pathWithProgress.reset()
 
