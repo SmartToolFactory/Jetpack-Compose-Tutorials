@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 @Composable
 fun Tutorial6_13Screen() {
@@ -33,7 +34,7 @@ fun Tutorial6_13Screen() {
 @Composable
 private fun TutorialContent() {
 
-    val startDurationInSeconds = 10
+    val startDurationInSeconds = 20
     var currentTime by remember {
         mutableStateOf(startDurationInSeconds)
     }
@@ -45,6 +46,12 @@ private fun TutorialContent() {
     var timerStarted by remember {
         mutableStateOf(false)
     }
+
+    val progress by animateFloatAsState(
+        targetValue = targetValue,
+        animationSpec = tween(startDurationInSeconds * 1000, easing = LinearEasing)
+    )
+
     LaunchedEffect(key1 = timerStarted) {
         if (timerStarted) {
             while (currentTime > 0) {
@@ -73,11 +80,6 @@ private fun TutorialContent() {
         val path = remember {
             Path()
         }
-
-        val progress by animateFloatAsState(
-            targetValue = targetValue,
-            animationSpec = tween(startDurationInSeconds * 1000, easing = LinearEasing)
-        )
 
         Box(contentAlignment = Alignment.Center) {
             Canvas(modifier = Modifier.size(250.dp, 140.dp)) {
@@ -142,7 +144,7 @@ private fun TutorialContent() {
                 pathMeasure.setPath(path, forceClosed = false)
                 pathMeasure.getSegment(
                     startDistance = 0f,
-                    stopDistance = pathMeasure.length * progress.toInt() / 100f,
+                    stopDistance = pathMeasure.length * progress.roundToInt() / 100f,
                     pathWithProgress,
                     startWithMoveTo = true
                 )
@@ -237,7 +239,8 @@ private fun TutorialContent() {
 
         Text(
             text = "currentTime: $currentTime, " +
-                    "progress: ${progress.toInt()}"
+                    "progress: ${progress.toInt()}",
+            color = if(progress == 0f) Color.DarkGray else Color.Red
         )
 
     }
