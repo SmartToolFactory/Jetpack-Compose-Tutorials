@@ -1921,6 +1921,21 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_13 = TutorialSectionModel(
+        title = "6-13 Timer with Border",
+        description = "Use Path segments to create path with progress to display remaining time",
+        action = {
+            Tutorial6_13Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_PATH,
+            TAG_PATH_SEGMENT,
+            TAG_CANVAS,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1941,6 +1956,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_9_1,
         tutorial6_10,
         tutorial6_11,
-        tutorial6_12
+        tutorial6_12,
+        tutorial6_13
     )
 }
