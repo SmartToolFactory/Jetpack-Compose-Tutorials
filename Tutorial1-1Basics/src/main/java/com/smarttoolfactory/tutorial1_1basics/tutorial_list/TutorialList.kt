@@ -1250,6 +1250,22 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_4_4 = TutorialSectionModel(
+        title = "5-4-4 Long Press Callbacks",
+        description = "Use AwaitPointerEventScope to create press and long press start and end " +
+                "callbacks.",
+        action = {
+            Tutorial5_4Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+        ),
+        tagColor = GestureListColor
+    )
 
     val tutorial5_5_1 = TutorialSectionModel(
         title = "5-5-1 Combined Gesture Events",
@@ -1506,6 +1522,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_4_1,
         tutorial5_4_2,
         tutorial5_4_3,
+        tutorial5_4_4,
         tutorial5_5_1,
         tutorial5_6_1,
         tutorial5_6_2,
