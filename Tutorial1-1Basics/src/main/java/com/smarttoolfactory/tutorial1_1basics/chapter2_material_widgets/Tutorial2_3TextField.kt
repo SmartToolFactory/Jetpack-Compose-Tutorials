@@ -3,10 +3,9 @@ package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
@@ -640,4 +640,139 @@ fun creditCardFilter(text: AnnotatedString): TransformedText {
     }
 
     return TransformedText(AnnotatedString(out), creditCardOffsetTranslator)
+}
+
+/**
+ * A sample for displaying label, placeholder and clickability with enabled or and readOnly
+ * param variations
+ */
+@Preview
+@Composable
+private fun TextFieldDisableTest() {
+    var value by remember {
+        mutableStateOf("")
+    }
+
+    val context = LocalContext.current
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Clicked",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
+                },
+            value = value,
+            onValueChange = { value = it },
+            placeholder = {
+                Text("Placeholder", modifier = Modifier.border(1.dp, Color.Red))
+            },
+            label = {
+                Text("Label", Modifier.border(1.dp, Color.Yellow))
+            }
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Clicked",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
+                },
+            value = value,
+            onValueChange = { value = it },
+            placeholder = {
+                Text("Placeholder", modifier = Modifier.border(1.dp, Color.Red))
+            },
+            label = {
+                Text("Label", Modifier.border(1.dp, Color.Yellow))
+            }
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Clicked",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
+                },
+            value = value,
+            onValueChange = {},
+            label = {
+                Text("Label", Modifier.border(1.dp, Color.Yellow))
+            },
+            placeholder = {
+                Text("Placeholder", modifier = Modifier.border(1.dp, Color.Red))
+            },
+            readOnly = true
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Clicked",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
+                },
+            value = value,
+            onValueChange = {},
+            label = {
+                Text("Label", Modifier.border(1.dp, Color.Yellow))
+            },
+            placeholder = {
+                Text("Placeholder", modifier = Modifier.border(1.dp, Color.Red))
+            },
+            enabled = false
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Clicked",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
+                },
+            value = value,
+            onValueChange = {},
+            label = {
+                Text("Label", Modifier.border(1.dp, Color.Yellow))
+            },
+            placeholder = {
+                Text("Placeholder", modifier = Modifier.border(1.dp, Color.Red))
+            },
+            enabled = false,
+            readOnly = true
+        )
+    }
 }
