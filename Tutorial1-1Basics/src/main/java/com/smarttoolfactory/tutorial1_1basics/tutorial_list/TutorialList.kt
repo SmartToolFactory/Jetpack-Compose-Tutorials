@@ -1076,6 +1076,41 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial8_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_8_1),
+        description = "Remembering MeasurePolicy prevents crating new object when " +
+                "the parameter it reads changes.",
+        action = {
+            Tutorial4_8_1Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_RECOMPOSITION,
+            TAG_MEASURE_POLICY,
+            TAG_PHASE_LAYOUT,
+        ),
+        tagColor = StateListColor
+    )
+
+    val tutorial8_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_8_2),
+        description = "Remembering MeasurePolicy prevents crating new object when " +
+                "the parameter it reads changes. In this example Modifier like shadow " +
+                "triggers recomposition on text changes too.",
+        action = {
+            Tutorial4_8_2Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_RECOMPOSITION,
+            TAG_MEASURE_POLICY,
+            TAG_PHASE_LAYOUT,
+        ),
+        tagColor = StateListColor
+    )
+
     return listOf(
         tutorial4_1,
         tutorial4_2_1,
@@ -1088,7 +1123,9 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_6,
         tutorial4_7_1,
         tutorial4_7_2,
-        tutorial4_7_3
+        tutorial4_7_3,
+        tutorial8_1,
+        tutorial8_2
     )
 }
 
