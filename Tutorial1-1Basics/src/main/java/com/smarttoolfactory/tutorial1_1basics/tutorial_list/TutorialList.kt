@@ -1973,6 +1973,21 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_14 = TutorialSectionModel(
+        title = "6-14 Pie Chart with Text",
+        description = "Draw pie chart with dividers, and text between angles.",
+        action = {
+            Tutorial6_14Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_TEXT_MEASURER,
+            TAG_CANVAS,
+        ),
+        tagColor = GraphicsListColor
+    )
+
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -1994,6 +2009,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_10,
         tutorial6_11,
         tutorial6_12,
-        tutorial6_13
+        tutorial6_13,
+        tutorial6_14
     )
 }
