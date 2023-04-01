@@ -2,10 +2,13 @@
 
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +37,24 @@ fun Tutorial6_14Screen() {
 @Preview
 @Composable
 private fun TutorialContent() {
+
+    val animatable = remember {
+        Animatable(-90f)
+    }
+
+    val finalValue = 270f
+
+    LaunchedEffect(key1 = animatable) {
+        animatable.animateTo(
+            targetValue = finalValue,
+            animationSpec = tween(
+                delayMillis = 4000,
+                durationMillis = 2000
+            )
+        )
+    }
+    val currentSweepAngle = animatable.value
+
 
     Box(
         modifier = Modifier
@@ -82,15 +103,17 @@ private fun TutorialContent() {
                 val textMeasureResult = textMeasureResults[index]
                 val textSize = textMeasureResult.size
 
-                drawArc(
-                    color = chartData.color,
-                    startAngle = startAngle,
-                    sweepAngle = sweepAngle,
-                    useCenter = false,
-                    topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
-                    size = Size(width - strokeWidth, width - strokeWidth),
-                    style = Stroke(strokeWidth)
-                )
+                if (startAngle <= currentSweepAngle) {
+                    drawArc(
+                        color = chartData.color,
+                        startAngle = startAngle,
+                        sweepAngle = sweepAngle.coerceAtMost(currentSweepAngle - startAngle),
+                        useCenter = false,
+                        topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
+                        size = Size(width - strokeWidth, width - strokeWidth),
+                        style = Stroke(strokeWidth)
+                    )
+                }
 
                 rotate(
                     90f + startAngle
@@ -105,20 +128,22 @@ private fun TutorialContent() {
 
                 val textCenter = textSize.center
 
-    drawText(
-        textLayoutResult = textMeasureResult,
-        color = Color.Gray,
-        topLeft = Offset(
-            -textCenter.x + center.x + (innerRadius + strokeWidth / 2) * cos(
-                angleInRadians
-            ),
-            -textCenter.y + center.y + (innerRadius + strokeWidth / 2) * sin(
-                angleInRadians
-            )
-        )
-    )
+                if (currentSweepAngle == finalValue) {
+                    drawText(
+                        textLayoutResult = textMeasureResult,
+                        color = Brown400,
+                        topLeft = Offset(
+                            -textCenter.x + center.x + (innerRadius + strokeWidth / 2) * cos(
+                                angleInRadians
+                            ),
+                            -textCenter.y + center.y + (innerRadius + strokeWidth / 2) * sin(
+                                angleInRadians
+                            )
+                        )
+                    )
+                }
 
-    startAngle += sweepAngle
+                startAngle += sweepAngle
             }
         }
     }
