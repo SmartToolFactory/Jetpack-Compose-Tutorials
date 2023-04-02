@@ -4,11 +4,13 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Slider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,15 +74,16 @@ private fun TutorialContent() {
         }
     }
 
+    val chartStartAngle = -90f
     val animatableInitialSweepAngle = remember {
-        Animatable(-90f)
+        Animatable(chartStartAngle)
     }
 
-    val finalValue = 270f
+    val chartEndAngle = 360f + chartStartAngle
 
     LaunchedEffect(key1 = animatableInitialSweepAngle) {
         animatableInitialSweepAngle.animateTo(
-            targetValue = finalValue,
+            targetValue = chartEndAngle,
             animationSpec = tween(
                 delayMillis = 1000,
                 durationMillis = 2000
@@ -153,6 +156,7 @@ private fun TutorialContent() {
                 val angleInRadians = (startAngle + sweepAngle / 2).degreeToRadian
                 val textMeasureResult = textMeasureResults[index]
                 val textSize = textMeasureResult.size
+                val currentStrokeWidth = strokeWidth
 
                 withTransform(
                     {
@@ -165,9 +169,6 @@ private fun TutorialContent() {
                 ) {
 
                     if (startAngle <= currentSweepAngle) {
-
-                        val currentStrokeWidth = strokeWidth + chartData.animatable.value
-
                         drawArc(
                             color = chartData.color,
                             startAngle = startAngle,
@@ -194,12 +195,12 @@ private fun TutorialContent() {
                             ),
                             useCenter = false,
                             topLeft = Offset(
-                                (width - 2 * innerRadius) / 2,
-                                (width - 2 * innerRadius) / 2
+                                (width - 2 * innerRadius) / 2 + shadeStrokeWidth / 2,
+                                (width - 2 * innerRadius) / 2 + shadeStrokeWidth / 2
                             ),
                             size = Size(
-                                innerRadius * 2,
-                                innerRadius * 2
+                                2 * innerRadius - shadeStrokeWidth,
+                                2 * innerRadius - shadeStrokeWidth
                             ),
                             style = Stroke(shadeStrokeWidth)
                         )
@@ -207,7 +208,7 @@ private fun TutorialContent() {
 
                     val textCenter = textSize.center
 
-                    if (currentSweepAngle == finalValue) {
+                    if (currentSweepAngle == chartEndAngle) {
                         drawText(
                             textLayoutResult = textMeasureResult,
                             color = Color.Black,
@@ -226,7 +227,7 @@ private fun TutorialContent() {
                 ) {
                     drawLine(
                         color = Color.White,
-                        start = Offset(center.x, innerRadius),
+                        start = Offset(center.x, innerRadius + shadeStrokeWidth),
                         end = Offset(center.x, 0f),
                         strokeWidth = lineStrokeWidth
                     )
@@ -242,15 +243,17 @@ private fun TutorialContent() {
 @Composable
 private fun CanvasRectTest() {
 
-    var scale by remember {
+    var target by remember {
         mutableStateOf(1f)
     }
+    val scale by animateFloatAsState(targetValue = target)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures {
-                    scale = if (scale == 1f) 2f else 1f
+                    target = if (target == 1f) 1.3f else 1f
                 }
             }
             .padding(40.dp),
@@ -285,15 +288,17 @@ private fun CanvasRectTest() {
 @Composable
 private fun CanvasRectTest2() {
 
-    var scale by remember {
+    var target by remember {
         mutableStateOf(1f)
     }
+    val scale by animateFloatAsState(targetValue = target)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures {
-                    scale = if (scale == 1f) 1.3f else 1f
+                    target = if (target == 1f) 1.3f else 1f
                 }
             }
             .padding(40.dp),
@@ -318,6 +323,107 @@ private fun CanvasRectTest2() {
                 ),
                 size = Size(size.width - newStrokeWidth, size.height - newStrokeWidth)
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TranslateScaleTest() {
+    var scale by remember {
+        mutableStateOf(1f)
+    }
+
+    var angle by remember {
+        mutableStateOf(0f)
+    }
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(40.dp)
+    ) {
+
+        Slider(
+            value = angle,
+            onValueChange = { angle = it },
+            valueRange = 0f..360f
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures {
+                        scale = if (scale == 1f) 1.3f else 1f
+                    }
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .border(2.dp, Color.Red),
+            ) {
+
+                val radius = size.width / 2f * .4f
+                val strokeWidth = 2.dp.toPx()
+
+                drawCircle(
+                    color = Color.Red,
+                    style = Stroke(2.dp.toPx()),
+                    radius = radius
+                )
+
+                withTransform(
+                    {
+                        scale(
+                            scaleX = scale,
+                            scaleY = 1f,
+                            pivot = Offset(
+                                center.x + radius * cos(angle * Math.PI / 180f).toFloat(),
+                                center.y + radius * sin(angle * Math.PI / 180f).toFloat()
+                            ),
+                        )
+                    }
+                ) {
+
+
+                    drawRect(
+                        color = Color.Green,
+                        style = Stroke(width = strokeWidth),
+                        topLeft = Offset(
+                            center.x + radius * cos(angle * Math.PI / 180f).toFloat(),
+                            -100f + center.y + radius * sin(angle * Math.PI / 180f).toFloat()
+                        ),
+                        size = Size(200f, 200f)
+                    )
+
+                    drawArc(
+                        color = Color.Magenta,
+                        topLeft = Offset(
+                            center.x + radius * cos(angle * Math.PI / 180f).toFloat(),
+                            -100f + center.y + radius * sin(angle * Math.PI / 180f).toFloat()
+                        ),
+                        size = Size(200f, 200f),
+                        startAngle = -60f,
+                        sweepAngle = 120f,
+                        useCenter = true
+                    )
+                }
+
+                drawCircle(
+                    color = Color.Blue,
+                    radius = 20f,
+                    Offset(
+                        center.x + radius * cos(angle * Math.PI / 180f).toFloat(),
+                        center.y + radius * sin(angle * Math.PI / 180f).toFloat()
+                    )
+                )
+
+            }
         }
     }
 }
