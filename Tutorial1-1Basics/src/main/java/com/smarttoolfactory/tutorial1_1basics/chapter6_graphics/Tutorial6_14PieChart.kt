@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.center
@@ -38,6 +39,29 @@ fun Tutorial6_14Screen() {
 @Composable
 private fun TutorialContent() {
 
+    val chartDataList = remember {
+        listOf(
+            ChartData(Pink400, 10f),
+            ChartData(Orange400, 20f),
+            ChartData(Yellow400, 15f),
+            ChartData(Green400, 5f),
+            ChartData(Blue400, 50f),
+        )
+    }
+
+    val textMeasurer = rememberTextMeasurer()
+    val textMeasureResults = remember(chartDataList) {
+        chartDataList.map {
+            textMeasurer.measure(
+                text = "%${it.data.toInt()}",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
+    }
+
     val animatable = remember {
         Animatable(-90f)
     }
@@ -48,7 +72,7 @@ private fun TutorialContent() {
         animatable.animateTo(
             targetValue = finalValue,
             animationSpec = tween(
-                delayMillis = 4000,
+                delayMillis = 1000,
                 durationMillis = 2000
             )
         )
@@ -62,26 +86,6 @@ private fun TutorialContent() {
             .padding(20.dp),
         contentAlignment = Alignment.Center
     ) {
-        val chartDataList = listOf(
-            ChartData(Pink400, 10f),
-            ChartData(Orange400, 20f),
-            ChartData(Yellow400, 15f),
-            ChartData(Green400, 5f),
-            ChartData(Blue400, 50f),
-        )
-
-        val textMeasurer = rememberTextMeasurer()
-        val textMeasureResults = remember(chartDataList) {
-            chartDataList.map {
-                textMeasurer.measure(
-                    text = "%${it.data.toInt()}",
-                    style = TextStyle(
-                        fontSize = 18.sp
-                    )
-                )
-            }
-        }
-
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,7 +103,7 @@ private fun TutorialContent() {
 
                 val chartData = chartDataList[index]
                 val sweepAngle = chartData.data.asAngle
-                val angleInRadians = (startAngle + sweepAngle / 2).degreeToAngle
+                val angleInRadians = (startAngle + sweepAngle / 2).degreeToRadian
                 val textMeasureResult = textMeasureResults[index]
                 val textSize = textMeasureResult.size
 
@@ -131,7 +135,7 @@ private fun TutorialContent() {
                 if (currentSweepAngle == finalValue) {
                     drawText(
                         textLayoutResult = textMeasureResult,
-                        color = Brown400,
+                        color = Color.Black,
                         topLeft = Offset(
                             -textCenter.x + center.x + (innerRadius + strokeWidth / 2) * cos(
                                 angleInRadians
@@ -149,11 +153,11 @@ private fun TutorialContent() {
     }
 }
 
-private val Float.degreeToAngle
+val Float.degreeToRadian
     get() = (this * Math.PI / 180f).toFloat()
 
-private val Float.asAngle: Float
+val Float.asAngle: Float
     get() = this * 360f / 100f
 
 @Immutable
-data class ChartData(val color: Color, val data: Float)
+private data class ChartData(val color: Color, val data: Float)
