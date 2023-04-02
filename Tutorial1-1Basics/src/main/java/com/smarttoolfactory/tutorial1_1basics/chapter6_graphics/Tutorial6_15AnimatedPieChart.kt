@@ -1,7 +1,6 @@
-@file:OptIn(ExperimentalTextApi::class)
-
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
@@ -19,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.chart.ChartData
@@ -41,6 +40,9 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
+        val context = LocalContext.current
+
         val data = remember {
             listOf(
                 ChartData(Pink400, 10f),
@@ -52,7 +54,41 @@ private fun TutorialContent() {
             )
         }
 
-        PieChart(modifier = Modifier.fillMaxSize(), data = data)
+        PieChart(
+            modifier = Modifier.fillMaxSize(),
+            data = data,
+            outerRingPercent = 35,
+            innerRingPercent = 10,
+            dividerStrokeWidth = 3.dp
+        ) { chartData: ChartData, index: Int ->
+            Toast.makeText(context, "Clicked: ${chartData.data}", Toast.LENGTH_SHORT).show()
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PieChart(
+            modifier = Modifier.fillMaxSize(),
+            data = data,
+            outerRingPercent = 100,
+            innerRingPercent = 0,
+            startAngle = -90f,
+            drawText = false,
+            dividerStrokeWidth = 0.dp
+        ) { chartData: ChartData, index: Int ->
+            Toast.makeText(context, "Clicked: ${chartData.data}", Toast.LENGTH_SHORT).show()
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PieChart(
+            modifier = Modifier.fillMaxSize(),
+            data = data,
+            outerRingPercent = 25,
+            innerRingPercent = 0,
+            dividerStrokeWidth = 2.dp
+        ) { chartData: ChartData, index: Int ->
+            Toast.makeText(context, "Clicked: ${chartData.data}", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
@@ -132,7 +168,7 @@ private fun CanvasRectTest2() {
             val newStrokeWidth = strokeWidth * scale
             drawRect(
                 color = Color.Green,
-                style = Stroke(width = newStrokeWidth),
+//                style = Stroke(width = newStrokeWidth),
                 topLeft = Offset(
                     (size.width - 2 * radius - newStrokeWidth) / 2,
                     (size.width - 2 * radius - newStrokeWidth) / 2

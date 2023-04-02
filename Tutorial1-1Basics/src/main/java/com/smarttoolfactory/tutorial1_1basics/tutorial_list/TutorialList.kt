@@ -1987,6 +1987,21 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_15 = TutorialSectionModel(
+        title = "6-15 Pie Chart with Touch Animation",
+        description = "Animate Pie Chart on touch and get data of touched section.",
+        action = {
+            Tutorial6_15Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_TEXT_MEASURER,
+            TAG_CANVAS,
+            TAG_DETECT_TAP_GESTURES
+        ),
+        tagColor = GraphicsListColor
+    )
+
 
     return listOf(
         tutorial6_1_1,
@@ -2010,6 +2025,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_11,
         tutorial6_12,
         tutorial6_13,
-        tutorial6_14
+        tutorial6_14,
+        tutorial6_15
     )
 }

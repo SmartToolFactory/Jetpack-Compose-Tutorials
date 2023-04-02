@@ -6,11 +6,10 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,20 +23,75 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.degreeToRadian
+import com.smarttoolfactory.tutorial1_1basics.ui.*
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+@Preview
+@Composable
+private fun PieChartPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        val data = remember {
+            listOf(
+                ChartData(Pink400, 10f),
+                ChartData(Orange400, 20f),
+                ChartData(Yellow400, 15f),
+                ChartData(Green400, 5f),
+                ChartData(Red400, 35f),
+                ChartData(Blue400, 15f)
+            )
+        }
+
+        PieChart(
+            modifier = Modifier.fillMaxSize(),
+            data = data,
+            outerRingPercent = 35,
+            innerRingPercent = 10,
+            dividerStrokeWidth = 3.dp
+        )
+
+        PieChart(
+            modifier = Modifier.fillMaxSize(),
+            data = data,
+            outerRingPercent = 100,
+            innerRingPercent = 0,
+            startAngle = -90f,
+            drawText = false,
+            dividerStrokeWidth = 0.dp
+        )
+
+        PieChart(
+            modifier = Modifier.fillMaxSize(),
+            data = data,
+            outerRingPercent = 25,
+            innerRingPercent = 0,
+            dividerStrokeWidth = 2.dp
+        )
+    }
+}
+
 @Composable
 fun PieChart(
     modifier: Modifier,
     data: List<ChartData>,
-    startAngle:Float = 0f
+    startAngle: Float = 0f,
+    outerRingPercent: Int = 35,
+    innerRingPercent: Int = 10,
+    dividerStrokeWidth: Dp = 0.dp,
+    drawText: Boolean = true,
+    onClick: ((data: ChartData, index: Int) -> Unit)? = null
 ) {
 
     BoxWithConstraints(
@@ -48,13 +102,18 @@ fun PieChart(
         val density = LocalDensity.current
 
         val width = constraints.maxWidth.toFloat()
-        // Outer radius of chart. This is edge of strokw width as
-        val radius = (width / 2f) * .9f
-        val outerStrokeWidth = radius * .4f
-        val innerRadius = radius - outerStrokeWidth
 
-        val lineStrokeWidth = with(density) { 3.dp.toPx() }
-        val innerStrokeWidth = outerStrokeWidth * .3f
+        // Outer radius of chart. This is edge of stroke width as
+        val radius = (width / 2f) * .9f
+        val outerStrokeWidthPx =
+            (radius * outerRingPercent / 100f).coerceIn(0f, radius)
+
+        // Inner radius of chart. Semi transparent inner ring
+        val innerRadius = (radius - outerStrokeWidthPx).coerceIn(0f, radius)
+        val innerStrokeWidthPx =
+            (radius * innerRingPercent / 100f).coerceIn(0f, radius)
+
+        val lineStrokeWidth = with(density) { dividerStrokeWidth.toPx() }
 
         // Start angle of chart. Top center is -90, right center 0,
         // bottom center 90, left center 180
@@ -91,9 +150,24 @@ fun PieChart(
 
         chartDataList.forEach {
             LaunchedEffect(key1 = it.isSelected) {
-                val targetValue = if (it.isSelected) 1.1f else 1f
+                // This is for scaling radius
+                val targetValue = (if (it.isSelected) width / 2 else radius) / radius
+
+                // This is for increasing outer ring
+//                val targetValue = if (it.isSelected) outerStrokeWidthPx + width / 2 - radius
+//                else outerStrokeWidthPx
                 it.animatable.animateTo(targetValue, animationSpec = tween(500))
             }
+        }
+
+        LaunchedEffect(key1 = animatableInitialSweepAngle) {
+            animatableInitialSweepAngle.animateTo(
+                targetValue = chartEndAngle,
+                animationSpec = tween(
+                    delayMillis = 1000,
+                    durationMillis = 1500
+                )
+            )
         }
 
         val textMeasurer = rememberTextMeasurer()
@@ -109,18 +183,7 @@ fun PieChart(
             }
         }
 
-        LaunchedEffect(key1 = animatableInitialSweepAngle) {
-            animatableInitialSweepAngle.animateTo(
-                targetValue = chartEndAngle,
-                animationSpec = tween(
-                    delayMillis = 1000,
-                    durationMillis = 1500
-                )
-            )
-        }
-
         val chartModifier = Modifier
-            .border(1.dp, Color.Red)
             .fillMaxWidth()
             .aspectRatio(1f)
             .pointerInput(Unit) {
@@ -129,7 +192,7 @@ fun PieChart(
                         val xPos = size.center.x - position.x
                         val yPos = size.center.y - position.y
                         val length = sqrt(xPos * xPos + yPos * yPos)
-                        val isTouched = length in innerRadius..radius
+                        val isTouched = length in innerRadius - innerStrokeWidthPx..radius
 
                         if (isTouched) {
                             var touchAngle =
@@ -143,22 +206,28 @@ fun PieChart(
                             }
 
 
-                            chartDataList.forEach {
-                                val range = it.range
+                            chartDataList.forEachIndexed { index, chartData ->
+                                val range = chartData.range
 
                                 val isTouchInArcSegment = touchAngle in range
-                                if (it.isSelected) {
-                                    it.isSelected = false
+                                if (chartData.isSelected) {
+                                    chartData.isSelected = false
                                 } else {
-                                    it.isSelected = isTouchInArcSegment
+                                    chartData.isSelected = isTouchInArcSegment
+                                    if (isTouchInArcSegment) {
+                                        onClick?.invoke(
+                                            ChartData(
+                                                color = chartData.color,
+                                                data = chartData.data
+                                            ), index
+                                        )
+                                    }
                                 }
-
                             }
                         }
                     }
                 )
             }
-
 
         PieChartImpl(
             modifier = chartModifier,
@@ -167,10 +236,12 @@ fun PieChart(
             currentSweepAngle = currentSweepAngle,
             chartStartAngle = chartStartAngle,
             chartEndAngle = chartEndAngle,
-            outerStrokeWidth = outerStrokeWidth,
+            outerRadius = radius,
+            outerStrokeWidth = outerStrokeWidthPx,
             innerRadius = innerRadius,
-            innerStrokeWidth = innerStrokeWidth,
-            lineStrokeWidth = lineStrokeWidth
+            innerStrokeWidth = innerStrokeWidthPx,
+            lineStrokeWidth = lineStrokeWidth,
+            drawText = drawText
         )
 
     }
@@ -184,10 +255,12 @@ private fun PieChartImpl(
     currentSweepAngle: Float,
     chartStartAngle: Float,
     chartEndAngle: Float,
+    outerRadius: Float,
     outerStrokeWidth: Float,
     innerRadius: Float,
     innerStrokeWidth: Float,
-    lineStrokeWidth: Float
+    lineStrokeWidth: Float,
+    drawText: Boolean
 ) {
     Canvas(modifier = modifier) {
 
@@ -204,6 +277,8 @@ private fun PieChartImpl(
             val textSize = textMeasureResult.size
 
             val currentStrokeWidth = outerStrokeWidth
+            // This is for increasing stroke width without scaling
+//            val currentStrokeWidth = chartData.animatable.value
 
             withTransform(
                 {
@@ -217,9 +292,19 @@ private fun PieChartImpl(
 
                 if (startAngle <= currentSweepAngle) {
 
+                    val color = chartData.color
+                    val diff = (width / 2 - outerRadius) / outerRadius
+                    val fraction = (chartData.animatable.value - 1f) / diff
+
+                    val animatedColor = androidx.compose.ui.graphics.lerp(
+                        color,
+                        color.copy(alpha = .85f),
+                        fraction
+                    )
+
                     // Outer Arc Segment
                     drawArc(
-                        color = chartData.color,
+                        color = animatedColor,
                         startAngle = startAngle,
                         sweepAngle = sweepAngle.coerceAtMost(
                             currentSweepAngle - startAngle
@@ -239,7 +324,7 @@ private fun PieChartImpl(
 
                     // Inner Arc Segment
                     drawArc(
-                        color = chartData.color.copy(alpha = .7f),
+                        color = animatedColor.copy(alpha = .7f),
                         startAngle = startAngle,
                         sweepAngle = sweepAngle.coerceAtMost(
                             currentSweepAngle - startAngle
@@ -259,19 +344,28 @@ private fun PieChartImpl(
 
                 val textCenter = textSize.center
 
-                if (currentSweepAngle == chartEndAngle) {
+                if (drawText && currentSweepAngle == chartEndAngle) {
                     drawText(
                         textLayoutResult = textMeasureResult,
                         color = Color.Black,
                         topLeft = Offset(
                             -textCenter.x + center.x
-                                    + (innerRadius + outerStrokeWidth / 2) * cos(angleInRadians),
+                                    + (innerRadius + currentStrokeWidth / 2) * cos(angleInRadians),
                             -textCenter.y + center.y
-                                    + (innerRadius + outerStrokeWidth / 2) * sin(angleInRadians)
+                                    + (innerRadius + currentStrokeWidth / 2) * sin(angleInRadians)
                         )
                     )
                 }
             }
+
+            startAngle += sweepAngle
+        }
+
+        for (index in 0..chartDataList.lastIndex) {
+
+            val chartData = chartDataList[index]
+            val range = chartData.range
+            val sweepAngle = range.endInclusive - range.start
 
             // Divider
             rotate(
@@ -279,7 +373,11 @@ private fun PieChartImpl(
             ) {
                 drawLine(
                     color = Color.White,
-                    start = Offset(center.x, innerRadius + innerStrokeWidth),
+                    start = Offset(
+                        center.x,
+                        (width / 2 - innerRadius + innerStrokeWidth)
+                            .coerceAtMost(width / 2)
+                    ),
                     end = Offset(center.x, 0f),
                     strokeWidth = lineStrokeWidth
                 )
