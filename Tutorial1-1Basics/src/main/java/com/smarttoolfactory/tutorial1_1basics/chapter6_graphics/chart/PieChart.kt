@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.*
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.ColorUtils
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.degreeToRadian
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import kotlin.math.atan2
@@ -298,9 +300,16 @@ private fun PieChartImpl(
 
                     val animatedColor = androidx.compose.ui.graphics.lerp(
                         color,
-                        color.copy(alpha = .85f),
+                        color.copy(alpha = .8f),
                         fraction
                     )
+
+                    val colorInner =
+                       Color(
+                           ColorUtils
+                               .blendARGB(animatedColor.toArgb(), Color.Black.toArgb(), 0.1f)
+                       )
+
 
                     // Outer Arc Segment
                     drawArc(
@@ -324,7 +333,7 @@ private fun PieChartImpl(
 
                     // Inner Arc Segment
                     drawArc(
-                        color = animatedColor.copy(alpha = .7f),
+                        color = colorInner,
                         startAngle = startAngle,
                         sweepAngle = sweepAngle.coerceAtMost(
                             currentSweepAngle - startAngle
