@@ -44,14 +44,46 @@ fun Tutorial6_15Screen() {
 @Preview
 @Composable
 private fun TutorialContent() {
-    val chartDataList = remember {
+    val data = remember {
         listOf(
-            AnimatedChartData(Pink400, 10f),
-            AnimatedChartData(Orange400, 20f),
-            AnimatedChartData(Yellow400, 15f),
-            AnimatedChartData(Green400, 5f),
-            AnimatedChartData(Blue400, 50f),
+            ChartData(Pink400, 10f),
+            ChartData(Orange400, 20f),
+            ChartData(Yellow400, 15f),
+            ChartData(Green400, 5f),
+            ChartData(Red400 , 35f),
+            ChartData(Blue400, 15f)
         )
+    }
+
+    val chartStartAngle = -90f
+    val animatableInitialSweepAngle = remember {
+        Animatable(chartStartAngle)
+    }
+
+    val chartEndAngle = 360f + chartStartAngle
+
+    val sum = data.sumOf {
+        it.data.toDouble()
+    }.toFloat()
+
+    val coEfficient = 360f / sum
+    var currentAngle = 0f
+    val currentSweepAngle = animatableInitialSweepAngle.value
+
+    val chartDataList = remember(data) {
+        data.map {
+
+            val chartData = it.data
+            val range = currentAngle..currentAngle + chartData * coEfficient
+            currentAngle += chartData * coEfficient
+
+            AnimatedChartData(
+                color = it.color,
+                data = it.data,
+                selected = false,
+                range = range
+            )
+        }
     }
 
     chartDataList.forEach {
@@ -74,24 +106,15 @@ private fun TutorialContent() {
         }
     }
 
-    val chartStartAngle = -90f
-    val animatableInitialSweepAngle = remember {
-        Animatable(chartStartAngle)
-    }
-
-    val chartEndAngle = 360f + chartStartAngle
-
     LaunchedEffect(key1 = animatableInitialSweepAngle) {
         animatableInitialSweepAngle.animateTo(
             targetValue = chartEndAngle,
             animationSpec = tween(
                 delayMillis = 1000,
-                durationMillis = 2000
+                durationMillis = 1500
             )
         )
     }
-    val currentSweepAngle = animatableInitialSweepAngle.value
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -116,21 +139,25 @@ private fun TutorialContent() {
                             val isTouched = length in innerRadius..radius
 
                             if (isTouched) {
-                                val touchAngle =
-                                    (atan2(yPos, xPos) * 180 / Math.PI + 270f) % 360f
+                                var touchAngle =
+                                    (-chartStartAngle + 180f + atan2(
+                                        yPos,
+                                        xPos
+                                    ) * 180 / Math.PI) % 360f
 
-                                var startAngle = 0f
+                                if (touchAngle < 0){
+                                    touchAngle += 360f
+                                }
+
                                 chartDataList.forEach {
-                                    val angle = it.data.asAngle
-                                    val range = startAngle..startAngle + angle
-                                    val newSelectedValue = touchAngle in range
+                                    val range = it.range
+                                    val isTouchInArcSegment = touchAngle in range
                                     if (it.isSelected) {
                                         it.isSelected = false
                                     } else {
-                                        it.isSelected = newSelectedValue
+                                        it.isSelected = isTouchInArcSegment
                                     }
 
-                                    startAngle += angle
                                 }
                             }
 
@@ -147,12 +174,13 @@ private fun TutorialContent() {
             val lineStrokeWidth = 3.dp.toPx()
             val shadeStrokeWidth = strokeWidth * .3f
 
-            var startAngle = -90f
+            var startAngle = chartStartAngle
 
             for (index in 0..chartDataList.lastIndex) {
 
                 val chartData = chartDataList[index]
-                val sweepAngle = chartData.data.asAngle
+                val range = chartData.range
+                val sweepAngle = range.endInclusive - range.start
                 val angleInRadians = (startAngle + sweepAngle / 2).degreeToRadian
                 val textMeasureResult = textMeasureResults[index]
                 val textSize = textMeasureResult.size
@@ -237,6 +265,14 @@ private fun TutorialContent() {
             }
         }
     }
+}
+
+@Composable
+fun PieChart(
+    modifier: Modifier,
+    data: List<ChartData>
+) {
+
 }
 
 @Preview
@@ -433,6 +469,7 @@ class AnimatedChartData(
     val color: Color,
     val data: Float,
     selected: Boolean = false,
+    val range: ClosedFloatingPointRange<Float>,
     val animatable: Animatable<Float, AnimationVector1D> = Animatable(1f)
 ) {
     var isSelected by mutableStateOf(selected)

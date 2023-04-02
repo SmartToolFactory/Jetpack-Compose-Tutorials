@@ -160,4 +160,4 @@ val Float.asAngle: Float
     get() = this * 360f / 100f
 
 @Immutable
-private data class ChartData(val color: Color, val data: Float)
+data class ChartData(val color: Color, val data: Float)
