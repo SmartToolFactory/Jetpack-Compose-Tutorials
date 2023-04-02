@@ -7,7 +7,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.chart.ChartData
 import com.smarttoolfactory.tutorial1_1basics.ui.*
 import kotlin.math.cos
 import kotlin.math.sin
@@ -158,6 +158,3 @@ val Float.degreeToRadian
 
 val Float.asAngle: Float
     get() = this * 360f / 100f
-
-@Immutable
-data class ChartData(val color: Color, val data: Float)
