@@ -190,7 +190,7 @@ fun PieChart(
             .aspectRatio(1f)
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onPress = { position: Offset ->
+                    onTap = { position: Offset ->
                         val xPos = size.center.x - position.x
                         val yPos = size.center.y - position.y
                         val length = sqrt(xPos * xPos + yPos * yPos)
