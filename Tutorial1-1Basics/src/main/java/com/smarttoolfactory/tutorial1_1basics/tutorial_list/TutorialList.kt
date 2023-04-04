@@ -1691,6 +1691,20 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_1_7 = TutorialSectionModel(
+        title = "6-1-7 Canvas Stroke Change",
+        description = "Draw stroke between edges of Canvas, drawing inwards and outwards direction.",
+        action = {
+            Tutorial6_1Screen7()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_2_1 = TutorialSectionModel(
         title = "6-2-1 Blend Modes(Porter-Duff)",
         description = "Use blend(Porter-Duff) modes to change drawing source/destination " +
@@ -2010,6 +2024,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_4,
         tutorial6_1_5,
         tutorial6_1_6,
+        tutorial6_1_7,
         tutorial6_2_1,
         tutorial6_2_2,
         tutorial6_2_3,
