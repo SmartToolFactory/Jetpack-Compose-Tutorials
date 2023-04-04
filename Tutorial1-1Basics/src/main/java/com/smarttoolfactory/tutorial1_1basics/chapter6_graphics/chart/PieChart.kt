@@ -305,10 +305,10 @@ private fun PieChartImpl(
                     )
 
                     val colorInner =
-                       Color(
-                           ColorUtils
-                               .blendARGB(animatedColor.toArgb(), Color.Black.toArgb(), 0.1f)
-                       )
+                        Color(
+                            ColorUtils
+                                .blendARGB(animatedColor.toArgb(), Color.Black.toArgb(), 0.1f)
+                        )
 
 
                     // Outer Arc Segment
