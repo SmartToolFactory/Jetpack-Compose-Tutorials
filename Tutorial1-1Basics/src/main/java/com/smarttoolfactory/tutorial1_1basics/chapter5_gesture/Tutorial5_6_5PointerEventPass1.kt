@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ExposedSelectionMenu
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
@@ -47,7 +48,27 @@ private fun TutorialContent() {
 
         val context = LocalContext.current
 
-        val pass = PointerEventPass.Main
+        var pass by remember {
+            mutableStateOf(
+                PointerEventPass.Main
+            )
+        }
+
+        ExposedSelectionMenu(title = "PointerEventPass",
+            index = when (pass) {
+                PointerEventPass.Initial -> 0
+                PointerEventPass.Main -> 1
+                else -> 2
+            },
+            options = listOf("Initial", "Main", "Final"),
+            onSelected = {
+                pass = when (it) {
+                    0 -> PointerEventPass.Initial
+                    1 -> PointerEventPass.Main
+                    else -> PointerEventPass.Final
+                }
+            }
+        )
 
         Column(
             modifier = Modifier
@@ -147,7 +168,7 @@ fun Modifier.customTouch(
     onDown: () -> Unit,
     onUp: () -> Unit
 ) = this.then(
-    Modifier.pointerInput(Unit) {
+    Modifier.pointerInput(pass) {
         awaitEachGesture {
             val down = awaitFirstDown(pass = pass)
             onDown()
@@ -181,9 +202,11 @@ private fun AnimatedContentPreview() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .border(1.dp, Color.Blue)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(1.dp, Color.Blue)
+        ) {
             Column {
                 AnimatedVisibility(
                     visible = isClicked,

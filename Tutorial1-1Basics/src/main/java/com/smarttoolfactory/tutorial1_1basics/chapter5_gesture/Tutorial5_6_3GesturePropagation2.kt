@@ -21,6 +21,7 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,6 +39,7 @@ fun Tutorial5_6Screen3() {
     TutorialContent()
 }
 
+@Preview
 @Composable
 private fun TutorialContent() {
     Column(
