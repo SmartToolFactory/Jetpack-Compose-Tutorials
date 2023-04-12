@@ -9,11 +9,14 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -23,9 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ExposedSelectionMenu
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
-import com.smarttoolfactory.tutorial1_1basics.ui.Green400
-import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
-import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Composable
@@ -43,26 +43,83 @@ private fun TutorialContent() {
             .padding(20.dp)
     ) {
         StyleableTutorialText(
-            text = ""
+            text = "**PointerEventPass** determines in which direction touch will propagate. " +
+                    "By default, **PointerEventPass.Main** causes motion to " +
+                    "traverse from descendant to ancestor. Setting Initial will propagate " +
+                    "motion from outer even if disabled Button is clicked",
+            bullets = false
         )
 
         val context = LocalContext.current
 
-        var pass by remember {
+        var passOuter by remember {
             mutableStateOf(
                 PointerEventPass.Main
             )
         }
 
-        ExposedSelectionMenu(title = "PointerEventPass",
-            index = when (pass) {
+        var passCenter by remember {
+            mutableStateOf(
+                PointerEventPass.Main
+            )
+        }
+
+        var passInner by remember {
+            mutableStateOf(
+                PointerEventPass.Main
+            )
+        }
+
+        val outerColor = Color(0xFFFFA000)
+        val centerColor = Color(0xFFFFC107)
+        val innerColor = Color(0xFFFFD54F)
+
+        var gestureColorOuter by remember { mutableStateOf(outerColor) }
+        var gestureColorCenter by remember { mutableStateOf(centerColor) }
+        var gestureColorInner by remember { mutableStateOf(innerColor) }
+
+        ExposedSelectionMenu(title = "Outer PointerEventPass",
+            index = when (passOuter) {
                 PointerEventPass.Initial -> 0
                 PointerEventPass.Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
-                pass = when (it) {
+                passOuter = when (it) {
+                    0 -> PointerEventPass.Initial
+                    1 -> PointerEventPass.Main
+                    else -> PointerEventPass.Final
+                }
+            }
+        )
+
+        ExposedSelectionMenu(title = "Center PointerEventPass",
+            index = when (passCenter) {
+                PointerEventPass.Initial -> 0
+                PointerEventPass.Main -> 1
+                else -> 2
+            },
+            options = listOf("Initial", "Main", "Final"),
+            onSelected = {
+                passCenter = when (it) {
+                    0 -> PointerEventPass.Initial
+                    1 -> PointerEventPass.Main
+                    else -> PointerEventPass.Final
+                }
+            }
+        )
+
+        ExposedSelectionMenu(
+            title = "Inner PointerEventPass",
+            index = when (passInner) {
+                PointerEventPass.Initial -> 0
+                PointerEventPass.Main -> 1
+                else -> 2
+            },
+            options = listOf("Initial", "Main", "Final"),
+            onSelected = {
+                passInner = when (it) {
                     0 -> PointerEventPass.Initial
                     1 -> PointerEventPass.Main
                     else -> PointerEventPass.Final
@@ -72,16 +129,20 @@ private fun TutorialContent() {
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Pink400)
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .background(gestureColorOuter)
                 .customTouch(
-                    pass = pass,
+                    pass = passOuter,
                     onDown = {
+                        gestureColorOuter = Blue400
                         Toast
                             .makeText(context, "Outer Touched", Toast.LENGTH_SHORT)
                             .show()
                     },
                     onUp = {
+                        gestureColorOuter = outerColor
                         Toast
                             .makeText(context, "Outer Up", Toast.LENGTH_SHORT)
                             .show()
@@ -91,16 +152,21 @@ private fun TutorialContent() {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Orange400)
+                    .padding(30.dp)
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .background(gestureColorCenter)
                     .customTouch(
-                        pass = pass,
+                        pass = passCenter,
                         onDown = {
+                            gestureColorCenter = Blue400
                             Toast
                                 .makeText(context, "Center Touched", Toast.LENGTH_SHORT)
                                 .show()
                         },
                         onUp = {
+                            gestureColorCenter = centerColor
                             Toast
                                 .makeText(context, "Center Up", Toast.LENGTH_SHORT)
                                 .show()
@@ -110,22 +176,29 @@ private fun TutorialContent() {
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(Green400)
+                        .padding(30.dp)
+                        .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .background(gestureColorInner)
                         .customTouch(
-                            pass = pass,
+                            pass = passInner,
                             onDown = {
+                                gestureColorInner = Blue400
                                 Toast
                                     .makeText(context, "Inner Touched", Toast.LENGTH_SHORT)
                                     .show()
                             },
                             onUp = {
+                                gestureColorInner = innerColor
                                 Toast
                                     .makeText(context, "Inner Up", Toast.LENGTH_SHORT)
                                     .show()
                             }
                         )
-                        .padding(20.dp)
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
@@ -150,16 +223,6 @@ private fun TutorialContent() {
                 }
             }
         }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(2000.dp)
-                .background(Blue400)
-        ) {
-
-        }
-
     }
 }
 
@@ -170,7 +233,7 @@ fun Modifier.customTouch(
 ) = this.then(
     Modifier.pointerInput(pass) {
         awaitEachGesture {
-            val down = awaitFirstDown(pass = pass)
+            awaitFirstDown(pass = pass)
             onDown()
             waitForUpOrCancellation(pass)
             onUp()
