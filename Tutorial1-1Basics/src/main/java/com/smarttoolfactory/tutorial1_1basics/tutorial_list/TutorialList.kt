@@ -1395,6 +1395,23 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_6_5 = TutorialSectionModel(
+        title = "5-6-5 PointerEventPass1",
+        description = "Change PointerEventPass to change direction of event propagation",
+        action = {
+            Tutorial5_6Screen5()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_POINTER_EVENT_PASS
+
+        ),
+        tagColor = GestureListColor
+    )
+
     val tutorial5_7_1 = TutorialSectionModel(
         title = "5-7-1 Ripple Gesture Events",
         description = "Implement ripple effect on touch position with gestures.",
@@ -1565,6 +1582,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_6_2,
         tutorial5_6_3,
         tutorial5_6_4,
+        tutorial5_6_5,
         tutorial5_7_1,
         tutorial5_8_1,
         tutorial5_8_2,
