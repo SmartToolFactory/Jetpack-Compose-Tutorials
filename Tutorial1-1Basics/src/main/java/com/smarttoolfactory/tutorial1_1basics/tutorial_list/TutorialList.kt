@@ -1397,7 +1397,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_6_5 = TutorialSectionModel(
         title = "5-6-5 PointerEventPass1",
-        description = "Change PointerEventPass to change direction of event propagation",
+        description = "Change PointerEventPass to change direction of event propagation with " +
+                "child parent relationship.",
         action = {
             Tutorial5_6Screen5()
         },
@@ -1406,6 +1407,60 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_AWAIT_POINTER_EVENT_SCOPE,
             TAG_POINTER_INPUT_CHANGE,
             TAG_AWAIT_FIRST_DOWN,
+            TAG_POINTER_EVENT_PASS
+
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_6_6 = TutorialSectionModel(
+        title = "5-6-6 PointerEventPass2",
+        description = "Change PointerEventPass to change direction of event propagation " +
+                "with multiple PointerInput.",
+        action = {
+            Tutorial5_6Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_POINTER_EVENT_PASS
+
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_6_7 = TutorialSectionModel(
+        title = "5-6-7 PointerEventPass3",
+        description = "",
+        action = {
+            Tutorial5_6Screen7()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_POINTER_EVENT_PASS
+
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_6_8 = TutorialSectionModel(
+        title = "5-6-8 PointerEventPass4",
+        description = "Change PointerEventPass with awaitPointerEvent to get pinch/zoom " +
+                "gesture or click/long lick first and consume before click based on pass.",
+        action = {
+            Tutorial5_6Screen8()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
             TAG_POINTER_EVENT_PASS
 
         ),
@@ -1583,6 +1638,9 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_6_3,
         tutorial5_6_4,
         tutorial5_6_5,
+        tutorial5_6_6,
+        tutorial5_6_7,
+        tutorial5_6_8,
         tutorial5_7_1,
         tutorial5_8_1,
         tutorial5_8_2,
