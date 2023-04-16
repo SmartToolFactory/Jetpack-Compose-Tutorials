@@ -1433,7 +1433,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_6_7 = TutorialSectionModel(
         title = "5-6-7 PointerEventPass3",
-        description = "",
+        description = "Change PointerEventPass to change direction of" +
+                " drag or touch gestures.",
         action = {
             Tutorial5_6Screen7()
         },
@@ -1450,10 +1451,27 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
 
     val tutorial5_6_8 = TutorialSectionModel(
         title = "5-6-8 PointerEventPass4",
+        description = "Change PointerEventPass to change drag and touch order.",
+        action = {
+            Tutorial5_6Screen8()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_POINTER_EVENT_PASS
+
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_6_9 = TutorialSectionModel(
+        title = "5-6-9 PointerEventPass5",
         description = "Change PointerEventPass with awaitPointerEvent to get pinch/zoom " +
                 "gesture or click/long lick first and consume before click based on pass.",
         action = {
-            Tutorial5_6Screen8()
+            Tutorial5_6Screen9()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -1641,6 +1659,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_6_6,
         tutorial5_6_7,
         tutorial5_6_8,
+        tutorial5_6_9,
         tutorial5_7_1,
         tutorial5_8_1,
         tutorial5_8_2,

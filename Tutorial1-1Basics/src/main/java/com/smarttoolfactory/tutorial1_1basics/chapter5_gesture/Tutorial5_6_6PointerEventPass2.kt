@@ -2,6 +2,9 @@ package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -99,8 +103,8 @@ private fun TutorialContent() {
         StyleableTutorialText(
             text = "**PointerEventPass** determines in which direction touch will propagate. " +
                     "By default, **PointerEventPass.Main** causes motion to " +
-                    "traverse from descendant to ancestor. Setting Initial will propagate " +
-                    "motion from outer even if disabled Button is clicked",
+                    "traverse from bottom to upper **pointerInput**. " +
+                    "Changing **PointerEventPass** changes in which order which block is called.",
             bullets = false
         )
 
@@ -161,3 +165,18 @@ private fun TutorialContent() {
         )
     }
 }
+
+private fun Modifier.customTouch(
+    pass: PointerEventPass,
+    onDown: () -> Unit,
+    onUp: () -> Unit
+) = this.then(
+    Modifier.pointerInput(pass) {
+        awaitEachGesture {
+            awaitFirstDown(pass = pass)
+            onDown()
+            waitForUpOrCancellation(pass)
+            onUp()
+        }
+    }
+)

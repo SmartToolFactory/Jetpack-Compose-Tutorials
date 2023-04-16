@@ -270,7 +270,7 @@ private fun TutorialContent() {
     }
 }
 
-fun Modifier.customTouch(
+private fun Modifier.customTouch(
     pass: PointerEventPass,
     onDown: () -> Unit,
     onUp: () -> Unit

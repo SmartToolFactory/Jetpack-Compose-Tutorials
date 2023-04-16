@@ -1,317 +1,232 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.calculateCentroid
-import androidx.compose.foundation.gestures.calculateCentroidSize
-import androidx.compose.foundation.gestures.calculatePan
-import androidx.compose.foundation.gestures.calculateRotation
-import androidx.compose.foundation.gestures.calculateZoom
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerEventPass.Final
-import androidx.compose.ui.input.pointer.PointerEventPass.Initial
-import androidx.compose.ui.input.pointer.PointerEventPass.Main
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ExposedSelectionMenu
-import com.smarttoolfactory.tutorial1_1basics.ui.Green400
-import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
-import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
-import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
-import kotlin.math.abs
-
 
 @Composable
 fun Tutorial5_6Screen8() {
     TutorialContent()
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun TutorialContent() {
-    var zoom by remember { mutableStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset.Zero) }
+    Column(modifier = Modifier.fillMaxSize()) {
+        ScrollTouchSample()
+    }
+}
 
-    val outer = (1..60).toList().chunked(6)
+@Composable
+private fun ScrollTouchSample() {
+    val context = LocalContext.current
 
-    /**
-     * The enumeration of passes where [PointerInputChange] traverses up and down the UI tree.
-     *
-     * PointerInputChanges traverse throw the hierarchy in the following passes:
-     *
-     * 1. [Initial]: Down the tree from ancestor to descendant.
-     * 2. [Main]: Up the tree from descendant to ancestor.
-     * 3. [Final]: Down the tree from ancestor to descendant.
-     *
-     * These passes serve the following purposes:
-     *
-     * 1. Initial: Allows ancestors to consume aspects of [PointerInputChange] before descendants.
-     * This is where, for example, a scroller may block buttons from getting tapped by other fingers
-     * once scrolling has started.
-     * 2. Main: The primary pass where gesture filters should react to and consume aspects of
-     * [PointerInputChange]s. This is the primary path where descendants will interact with
-     * [PointerInputChange]s before parents. This allows for buttons to respond to a tap before a
-     * container of the bottom to respond to a tap.
-     * 3. Final: This pass is where children can learn what aspects of [PointerInputChange]s were
-     * consumed by parents during the [Main] pass. For example, this is how a button determines that
-     * it should no longer respond to fingers lifting off of it because a parent scroller has
-     * consumed movement in a [PointerInputChange].
-     */
-    var pass by remember {
-        mutableStateOf(PointerEventPass.Main)
+    var passOuter by remember {
+        mutableStateOf(
+            PointerEventPass.Main
+        )
     }
 
-    val transformModifier = Modifier
-        .clipToBounds()
-        // 🔥 Important to reset this on pass change or it uses old value
-        .pointerInput(pass) {
-            //zoom in/out and move around
-            customDetectTransformGestures(
-                // Consuming this cancels clicks when position of pointer changes
-                consume = false,
-                pass = pass,
-                onGesture = { gestureCentroid: Offset,
-                              gesturePan: Offset,
-                              gestureZoom: Float,
-                              _,
-                              _,
-                              changes: List<PointerInputChange> ->
+    var passInner by remember {
+        mutableStateOf(
+            PointerEventPass.Main
+        )
+    }
 
-                    val oldScale = zoom
-                    val newScale = (zoom * gestureZoom).coerceIn(1f..5f)
-                    offset =
-                        (offset + gestureCentroid / oldScale) - (gestureCentroid / newScale + gesturePan / oldScale)
-                    zoom = newScale
+    var outerConsumeDown by remember { mutableStateOf(false) }
+    var innerConsumeDown by remember { mutableStateOf(false) }
 
+    StyleableTutorialText(
+        text = "Use **PointerEventPass** to change gesture direction and **consume** to " +
+                "intercept or prevent " +
+                "next **pointerInput** getting event",
+        bullets = false
+    )
 
-                    // 🔥Consume touch when multiple fingers down
-                    // This prevents click and long click if your finger touches a
-                    // button while pinch gesture is being invoked
-                    val size = changes.size
-                    if (size > 1) {
-                        changes.forEach { it.consume() }
-                    }
-                }
-            )
+    val outerColor = Color(0xFFFFA000)
+    val centerColor = Color(0xFFFFC107)
+
+    ExposedSelectionMenu(title = "Outer PointerEventPass",
+        index = when (passOuter) {
+            PointerEventPass.Initial -> 0
+            PointerEventPass.Main -> 1
+            else -> 2
+        },
+        options = listOf("Initial", "Main", "Final"),
+        onSelected = {
+            passOuter = when (it) {
+                0 -> PointerEventPass.Initial
+                1 -> PointerEventPass.Main
+                else -> PointerEventPass.Final
+            }
         }
+    )
+    CheckBoxWithTextRippleFullRow(
+        label = "outerConsumeDown",
+        outerConsumeDown
+    ) {
+        outerConsumeDown = it
+    }
+
+    ExposedSelectionMenu(title = "Inner PointerEventPass",
+        index = when (passInner) {
+            PointerEventPass.Initial -> 0
+            PointerEventPass.Main -> 1
+            else -> 2
+        },
+        options = listOf("Initial", "Main", "Final"),
+        onSelected = {
+            passInner = when (it) {
+                0 -> PointerEventPass.Initial
+                1 -> PointerEventPass.Main
+                else -> PointerEventPass.Final
+            }
+        }
+    )
+
+    CheckBoxWithTextRippleFullRow(label = "innerConsumeDown", innerConsumeDown) {
+        innerConsumeDown = it
+    }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
-
-        StyleableTutorialText(
-            text = "Changing **PointerEventPass** for transfer gestures changes order " +
-                    "of pinch and move gesture invocation before click and long click. " +
-                    "With **Main** gesture propagates from child to parent. " +
-                    "If first click position" +
-                    " is one of the buttons it will consume event and pinch/zoom won't work",
-            bullets = false
-        )
-
-        ExposedSelectionMenu(title = "PointerEventPass",
-            index = when (pass) {
-                PointerEventPass.Initial -> 0
-                PointerEventPass.Main -> 1
-                else -> 2
-            },
-            options = listOf("Initial", "Main", "Final"),
-            onSelected = {
-                pass = when (it) {
-                    0 -> PointerEventPass.Initial
-                    1 -> PointerEventPass.Main
-                    else -> PointerEventPass.Final
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Column(
-            modifier = transformModifier
-                .clipToBounds()
+        LazyColumn(
+            modifier = Modifier
                 .fillMaxSize()
-                .graphicsLayer {
-                    translationX = -offset.x * zoom
-                    translationY = -offset.y * zoom
-                    scaleX = zoom
-                    scaleY = zoom
-                }
-                .background(backgroundColor),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            outer.forEach { inner ->
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            items(100) {
 
-                    inner.forEach { tile ->
+                val modifier = Modifier
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
 
-                        var text by remember {
-                            mutableStateOf(tile.toString())
+                var gestureColorOuter by remember { mutableStateOf(outerColor) }
+                var gestureColorCenter by remember { mutableStateOf(centerColor) }
+
+                val outerModifier = modifier
+                    .fillMaxWidth()
+                    .background(gestureColorOuter)
+                    .customTouch(
+                        consume = outerConsumeDown,
+                        pass = passOuter,
+                        onDown = {
+                            gestureColorOuter = Blue400
+                            Toast
+                                .makeText(context, "Outer Touched", Toast.LENGTH_SHORT)
+                                .show()
+                        },
+                        onUp = {
+                            gestureColorOuter = outerColor
+                            Toast
+                                .makeText(context, "Outer Up", Toast.LENGTH_SHORT)
+                                .show()
                         }
+                    )
+                    .padding(30.dp)
 
-                        val color = if (text == "CL") Green400
-                        else if (text == "LO") Orange400
-                        else Pink400
+                val innerModifier = modifier
+                    .fillMaxWidth()
+                    .background(gestureColorCenter)
+                    .customTouch(
+                        consume = innerConsumeDown,
+                        pass = passInner,
+                        onDown = {
+                            gestureColorCenter = Blue400
+                            Toast
+                                .makeText(context, "Inner Touched", Toast.LENGTH_SHORT)
+                                .show()
+                        },
+                        onUp = {
+                            gestureColorCenter = centerColor
+                            Toast
+                                .makeText(context, "Inner Up", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    )
+                    .padding(30.dp)
 
-                        Box(
-                            Modifier
-                                .size(50.dp)
-                                .background(color)
-                                .combinedClickable(
-                                    onClick = {
-                                        text = "CL"
-                                    },
-                                    onLongClick = {
-                                        text = "LO"
-                                    }
+                Box(
+                    modifier = outerModifier,
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = innerModifier,
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Button Touched",
+                                    Toast.LENGTH_SHORT
                                 )
-                            ,
-                            contentAlignment = Alignment.Center
+                                    .show()
+                            }
                         ) {
-                            Text(
-                                text = text,
-                                color = Color.White
-                            )
+                            Text(text = "Click")
                         }
                     }
                 }
+
             }
         }
     }
 }
 
-suspend fun PointerInputScope.customDetectTransformGestures(
-    panZoomLock: Boolean = false,
+private fun Modifier.customTouch(
     consume: Boolean = false,
-    pass: PointerEventPass = PointerEventPass.Main,
-    onGestureStart: (PointerInputChange) -> Unit = {},
-    onGesture: (
-        centroid: Offset,
-        pan: Offset,
-        zoom: Float,
-        rotation: Float,
-        mainPointer: PointerInputChange,
-        changes: List<PointerInputChange>
-    ) -> Unit,
-    onGestureEnd: (PointerInputChange) -> Unit = {}
-) {
-    awaitEachGesture {
-        var rotation = 0f
-        var zoom = 1f
-        var pan = Offset.Zero
-        var pastTouchSlop = false
-        val touchSlop = viewConfiguration.touchSlop
-        var lockedToPanZoom = false
-
-        // Wait for at least one pointer to press down, and set first contact position
-        val down: PointerInputChange = awaitFirstDown(
-            requireUnconsumed = false,
-            pass = pass
-        )
-        onGestureStart(down)
-
-        println("PASS pass: $pass")
-
-        var pointer = down
-        // Main pointer is the one that is down initially
-        var pointerId = down.id
-
-        do {
-            val event = awaitPointerEvent(pass = pass)
-
-            // If any position change is consumed from another PointerInputChange
-            // or pointer count requirement is not fulfilled
-            val canceled =
-                event.changes.any { it.isConsumed }
-
-            if (!canceled) {
-
-                // Get pointer that is down, if first pointer is up
-                // get another and use it if other pointers are also down
-                // event.changes.first() doesn't return same order
-                val pointerInputChange =
-                    event.changes.firstOrNull { it.id == pointerId }
-                        ?: event.changes.first()
-
-                // Next time will check same pointer with this id
-                pointerId = pointerInputChange.id
-                pointer = pointerInputChange
-
-                val zoomChange = event.calculateZoom()
-                val rotationChange = event.calculateRotation()
-                val panChange = event.calculatePan()
-
-                if (!pastTouchSlop) {
-                    zoom *= zoomChange
-                    rotation += rotationChange
-                    pan += panChange
-
-                    val centroidSize = event.calculateCentroidSize(useCurrent = false)
-                    val zoomMotion = abs(1 - zoom) * centroidSize
-                    val rotationMotion =
-                        abs(rotation * kotlin.math.PI.toFloat() * centroidSize / 180f)
-                    val panMotion = pan.getDistance()
-
-                    if (zoomMotion > touchSlop ||
-                        rotationMotion > touchSlop ||
-                        panMotion > touchSlop
-                    ) {
-                        pastTouchSlop = true
-                        lockedToPanZoom = panZoomLock && rotationMotion < touchSlop
-                    }
-                }
-
-                if (pastTouchSlop) {
-                    val centroid = event.calculateCentroid(useCurrent = false)
-                    val effectiveRotation = if (lockedToPanZoom) 0f else rotationChange
-                    if (effectiveRotation != 0f ||
-                        zoomChange != 1f ||
-                        panChange != Offset.Zero
-                    ) {
-                        onGesture(
-                            centroid,
-                            panChange,
-                            zoomChange,
-                            effectiveRotation,
-                            pointer,
-                            event.changes
-                        )
-                    }
-
-                    if (consume) {
-                        event.changes.forEach {
-                            if (it.positionChanged()) {
-                                it.consume()
-                            }
-                        }
-                    }
+    pass: PointerEventPass,
+    onDown: () -> Unit,
+    onUp: () -> Unit
+) = this.then(
+    Modifier.pointerInput(pass, consume) {
+        awaitEachGesture {
+            val down = awaitFirstDown(pass = pass)
+            if (consume) {
+                down.consume()
+            }
+            onDown()
+            val up = waitForUpOrCancellation(pass)
+            onUp()
+            up?.let {
+                if (consume) {
+                    it.consume()
                 }
             }
-        } while (!canceled && event.changes.any { it.pressed })
-        onGestureEnd(pointer)
+        }
     }
-}
+)
