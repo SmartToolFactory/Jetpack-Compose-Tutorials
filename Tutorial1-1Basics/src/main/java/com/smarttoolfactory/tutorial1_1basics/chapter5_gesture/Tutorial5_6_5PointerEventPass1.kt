@@ -36,11 +36,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ExposedSelection
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
-@Composable
-fun Tutorial5_6Screen5() {
-    TutorialContent()
-}
-
 /**
  * The enumeration of passes where [PointerInputChange] traverses up and down the UI tree.
  *
@@ -64,6 +59,11 @@ fun Tutorial5_6Screen5() {
  * it should no longer respond to fingers lifting off of it because a parent scroller has
  * consumed movement in a [PointerInputChange].
  */
+@Composable
+fun Tutorial5_6Screen5() {
+    TutorialContent()
+}
+
 @Preview
 @Composable
 private fun TutorialContent() {

@@ -675,7 +675,7 @@ private fun GesturePropagationExample2() {
             IntOffset(offsetOuter.x.roundToInt(), offsetOuter.y.roundToInt())
         }
         .border(4.dp, color = gestureColorOuter, shape = RoundedCornerShape(8.dp))
-        .size(200.dp)
+        .size(sizeOuter)
         .pointerInput(
             outerRequireUnconsumed,
             outerConsumeDown,
@@ -749,7 +749,7 @@ private fun GesturePropagationExample2() {
             IntOffset(offsetInner.x.roundToInt(), offsetInner.y.roundToInt())
         }
         .border(4.dp, color = gestureColorInner, shape = RoundedCornerShape(8.dp))
-        .size(100.dp)
+        .size(sizeInner)
         .pointerInput(
             innerRequireUnconsumed,
             innerConsumeDown,
