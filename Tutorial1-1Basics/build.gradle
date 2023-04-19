@@ -33,19 +33,19 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.4"
+        kotlinCompilerExtensionVersion = "1.4.5"
     }
     namespace 'com.smarttoolfactory.tutorial1_1basics'
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
 
     // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
     // Jetpack Compose
     implementation "androidx.compose.ui:ui:$compose_version"
