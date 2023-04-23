@@ -233,9 +233,9 @@ private fun DrawingApp() {
                             color = Color.Transparent,
                             path = path,
                             style = Stroke(
-                                width = currentPathProperty.strokeWidth,
-                                cap = currentPathProperty.strokeCap,
-                                join = currentPathProperty.strokeJoin
+                                width = property.strokeWidth,
+                                cap = property.strokeCap,
+                                join = property.strokeJoin
                             ),
                             blendMode = BlendMode.Clear
                         )
