@@ -8,9 +8,18 @@ import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -126,7 +135,11 @@ private fun AwaitPointerEventScopeIndicationSample() {
 
                 // We emit a release press interaction here
                 coroutineScope.launch {
-                    interactionSource.emit(PressInteraction.Release(press))
+                    if (up != null) {
+                        interactionSource.emit(PressInteraction.Release(press = press))
+                    } else {
+                        interactionSource.emit(PressInteraction.Cancel(press = press))
+                    }
                 }
             }
         }
