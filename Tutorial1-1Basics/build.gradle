@@ -33,7 +33,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.5"
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
     namespace 'com.smarttoolfactory.tutorial1_1basics'
 }
@@ -61,13 +61,13 @@ dependencies {
     // Jetpack Compose Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    implementation "androidx.activity:activity-compose:1.6.1"
+    implementation "androidx.activity:activity-compose:1.7.1"
 
     def nav_compose_version = "2.5.3"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.2.0")
 
     def accompanist_version = "0.27.0"
     // Accompanist
@@ -80,6 +80,6 @@ dependencies {
     implementation 'dev.chrisbanes.accompanist:accompanist-glide:0.6.2'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
