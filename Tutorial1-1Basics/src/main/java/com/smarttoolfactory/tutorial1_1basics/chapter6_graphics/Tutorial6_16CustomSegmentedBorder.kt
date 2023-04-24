@@ -1,8 +1,15 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
+package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,13 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
+@Preview
 @Composable
-fun Tutorial3_1Screen4() {
+fun Tutorial6_16Screen() {
     TutorialContent()
 }
 
@@ -38,7 +47,8 @@ private fun TutorialContent() {
         Spacer(modifier = Modifier.height(40.dp))
 
         StyleableTutorialText(
-            text = "Use **composed** to create segmented border and segmented clip modifiers",
+            text = "Use **Modifier.composed** and **Modifier.drawBehind** " +
+                    "to create segmented border and segmented clip modifiers",
             bullets = false
         )
         SegmentedBorderSample()
