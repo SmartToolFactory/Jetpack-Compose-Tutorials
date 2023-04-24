@@ -564,21 +564,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-    val tutorial3_1_4 = TutorialSectionModel(
-        title = stringResource(R.string.title3_1_4),
-        description = "Use Modifier.drawBehind{} to create segmented borders and composed to" +
-                "",
-        action = {
-            Tutorial3_1Screen4()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_COMPOSE_MODIFIER,
-            TAG_COMPOSED_MODIFIER
-        ),
-        tagColor = LayoutListColor
-    )
-
     val tutorial3_2_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_2_1),
         description = "Create custom layout using using layout, " +
@@ -852,7 +837,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_1_1,
         tutorial3_1_2,
         tutorial3_1_3,
-        tutorial3_1_4,
         tutorial3_2_1,
         tutorial3_2_2,
         tutorial3_2_3,
