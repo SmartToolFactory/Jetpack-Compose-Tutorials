@@ -2103,6 +2103,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_COMPOSED_MODIFIER,
             TAG_CANVAS,
 
         ),
@@ -2118,6 +2120,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_COMPOSED_MODIFIER,
             TAG_CANVAS,
             TAG_BRUSH,
             TAG_BLEND_MODE,
