@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalDensity
@@ -38,9 +40,10 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.withRotation
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.ArrowDirection
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.createBubbleShape
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
 
 
@@ -61,9 +64,15 @@ private fun TutorialContent() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        StyleableTutorialText(
+            text = "Draw animated rainbow color border using **BlendMode.SrcIn** " +
+                    "and Modifier.drawWithCache",
+            bullets = false
+        )
+
         Box(
             modifier = Modifier
-                .size(100.dp)
+                .size(150.dp)
                 .drawRainbowBorder(
                     strokeWidth = 4.dp,
                     durationMillis = 3000
@@ -71,7 +80,7 @@ private fun TutorialContent() {
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Hello World")
+            Text(text = "Hello World", fontSize = 20.sp)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -86,13 +95,15 @@ private fun TutorialContent() {
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Hello World")
+            Text(text = "Hello World", fontSize = 20.sp)
         }
+
+
 
         Spacer(modifier = Modifier.height(10.dp))
         Box(
             modifier = Modifier
-                .size(60.dp)
+                .size(80.dp)
                 .drawRainbowBorder(
                     strokeWidth = 4.dp,
                     durationMillis = 2000,
@@ -110,7 +121,7 @@ private fun TutorialContent() {
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Hello World")
+            Text(text = "Hello World", fontSize = 20.sp)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -123,17 +134,42 @@ private fun TutorialContent() {
                     shape = createBubbleShape(
                         arrowWidth = 20f,
                         arrowHeight = 20f,
-                        arrowOffset = 10f,
+                        arrowOffset = 20f,
                         arrowDirection = ArrowDirection.Left
                     )
                 )
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Hello World")
+            Text(text = "Hello World", fontSize = 20.sp)
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Box(
+            modifier = Modifier
+                .drawAnimatedBorder(
+                    brush = {
+                        Brush.sweepGradient(
+                            colors = listOf(
+                                Color.Gray,
+                                Color.White,
+                                Color.Gray,
+                                Color.White,
+                                Color.Gray
+                            )
+                        )
+                    },
+                    strokeWidth = 4.dp,
+                    durationMillis = 2000,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .padding(12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Hello World", fontSize = 20.sp)
         }
     }
-
 }
 
 fun Modifier.drawRainbowBorder(
@@ -150,6 +186,8 @@ fun Modifier.drawRainbowBorder(
             repeatMode = RepeatMode.Restart
         ), label = "rotation"
     )
+
+    val brush = Brush.sweepGradient(gradientColors)
 
     Modifier.drawWithContent {
 
@@ -169,14 +207,10 @@ fun Modifier.drawRainbowBorder(
             )
 
             // Source
-            withRotation(
-                angle,
-                pivotX = center.x,
-                pivotY = center.y
-            ) {
+            rotate(angle) {
 
                 drawCircle(
-                    brush = Brush.sweepGradient(gradientColors),
+                    brush = brush,
                     radius = size.width,
                     blendMode = BlendMode.SrcIn,
                 )
@@ -208,23 +242,21 @@ fun Modifier.drawRainbowBorder(
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
 
-    Modifier
-        .drawWithContent {
+    Modifier.drawWithCache {
+        val strokeWidthPx = strokeWidth.toPx()
 
+        val brush = Brush.sweepGradient(gradientColors)
 
-            val strokeWidthPx = strokeWidth.toPx()
-            val width = size.width
-            val height = size.height
+        val outline = shape.createOutline(
+            size = Size(
+                size.width - strokeWidthPx,
+                size.height - strokeWidthPx
+            ),
+            layoutDirection = layoutDirection,
+            density = density
+        )
 
-            val outline = shape.createOutline(
-                size = Size(
-                    size.width - strokeWidthPx,
-                    size.height - strokeWidthPx
-                ),
-                layoutDirection = layoutDirection,
-                density = density
-            )
-
+        onDrawWithContent {
             with(drawContext.canvas.nativeCanvas) {
                 val checkPoint = saveLayer(null, null)
 
@@ -241,14 +273,10 @@ fun Modifier.drawRainbowBorder(
                 }
 
                 // Source
-                withRotation(
-                    angle,
-                    pivotX = center.x,
-                    pivotY = center.y
-                ) {
+                rotate(angle) {
 
                     drawCircle(
-                        brush = Brush.sweepGradient(gradientColors),
+                        brush = brush,
                         radius = size.width,
                         blendMode = BlendMode.SrcIn,
                     )
@@ -258,4 +286,71 @@ fun Modifier.drawRainbowBorder(
             }
             drawContent()
         }
+    }
+}
+
+fun Modifier.drawAnimatedBorder(
+    brush: (Size) -> Brush,
+    strokeWidth: Dp,
+    shape: Shape,
+    durationMillis: Int
+) = composed {
+
+    val infiniteTransition = rememberInfiniteTransition(label = "rotation")
+    val angle by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ), label = "rotation"
+    )
+
+    val density = LocalDensity.current
+    val layoutDirection = LocalLayoutDirection.current
+
+    Modifier.drawWithCache {
+        val strokeWidthPx = strokeWidth.toPx()
+
+        val currentBrush = brush(size)
+
+        val outline = shape.createOutline(
+            size = Size(
+                size.width - strokeWidthPx,
+                size.height - strokeWidthPx
+            ),
+            layoutDirection = layoutDirection,
+            density = density
+        )
+
+        onDrawWithContent {
+            with(drawContext.canvas.nativeCanvas) {
+                val checkPoint = saveLayer(null, null)
+
+                // Destination
+                translate(
+                    left = strokeWidthPx / 2,
+                    top = strokeWidthPx / 2
+                ) {
+                    drawOutline(
+                        outline = outline,
+                        color = Color.Gray,
+                        style = Stroke(strokeWidthPx)
+                    )
+                }
+
+                // Source
+                rotate(angle) {
+                    drawCircle(
+                        brush = currentBrush,
+                        radius = size.width,
+                        blendMode = BlendMode.SrcIn,
+                    )
+                }
+
+                restoreToCount(checkPoint)
+            }
+            drawContent()
+        }
+    }
 }

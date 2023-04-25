@@ -2095,6 +2095,36 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_16 = TutorialSectionModel(
+        title = "6-16 Segmented Border",
+        description = "Draw border that divides Composable into segments.",
+        action = {
+            Tutorial6_16Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_17 = TutorialSectionModel(
+        title = "6-17 Animated Rainbow Border",
+        description = "Draw animated rainbow color border using BlendMode.SrcIn" +
+                "and Modifier.drawWithCache",
+        action = {
+            Tutorial6_17Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_BRUSH,
+            TAG_BLEND_MODE,
+        ),
+        tagColor = GraphicsListColor
+    )
+
 
     return listOf(
         tutorial6_1_1,
@@ -2120,6 +2150,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_12,
         tutorial6_13,
         tutorial6_14,
-        tutorial6_15
+        tutorial6_15,
+        tutorial6_16,
+        tutorial6_17
     )
 }
