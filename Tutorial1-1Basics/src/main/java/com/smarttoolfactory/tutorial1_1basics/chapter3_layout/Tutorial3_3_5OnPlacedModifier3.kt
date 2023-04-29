@@ -117,7 +117,7 @@ fun Modifier.animatePlacement(): Modifier = composed {
         mutableStateOf<Animatable<IntOffset, AnimationVector2D>?>(null)
     }
     this
-            // 🔥 onPlaced should be before offset Modifier
+        // 🔥 onPlaced should be before offset Modifier
         .onPlaced {
             // Calculate the position in the parent layout
             targetOffset = it
