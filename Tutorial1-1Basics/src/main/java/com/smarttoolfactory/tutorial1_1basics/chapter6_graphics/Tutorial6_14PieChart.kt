@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -38,7 +39,20 @@ fun Tutorial6_14Screen() {
 @Preview
 @Composable
 private fun TutorialContent() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+        PieChartWithRoundedStrokesAndLabels()
+        Spacer(modifier = Modifier.height(10.dp))
+        PieChart()
+    }
+}
 
+@Preview
+@Composable
+private fun PieChart() {
     val chartDataList = remember {
         listOf(
             ChartData(Pink400, 10f),
@@ -82,8 +96,8 @@ private fun TutorialContent() {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
+            .fillMaxWidth()
+            .aspectRatio(1f),
         contentAlignment = Alignment.Center
     ) {
         Canvas(
@@ -148,6 +162,78 @@ private fun TutorialContent() {
                 }
 
                 startAngle += sweepAngle
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PieChartWithRoundedStrokesAndLabels() {
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f),
+        contentAlignment = Alignment.Center
+    ) {
+        val chartDataList = remember {
+            listOf(
+                ChartData(Pink400, 10f),
+                ChartData(Orange400, 20f),
+                ChartData(Yellow400, 15f),
+                ChartData(Green400, 5f),
+                ChartData(Blue400, 50f),
+            )
+        }
+
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth(.7f)
+                .aspectRatio(1f)
+        ) {
+            val width = size.width
+            val radius = width / 2f
+            val strokeWidth = 20.dp.toPx()
+
+            val circumference = 2 * Math.PI * (radius - strokeWidth / 2)
+            // stroke width is diameter of rounded cap half circle
+            val strokeAngle = 1.2f * (strokeWidth / circumference * 180f).toFloat()
+
+            var startAngle = -90f
+
+            for (index in 0..chartDataList.lastIndex) {
+
+                val chartData = chartDataList[index]
+                val sweepAngle = chartData.data.asAngle
+                val angleInRadians = (startAngle + sweepAngle / 2).degreeToRadian
+
+                drawArc(
+                    color = chartData.color,
+                    startAngle = startAngle + strokeAngle,
+                    sweepAngle = (sweepAngle - strokeAngle * 2).coerceAtLeast(0f),
+                    useCenter = false,
+                    topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
+                    size = Size(width - strokeWidth, width - strokeWidth),
+                    style = Stroke(strokeWidth, cap = StrokeCap.Round)
+                )
+
+                startAngle += sweepAngle
+
+
+                val rectWidth = 20.dp.toPx()
+                drawRect(
+                    color = Color.Red,
+                    size = Size(rectWidth, rectWidth),
+                    topLeft = Offset(
+                        -rectWidth / 2 + center.x + (radius + strokeWidth) * cos(
+                            angleInRadians
+                        ),
+                        -rectWidth / 2 + center.y + (radius + strokeWidth) * sin(
+                            angleInRadians
+                        )
+                    )
+                )
             }
         }
     }
