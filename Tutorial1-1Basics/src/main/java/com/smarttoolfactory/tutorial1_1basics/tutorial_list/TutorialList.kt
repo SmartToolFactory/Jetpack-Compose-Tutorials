@@ -2129,6 +2129,23 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_18 = TutorialSectionModel(
+        title = "6-18 Shimmer Effect",
+        description = "Draw shimmer Effect using Brush and infinite animation",
+        action = {
+            Tutorial6_18Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_COMPOSED_MODIFIER,
+            TAG_CANVAS,
+            TAG_BRUSH
+        ),
+        tagColor = GraphicsListColor
+    )
+
+
 
     return listOf(
         tutorial6_1_1,
@@ -2156,6 +2173,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_14,
         tutorial6_15,
         tutorial6_16,
-        tutorial6_17
+        tutorial6_17,
+        tutorial6_18
     )
 }
