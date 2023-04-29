@@ -52,8 +52,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.createBubbleShape
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
 
-
-@Preview
 @Composable
 fun Tutorial6_17Screen() {
     TutorialContent()
