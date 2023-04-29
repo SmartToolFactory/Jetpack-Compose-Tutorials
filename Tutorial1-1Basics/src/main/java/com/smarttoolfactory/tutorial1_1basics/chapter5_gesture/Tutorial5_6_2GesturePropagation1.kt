@@ -114,11 +114,11 @@ private fun GesturePropagationExample() {
     var gestureText by remember { mutableStateOf("") }
 
     val outerColor = Color(0xFFFFA000)
-    val centerColor = Color(0xFFFFC107)
+    val middleColor = Color(0xFFFFC107)
     val innerColor = Color(0xFFFFD54F)
 
     var gestureColorOuter by remember { mutableStateOf(outerColor) }
-    var gestureColorCenter by remember { mutableStateOf(centerColor) }
+    var gestureColorMiddle by remember { mutableStateOf(middleColor) }
     var gestureColorInner by remember { mutableStateOf(innerColor) }
 
     /*
@@ -129,10 +129,10 @@ private fun GesturePropagationExample() {
     var outerConsumePositionChange by remember { mutableStateOf(false) }
     var outerConsumeUp by remember { mutableStateOf(false) }
 
-    var centerRequireUnconsumed by remember { mutableStateOf(true) }
-    var centerConsumeDown by remember { mutableStateOf(false) }
-    var centerConsumePositionChange by remember { mutableStateOf(false) }
-    var centerConsumeUp by remember { mutableStateOf(false) }
+    var middleRequireUnconsumed by remember { mutableStateOf(true) }
+    var middleConsumeDown by remember { mutableStateOf(false) }
+    var middleConsumePositionChange by remember { mutableStateOf(false) }
+    var middleConsumeUp by remember { mutableStateOf(false) }
 
     var innerRequireUnconsumed by remember { mutableStateOf(true) }
     var innerConsumeDown by remember { mutableStateOf(false) }
@@ -246,28 +246,28 @@ private fun GesturePropagationExample() {
             }
         }
 
-    val centerModifier = Modifier
+    val middleModifier = Modifier
         .shadow(4.dp, shape = RoundedCornerShape(8.dp))
         .size(200.dp)
-        .background(gestureColorCenter)
+        .background(gestureColorMiddle)
         .pointerInput(
-            centerRequireUnconsumed,
-            centerConsumeDown,
-            centerConsumePositionChange,
-            centerConsumeUp
+            middleRequireUnconsumed,
+            middleConsumeDown,
+            middleConsumePositionChange,
+            middleConsumeUp
         ) {
             awaitEachGesture {
                 // Wait for at least one pointer to press down, and set first contact position
                 val down: PointerInputChange =
                 // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
                     // before this one consumes down, awaitFirstDown gets triggered nonetheless
-                    awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
+                    awaitFirstDown(requireUnconsumed = middleRequireUnconsumed)
 
-                if (centerConsumeDown) {
+                if (middleConsumeDown) {
                     down.consume()
                 }
 
-                val downText = "🎃🎃 CENTER DOWN id: ${down.id.value}\n" +
+                val downText = "🎃🎃 MIDDLE DOWN id: ${down.id.value}\n" +
                         "changedToDown: ${down.changedToDown()}\n" +
                         "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
                         "pressed: ${down.pressed}\n" +
@@ -276,7 +276,7 @@ private fun GesturePropagationExample() {
                         "isConsumed: ${down.isConsumed}\n\n"
 
                 gestureText += downText
-                gestureColorCenter = Pink400
+                gestureColorMiddle = Pink400
 
                 // Main pointer is the one that is down initially
                 var pointerId = down.id
@@ -287,10 +287,10 @@ private fun GesturePropagationExample() {
 
                     val anyPressed = event.changes.any {
                         if (!it.pressed) {
-                            if (centerConsumeUp) {
+                            if (middleConsumeUp) {
                                 it.consume()
                             }
-                            val upText = "🚀🚀 CENTER UP id: ${down.id.value}\n" +
+                            val upText = "🚀🚀 MIDDLE UP id: ${down.id.value}\n" +
                                     "changedToDown: ${it.changedToDown()}, " +
                                     "changedToDownIgnoreConsumed: ${it.changedToDownIgnoreConsumed()}\n" +
                                     "changedUp: ${it.changedToUp()}\n" +
@@ -318,14 +318,14 @@ private fun GesturePropagationExample() {
                         // positionChangeConsumed() to true.
                         // And any parent or pointerInput above this gets no position change
                         // Scrolling or detectGestures check positionChangeConsumed()
-                        if (centerConsumePositionChange) {
+                        if (middleConsumePositionChange) {
                             pointerInputChange.consume()
                         }
-                        gestureColorCenter = Blue400
+                        gestureColorMiddle = Blue400
 
                         event.changes.forEach { pointer ->
                             val moveText =
-                                "🍏🍏 CENTER MOVE changes size ${event.changes.size}\n" +
+                                "🍏🍏 MIDDLE MOVE changes size ${event.changes.size}\n" +
                                         "id: ${pointer.id.value}, " +
                                         "changedToDown: ${pointer.changedToDown()}, " +
                                         "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
@@ -341,8 +341,8 @@ private fun GesturePropagationExample() {
 
                     } else {
                         // All of the pointers are up
-                        gestureText += "CENTER Up\n\n"
-                        gestureColorCenter = centerColor
+                        gestureText += "MIDDLE Up\n\n"
+                        gestureColorMiddle = middleColor
                         break
                     }
                 }
@@ -463,7 +463,7 @@ private fun GesturePropagationExample() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(outerModifier, contentAlignment = Alignment.Center) {
-            Box(centerModifier, contentAlignment = Alignment.Center) {
+            Box(middleModifier, contentAlignment = Alignment.Center) {
                 Box(modifier = innerModifier)
             }
         }
@@ -473,7 +473,7 @@ private fun GesturePropagationExample() {
             CONTROLS
      */
     var innerCheckBoxesExpanded by remember { mutableStateOf(true) }
-    var centerCheckBoxesExpanded by remember { mutableStateOf(true) }
+    var middleCheckBoxesExpanded by remember { mutableStateOf(true) }
     var outerCheckBoxesExpanded by remember { mutableStateOf(true) }
 
     Row(
@@ -534,47 +534,47 @@ private fun GesturePropagationExample() {
             .padding(horizontal = 4.dp)
             .fillMaxWidth()
             .clickable {
-                centerCheckBoxesExpanded = !centerCheckBoxesExpanded
+                middleCheckBoxesExpanded = !middleCheckBoxesExpanded
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            "CENTER Composable", modifier = Modifier
+            "MIDDLE Composable", modifier = Modifier
                 .weight(1f)
 
                 .padding(horizontal = 10.dp, vertical = 8.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
-            color = centerColor
+            color = middleColor
         )
         // Change vector drawable to expand more or less based on state of expanded
         Icon(
-            imageVector = if (centerCheckBoxesExpanded) Icons.Filled.ExpandLess
+            imageVector = if (middleCheckBoxesExpanded) Icons.Filled.ExpandLess
             else Icons.Filled.ExpandMore,
             contentDescription = null
         )
     }
-    AnimatedVisibility(visible = centerCheckBoxesExpanded) {
+    AnimatedVisibility(visible = middleCheckBoxesExpanded) {
         Column {
             CheckBoxWithTextRippleFullRow(
-                label = "centerRequireUnconsumed",
-                centerRequireUnconsumed
+                label = "middleRequireUnconsumed",
+                middleRequireUnconsumed
             ) {
                 gestureText = ""
-                centerRequireUnconsumed = it
+                middleRequireUnconsumed = it
             }
-            CheckBoxWithTextRippleFullRow(label = "centerConsumeDown", centerConsumeDown) {
+            CheckBoxWithTextRippleFullRow(label = "middleConsumeDown", middleConsumeDown) {
                 gestureText = ""
-                centerConsumeDown = it
+                middleConsumeDown = it
             }
             CheckBoxWithTextRippleFullRow(
-                label = "centerConsumePositionChange", centerConsumePositionChange
+                label = "middleConsumePositionChange", middleConsumePositionChange
             ) {
                 gestureText = ""
-                centerConsumePositionChange = it
+                middleConsumePositionChange = it
             }
-            CheckBoxWithTextRippleFullRow(label = "centerConsumeUp", centerConsumeUp) {
-                centerConsumeUp = it
+            CheckBoxWithTextRippleFullRow(label = "middleConsumeUp", middleConsumeUp) {
+                middleConsumeUp = it
             }
         }
     }

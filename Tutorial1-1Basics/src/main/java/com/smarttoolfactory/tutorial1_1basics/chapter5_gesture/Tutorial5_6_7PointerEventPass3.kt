@@ -110,7 +110,7 @@ private fun ScrollTouchSample() {
         )
 
         val outerColor = Color(0xFFFFA000)
-        val centerColor = Color(0xFFFFC107)
+        val innerColor = Color(0xFFFFC107)
 
         ExposedSelectionMenu(title = "Outer PointerEventPass",
             index = when (passOuter) {
@@ -162,7 +162,7 @@ private fun ScrollTouchSample() {
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
 
             var gestureColorOuter by remember { mutableStateOf(outerColor) }
-            var gestureColorCenter by remember { mutableStateOf(centerColor) }
+            var gestureColorInner by remember { mutableStateOf(innerColor) }
 
             val outerModifier = modifier
                 .fillMaxWidth()
@@ -187,18 +187,18 @@ private fun ScrollTouchSample() {
 
             val innerModifier = modifier
                 .fillMaxWidth()
-                .background(gestureColorCenter)
+                .background(gestureColorInner)
                 .customTouch(
                     consume = innerConsumeDown,
                     pass = passInner,
                     onDown = {
-                        gestureColorCenter = Blue400
+                        gestureColorInner = Blue400
                         Toast
                             .makeText(context, "Inner Touched", Toast.LENGTH_SHORT)
                             .show()
                     },
                     onUp = {
-                        gestureColorCenter = centerColor
+                        gestureColorInner = innerColor
                         Toast
                             .makeText(context, "Inner Up", Toast.LENGTH_SHORT)
                             .show()

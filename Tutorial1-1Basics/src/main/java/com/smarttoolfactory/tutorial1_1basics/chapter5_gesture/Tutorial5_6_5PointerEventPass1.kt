@@ -86,7 +86,7 @@ private fun TutorialContent() {
             )
         }
 
-        var passCenter by remember {
+        var passMiddle by remember {
             mutableStateOf(
                 PointerEventPass.Main
             )
@@ -99,11 +99,11 @@ private fun TutorialContent() {
         }
 
         val outerColor = Color(0xFFFFA000)
-        val centerColor = Color(0xFFFFC107)
+        val middleColor = Color(0xFFFFC107)
         val innerColor = Color(0xFFFFD54F)
 
         var gestureColorOuter by remember { mutableStateOf(outerColor) }
-        var gestureColorCenter by remember { mutableStateOf(centerColor) }
+        var gestureColorMiddle by remember { mutableStateOf(middleColor) }
         var gestureColorInner by remember { mutableStateOf(innerColor) }
 
         ExposedSelectionMenu(title = "Outer PointerEventPass",
@@ -122,15 +122,15 @@ private fun TutorialContent() {
             }
         )
 
-        ExposedSelectionMenu(title = "Center PointerEventPass",
-            index = when (passCenter) {
+        ExposedSelectionMenu(title = "Middle PointerEventPass",
+            index = when (passMiddle) {
                 PointerEventPass.Initial -> 0
                 PointerEventPass.Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
-                passCenter = when (it) {
+                passMiddle = when (it) {
                     0 -> PointerEventPass.Initial
                     1 -> PointerEventPass.Main
                     else -> PointerEventPass.Final
@@ -179,20 +179,20 @@ private fun TutorialContent() {
             )
             .padding(40.dp)
 
-        val centerModifier = modifier
-            .background(gestureColorCenter)
+        val middleModifier = modifier
+            .background(gestureColorMiddle)
             .customTouch(
-                pass = passCenter,
+                pass = passMiddle,
                 onDown = {
-                    gestureColorCenter = Blue400
+                    gestureColorMiddle = Blue400
                     Toast
-                        .makeText(context, "Center Touched", Toast.LENGTH_SHORT)
+                        .makeText(context, "Middle Touched", Toast.LENGTH_SHORT)
                         .show()
                 },
                 onUp = {
-                    gestureColorCenter = centerColor
+                    gestureColorMiddle = middleColor
                     Toast
-                        .makeText(context, "Center Up", Toast.LENGTH_SHORT)
+                        .makeText(context, "Middle Up", Toast.LENGTH_SHORT)
                         .show()
                 }
             )
@@ -228,7 +228,7 @@ private fun TutorialContent() {
                 modifier = outerModifier
             ) {
                 Column(
-                    modifier = centerModifier
+                    modifier = middleModifier
                 ) {
                     Column(
                         modifier = innerModifier,

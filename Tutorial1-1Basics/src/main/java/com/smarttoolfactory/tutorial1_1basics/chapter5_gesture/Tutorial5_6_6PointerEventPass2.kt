@@ -68,7 +68,7 @@ private fun TutorialContent() {
         )
     }
 
-    var passCenter by remember {
+    var passMiddle by remember {
         mutableStateOf(
             PointerEventPass.Main
         )
@@ -97,15 +97,15 @@ private fun TutorialContent() {
             }
         )
         .customTouch(
-            pass = passCenter,
+            pass = passMiddle,
             onDown = {
                 Toast
-                    .makeText(context, "Center PointerInput Down", Toast.LENGTH_SHORT)
+                    .makeText(context, "Middle PointerInput Down", Toast.LENGTH_SHORT)
                     .show()
             },
             onUp = {
                 Toast
-                    .makeText(context, "Center PointerInput Up", Toast.LENGTH_SHORT)
+                    .makeText(context, "Middle PointerInput Up", Toast.LENGTH_SHORT)
                     .show()
             }
         )
@@ -151,15 +151,15 @@ private fun TutorialContent() {
             }
         )
 
-        ExposedSelectionMenu(title = "Center PointerEventPass",
-            index = when (passCenter) {
+        ExposedSelectionMenu(title = "Middle PointerEventPass",
+            index = when (passMiddle) {
                 PointerEventPass.Initial -> 0
                 PointerEventPass.Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
-                passCenter = when (it) {
+                passMiddle = when (it) {
                     0 -> PointerEventPass.Initial
                     1 -> PointerEventPass.Main
                     else -> PointerEventPass.Final

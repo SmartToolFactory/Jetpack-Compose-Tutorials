@@ -1,23 +1,51 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.drag
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.changedToDown
+import androidx.compose.ui.input.pointer.changedToDownIgnoreConsumed
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.changedToUpIgnoreConsumed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -81,11 +109,11 @@ private fun TutorialContent() {
 private fun DetectDragGesturesPropagationExample() {
 
     val outerColor = Color(0xFFFFA000)
-    val centerColor = Color(0xFFFFC107)
+    val middleColor = Color(0xFFFFC107)
     val innerColor = Color(0xFFFFD54F)
 
     var gestureColorOuter by remember { mutableStateOf(outerColor) }
-    var gestureColorCenter by remember { mutableStateOf(centerColor) }
+    var gestureColorMiddle by remember { mutableStateOf(middleColor) }
     var gestureColorInner by remember { mutableStateOf(innerColor) }
 
     val outerModifier = Modifier
@@ -110,24 +138,24 @@ private fun DetectDragGesturesPropagationExample() {
             )
         }
 
-    val centerModifier = Modifier
+    val middleModifier = Modifier
         .shadow(4.dp, shape = RoundedCornerShape(8.dp))
         .size(200.dp)
-        .background(gestureColorCenter)
+        .background(gestureColorMiddle)
         .pointerInput(Unit) {
             detectDragGestures(
                 onDragStart = { offset ->
-                    gestureColorCenter = Purple400
+                    gestureColorMiddle = Purple400
                 },
                 onDrag = { change: PointerInputChange, dragAmount: Offset ->
-                    gestureColorCenter = Blue400
+                    gestureColorMiddle = Blue400
 
                 },
                 onDragEnd = {
-                    gestureColorCenter = innerColor
+                    gestureColorMiddle = innerColor
                 },
                 onDragCancel = {
-                    gestureColorCenter = Red400
+                    gestureColorMiddle = Red400
                 }
             )
         }
@@ -163,7 +191,7 @@ private fun DetectDragGesturesPropagationExample() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(outerModifier, contentAlignment = Alignment.Center) {
-            Box(centerModifier, contentAlignment = Alignment.Center) {
+            Box(middleModifier, contentAlignment = Alignment.Center) {
                 Box(modifier = innerModifier)
             }
         }
@@ -195,11 +223,11 @@ private fun DragPropagationExample() {
     var gestureText by remember { mutableStateOf("") }
 
     val outerColor = Color(0xFFFFA000)
-    val centerColor = Color(0xFFFFC107)
+    val middleColor = Color(0xFFFFC107)
     val innerColor = Color(0xFFFFD54F)
 
     var gestureColorOuter by remember { mutableStateOf(outerColor) }
-    var gestureColorCenter by remember { mutableStateOf(centerColor) }
+    var gestureColorMiddle by remember { mutableStateOf(middleColor) }
     var gestureColorInner by remember { mutableStateOf(innerColor) }
 
     /*
@@ -209,9 +237,9 @@ private fun DragPropagationExample() {
     var outerConsumeDown by remember { mutableStateOf(false) }
     var outerConsumePositionChange by remember { mutableStateOf(false) }
 
-    var centerRequireUnconsumed by remember { mutableStateOf(true) }
-    var centerConsumeDown by remember { mutableStateOf(false) }
-    var centerConsumePositionChange by remember { mutableStateOf(false) }
+    var middleRequireUnconsumed by remember { mutableStateOf(true) }
+    var middleConsumeDown by remember { mutableStateOf(false) }
+    var middleConsumePositionChange by remember { mutableStateOf(false) }
 
     var innerRequireUnconsumed by remember { mutableStateOf(true) }
     var innerConsumeDown by remember { mutableStateOf(false) }
@@ -295,14 +323,14 @@ private fun DragPropagationExample() {
             }
         }
 
-    val centerModifier = Modifier
+    val middleModifier = Modifier
         .shadow(4.dp, shape = RoundedCornerShape(8.dp))
         .size(200.dp)
-        .background(gestureColorCenter)
+        .background(gestureColorMiddle)
         .pointerInput(
-            centerRequireUnconsumed,
-            centerConsumeDown,
-            centerConsumePositionChange
+            middleRequireUnconsumed,
+            middleConsumeDown,
+            middleConsumePositionChange
         ) {
             awaitEachGesture {
 
@@ -310,13 +338,13 @@ private fun DragPropagationExample() {
                 val down: PointerInputChange =
                 // 🔥🔥 When requireUnconsumed false even if a child Composable or a pointerInput
                     // before this one consumes down, awaitFirstDown gets triggered nonetheless
-                    awaitFirstDown(requireUnconsumed = centerRequireUnconsumed)
+                    awaitFirstDown(requireUnconsumed = middleRequireUnconsumed)
 
-                if (centerConsumeDown) {
+                if (middleConsumeDown) {
                     down.consume()
                 }
 
-                val downText = "🎃🎃 CENTER DOWN id: ${down.id.value}\n" +
+                val downText = "🎃🎃 MIDDLE DOWN id: ${down.id.value}\n" +
                         "changedToDown: ${down.changedToDown()}\n" +
                         "changedToDownIgnoreConsumed: ${down.changedToDownIgnoreConsumed()}\n" +
                         "pressed: ${down.pressed}\n" +
@@ -325,7 +353,7 @@ private fun DragPropagationExample() {
                         "isConsumed: ${down.isConsumed}\n\n"
 
                 gestureText += downText
-                gestureColorCenter = Purple400
+                gestureColorMiddle = Purple400
 
                 val change: PointerInputChange? =
                     awaitTouchSlopOrCancellation(down.id) { change: PointerInputChange, over: Offset ->
@@ -347,13 +375,13 @@ private fun DragPropagationExample() {
                         // isConsumed to true.
                         // And any parent or pointerInput above this gets no position change
                         // Scrolling or detectGestures check isConsumed
-                        if (centerConsumePositionChange) {
+                        if (middleConsumePositionChange) {
                             pointerInputChange.consume()
                         }
-                        gestureColorCenter = Blue400
+                        gestureColorMiddle = Blue400
 
-                        val centerText =
-                            "🍏🍏 CENTER DRAG" +
+                        val middleText =
+                            "🍏🍏 MIDDLE DRAG" +
                                     "id: ${change.id.value}, " +
                                     "changedToDown: ${change.changedToDown()}, " +
                                     "changedToDownIgnoreConsumed: ${change.changedToDownIgnoreConsumed()}\n" +
@@ -364,14 +392,14 @@ private fun DragPropagationExample() {
                                     "positionChange: ${change.positionChange()}\n" +
                                     "positionChanged: ${change.positionChanged()}\n" +
                                     "isConsumed: ${change.isConsumed}\n\n"
-                        gestureText += centerText
+                        gestureText += middleText
                     }
 
-                    gestureText += "CENTER onDragEnd\n\n"
-                    gestureColorCenter = centerColor
+                    gestureText += "MIDDLE onDragEnd\n\n"
+                    gestureColorMiddle = middleColor
                 } else {
-                    gestureText += "CENTER onDragEnd\n\n"
-                    gestureColorCenter = Red400
+                    gestureText += "MIDDLE onDragEnd\n\n"
+                    gestureColorMiddle = Red400
                 }
             }
         }
@@ -468,7 +496,7 @@ private fun DragPropagationExample() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(outerModifier, contentAlignment = Alignment.Center) {
-            Box(centerModifier, contentAlignment = Alignment.Center) {
+            Box(middleModifier, contentAlignment = Alignment.Center) {
                 Box(modifier = innerModifier)
             }
         }
@@ -478,7 +506,7 @@ private fun DragPropagationExample() {
             CONTROLS
      */
     var innerCheckBoxesExpanded by remember { mutableStateOf(true) }
-    var centerCheckBoxesExpanded by remember { mutableStateOf(true) }
+    var middleCheckBoxesExpanded by remember { mutableStateOf(true) }
     var outerCheckBoxesExpanded by remember { mutableStateOf(true) }
 
     Row(
@@ -535,44 +563,44 @@ private fun DragPropagationExample() {
             .padding(horizontal = 4.dp)
             .fillMaxWidth()
             .clickable {
-                centerCheckBoxesExpanded = !centerCheckBoxesExpanded
+                middleCheckBoxesExpanded = !middleCheckBoxesExpanded
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            "CENTER Composable", modifier = Modifier
+            "MIDDLE Composable", modifier = Modifier
                 .weight(1f)
 
                 .padding(horizontal = 10.dp, vertical = 8.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
-            color = centerColor
+            color = middleColor
         )
         // Change vector drawable to expand more or less based on state of expanded
         Icon(
-            imageVector = if (centerCheckBoxesExpanded) Icons.Filled.ExpandLess
+            imageVector = if (middleCheckBoxesExpanded) Icons.Filled.ExpandLess
             else Icons.Filled.ExpandMore,
             contentDescription = null
         )
     }
-    AnimatedVisibility(visible = centerCheckBoxesExpanded) {
+    AnimatedVisibility(visible = middleCheckBoxesExpanded) {
         Column {
             CheckBoxWithTextRippleFullRow(
-                label = "centerRequireUnconsumed",
-                centerRequireUnconsumed
+                label = "middleRequireUnconsumed",
+                middleRequireUnconsumed
             ) {
                 gestureText = ""
-                centerRequireUnconsumed = it
+                middleRequireUnconsumed = it
             }
-            CheckBoxWithTextRippleFullRow(label = "centerConsumeDown", centerConsumeDown) {
+            CheckBoxWithTextRippleFullRow(label = "middleConsumeDown", middleConsumeDown) {
                 gestureText = ""
-                centerConsumeDown = it
+                middleConsumeDown = it
             }
             CheckBoxWithTextRippleFullRow(
-                label = "centerConsumePositionChange", centerConsumePositionChange
+                label = "middleConsumePositionChange", middleConsumePositionChange
             ) {
                 gestureText = ""
-                centerConsumePositionChange = it
+                middleConsumePositionChange = it
             }
         }
     }
