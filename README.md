@@ -317,6 +317,8 @@ previous searches using a database, domain with ViewModel.
 <br>
 [Jetpack Compose Samples](https://github.com/android/compose-samples)
 <br>
+[Jetpack Compose Components List](https://www.composables.com/components)
+<br>
 [Under the hood of Jetpack Compose — part 2 of 2- Leland Richardson](https://medium.com/androiddevelopers/under-the-hood-of-jetpack-compose-part-2-of-2-37b2c20c6cdd)
 <br>
 [What is “donut-hole skipping” in Jetpack Compose?-Vinay Gaba](https://www.jetpackcompose.app/articles/donut-hole-skipping-in-jetpack-compose)
