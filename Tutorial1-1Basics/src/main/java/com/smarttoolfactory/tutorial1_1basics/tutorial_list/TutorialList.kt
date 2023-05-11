@@ -761,6 +761,63 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_3_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_3_3),
+        description = "Use Modifier.onPlaced invokes after the parent LayoutModifier " +
+                "and parent layout has been placed and before child " +
+                "LayoutModifier is placed. This allows child LayoutModifier " +
+                "to adjust its own placement based on where the parent is.",
+        action = {
+            Tutorial3_3Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ON_PLACED_MODIFIER,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SCOPE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_3_4 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_3_4),
+        description = "Use Modifier.onPlaced to observe alignment changes.",
+        action = {
+            Tutorial3_3Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ON_PLACED_MODIFIER,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SCOPE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_3_5 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_3_5),
+        description = "Use Modifier.onPlaced to observe alignment animation.",
+        action = {
+            Tutorial3_3Screen5()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ON_PLACED_MODIFIER,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SCOPE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
     val tutorial3_4 = TutorialSectionModel(
         title = stringResource(R.string.title_3_4),
         description = "BoxWithConstraints is a composable that defines its own content " +
@@ -848,6 +905,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_9,
         tutorial3_3_1,
         tutorial3_3_2,
+        tutorial3_3_3,
+        tutorial3_3_4,
+        tutorial3_3_5,
         tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,
@@ -2107,7 +2167,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSED_MODIFIER,
             TAG_CANVAS,
 
-        ),
+            ),
         tagColor = GraphicsListColor
     )
 

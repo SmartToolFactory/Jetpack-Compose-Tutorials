@@ -56,15 +56,18 @@ private fun TutorialContent() {
         I  🚙 INNER layout() width: 100, height: 100
         I  🚙 MIDDLE layout() width: 300, height: 300
         I  🚙 OUTER layout() width: 500, height: 500
-        I  🍏 OUTER onPlaced() positionInParent: 0.0
+        I  🍏 OUTER onPlaced() positionInParent: 485.0
+        I  🚙🚙 OUTER layout() PLACING...
         I  😶‍🌫️ OUTER CustomLayout layout...
         I  🍏 MIDDLE onPlaced() positionInParent: 0.0
+        I  🚙🚙 MIDDLE layout() PLACING...
         I  😶‍🌫️ MIDDLE CustomLayout layout...
-        I  🍏 INNER onPlaced() positionInParent: 407.0
+        I  🍏 INNER onPlaced() positionInParent: 0.0
+        I  🚙🚙 INNER layout() PLACING...
         I  😶‍🌫️ INNER CustomLayout layout...
-        I  🍎 OUTER onGloballyPositioned() positionInParent: 0.0
+        I  🍎 OUTER onGloballyPositioned() positionInParent: 485.0
         I  🍎 MIDDLE onGloballyPositioned() positionInParent: 0.0
-        I  🍎 INNER onGloballyPositioned() positionInParent: 407.0
+        I  🍎 INNER onGloballyPositioned() positionInParent: 0.0
         I  🚗 OUTER drawWithContent()
         I  🚗 MIDDLE drawWithContent()
         I  🚗 INNER drawWithContent()
@@ -184,6 +187,10 @@ fun Modifier.layoutPlacementDraw(
             )
 
             layout(placeable.width, placeable.height) {
+
+                println(
+                    "🚙🚙 $title layout() PLACING..."
+                )
                 placeable.placeRelative(0, 0)
             }
         }
