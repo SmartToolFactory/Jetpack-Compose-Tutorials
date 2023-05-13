@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
@@ -29,6 +30,7 @@ fun Tutorial3_1Screen1() {
     TutorialContent()
 }
 
+@Preview
 @Composable
 private fun TutorialContent() {
 

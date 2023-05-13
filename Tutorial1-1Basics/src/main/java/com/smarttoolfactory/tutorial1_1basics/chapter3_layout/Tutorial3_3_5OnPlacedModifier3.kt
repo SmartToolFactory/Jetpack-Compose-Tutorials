@@ -38,7 +38,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-
 @Composable
 fun Tutorial3_3Screen5() {
     TutorialContent()
