@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 /**
@@ -36,8 +38,9 @@ fun Tutorial3_7Screen2() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
             .fillMaxSize()
+            .background(backgroundColor)
+            .verticalScroll(rememberScrollState())
             .padding(10.dp)
     ) {
 

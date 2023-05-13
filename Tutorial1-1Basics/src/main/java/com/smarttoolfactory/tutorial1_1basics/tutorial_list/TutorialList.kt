@@ -12,11 +12,124 @@ import androidx.compose.ui.res.stringResource
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter1_basics.Tutorial1_2Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.*
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.*
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.*
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.*
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.*
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_10Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_10Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_10Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_10Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_11Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_12Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_13Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_4Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_5Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_5Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_5Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_5Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_5Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_5Screen8
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_6Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_7Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_8Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen6
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen8
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen9
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_5Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_5_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_5_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_6Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_8_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_8_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_10_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_11Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_2Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_4Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_5Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen6
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen8
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_6Screen9
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_7Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_8Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_8Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_10Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_11Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_12Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_13Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_14Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_15Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_16Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_17Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_18Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen6
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen0
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_5Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_6Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_7Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_8Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_9Screen1
 import com.smarttoolfactory.tutorial1_1basics.model.TutorialSectionModel
 import com.smarttoolfactory.tutorial1_1basics.ui.GestureListColor
 import com.smarttoolfactory.tutorial1_1basics.ui.GraphicsListColor
@@ -890,6 +1003,53 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_7_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_7_1),
+        description = "movableContentOf converts a lambda into one that moves the remembered " +
+                "state and nodes created in a previous call " +
+                "to the new location it is called.",
+        action = {
+            Tutorial3_7Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MOVABLE_CONTENT_OF,
+            TAG_REMEMBER
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_7_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_7_2),
+        description = "Use movableContentOf to inspect effects on Composables when items from " +
+                "a list while are deleted",
+        action = {
+            Tutorial3_7Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MOVABLE_CONTENT_OF,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_REMEMBER
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_7_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_7_3),
+        description = "Use movableContentOf to inspect state after change in a list",
+        action = {
+            Tutorial3_7Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MOVABLE_CONTENT_OF,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_REMEMBER
+        ),
+        tagColor = LayoutListColor
+    )
+
     return listOf(
         tutorial3_1_1,
         tutorial3_1_2,
@@ -911,7 +1071,10 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,
-        tutorial3_6_2
+        tutorial3_6_2,
+        tutorial3_7_1,
+        tutorial3_7_2,
+        tutorial3_7_3,
     )
 }
 
