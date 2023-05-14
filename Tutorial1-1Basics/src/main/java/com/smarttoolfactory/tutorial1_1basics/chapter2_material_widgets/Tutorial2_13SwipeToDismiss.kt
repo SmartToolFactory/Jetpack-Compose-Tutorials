@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,89 +23,160 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.MutableStateFlow
+
 
 @ExperimentalMaterialApi
 @Composable
 fun Tutorial2_13Screen() {
-    TutorialContent()
+    val viewModel = MyViewModel()
+    TutorialContent(viewModel)
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun TutorialContent() {
+private fun TutorialContent(viewModel: MyViewModel) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // Button  to generate list. viewmodel is used to generate list which is close to real world scenario
+        Button(onClick = {
+            viewModel.newList()
+        }) {
+            Text(text = "Generate User List")
+        }
 
-    // This is an example of a list of dismissible items, similar to what you would see in an
+        // safely collecting flows
+        val usersList = viewModel.listFlow.collectAsStateWithLifecycle()
+        // This is an example of a list of dismissible items, similar to what you would see in an
 // email app. Swiping left reveals a 'delete' icon and swiping right reveals a 'done' icon.
 // The background will start as grey, but once the dismiss threshold is reached, the colour
 // will animate to red if you're swiping left or green if you're swiping right. When you let
 // go, the item will animate out of the way if you're swiping left (like deleting an email) or
 // back to its default position if you're swiping right (like marking an email as read/unread).
-    LazyColumn {
-        items(userList) { item ->
-            var unread by remember { mutableStateOf(false) }
-            val dismissState = rememberDismissState(
-                confirmStateChange = {
-                    if (it == DismissedToEnd) unread = !unread
-                    it != DismissedToEnd
-                }
-            )
-            SwipeToDismiss(
-                state = dismissState,
-                modifier = Modifier.padding(vertical = 4.dp),
-                directions = setOf(StartToEnd, EndToStart),
-                dismissThresholds = { direction ->
-                    FractionalThreshold(if (direction == StartToEnd) 0.25f else 0.5f)
-                },
-                background = {
+        LazyColumn {
+            // deleting items will change row positions so it is required to add key which is unique
+            // for demo user id is used as key
+            items(items = usersList.value, key = { user -> user.id }) { user ->
 
-                    val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+                // https://stackoverflow.com/questions/75040603/is-composes-swipe-to-dismiss-state-always-remember-the-old-item-based-on-id-ev
+                // This is required as expalined in the link stackoverflow link
+                val currentItem by rememberUpdatedState(user)
 
-                    val color by animateColorAsState(
-
-                        when (dismissState.targetValue) {
-                            Default -> Color.LightGray
-                            DismissedToEnd -> Color.Green
-                            DismissedToStart -> Color.Red
+                val dismissState = rememberDismissState(
+                    confirmStateChange = { dismissValue  ->
+                        when (dismissValue) {
+                            // do something when right to left swipe
+                            DismissedToEnd -> {
+                                viewModel.removeItem(currentItem)
+                                true
+                            }
+                            // do something when left to right swipe
+                            DismissedToStart -> {
+                                viewModel.removeItem(currentItem)
+                                true
+                            }
+                            else -> { false }
                         }
-                    )
-                    val alignment = when (direction) {
-                        StartToEnd -> Alignment.CenterStart
-                        EndToStart -> Alignment.CenterEnd
                     }
-                    val icon = when (direction) {
-                        StartToEnd -> Icons.Default.Done
-                        EndToStart -> Icons.Default.Delete
-                    }
-                    val scale by animateFloatAsState(
-                        if (dismissState.targetValue == Default) 0.75f else 1f
-                    )
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    directions = setOf(StartToEnd, EndToStart),
+                    dismissThresholds = { direction ->
+                        FractionalThreshold(if (direction == StartToEnd) 0.25f else 0.5f)
+                    },
+                    background = {
 
-                    Box(
-                        Modifier.fillMaxSize().background(color).padding(horizontal = 20.dp),
-                        contentAlignment = alignment
-                    ) {
-                        Icon(
-                            icon,
-                            contentDescription = "Localized description",
-                            modifier = Modifier.scale(scale)
+                        val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+
+                        val color by animateColorAsState(
+
+                            when (dismissState.targetValue) {
+                                Default -> Color.LightGray
+                                DismissedToEnd -> Color.Green
+                                DismissedToStart -> Color.Red
+                            }
                         )
-                    }
-                },
-                dismissContent = {
-                    Card(
-                        elevation = animateDpAsState(
-                            if (dismissState.dismissDirection != null) 4.dp else 0.dp
-                        ).value
-                    ) {
-                        ListItem(
-                            text = {
-                                Text(item, fontWeight = if (unread) FontWeight.Bold else null)
-                            },
-                            secondaryText = { Text("Swipe me left or right!") }
+                        val alignment = when (direction) {
+                            StartToEnd -> Alignment.CenterStart
+                            EndToStart -> Alignment.CenterEnd
+                        }
+                        val icon = when (direction) {
+                            StartToEnd -> Icons.Default.Done
+                            EndToStart -> Icons.Default.Delete
+                        }
+                        val scale by animateFloatAsState(
+                            if (dismissState.targetValue == Default) 0.75f else 1f
                         )
+
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .background(color)
+                                .padding(horizontal = 20.dp),
+                            contentAlignment = alignment
+                        ) {
+                            Icon(
+                                icon,
+                                contentDescription = "Localized description",
+                                modifier = Modifier.scale(scale)
+                            )
+                        }
+                    },
+                    dismissContent = {
+                        Card(
+                            elevation = animateDpAsState(
+                                if (dismissState.dismissDirection != null) 4.dp else 0.dp
+                            ).value
+                        ) {
+                            ListItem(
+                                text = {
+                                    Text(user.name, fontWeight = FontWeight.Bold)
+                                },
+                                secondaryText = { Text("Swipe me left or right!") }
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
+
+// ViewModel to generate list and expose the data as flow to ui
+class MyViewModel : ViewModel() {
+    private var userList = mutableStateListOf<User>()
+    val listFlow = MutableStateFlow(userList)
+
+    fun newList() {
+        val mutableList = mutableStateListOf<User>()
+        for (i in 0..10) {
+            mutableList.add(User(i, "User$i"))
+        }
+
+        userList = mutableList
+        listFlow.value = mutableList
+    }
+
+    fun removeItem(item: User) {
+        val index = userList.indexOf(item)
+        userList.remove(userList[index])
+    }
+
+}
+
+data class User(val id: Int, val name: String)
+
+
+
+
+
+
+
+
+
+
+
+
