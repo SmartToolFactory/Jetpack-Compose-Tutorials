@@ -343,5 +343,5 @@ previous searches using a database, domain with ViewModel.
 <br>
 [Gooey Effect Using Canvas API In Android](https://laewoong.github.io/android-gooey-effect/)
 <br>
-https://newsletter.jorgecastillo.dev/p/movablecontentof-and-movablecontentwithreceivero
+[movableContentOf](https://newsletter.jorgecastillo.dev/p/movablecontentof-and-movablecontentwithreceivero)
 <br>

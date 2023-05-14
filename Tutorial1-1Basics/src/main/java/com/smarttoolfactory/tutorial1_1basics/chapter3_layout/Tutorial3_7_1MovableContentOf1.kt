@@ -73,14 +73,6 @@ private fun TutorialContent() {
             }
         }
 
-        val contentList = remember {
-            listOf<@Composable () -> Unit> {
-                CustomTextField()
-                CustomCheckBox()
-                Counter()
-            }
-        }
-
         if (showAsRow) {
             Row {
                 movableContent()
@@ -93,6 +85,14 @@ private fun TutorialContent() {
             text = "When content enters composition content is reset by default.",
             bullets = false
         )
+
+        val contentList = remember {
+            listOf<@Composable () -> Unit> {
+                CustomTextField()
+                CustomCheckBox()
+                Counter()
+            }
+        }
 
         if (showAsRow) {
             Row {
@@ -118,7 +118,7 @@ private fun TutorialContent() {
 //            CustomSwitch()
 //            Counter()
 //        }
-        
+
         Spacer(modifier = Modifier.height(40.dp))
 
         Button(
