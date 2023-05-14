@@ -56,22 +56,11 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
             .padding(10.dp)
     ) {
+
         StyleableTutorialText(
-            text = "With **movableContentOf** convert a lambda into " +
-                    "one that moves the remembered state and nodes created in a previous call " +
-                    "to the new location it is called.\n" +
-                    "Tracking compositions can be used to produce a composable that moves its " +
-                    "content between a row and a column based on a parameter",
+            text = "When content enters composition content is reset by default.",
             bullets = false
         )
-
-        val movableContent = remember {
-            movableContentOf {
-                CustomTextField()
-                CustomCheckBox()
-                Counter()
-            }
-        }
 
         val contentList = remember {
             listOf<@Composable () -> Unit> {
@@ -80,19 +69,6 @@ private fun TutorialContent() {
                 Counter()
             }
         }
-
-        if (showAsRow) {
-            Row {
-                movableContent()
-            }
-        } else {
-            movableContent()
-        }
-
-        StyleableTutorialText(
-            text = "When content enters composition content is reset by default.",
-            bullets = false
-        )
 
         if (showAsRow) {
             Row {
@@ -118,7 +94,33 @@ private fun TutorialContent() {
 //            CustomSwitch()
 //            Counter()
 //        }
-        
+
+        StyleableTutorialText(
+            text = "With **movableContentOf** convert a lambda into " +
+                    "one that moves the remembered state and nodes created in a previous call " +
+                    "to the new location it is called.\n" +
+                    "Tracking compositions can be used to produce a composable that moves its " +
+                    "content between a row and a column based on a parameter",
+            bullets = false
+        )
+
+        val movableContent = remember {
+            movableContentOf {
+                CustomTextField()
+                CustomCheckBox()
+                Counter()
+            }
+        }
+
+        if (showAsRow) {
+            Row {
+                movableContent()
+            }
+        } else {
+            movableContent()
+        }
+
+
         Spacer(modifier = Modifier.height(40.dp))
 
         Button(
