@@ -53,7 +53,7 @@ private fun TutorialContent() {
 
         StatefulListSample()
         StyleableTutorialText(
-            text = "With movableContentOf, the state can be preserved across such movements",
+            text = "With **movableContentOf**, the state can be preserved across such movements",
             bullets = false
         )
 
