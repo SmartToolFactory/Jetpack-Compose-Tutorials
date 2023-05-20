@@ -2,20 +2,38 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.*
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
@@ -28,6 +46,7 @@ fun Tutorial6_1Screen3() {
     TutorialContent()
 }
 
+@Preview
 @Composable
 private fun TutorialContent() {
 
@@ -48,7 +67,8 @@ private fun TutorialContent() {
                     "rectangles, or create custom rounded rectangle or ticket shaped paths." +
                     "\n Draw path progress with **PathMeasure**, or draw polygons with " +
                     "simple trigonometry or draw quad or cubic",
-            bullets = false)
+            bullets = false
+        )
         TutorialText2(text = "Absolute and Relative positions")
         DrawPath()
         TutorialText2(text = "Draw arcTo path")
@@ -57,6 +77,8 @@ private fun TutorialContent() {
         DrawTicketPathWithArc()
         TutorialText2(text = "Draw rounded rectangle with path")
         DrawRoundedRectangleWithArc()
+        TutorialText2(text = "Draw rounded rectangle with Corner Size")
+        DrawRoundedRectangleWithArc2()
         TutorialText2(text = "Draw path with progress")
         DrawPathProgress()
         TutorialText2(text = "Draw Rect path with progress")
@@ -289,6 +311,72 @@ private fun DrawRoundedRectangleWithArc() {
                 )
             )
         )
+    }
+}
+
+@Composable
+private fun DrawRoundedRectangleWithArc2() {
+    val bound = 150f
+
+    var topLeft by remember {
+        mutableStateOf(30f)
+    }
+
+    var topRight by remember {
+        mutableStateOf(80f)
+    }
+
+    var bottomLeft by remember {
+        mutableStateOf(50f)
+    }
+
+    var bottomRight by remember {
+        mutableStateOf(150f)
+    }
+
+    Canvas(modifier = canvasModifier) {
+
+        val path = roundedRectanglePath(
+            topLeft = Offset(100f, 100f),
+            size = Size(size.width - 200f, size.height - 200f),
+            radiusTopLeft = topLeft,
+            radiusTopRight = topRight,
+            radiusBottomLeft = bottomLeft,
+            radiusBottomRight = bottomRight,
+        )
+        drawPath(path, color = Color.Red)
+    }
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+        Text(text = "Top Left ${topLeft.roundToInt()}px")
+        Slider(
+            value = topLeft,
+            onValueChange = { topLeft = it },
+            valueRange = 0f..bound,
+        )
+
+        Text(text = "Top Right ${topRight.roundToInt()}px")
+        Slider(
+            value = topRight,
+            onValueChange = { topRight = it },
+            valueRange = 0f..bound,
+        )
+
+        Text(text = "Bottom Left ${bottomLeft.roundToInt()}px")
+        Slider(
+            value = bottomLeft,
+            onValueChange = { bottomLeft = it },
+            valueRange = 0f..bound,
+        )
+
+        Text(text = "Bottom Right ${bottomRight.roundToInt()}px")
+        Slider(
+            value = bottomRight,
+            onValueChange = { bottomRight = it },
+            valueRange = 0f..bound,
+        )
+
     }
 }
 

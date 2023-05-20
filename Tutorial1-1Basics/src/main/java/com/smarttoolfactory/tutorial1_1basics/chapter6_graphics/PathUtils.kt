@@ -40,72 +40,116 @@ fun createPolygonPath(cx: Float, cy: Float, sides: Int, radius: Float): Path {
     }
 }
 
-fun roundedRectanglePath(topLeft: Offset = Offset.Zero, size: Size, cornerRadius: Float): Path {
+fun roundedRectanglePath(
+    topLeft: Offset = Offset.Zero,
+    size: Size,
+    cornerRadius: Float
+): Path {
+    return roundedRectanglePath(
+        topLeft = topLeft,
+        size = size,
+        radiusTopLeft = cornerRadius,
+        radiusTopRight = cornerRadius,
+        radiusBottomRight = cornerRadius,
+        radiusBottomLeft = cornerRadius
+    )
+}
+
+fun roundedRectanglePath(
+    topLeft: Offset = Offset.Zero,
+    size: Size,
+    radiusTopLeft: Float,
+    radiusTopRight: Float,
+    radiusBottomRight: Float,
+    radiusBottomLeft: Float
+): Path {
     return Path().apply {
         reset()
 
-        // Top left arc
-        val radius = cornerRadius * 2
-        arcTo(
-            rect = Rect(
-                left = topLeft.x,
-                top = topLeft.y,
-                right = topLeft.x + radius,
-                bottom = topLeft.y + radius
-            ),
-            startAngleDegrees = 180.0f,
-            sweepAngleDegrees = 90.0f,
-            forceMoveTo = false
+        addRoundedRect(
+            radiusTopLeft = radiusTopLeft,
+            radiusTopRight = radiusTopRight,
+            radiusBottomRight = radiusBottomRight,
+            radiusBottomLeft = radiusBottomLeft,
+            topLeft = topLeft,
+            size = size
         )
-
-        lineTo(x = topLeft.x + size.width - cornerRadius, y = topLeft.y)
-
-        // Top right arc
-        arcTo(
-            rect = Rect(
-                left = topLeft.x + size.width - radius,
-                top = topLeft.y,
-                right = topLeft.x + size.width,
-                bottom = topLeft.y + radius
-            ),
-            startAngleDegrees = -90.0f,
-            sweepAngleDegrees = 90.0f,
-            forceMoveTo = false
-        )
-
-        lineTo(x = topLeft.x + size.width, y = topLeft.y + size.height - cornerRadius)
-
-        // Bottom right arc
-        arcTo(
-            rect = Rect(
-                left = topLeft.x + size.width - radius,
-                top = topLeft.y + size.height - radius,
-                right = topLeft.x + size.width,
-                bottom = topLeft.y + size.height
-            ),
-            startAngleDegrees = 0f,
-            sweepAngleDegrees = 90.0f,
-            forceMoveTo = false
-        )
-
-        lineTo(x = topLeft.x + cornerRadius, y = topLeft.y + size.height)
-
-        // Bottom left arc
-        arcTo(
-            rect = Rect(
-                left = topLeft.x,
-                top = topLeft.y + size.height - radius,
-                right = topLeft.x + radius,
-                bottom = topLeft.y + size.height
-            ),
-            startAngleDegrees = 90.0f,
-            sweepAngleDegrees = 90.0f,
-            forceMoveTo = false
-        )
-
-        lineTo(x = topLeft.x, y = topLeft.y + cornerRadius)
-        close()
     }
+}
+
+private fun Path.addRoundedRect(
+    radiusTopLeft: Float,
+    radiusTopRight: Float,
+    radiusBottomRight: Float,
+    radiusBottomLeft: Float,
+    topLeft: Offset,
+    size: Size
+) {
+    val topLeftRadius = radiusTopLeft * 2
+    val topRightRadius = radiusTopRight * 2
+    val bottomRightRadius = radiusBottomRight * 2
+    val bottomLeftRadius = radiusBottomLeft * 2
+
+    // Top left arc
+    arcTo(
+        rect = Rect(
+            left = topLeft.x,
+            top = topLeft.y,
+            right = topLeft.x + topLeftRadius,
+            bottom = topLeft.y + topLeftRadius
+        ),
+        startAngleDegrees = 180.0f,
+        sweepAngleDegrees = 90.0f,
+        forceMoveTo = false
+    )
+
+    lineTo(x = topLeft.x + size.width - topRightRadius, y = topLeft.y)
+
+    // Top right arc
+    arcTo(
+        rect = Rect(
+            left = topLeft.x + size.width - topRightRadius,
+            top = topLeft.y,
+            right = topLeft.x + size.width,
+            bottom = topLeft.y + topRightRadius
+        ),
+        startAngleDegrees = -90.0f,
+        sweepAngleDegrees = 90.0f,
+        forceMoveTo = false
+    )
+
+    lineTo(x = topLeft.x + size.width, y = topLeft.y + size.height - bottomRightRadius)
+
+    // Bottom right arc
+    arcTo(
+        rect = Rect(
+            left = topLeft.x + size.width - bottomRightRadius,
+            top = topLeft.y + size.height - bottomRightRadius,
+            right = topLeft.x + size.width,
+            bottom = topLeft.y + size.height
+        ),
+        startAngleDegrees = 0f,
+        sweepAngleDegrees = 90.0f,
+        forceMoveTo = false
+    )
+
+    lineTo(x = topLeft.x + bottomLeftRadius, y = topLeft.y + size.height)
+
+    // Bottom left arc
+    arcTo(
+        rect = Rect(
+            left = topLeft.x,
+            top = topLeft.y + size.height - bottomLeftRadius,
+            right = topLeft.x + bottomLeftRadius,
+            bottom = topLeft.y + size.height
+        ),
+        startAngleDegrees = 90.0f,
+        sweepAngleDegrees = 90.0f,
+        forceMoveTo = false
+    )
+
+    lineTo(x = topLeft.x, y = topLeft.y + topLeftRadius)
+    close()
 }
 
 /**
