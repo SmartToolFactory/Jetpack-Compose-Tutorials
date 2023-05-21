@@ -19,6 +19,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_11Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_12Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_13Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_14Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_3Screen
@@ -588,6 +589,18 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         )
     )
 
+    val tutorial2_14 = TutorialSectionModel(
+        title = stringResource(R.string.title2_14),
+        description = "Lazy column compose that has checkbox where items can be checked and unchecked",
+        action = {
+            Tutorial2_14Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN_CHECKBOX
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -617,7 +630,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         tutorial2_10_5,
         tutorial2_11,
         tutorial2_12,
-        tutorial2_13
+        tutorial2_13,
+        tutorial2_14
     )
 }
 
