@@ -72,7 +72,8 @@ fun Tutorial6_19CustomCarousel() {
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
             currentValueLabel = { value ->
-                Text(
+                Text(modifier = Modifier.padding(16.dp),
+                    color = Color.Red,
                     text = "$value",
                     style = MaterialTheme.typography.h6
                 )
