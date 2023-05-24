@@ -1,5 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
-
+package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -65,7 +64,7 @@ private val colors = listOf(
 )
 
 @Composable
-fun Tutorial3_7_4CustomCarousel() {
+fun Tutorial6_19CustomCarousel() {
     Column() {
         InstagramCarousel(
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -110,14 +109,17 @@ class CarouselStateImpl(
         animatable.stop()
     }
 
+    // snap to value
     override suspend fun snapTo(value: Float) {
         animatable.snapTo(value.coerceIn(floatRange))
     }
 
+    // scroll to index
     override suspend fun scrollTo(value: Int) {
         animatable.snapTo(value.toFloat().coerceIn(floatRange))
     }
 
+    // decay animation when velocity decreases as items scrolls
     override suspend fun decayTo(velocity: Float, value: Float) {
         val target = value.roundToInt().coerceIn(range).toFloat()
         animatable.animateTo(
@@ -162,6 +164,7 @@ class CarouselStateImpl(
     }
 }
 
+// save state during configuration change
 @Composable
 fun rememberCarouselState(
     currentValue: Float = 0f,
@@ -190,7 +193,6 @@ fun InstagramCarousel(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         currentValueLabel(state.currentValue.roundToInt())
-        //Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
         val scope = rememberCoroutineScope()
 
         BoxWithConstraints(
@@ -204,15 +206,20 @@ fun InstagramCarousel(
                 fillColor = Color(android.graphics.Color.parseColor("#4DB6AC")),
                 strokeWidth = 5.dp,
             )
+            // divide maxWidth by num of segments. here its 5
             val segmentWidth = maxWidth / numSegments
+            // calculate each segment width
             val segmentWidthPx = constraints.maxWidth.toFloat() / numSegments.toFloat()
+            // half os segment width cause we need to place the first item at the center
             val halfSegments = (numSegments + 1) / 2
+
             val start = (state.currentValue - halfSegments).toInt()
                 .coerceAtLeast(state.range.start)
             val end = (state.currentValue + halfSegments).toInt()
                 .coerceAtMost(state.range.endInclusive)
             val maxOffset = constraints.maxWidth / 2f
             for (i in start..end) {
+                // offset of the item
                 val offsetX = (i - state.currentValue) * segmentWidthPx
                 // alpha
                 val deltaFromCenter = (offsetX)
@@ -244,6 +251,7 @@ fun InstagramCarousel(
                             .clip(CircleShape)
                             .background(colors[i % colors.size])
                             .clickable {
+                                // scroll to position on click
                                 scope.launch {
                                     state.scrollTo(i)
                                 }

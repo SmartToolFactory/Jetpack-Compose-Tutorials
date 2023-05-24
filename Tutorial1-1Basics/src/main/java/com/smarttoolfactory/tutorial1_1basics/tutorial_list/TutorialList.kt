@@ -61,7 +61,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen3
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7_4CustomCarousel
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_2Screen
@@ -114,6 +113,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_15Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_16Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_17Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_18Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_19CustomCarousel
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen3
@@ -1065,22 +1065,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-    val tutorial3_7_4 = TutorialSectionModel(
-        title = stringResource(R.string.title_3_7_4),
-        description = "Custom layout to show carousel",
-        action = {
-            Tutorial3_7_4CustomCarousel()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_CUSTOM_LAYOUT,
-            TAG_MEASURABLE,
-            TAG_CONSTRAINTS,
-            TAG_PLACEABLE
-        ),
-        tagColor = LayoutListColor
-    )
-
 
     return listOf(
         tutorial3_1_1,
@@ -1106,8 +1090,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_6_2,
         tutorial3_7_1,
         tutorial3_7_2,
-        tutorial3_7_3,
-        tutorial3_7_4,
+        tutorial3_7_3
     )
 }
 
@@ -2402,6 +2385,23 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     )
 
 
+    val tutorial6_19 = TutorialSectionModel(
+        title = "6-19 Custom Carousel",
+        description = "Custom carousel with gestures",
+        action = {
+            Tutorial6_19CustomCarousel()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_COMPOSE_CLICKABLE,
+            TAG_SCROLLABLE,
+            TAG_HORIZONTAL_DRAG,
+            TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER
+        ),
+        tagColor = LayoutListColor
+    )
+
 
     return listOf(
         tutorial6_1_1,
@@ -2430,6 +2430,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_15,
         tutorial6_16,
         tutorial6_17,
-        tutorial6_18
+        tutorial6_18,
+        tutorial6_19
     )
 }
