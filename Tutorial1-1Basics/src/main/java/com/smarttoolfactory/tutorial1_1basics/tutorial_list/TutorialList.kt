@@ -2393,7 +2393,6 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         },
         tags = listOf(
             TAG_COMPOSE,
-            TAG_CUSTOM_LAYOUT,
             TAG_COMPOSE_CLICKABLE,
             TAG_SCROLLABLE,
             TAG_HORIZONTAL_DRAG,
