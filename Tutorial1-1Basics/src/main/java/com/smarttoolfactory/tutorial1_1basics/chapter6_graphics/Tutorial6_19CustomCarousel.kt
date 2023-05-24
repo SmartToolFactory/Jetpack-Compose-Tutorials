@@ -53,6 +53,7 @@ import kotlin.math.roundToInt
 
 /**
  * Inspired from https://fvilarino.medium.com/recreating-google-podcasts-speed-selector-in-jetpack-compose-7623203a009d
+ * Motivation -  https://docs.flutter.dev/cookbook/effects/photo-filter-carousel
  */
 private val colors = listOf(
     Color.Red,
@@ -219,10 +220,13 @@ fun InstagramCarousel(
                 .coerceAtMost(state.range.endInclusive)
             val maxOffset = constraints.maxWidth / 2f
             for (i in start..end) {
-                // offset of the item
+                // offset of the item. i is the index/position. initially state.currentValue is 0
+                // initially offset is 0 for the first item
                 val offsetX = (i - state.currentValue) * segmentWidthPx
                 // alpha
                 val deltaFromCenter = (offsetX)
+                // if its 1 then items has no alpha.
+                // based on the distance the item has moved from center the alpha changes accordingly
                 val percentFromCenter = 1.0f - abs(deltaFromCenter) / maxOffset
                 val alpha = 0.25f + (percentFromCenter * 0.75f)
                 // scale
@@ -235,8 +239,10 @@ fun InstagramCarousel(
                         .width(segmentWidth)
                         .wrapContentHeight(Alignment.CenterVertically)
                         .graphicsLayer(
+                            // place item at respective offset's on x axis
                             translationX = offsetX,
                         ),
+                    // center the component
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Box(
@@ -244,11 +250,12 @@ fun InstagramCarousel(
                             .width(55.dp)
                             .height(55.dp)
                             .graphicsLayer(
+                                // setting alpha ans scale for each item
                                 alpha = alpha,
                                 scaleY = scale,
                                 scaleX = scale
                             )
-                            .clip(CircleShape)
+                            .clip(CircleShape) // circle shape for each item
                             .background(colors[i % colors.size])
                             .clickable {
                                 // scroll to position on click
@@ -266,6 +273,8 @@ fun InstagramCarousel(
     }
 }
 
+// Custom gesture to track horizontal drag offset and also the velocity of the fling
+// these values are used to the change the state of the items
 @SuppressLint("ReturnFromAwaitPointerEventScope", "MultipleAwaitPointerEventScopes")
 private fun Modifier.drag(
     state: CarouselState,
@@ -302,6 +311,7 @@ private fun Modifier.drag(
 }
 
 
+// Custom circle with stroke
 @Composable
 fun CenterCircle(
     modifier: Modifier = Modifier,
