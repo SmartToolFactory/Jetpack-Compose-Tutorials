@@ -15,7 +15,6 @@ import androidx.compose.foundation.gestures.horizontalDrag
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -44,6 +43,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.coroutineScope
@@ -65,8 +65,14 @@ private val colors = listOf(
 )
 
 @Composable
-fun Tutorial6_19CustomCarousel() {
-    Column() {
+fun Tutorial6_19Screen() {
+    TutorialContent()
+}
+
+@Preview
+@Composable
+private fun TutorialContent() {
+    Column {
         InstagramCarousel(
             modifier = Modifier.align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
@@ -81,7 +87,6 @@ fun Tutorial6_19CustomCarousel() {
         )
     }
 }
-
 
 @Stable
 interface CarouselState {

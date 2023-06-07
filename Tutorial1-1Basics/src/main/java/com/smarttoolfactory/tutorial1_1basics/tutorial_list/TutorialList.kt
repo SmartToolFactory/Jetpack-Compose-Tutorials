@@ -113,7 +113,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_15Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_16Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_17Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_18Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_19CustomCarousel
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_19Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen3
@@ -2389,7 +2389,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         title = "6-19 Custom Carousel",
         description = "Custom carousel with gestures",
         action = {
-            Tutorial6_19CustomCarousel()
+            Tutorial6_19Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -2398,7 +2398,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_HORIZONTAL_DRAG,
             TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER
         ),
-        tagColor = LayoutListColor
+        tagColor = GraphicsListColor
     )
 
 
