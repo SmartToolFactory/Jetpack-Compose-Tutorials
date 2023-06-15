@@ -58,7 +58,7 @@ private fun ConstraintsAndSiblingsSample() {
     StyleableTutorialText(
         text = "In this example we set layout width via slide but when **layoutWidth** " +
                 "is not in range of min-max width of **Constraints** coming " +
-                "from **Modifier** layout defined with green border is placed as in previous" +
+                "from **Modifier** layout content(Orange) is placed as in previous" +
                 " tutorial. Orange content is measured in a range between 0-and min of layout " +
                 "width and Constraints.maxWidth",
         bullets = false
@@ -158,8 +158,10 @@ private fun ConstraintsAndSiblingsSample() {
     }
 
     TutorialText2(
-        text = "Width of the parent Composable. If it's out of original Constraints " +
-                "parent is placed difference between layout width and (min/max) constraints width"
+        text = "Width of the layout(width) of Composable. If it's not in bounds " +
+                "of original Constraints " +
+                "content is placed difference between " +
+                "layout width and (min/max) constraints width"
     )
 
     SliderWithLabel(
@@ -200,7 +202,9 @@ private fun CustomLayout(
         val totalHeight = placeables.sumOf { it.height }
         var posY = 0
         // 🔥🔥 Changing  width changes where this Composable is positioned if it's not
-        // in parents bounds
+        // in constraints range.
+        // For instance, if layoutWidth is 600px with Constraints maxWidth=550px content of
+        // this Composable is pushed 25px to left
         layout(width = layoutWidth, height = totalHeight) {
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, posY)
