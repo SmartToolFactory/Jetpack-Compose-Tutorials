@@ -111,14 +111,10 @@ private fun ConstraintsSample() {
         Spacer(modifier = Modifier.height(10.dp))
 
         StyleableTutorialText(
-            text = "3-) In this example child composables are measured with " +
-                    "**constraints.copy(minWidth = 750, maxWidth = 900)**\n" +
-                    "Since child Composables' widths are bigger than container they overflow from" +
-                    " parent Composable.\n" +
-                    "MyLayout3(green border) " +
-                    "overflows from parent as **(Constraints.maxWidth-layout width)/2** " +
-                    "maxWidth is 700px while layout width is 900px because of this **MyLayout3** " +
-                    "is moved to left by 100px.",
+            text = "3-) In this example MyLayout3(green border) " +
+                    "overflows from parent **(Constraints.maxWidth-layout width)/2**, " +
+                    "maxWidth is 700px while layout width is 900px, and placed at " +
+                    "-100px left of parent Composable.",
         )
 
         MyLayout3(modifier = Modifier.border(3.dp, Green400)) {
@@ -126,17 +122,19 @@ private fun ConstraintsSample() {
         }
 
         val minWidth = with(density) {
-            700f.toDp()
+            600f.toDp()
         }
 
         StyleableTutorialText(
             text = "4-) In this example layout width is 400px while " +
-                    "**Constraints.minWidth = 500f**, Constrains.maxWidth = 1080f\n" +
-                    "MyLayout3(green border) " +
-                    "overflows from parent as **(layout width-Constraints.minWidth)/2**.\n" +
+                    "**Constraints.minWidth = 600f**, Constrains.maxWidth = 700f\n" +
+                    "MyLayout4(green border) " +
+                    "is placed **(Constraints.minWidth - layout width)/2**.\n" +
                     "Also child Composable is measured with " +
                     "**constraints.copy(minWidth = 100, maxWidth = 500)**",
         )
+
+        // 🔥Placed at (600f-400f)/2 = 200f pixels off from start of Composable
         MyLayout4(
             modifier = Modifier
                 .widthIn(min = minWidth)
@@ -367,16 +365,14 @@ private fun MyLayout3(
         content = content
     ) { measurables: List<Measurable>, constraints: Constraints ->
 
-        val updatedConstraints = constraints.copy(minWidth = 750, maxWidth = 900)
 
         val placeables = measurables.map { measurable: Measurable ->
-            measurable.measure(updatedConstraints)
+            measurable.measure(constraints)
         }
 
         println(
             "🔥 MyLayout3\n" +
-                    "constraints: $constraints\n" +
-                    "updatedConstraints: $updatedConstraints\n"
+                    "constraints: $constraints"
         )
 
         val totalHeight = placeables.sumOf { it.height }
@@ -425,7 +421,7 @@ private fun MyLayout4(
 
         // 🔥🔥 Changing  width changes where this Composable is positioned if it's not
         // in parents bounds
-        layout(width = 500, height = totalHeight) {
+        layout(width = 400, height = totalHeight) {
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, posY)
                 posY += placeable.height
