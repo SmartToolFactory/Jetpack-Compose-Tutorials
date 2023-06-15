@@ -96,7 +96,7 @@ private fun TutorialContent() {
 @Composable
 private fun WrapContentSizeSample() {
 
-    TutorialText2(text = "No wrap Modifie")
+    TutorialText2(text = "No wrap Modifier")
 
     MinimumConstrainedLayout(
         Modifier.border(2.dp, Color.Green)
