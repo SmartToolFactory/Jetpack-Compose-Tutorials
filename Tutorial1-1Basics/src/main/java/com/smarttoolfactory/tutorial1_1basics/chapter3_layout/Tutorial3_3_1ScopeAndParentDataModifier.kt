@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -51,7 +50,6 @@ private fun TutorialContent() {
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
-                .wrapContentHeight()
                 .background(Color.LightGray)
         ) {
 
@@ -181,14 +179,8 @@ private class CustomColumnData(
     override fun equals(other: Any?): Boolean {
 
         if (this === other) return true
-
-        if (javaClass != other?.javaClass) return false
-
-        other as CustomColumnData
-
-        if (alignment != other.alignment) return false
-
-        return true
+        val otherModifier = other as? CustomColumnData ?: return false
+        return alignment == otherModifier.alignment
     }
 
     override fun hashCode(): Int {
@@ -255,10 +247,7 @@ fun CustomColumnWithScope(
         // Track the y co-ord we have placed children up to
         var yPosition = 0
 
-        val totalHeight: Int = placeables.map {
-            it.height
-        }
-            .sum()
+        val totalHeight: Int = placeables.sumOf { it.height }
             .coerceAtLeast(constraints.minHeight)
 
         val maxWidth = constraints.maxWidth
@@ -278,8 +267,8 @@ fun CustomColumnWithScope(
 
                 val x = when (measurableAlignment[index]) {
                     HorizontalAlignment.Start -> 0
-                    HorizontalAlignment.Center -> (maxWidth - placeable.measuredWidth) / 2
-                    HorizontalAlignment.End -> maxWidth - placeable.measuredWidth
+                    HorizontalAlignment.Center -> (maxWidth - placeable.width) / 2
+                    HorizontalAlignment.End -> maxWidth - placeable.width
                 }
 
                 // Position item on the screen
@@ -312,18 +301,11 @@ private class CustomRowData(
 
     override fun Density.modifyParentData(parentData: Any?) = this@CustomRowData
 
-
     override fun equals(other: Any?): Boolean {
 
         if (this === other) return true
-
-        if (javaClass != other?.javaClass) return false
-
-        other as CustomRowData
-
-        if (alignment != other.alignment) return false
-
-        return true
+        val otherModifier = other as? CustomRowData ?: return false
+        return alignment == otherModifier.alignment
     }
 
     override fun hashCode(): Int {
@@ -383,23 +365,16 @@ fun CustomRowWithScope(
             measurable.measure(looseConstraints)
         }
 
-        // 🔥 We will use this alignment to set position of our composables
+        // 🔥 We will use this alignment to set position of our Composables
         val measurableAlignment: List<VerticalAlignment> = measurables.map { measurable ->
             measurable.verticalAlignment
         }
 
-        val totalWidth: Int = placeables
-            .map {
-                it.width
-            }
-            .sum()
+        val totalWidth: Int = placeables.sumOf { it.width }
             .coerceAtLeast(constraints.minWidth)
 
-        var maxHeight: Int = placeables.map {
-            it.height
-        }.maxOrNull() ?: 0
-
-        maxHeight = maxHeight.coerceAtLeast(constraints.minHeight)
+        var maxHeight: Int = if (constraints.hasBoundedHeight) constraints.maxHeight
+        else placeables.maxOf { it.height }.coerceAtLeast(constraints.minHeight)
 
         println(
             "🧨 Constraints minWidth: ${constraints.minWidth}, " +
@@ -421,8 +396,8 @@ fun CustomRowWithScope(
 
                 val y = when (measurableAlignment[index]) {
                     VerticalAlignment.Top -> 0
-                    VerticalAlignment.Center -> (maxHeight - placeable.measuredHeight) / 2
-                    VerticalAlignment.Bottom -> maxHeight - placeable.measuredHeight
+                    VerticalAlignment.Center -> (maxHeight - placeable.height) / 2
+                    VerticalAlignment.Bottom -> maxHeight - placeable.height
                 }
 
                 // Position item on the screen
