@@ -5,7 +5,14 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -27,16 +34,20 @@ import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.chart.ChartData
-import com.smarttoolfactory.tutorial1_1basics.ui.*
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.Yellow400
 import kotlin.math.cos
 import kotlin.math.sin
 
+@Preview
 @Composable
 fun Tutorial6_14Screen() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

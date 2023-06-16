@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
+@Preview
 @Composable
 fun Tutorial1_2Screen() {
     TutorialContent()

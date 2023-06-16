@@ -62,12 +62,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import kotlin.math.roundToInt
 
+@Preview
 @Composable
 fun Tutorial5_6Screen3() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

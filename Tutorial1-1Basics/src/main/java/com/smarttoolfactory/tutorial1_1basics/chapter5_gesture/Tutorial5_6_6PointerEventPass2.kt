@@ -52,12 +52,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
  * it should no longer respond to fingers lifting off of it because a parent scroller has
  * consumed movement in a [PointerInputChange].
  */
+@Preview
 @Composable
 fun Tutorial5_6Screen6() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     val context = LocalContext.current

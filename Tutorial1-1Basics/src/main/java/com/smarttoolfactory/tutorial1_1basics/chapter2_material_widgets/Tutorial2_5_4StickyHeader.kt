@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.model.Snack
@@ -19,6 +20,7 @@ import com.smarttoolfactory.tutorial1_1basics.model.snacksOrdered
 import com.smarttoolfactory.tutorial1_1basics.ui.components.SnackCard
 
 @ExperimentalFoundationApi
+@Preview
 @Composable
 fun Tutorial2_5Screen4() {
     TutorialContent()

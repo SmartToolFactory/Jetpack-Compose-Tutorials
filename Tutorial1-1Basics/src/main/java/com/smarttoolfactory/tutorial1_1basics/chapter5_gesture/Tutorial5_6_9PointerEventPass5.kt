@@ -10,9 +10,21 @@ import androidx.compose.foundation.gestures.calculateCentroidSize
 import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -37,14 +49,13 @@ import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import kotlin.math.abs
 
-
+@Preview
 @Composable
 fun Tutorial5_6Screen9() {
     TutorialContent()
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
 @Composable
 private fun TutorialContent() {
     var zoom by remember { mutableStateOf(1f) }

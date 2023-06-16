@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.Snack
 import com.smarttoolfactory.tutorial1_1basics.model.snacks
@@ -22,6 +23,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.FullWidthRow
 import com.smarttoolfactory.tutorial1_1basics.ui.components.SnackCard
 import kotlinx.coroutines.launch
 
+@Preview
 @Composable
 fun Tutorial2_5Screen2() {
     TutorialContent()

@@ -15,14 +15,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.chart.ChartData
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.chart.PieChart
-import com.smarttoolfactory.tutorial1_1basics.ui.*
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
+import com.smarttoolfactory.tutorial1_1basics.ui.Red400
+import com.smarttoolfactory.tutorial1_1basics.ui.Yellow400
 
+@Preview
 @Composable
 fun Tutorial6_15Screen() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

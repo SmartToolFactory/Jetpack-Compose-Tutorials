@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
+@Preview
 @Composable
 fun Tutorial2_10Screen2() {
     TutorialContent()

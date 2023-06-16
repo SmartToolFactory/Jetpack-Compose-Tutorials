@@ -41,6 +41,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
+@Preview
 @Composable
 fun Tutorial6_1Screen3() {
     TutorialContent()

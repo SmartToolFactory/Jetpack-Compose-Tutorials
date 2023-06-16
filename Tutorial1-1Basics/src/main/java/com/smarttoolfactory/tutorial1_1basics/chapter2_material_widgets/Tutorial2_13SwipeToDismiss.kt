@@ -10,18 +10,33 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.material.DismissDirection.*
-import androidx.compose.material.DismissValue.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.DismissDirection.EndToStart
+import androidx.compose.material.DismissDirection.StartToEnd
+import androidx.compose.material.DismissValue.Default
+import androidx.compose.material.DismissValue.DismissedToEnd
+import androidx.compose.material.DismissValue.DismissedToStart
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.Icon
+import androidx.compose.material.ListItem
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberDismissState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,6 +44,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @ExperimentalMaterialApi
+@Preview
 @Composable
 fun Tutorial2_13Screen() {
     val viewModel = MyViewModel()

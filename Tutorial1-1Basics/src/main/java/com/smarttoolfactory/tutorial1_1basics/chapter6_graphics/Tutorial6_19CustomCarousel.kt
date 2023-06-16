@@ -64,6 +64,7 @@ private val colors = listOf(
     Color.Cyan,
 )
 
+@Preview
 @Composable
 fun Tutorial6_19Screen() {
     TutorialContent()

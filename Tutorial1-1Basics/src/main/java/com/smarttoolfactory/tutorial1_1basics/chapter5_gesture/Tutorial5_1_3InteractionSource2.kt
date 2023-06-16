@@ -7,14 +7,34 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,12 +43,23 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.*
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageStatus
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageTimeText
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.QuotedMessageAlt
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.RecipientName
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.isRecipientRegistered
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.recipientOriginalName
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.recipientRegisteredName
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.ChatFlexBoxLayout
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.SubcomposeColumn
-import com.smarttoolfactory.tutorial1_1basics.ui.*
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.ReceivedQuoteColor
+import com.smarttoolfactory.tutorial1_1basics.ui.SentMessageColor
+import com.smarttoolfactory.tutorial1_1basics.ui.SentQuoteColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlinx.coroutines.delay
@@ -36,6 +67,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@Preview
 @Composable
 fun Tutorial5_1Screen3() {
     TutorialContent()

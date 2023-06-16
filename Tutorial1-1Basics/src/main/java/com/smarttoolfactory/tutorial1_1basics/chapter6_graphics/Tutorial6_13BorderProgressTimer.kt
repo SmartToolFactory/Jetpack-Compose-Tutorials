@@ -37,12 +37,12 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
+@Preview
 @Composable
 fun Tutorial6_13Screen() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
 

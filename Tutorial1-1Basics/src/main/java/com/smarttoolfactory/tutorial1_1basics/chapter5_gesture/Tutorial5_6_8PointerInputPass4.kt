@@ -83,12 +83,12 @@ import kotlin.math.roundToInt
  * it should no longer respond to fingers lifting off of it because a parent scroller has
  * consumed movement in a [PointerInputChange].
  */
+@Preview
 @Composable
 fun Tutorial5_6Screen8() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(
