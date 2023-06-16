@@ -78,8 +78,8 @@ private fun ConstraintsSample() {
         StyleableTutorialText(
             text = "When layout width is not in bounds of " +
                     "**Constraints.minWidth**..**Constraints.maxWidth** " +
-                    "Parent is placed at (layout width-Constraints.maxWidth)/2 or " +
-                    "(layout width-Constraints.minWidth)/2\n" +
+                    "Parent is placed at (Constraints.maxWidth- layout width)/2 or " +
+                    "(Constraints.minWidth-layout width)/2\n" +
                     "Constraints used for measuring measurables determine size " +
                     "of child Composables.\n" +
                     "Setting layout width determines where parent will be positioned and which" +
