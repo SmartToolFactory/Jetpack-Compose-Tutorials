@@ -28,12 +28,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/runtime/design/movable-content.md
  *
  */
+@Preview
 @Composable
 fun Tutorial3_7Screen2() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

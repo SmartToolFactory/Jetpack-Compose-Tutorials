@@ -24,12 +24,12 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
+@Preview
 @Composable
 fun Tutorial3_7Screen3() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

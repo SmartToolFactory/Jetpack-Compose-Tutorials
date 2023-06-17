@@ -31,12 +31,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
+@Preview
 @Composable
 fun Tutorial3_3Screen3() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     val density = LocalDensity.current

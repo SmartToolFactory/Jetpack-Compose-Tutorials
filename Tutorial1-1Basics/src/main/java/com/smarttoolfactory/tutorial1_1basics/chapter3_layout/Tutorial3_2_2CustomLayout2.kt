@@ -36,12 +36,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
+@Preview
 @Composable
 fun Tutorial3_2Screen2() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
 

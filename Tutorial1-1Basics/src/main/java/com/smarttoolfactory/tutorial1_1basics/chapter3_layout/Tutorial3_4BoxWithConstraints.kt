@@ -48,12 +48,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
+@Preview
 @Composable
 fun Tutorial3_4Screen() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
 
@@ -214,7 +214,7 @@ private fun ConstrainsSample2() {
             .background(Color.Red))
         Box(modifier = Modifier
             .size(50.dp)
-            .requiredSizeIn(100.dp)
+            .requiredSizeIn(minWidth = 100.dp)
             .background(Color.Green))
 
 

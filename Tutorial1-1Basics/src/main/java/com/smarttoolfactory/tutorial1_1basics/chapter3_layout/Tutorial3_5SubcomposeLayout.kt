@@ -57,12 +57,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
  *  When remeasuring take into consideration that new measurement must be done with new
  *  [Constraints] that use that property as one of parameters.
  */
+@Preview
 @Composable
 fun Tutorial3_5Screen() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
 

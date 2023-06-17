@@ -38,12 +38,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+@Preview
 @Composable
 fun Tutorial3_3Screen5() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     var alignment by remember {

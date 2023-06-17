@@ -46,12 +46,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
  * This is the inner area after we remove nip's dimensions and padding dimensions like in padding
  * example in first section.
  */
+@Preview
 @Composable
 fun Tutorial3_2Screen7() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     var message by remember { mutableStateOf("Type to monitor overflow") }

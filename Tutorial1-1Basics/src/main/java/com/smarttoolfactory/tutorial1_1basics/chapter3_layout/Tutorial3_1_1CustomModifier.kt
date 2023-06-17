@@ -25,12 +25,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.random.Random
 
+@Preview
 @Composable
 fun Tutorial3_1Screen1() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
 

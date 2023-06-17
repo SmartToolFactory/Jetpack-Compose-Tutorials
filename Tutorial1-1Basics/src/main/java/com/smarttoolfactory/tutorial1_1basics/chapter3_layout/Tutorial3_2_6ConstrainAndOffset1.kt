@@ -39,12 +39,12 @@ val textBackgroundColor = Color(0xff2196F3)
  * especially when our Composable dimensions are at same size of or bigger than its Parent.
  *
  */
+@Preview
 @Composable
 fun Tutorial3_2Screen6() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     var message by remember { mutableStateOf("Type to monitor overflow") }

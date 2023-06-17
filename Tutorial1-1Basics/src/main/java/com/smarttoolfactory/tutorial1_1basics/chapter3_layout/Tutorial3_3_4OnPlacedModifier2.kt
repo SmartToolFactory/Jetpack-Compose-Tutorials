@@ -34,12 +34,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import kotlin.math.roundToInt
 
+@Preview
 @Composable
 fun Tutorial3_3Screen4() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

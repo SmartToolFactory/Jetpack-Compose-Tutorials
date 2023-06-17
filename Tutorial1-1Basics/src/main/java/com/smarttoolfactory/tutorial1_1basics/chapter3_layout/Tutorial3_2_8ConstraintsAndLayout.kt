@@ -42,12 +42,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.ReceivedQuoteColor
 import com.smarttoolfactory.tutorial1_1basics.ui.SentMessageColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
+@Preview
 @Composable
 fun Tutorial3_2Screen8() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
     Column(

@@ -36,12 +36,12 @@ import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
+@Preview
 @Composable
 fun Tutorial3_7Screen1() {
     TutorialContent()
 }
 
-@Preview
 @Composable
 private fun TutorialContent() {
 
