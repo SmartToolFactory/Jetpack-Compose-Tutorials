@@ -61,7 +61,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen3
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_3Screen
@@ -1097,12 +1097,12 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 @Composable
 fun createStateTutorialList(): List<TutorialSectionModel> {
 
-    val tutorial4_1 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_1),
+    val tutorial4_1_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_1_1),
         description = "This tutorial shows how remember and mutableState " +
                 "effect recomposition and states.",
         action = {
-            Tutorial4_1Screen()
+            Tutorial4_1Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -1335,7 +1335,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
     )
 
     return listOf(
-        tutorial4_1,
+        tutorial4_1_1,
         tutorial4_2_1,
         tutorial4_2_2,
         tutorial4_2_3,

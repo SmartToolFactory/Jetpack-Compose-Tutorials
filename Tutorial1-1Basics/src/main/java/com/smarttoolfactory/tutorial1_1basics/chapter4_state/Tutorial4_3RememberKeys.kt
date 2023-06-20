@@ -44,7 +44,7 @@ private fun TutorialContent() {
         RememberKeyExample()
         StyleableTutorialText(text = "2-) Remember the value returned by calculation " +
                 "if key1 and key2 are equal to the previous\n" +
-                " * composition, otherwise produce and remember a new value by calling calculation.")
+                " composition, otherwise produce and remember a new value by calling calculation.")
         RememberMultipleKeysExample()
     }
 }
@@ -87,7 +87,7 @@ private fun RememberKeyExample() {
     }
 }
 
-enum class MathOperation() {
+enum class MathOperation {
     INCREASE, DECREASE
 }
 
@@ -99,9 +99,9 @@ private fun RememberMultipleKeysExample() {
 
     var counter by remember(key1 = key1Text, key2 = key2Text) { mutableStateOf(0) }
 
-    Column() {
+    Column {
 
-        Row() {
+        Row {
             OutlinedTextField(
                 modifier = Modifier.weight(1f),
                 value = key1Text,

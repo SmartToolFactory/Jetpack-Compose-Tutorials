@@ -25,7 +25,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 
 @Preview
 @Composable
-fun Tutorial4_1Screen() {
+fun Tutorial4_1Screen1() {
     TutorialContent()
 }
 
@@ -41,7 +41,7 @@ private fun TutorialContent() {
 
         StyleableTutorialText(
             text = "At outer level there is no **recomposition** since " +
-                    "mutableState(counter) is not observed by outer level. " +
+                    "mutableState(counter) is not read by outer level. " +
                     "Because of that **only in this counter myVal gets updated**.",
             bullets = false
         )
@@ -181,7 +181,7 @@ private fun Counter4() {
             onClick = {
                 counter++
                 myVal++
-                // 🔥 Since MyData is remembered at each composition the one initially instantiated
+                // 🔥 Since MyData is remembered on each composition the one initially instantiated
                 // inside remember is retained
                 myData = MyData(myData.value + 1)
             }) {
