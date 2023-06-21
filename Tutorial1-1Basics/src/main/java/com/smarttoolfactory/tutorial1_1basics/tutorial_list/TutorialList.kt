@@ -62,6 +62,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_3Screen
@@ -1113,6 +1114,23 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_1_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_1_2),
+        description = "This tutorial shows how SnapshotMutationPolicy effects whether " +
+                "recomposition should be triggered or not.",
+        action = {
+            Tutorial4_1Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SNAPSHOT_MUTATION_POLICY,
+            TAG_REMEMBER,
+            TAG_RECOMPOSITION,
+            TAG_STATE
+        ),
+        tagColor = StateListColor
+    )
+
     val tutorial4_2_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_2_1),
         description = "This tutorial shows how recomposition happens for flat or hierarchical " +
@@ -1336,6 +1354,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     return listOf(
         tutorial4_1_1,
+        tutorial4_1_2,
         tutorial4_2_1,
         tutorial4_2_2,
         tutorial4_2_3,

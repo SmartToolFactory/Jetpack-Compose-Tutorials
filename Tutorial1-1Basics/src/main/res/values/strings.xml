@@ -47,8 +47,8 @@
     <string name="title_3_7_1">3-7-1 movableContentOf1</string>
     <string name="title_3_7_2">3-7-2 movableContentOf2</string>
     <string name="title_3_7_3">3-7-3 movableContentOf3</string>
-
     <string name="title_4_1_1"><![CDATA[4-1-1 Remember&MutableState]]></string>
+    <string name="title_4_1_2">4-1-2 SnapshotMutationPolicy</string>
     <string name="title_4_2_1">4-2-1 Recomposition</string>
     <string name="title_4_2_2">4-2-2 Recomposition2</string>
     <string name="title_4_2_3">4-2-3 ScopedRecomposition</string>

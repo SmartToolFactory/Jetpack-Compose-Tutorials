@@ -135,6 +135,7 @@ const val TAG_MOVABLE_CONTENT_OF = "movableContentOf"
     STATE
  */
 const val TAG_RECOMPOSITION = "Recomposition"
+const val TAG_SNAPSHOT_MUTATION_POLICY = "SnapshotMutationPolicy"
 const val TAG_PHASE_COMPOSITION = "Composition"
 const val TAG_PHASE_LAYOUT = "Layout"
 const val TAG_PHASE_DRAW = "Draw"
