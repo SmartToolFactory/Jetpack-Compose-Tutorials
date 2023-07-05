@@ -110,7 +110,6 @@ fun MyComponent() {
 
     LogCompositions("🔥 MyComposable function")
 
-    Text(text = "Counter: $counter")
     CustomButton(onClick = { counter++ }) {
         LogCompositions("🍉 CustomButton scope")
         CustomTextWrapper(text = "Counter: $counter")
