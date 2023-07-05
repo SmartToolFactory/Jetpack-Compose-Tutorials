@@ -46,7 +46,7 @@ private fun TutorialContent() {
             text = "Recomposition happens in closest scope that reads any **State** change. In this" +
                     " example after composition on each recomposition only scopes that read a " +
                     "value are recomposed skipping recomposition of Composables between.\n" +
-                    "Check logs to see which Composables get composed and how many times they do.",
+                    "Check logs to see which Composables get recomposed and how many times they do.",
             bullets = false
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -94,7 +94,7 @@ fun CustomTextWrapper(
 }
 
 @Composable
-private fun AnotherComposable(){
+private fun AnotherComposable() {
     LogCompositions("🍋 AnotherComposable function")
 }
 
