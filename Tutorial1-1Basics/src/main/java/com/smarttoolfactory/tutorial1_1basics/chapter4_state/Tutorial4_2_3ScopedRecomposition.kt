@@ -67,6 +67,7 @@ private fun TutorialContent() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample1() {
     RandomColorColumn {
@@ -79,6 +80,7 @@ private fun Sample1() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample2() {
     RandomColorColumn {
@@ -116,6 +118,7 @@ private fun Sample2() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample3() {
     RandomColorColumn {
@@ -155,6 +158,7 @@ private fun Sample3() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample4() {
     RandomColorColumn {
@@ -208,6 +212,7 @@ private fun Sample4() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample5() {
     RandomColorColumn {

@@ -77,6 +77,7 @@ private fun TutorialContent() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample1() {
     Column(
@@ -100,7 +101,7 @@ private fun Sample1() {
     }
 }
 
-
+@Preview
 @Composable
 private fun Sample2() {
     Column(
@@ -189,6 +190,7 @@ private fun Sample2() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample3() {
     Column(
@@ -294,6 +296,7 @@ private fun Sample3() {
     }
 }
 
+@Preview
 @Composable
 private fun Sample4() {
 
@@ -400,7 +403,7 @@ private fun Sample4() {
     }
 }
 
-
+@Preview
 @Composable
 private fun Sample5() {
     Column(
