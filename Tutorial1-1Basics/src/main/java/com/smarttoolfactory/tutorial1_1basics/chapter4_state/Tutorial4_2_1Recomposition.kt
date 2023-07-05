@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -98,12 +99,98 @@ private fun ScopedRecompositionSample() {
     }
 }
 
+@Preview
+@Composable
+private fun ComposeScopeSample() {
+    var counter by remember {
+        mutableStateOf(0)
+    }
+
+    /*
+        Prints
+        I  Middle SCOPE
+        I  INNER COMPOSABLE
+    */
+    Column {
+        Button(onClick = { counter++ }) {
+            Text(text = "Counter: $counter")
+        }
+        
+        OuterComposable {
+            // This scope never gets recomposed because
+            // Nothing
+            println("Outer SCOPE")
+            MiddleComposable {
+                // Everything inside this scope
+                // is recomposed when counter changes
+                println("Middle SCOPE")
+                InnerComposable(text = "Counter $counter")
+            }
+        }
+    }
+}
+
+@Composable
+private fun OuterComposable(
+    content: @Composable () -> Unit
+) {
+    SideEffect {
+        println("OUTER COMPOSABLE")
+    }
+    content()
+}
+
+
+@Composable
+private fun MiddleComposable(
+    content: @Composable () -> Unit
+) {
+    SideEffect {
+        println("MIDDLE COMPOSABLE")
+    }
+    SomeComposable()
+    content()
+}
+
+@Composable
+private fun SomeComposable() {
+    SideEffect {
+        println("SomeComposable()")
+    }
+    
+    Text(text = "Some Composable")
+}
+
+@Composable
+private fun InnerComposable(
+    text: String
+) {
+    SideEffect {
+        println("INNER COMPOSABLE")
+    }
+    SomeInnerComposable()
+    TextComposable(text = text)
+}
+
+@Composable
+private fun TextComposable(text: String){
+    Text(text = text)
+}
+
+@Composable
+private fun SomeInnerComposable() {
+    SideEffect {
+        println("SomeInnerComposable()")
+    }
+}
+
 /*
     This sample uses this article as reference to show how scoping effect which section of
     any composable should be recomposed
 
     https://www.jetpackcompose.app/articles/donut-hole-skipping-in-jetpack-compose
  */
+@Preview
 @Composable
 fun MyComponent() {
     var counter by remember { mutableStateOf(0) }
