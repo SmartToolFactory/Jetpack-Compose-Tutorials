@@ -2,10 +2,11 @@ package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,12 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
-/*
-    This tutorial uses this article as reference to show how scoping effect which section of
-    any composable should be recomposed
 
-    https://www.jetpackcompose.app/articles/donut-hole-skipping-in-jetpack-compose
- */
 @Preview
 @Composable
 fun Tutorial4_2_1Screen() {
@@ -37,11 +33,19 @@ fun Tutorial4_2_1Screen() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        Spacer(modifier = Modifier.height(20.dp))
+        StyleableTutorialText(
+            text = "Recomposition happens in closest scope that reads any **State** change.\n" +
+                    "A scope is non-inline function that returns Unit.",
+            bullets = false
+        )
+        ScopedRecompositionSample()
+
         StyleableTutorialText(
             text = "Recomposition happens in closest scope that reads any **State** change. In this" +
                     " example after composition on each recomposition only scopes that read a " +
@@ -49,20 +53,67 @@ private fun TutorialContent() {
                     "Check logs to see which Composables get recomposed and how many times they do.",
             bullets = false
         )
-        Spacer(modifier = Modifier.height(20.dp))
         MyComponent()
     }
 }
 
+/*
+    This sample uses this article as reference to show how scoping effect which section of
+    any composable should be recomposed
+
+    https://dev.to/zachklipp/scoped-recomposition-jetpack-compose-what-happens-when-state-changes-l78
+ */
+@Preview
+@Composable
+private fun ScopedRecompositionSample() {
+    var counter by remember {
+        mutableStateOf(0)
+    }
+
+    var counter2 by remember {
+        mutableStateOf(0)
+    }
+
+    Column {
+        println("Root")
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { counter++ }
+        ) {
+            println("🍏 Button Scope")
+            Text(text = "Counter: $counter")
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { counter2++ }
+        ) {
+            println("🍎 Button Scope2")
+            Text(text = "Counter2: $counter2")
+        }
+
+        // 🔥🔥 Reading this value triggers recomposition
+        // for whole Column and both Button scopes
+        Text(text = "Counter: $counter")
+    }
+}
+
+/*
+    This sample uses this article as reference to show how scoping effect which section of
+    any composable should be recomposed
+
+    https://www.jetpackcompose.app/articles/donut-hole-skipping-in-jetpack-compose
+ */
 @Composable
 fun MyComponent() {
     var counter by remember { mutableStateOf(0) }
 
     LogCompositions("🔥 MyComposable function")
 
+    Text(text = "Counter: $counter")
     CustomButton(onClick = { counter++ }) {
         LogCompositions("🍉 CustomButton scope")
-        CustomTextWrapper(modifier = Modifier, text = "Counter: $counter")
+        CustomTextWrapper(text = "Counter: $counter")
     }
 }
 
@@ -84,13 +135,10 @@ fun CustomButton(
 }
 
 @Composable
-fun CustomTextWrapper(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+fun CustomTextWrapper(text: String) {
     LogCompositions("🎃 CustomTextWrapper function")
     AnotherComposable()
-    CustomText(text, modifier)
+    CustomText(text)
 }
 
 @Composable
@@ -99,15 +147,12 @@ private fun AnotherComposable() {
 }
 
 @Composable
-fun CustomText(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+fun CustomText(text: String) {
     LogCompositions("🍎 CustomText function")
 
     Text(
         text = text,
-        modifier = modifier
+        modifier = Modifier
             .border(3.dp, getRandomColor())
             .padding(32.dp),
         fontSize = 20.sp
