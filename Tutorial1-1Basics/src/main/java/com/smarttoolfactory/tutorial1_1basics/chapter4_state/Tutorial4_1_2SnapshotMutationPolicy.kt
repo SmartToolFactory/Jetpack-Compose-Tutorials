@@ -1,29 +1,29 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
-import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
@@ -37,10 +37,20 @@ fun Tutorial4_1Screen2() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(8.dp)
     ) {
 
+        StyleableTutorialText(
+            text =
+            "**SnapshotMutationPolicy** determines whether setting value of **MutableState** " +
+                    "with same primitive values should trigger recomposition.\n" +
+                    "Change policies or implement custom one to determine when recomposition " +
+                    "should be triggered.",
+            bullets = false
+        )
+        SnapshotPolicySample()
 
         StyleableTutorialText(
             text = "SnapshotMutationPolicy controls how changes are handled in mutable " +
@@ -64,6 +74,49 @@ private fun TutorialContent() {
             bullets = false
         )
         ReferentialEqualitySample()
+
+    }
+}
+
+
+@Preview
+@Composable
+private fun SnapshotPolicySample() {
+    var counter by remember {
+        mutableStateOf(
+            value = 0,
+            // 🔥Setting policy changes whether recomposition should
+            // be triggered when same value is set in this example
+//            policy = referentialEqualityPolicy(),
+//            policy = structuralEqualityPolicy(),
+            policy = neverEqualPolicy()
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+    ) {
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            // Depending on which policy is used setting same value will trigger recomposition
+            onClick = { counter = 1 }) {
+            SideEffect {
+                println("Recomposing with $counter")
+            }
+            Text(text = "Click to set MutableState value")
+        }
+
+        Text(
+            modifier = Modifier
+                .border(2.dp, getRandomColor())
+                .fillMaxWidth()
+                .padding(10.dp),
+            text = "counter: $counter",
+            fontSize = 16.sp
+        )
     }
 }
 
@@ -87,7 +140,6 @@ private fun StructuralEqualitySample() {
 
     Column(
         modifier = Modifier
-            .background(Orange400)
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -111,7 +163,6 @@ private fun StructuralEqualitySample() {
                 .fillMaxWidth()
                 .padding(10.dp),
             text = oneTimeEventData.message,
-            color = Color.White,
             fontSize = 16.sp
         )
     }
@@ -135,7 +186,6 @@ private fun ReferentialEqualitySample() {
 
     Column(
         modifier = Modifier
-            .background(Blue400)
             .fillMaxWidth()
             .padding(4.dp)
     ) {
@@ -159,10 +209,8 @@ private fun ReferentialEqualitySample() {
                 .fillMaxWidth()
                 .padding(10.dp),
             text = oneTimeEventData.message,
-            color = Color.White,
             fontSize = 16.sp
         )
-
     }
 }
 
