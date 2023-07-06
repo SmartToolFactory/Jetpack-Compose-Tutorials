@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
-
 @Preview
 @Composable
 fun Tutorial4_2_1Screen() {
@@ -110,15 +109,16 @@ private fun ComposeScopeSample() {
         Prints
         I  Middle SCOPE
         I  INNER COMPOSABLE
+        I  TEXT COMPOSABLE
     */
     Column {
         Button(onClick = { counter++ }) {
             Text(text = "Counter: $counter")
         }
-        
+
         OuterComposable {
             // This scope never gets recomposed because
-            // Nothing
+            // Nothing is read here
             println("Outer SCOPE")
             MiddleComposable {
                 // Everything inside this scope
@@ -128,6 +128,11 @@ private fun ComposeScopeSample() {
             }
         }
     }
+}
+
+@Composable
+private fun SomeParamFun(list:List<Int>){
+    Text(text = "List size: ${list.size}")
 }
 
 @Composable
@@ -157,7 +162,7 @@ private fun SomeComposable() {
     SideEffect {
         println("SomeComposable()")
     }
-    
+
     Text(text = "Some Composable")
 }
 
@@ -173,7 +178,10 @@ private fun InnerComposable(
 }
 
 @Composable
-private fun TextComposable(text: String){
+private fun TextComposable(text: String) {
+    SideEffect {
+        println("TEXT COMPOSABLE")
+    }
     Text(text = text)
 }
 
