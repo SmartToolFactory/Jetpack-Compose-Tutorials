@@ -345,3 +345,7 @@ previous searches using a database, domain with ViewModel.
 <br>
 [movableContentOf and movableContentWithReceiverOf-Jorge Castillo](https://newsletter.jorgecastillo.dev/p/movablecontentof-and-movablecontentwithreceivero)
 <br>
+[Jetpack Compose Stability Explained-Ben Trengrove](https://medium.com/androiddevelopers/jetpack-compose-stability-explained-79c10db270c8)
+<br>
+[Composable metrics-Chris Banes](https://chrisbanes.me/posts/composable-metrics/)
+<br>
