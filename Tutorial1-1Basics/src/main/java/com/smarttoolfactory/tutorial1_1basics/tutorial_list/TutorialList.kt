@@ -66,6 +66,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_3Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_5_1Screen
@@ -1182,6 +1183,27 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_2_4 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_2_4),
+        description = "This tutorial shows how stable or unstable classes effects recomposition." +
+                "Skippable functions when called during recomposition, " +
+                "compose is able to skip the function " +
+                "if all of the parameters are equal with their previous values.",
+
+        action = {
+            Tutorial4_2_4Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_STABILITY,
+            TAG_SKIPPABLE,
+            TAG_RECOMPOSITION,
+            TAG_STATE,
+            TAG_REMEMBER,
+        ),
+        tagColor = StateListColor
+    )
+
     val tutorial4_3 = TutorialSectionModel(
         title = stringResource(R.string.title_4_3),
         description = "Remember produce and remember a new value by calling calculation when " +
@@ -1358,6 +1380,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_2_1,
         tutorial4_2_2,
         tutorial4_2_3,
+        tutorial4_2_4,
         tutorial4_3,
         tutorial4_4,
         tutorial4_5_1,
