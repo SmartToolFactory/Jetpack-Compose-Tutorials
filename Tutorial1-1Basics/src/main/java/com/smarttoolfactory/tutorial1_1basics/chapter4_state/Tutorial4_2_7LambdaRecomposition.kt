@@ -3,6 +3,8 @@ package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 
@@ -28,7 +31,15 @@ fun Tutorial4_2_7Screen() {
 
 @Composable
 private fun TutorialContent() {
-    LambdaStabilitySample()
+    Column {
+        StyleableTutorialText(
+            text = "Reading unstable types inside lambda causes function " +
+                    "to be recomposed.",
+            bullets = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        LambdaStabilitySample()
+    }
 }
 
 @Preview

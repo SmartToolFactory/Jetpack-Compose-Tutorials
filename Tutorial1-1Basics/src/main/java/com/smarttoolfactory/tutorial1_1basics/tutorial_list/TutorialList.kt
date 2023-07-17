@@ -69,6 +69,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_6Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_7Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_5_1Screen
@@ -1246,6 +1247,27 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_2_7 = TutorialSectionModel(
+        title = stringResource(R.string.tittle_4_2_7),
+        description = "This tutorial shows unstable types read in a lambda can trigger " +
+                "recomposition even if the value doesn't change",
+
+        action = {
+            Tutorial4_2_7Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_STABILITY,
+            TAG_SKIPPABLE,
+            TAG_STABLE,
+            TAG_RECOMPOSITION,
+            TAG_STATE,
+            TAG_REMEMBER,
+        ),
+        tagColor = StateListColor
+    )
+
+
     val tutorial4_3 = TutorialSectionModel(
         title = stringResource(R.string.title_4_3),
         description = "Remember produce and remember a new value by calling calculation when " +
@@ -1425,6 +1447,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_2_4,
         tutorial4_2_5,
         tutorial4_2_6,
+        tutorial4_2_7,
         tutorial4_3,
         tutorial4_4,
         tutorial4_5_1,
