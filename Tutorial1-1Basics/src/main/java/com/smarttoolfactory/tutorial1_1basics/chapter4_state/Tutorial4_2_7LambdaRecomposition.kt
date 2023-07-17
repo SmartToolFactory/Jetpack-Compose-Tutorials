@@ -19,6 +19,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
+
+@Preview
+@Composable
+fun Tutorial4_2_7Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    LambdaStabilitySample()
+}
+
 @Preview
 @Composable
 private fun LambdaStabilitySample() {

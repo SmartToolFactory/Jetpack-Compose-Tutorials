@@ -67,6 +67,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_4Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_5Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_6Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_5_1Screen
@@ -1204,6 +1206,46 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_2_5 = TutorialSectionModel(
+        title = stringResource(R.string.tittle_4_2_5),
+        description = "This tutorial shows an immutable type that contains unstable types can " +
+                "be made stable with @Immutable annotation",
+
+        action = {
+            Tutorial4_2_5Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_STABILITY,
+            TAG_SKIPPABLE,
+            TAG_IMMUTABLE,
+            TAG_RECOMPOSITION,
+            TAG_STATE,
+            TAG_REMEMBER,
+        ),
+        tagColor = StateListColor
+    )
+
+    val tutorial4_2_6 = TutorialSectionModel(
+        title = stringResource(R.string.tittle_4_2_6),
+        description = "This tutorial shows an mutable type that contains unstable types can " +
+                "be made stable with @Stable annotation",
+
+        action = {
+            Tutorial4_2_6Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_STABILITY,
+            TAG_SKIPPABLE,
+            TAG_STABLE,
+            TAG_RECOMPOSITION,
+            TAG_STATE,
+            TAG_REMEMBER,
+        ),
+        tagColor = StateListColor
+    )
+
     val tutorial4_3 = TutorialSectionModel(
         title = stringResource(R.string.title_4_3),
         description = "Remember produce and remember a new value by calling calculation when " +
@@ -1381,6 +1423,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_2_2,
         tutorial4_2_3,
         tutorial4_2_4,
+        tutorial4_2_5,
+        tutorial4_2_6,
         tutorial4_3,
         tutorial4_4,
         tutorial4_5_1,
