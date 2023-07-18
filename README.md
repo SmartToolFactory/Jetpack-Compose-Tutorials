@@ -190,8 +190,8 @@ subprojects {
   }
 ```
 
-And run task to check for compiler reports for stability inside build/compiler_reports
-`./gradlew assembleRelease -PcomposeCompilerReports=true`
+And run task to check for compiler reports for stability inside **build/compiler_reports**
+```./gradlew assembleRelease -PcomposeCompilerReports=true```
 
 ### Some of the answers i posted on Stackoverflow
 
