@@ -165,6 +165,34 @@ previous searches using a database, domain with ViewModel.
 |                                                                                                                                                                                                                                                                                                        |                                                         |
 | <h3>6-17 Animated Rainbow Border</h3><br/>Draw animated rainbow color border using BlendMode.SrcIn and Modifier.drawWithCache<br><br>• Canvas<br>• Shape<br>• BlendMode<br>• Brush<br>                                                                                                                 | <img src ="/./screenshots/tutorial6_17.gif" width=200>  |
 
+### Stability, Skippable, Restartable
+
+Add snippet below to app's gradle module
+```
+subprojects {
+ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+  kotlinOptions {
+    if (project.findProperty("composeCompilerReports") == "true") {
+      freeCompilerArgs += [
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+        project.buildDir.absolutePath + "/compose_compiler"
+        ]
+      }
+      if (project.findProperty("composeCompilerMetrics") == "true") {
+        freeCompilerArgs += [
+          "-P",
+          "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+          project.buildDir.absolutePath + "/compose_compiler"
+        ]
+      }
+    }
+  }
+```
+
+And run task to check for compiler reports for stability inside build/compiler_reports
+`./gradlew assembleRelease -PcomposeCompilerReports=true`
+
 ### Some of the answers i posted on Stackoverflow
 
 #### Composable Functions, Recomposition
