@@ -110,7 +110,7 @@ private fun ComposeScopeSample() {
                 // Unstable Functions get recomposed even when their inputs don't change
                 UnstableComposable(data = unstableData)
                 StableComposable(data = stableData)
-                InnerComposable(text = "Counter $counter")
+                Counter(text = "Counter $counter")
             }
         }
     }
@@ -197,7 +197,7 @@ private fun MiddleComposable(
 }
 
 @Composable
-private fun InnerComposable(
+private fun Counter(
     text: String
 ) {
     SideEffect {
@@ -211,6 +211,6 @@ private fun InnerComposable(
             .fillMaxWidth()
             .padding(4.dp)
     ) {
-        Text(text = "Inner Composable: $text")
+        Text(text = "Counter() text: $text")
     }
 }
