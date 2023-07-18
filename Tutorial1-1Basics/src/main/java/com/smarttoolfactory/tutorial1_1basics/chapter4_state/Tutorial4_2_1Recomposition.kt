@@ -1,11 +1,13 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -17,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -111,8 +114,16 @@ private fun ComposeScopeSample() {
         I  INNER COMPOSABLE
         I  TEXT COMPOSABLE
     */
-    Column {
-        Button(onClick = { counter++ }) {
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { counter++ }) {
             Text(text = "Counter: $counter")
         }
 
@@ -120,19 +131,15 @@ private fun ComposeScopeSample() {
             // This scope never gets recomposed because
             // Nothing is read here
             println("Outer SCOPE")
+            Text(text = "Outer Composable")
             MiddleComposable {
-                // Everything inside this scope
-                // is recomposed when counter changes
+                // Composables inside this scope might be
+                // recomposed when counter changes
                 println("Middle SCOPE")
                 InnerComposable(text = "Counter $counter")
             }
         }
     }
-}
-
-@Composable
-private fun SomeParamFun(list:List<Int>){
-    Text(text = "List size: ${list.size}")
 }
 
 @Composable
@@ -142,7 +149,16 @@ private fun OuterComposable(
     SideEffect {
         println("OUTER COMPOSABLE")
     }
-    content()
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        content()
+    }
 }
 
 
@@ -153,8 +169,19 @@ private fun MiddleComposable(
     SideEffect {
         println("MIDDLE COMPOSABLE")
     }
-    SomeComposable()
-    content()
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        Text(text = "Middle Composable")
+
+        SomeComposable()
+        content()
+    }
 }
 
 @Composable
@@ -163,7 +190,16 @@ private fun SomeComposable() {
         println("SomeComposable()")
     }
 
-    Text(text = "Some Composable")
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        Text(text = "Some Composable")
+    }
 }
 
 @Composable
@@ -173,8 +209,24 @@ private fun InnerComposable(
     SideEffect {
         println("INNER COMPOSABLE")
     }
-    SomeInnerComposable()
-    TextComposable(text = text)
+
+    // Reading text might recompose whole function
+    // since Column is not a scope
+    // It's might because skippable functions do not
+    // recomposed if any of their inputs do not change
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        Text(text = "Inner Composable")
+
+        SomeInnerComposable()
+        TextComposable(text = text)
+    }
 }
 
 @Composable
@@ -182,13 +234,33 @@ private fun TextComposable(text: String) {
     SideEffect {
         println("TEXT COMPOSABLE")
     }
-    Text(text = text)
+
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        Text(text = "Text Composable $text")
+    }
 }
 
 @Composable
 private fun SomeInnerComposable() {
     SideEffect {
         println("SomeInnerComposable()")
+    }
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .fillMaxWidth()
+            .background(getRandomColor())
+            .padding(4.dp)
+    ) {
+        Text(text = "SomeInnerComposable()")
     }
 }
 
