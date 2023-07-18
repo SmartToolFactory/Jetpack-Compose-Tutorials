@@ -70,6 +70,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_6Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_7Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_8Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_5_1Screen
@@ -1267,6 +1268,27 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_2_8 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_2_8),
+        description = "This tutorial shows @NonRestartableComposable effects skippable and " +
+                "restartable properties of a Composable",
+
+        action = {
+            Tutorial4_2_8Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_SKIPPABLE,
+            TAG_RESTARTABLE,
+            TAG_NON_RESTARTABLE_COMPOSABLE,
+            TAG_STABILITY,
+            TAG_RECOMPOSITION,
+            TAG_STATE,
+            TAG_REMEMBER,
+        ),
+        tagColor = StateListColor
+    )
+
 
     val tutorial4_3 = TutorialSectionModel(
         title = stringResource(R.string.title_4_3),
@@ -1448,6 +1470,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_2_5,
         tutorial4_2_6,
         tutorial4_2_7,
+        tutorial4_2_8,
         tutorial4_3,
         tutorial4_4,
         tutorial4_5_1,

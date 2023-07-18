@@ -56,6 +56,7 @@
     <string name="tittle_4_2_5">4-2-5 \@Immutable Annotation</string>
     <string name="tittle_4_2_6">4-2-6 \@Stable Annotation</string>
     <string name="tittle_4_2_7">4-2-7 Lambda Recomposition</string>
+    <string name="title_4_2_8">4-2-8 \@NonRestartableComposable</string>
     <string name="title_4_3"><![CDATA[4-3 Remember&State]]></string>
     <string name="title_4_4">4-4 Custom Remember</string>
     <string name="title_4_5_1">4-5-1 SideEffect1</string>
