@@ -201,7 +201,7 @@ private fun Counter(
     text: String
 ) {
     SideEffect {
-        println("INNER COMPOSABLE")
+        println("Counter()")
     }
     Column(
         modifier = Modifier
