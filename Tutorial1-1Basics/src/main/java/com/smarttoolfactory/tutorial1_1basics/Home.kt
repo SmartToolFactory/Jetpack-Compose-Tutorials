@@ -9,15 +9,39 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Surface
+import androidx.compose.material.Tab
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -44,7 +68,7 @@ internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Graph
 /**
  * This is Home Screen that contains Search bar, Tabs, and tutorial pages in Pager
  */
-@OptIn( ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalAnimationApi
 @Composable
 fun HomeScreen(
@@ -116,6 +140,7 @@ fun HomeScreen(
             SearchDisplay.InitialResults -> {
                 HomeContent(modifier, state.initialResults, navigateToTutorial)
             }
+
             SearchDisplay.NoResults -> {
                 Box(
                     modifier = Modifier
@@ -185,7 +210,13 @@ private fun HomeContent(
     navigateToTutorial: (String) -> Unit
 ) {
 
-    val pagerState: PagerState = rememberPagerState(initialPage = 0)
+    val pagerState: PagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        // provide pageCount
+        tabList.size
+    }
     val coroutineScope = rememberCoroutineScope()
 
     ScrollableTabRow(
@@ -212,11 +243,12 @@ private fun HomeContent(
     }
 
     HorizontalPager(
-        state = pagerState,
-        pageCount = tabList.size,
-        beyondBoundsPageCount = 2
+        modifier = Modifier,
+        pageSpacing = 0.dp,
+        beyondBoundsPageCount = 2,
+        pageSize = PageSize.Fill,
+        state = pagerState
     ) { page: Int ->
-
         when (page) {
             0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
             1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
@@ -226,6 +258,29 @@ private fun HomeContent(
             else -> ComingSoonScreen()
         }
     }
+
+//    HorizontalPager(
+//        modifier = Modifier,
+//        state = pagerState,
+//        pageSpacing = 0.dp,
+//        userScrollEnabled = true,
+//        reverseLayout = false,
+//        contentPadding = PaddingValues(0.dp),
+//        beyondBoundsPageCount = 2,
+//        pageSize = PageSize.Fill,
+//        flingBehavior = PagerDefaults.flingBehavior(state = state),
+//        key = null,
+//        pageContent = fun PagerScope.(page: Int) {
+//            when (page) {
+//                0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
+//                1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
+//                2 -> TutorialListContent(modifier, tutorialList[2], navigateToTutorial)
+//                3 -> TutorialListContent(modifier, tutorialList[3], navigateToTutorial)
+//                4 -> TutorialListContent(modifier, tutorialList[4], navigateToTutorial)
+//                else -> ComingSoonScreen()
+//            }
+//        }
+//    )
 }
 
 @Composable
