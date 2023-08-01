@@ -170,24 +170,25 @@ previous searches using a database, domain with ViewModel.
 Add snippet below to app's gradle module
 ```
 subprojects {
- tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-  kotlinOptions {
-    if (project.findProperty("composeCompilerReports") == "true") {
-      freeCompilerArgs += [
-        "-P",
-        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-        project.buildDir.absolutePath + "/compose_compiler"
-        ]
-      }
-      if (project.findProperty("composeCompilerMetrics") == "true") {
-        freeCompilerArgs += [
-          "-P",
-          "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-          project.buildDir.absolutePath + "/compose_compiler"
-        ]
-      }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            if (project.findProperty("composeCompilerReports") == "true") {
+                freeCompilerArgs += [
+                        "-P",
+                        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
+                                project.buildDir.absolutePath + "/compose_compiler"
+                ]
+            }
+            if (project.findProperty("composeCompilerMetrics") == "true") {
+                freeCompilerArgs += [
+                        "-P",
+                        "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
+                                project.buildDir.absolutePath + "/compose_compiler"
+                ]
+            }
+        }
     }
-  }
+}
 ```
 
 And run task to check for compiler reports for stability inside **build/compiler_reports**
