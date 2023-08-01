@@ -256,11 +256,13 @@ private fun UnboundedWrapContentSample() {
                 .background(Color.Cyan)
                 .size(150.dp),
         ) {
-            Text(
-                text = "Hello world text",
-                modifier = Modifier.background(Pink400),
-                color = Color.White
-            )
+            BoxWithConstraints {
+                Text(
+                    text = "Constraints: $constraints",
+                    modifier = Modifier.background(Pink400),
+                    color = Color.White
+                )
+            }
         }
     }
 
@@ -274,16 +276,18 @@ private fun UnboundedWrapContentSample() {
     ) {
         Column(
             modifier = Modifier
-                .size(150.dp)
                 .border(3.dp, Color.Red, RoundedCornerShape(8.dp))
-                .wrapContentSize(unbounded = true)
+                .size(150.dp)
                 .background(Color.Cyan)
+                .wrapContentSize(unbounded = true)
         ) {
-            Text(
-                text = "Hello world text",
-                modifier = Modifier.background(Pink400),
-                color = Color.White
-            )
+            BoxWithConstraints {
+                Text(
+                    text = "Constraints: $constraints",
+                    modifier = Modifier.background(Pink400),
+                    color = Color.White
+                )
+            }
         }
     }
 }
