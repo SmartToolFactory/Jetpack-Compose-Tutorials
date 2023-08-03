@@ -41,6 +41,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen10
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen4
@@ -843,11 +844,27 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_9 = TutorialSectionModel(
-        title = "3-2-9 Modifier.wrapContentSize",
+        title = "3-2-9 Constraints.Infinity",
+        description = "Observe how using infinite constraints incorrectly leads to" +
+                "exceptions.",
+        action = {
+            Tutorial3_2Screen9()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_2_10 = TutorialSectionModel(
+        title = "3-2-10 Modifier.wrapContentSize",
         description = "Use Modifier.wrapContentSize/Width/Height to use content constraints " +
                 "instead of Constraints forced by parent.",
         action = {
-            Tutorial3_2Screen9()
+            Tutorial3_2Screen10()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -1085,6 +1102,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_7,
         tutorial3_2_8,
         tutorial3_2_9,
+        tutorial3_2_10,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_3_3,
