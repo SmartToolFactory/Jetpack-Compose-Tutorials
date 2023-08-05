@@ -40,6 +40,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen10
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen2
@@ -699,6 +700,23 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_2_0 = TutorialSectionModel(
+        title = stringResource(R.string.title3_2_0),
+        description = "Create custom layout using using layout, " +
+                "Measurable, Constraint, Placeable.",
+        action = {
+            Tutorial3_2Screen0()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
     val tutorial3_2_1 = TutorialSectionModel(
         title = stringResource(R.string.title3_2_1),
         description = "Create custom layout using using layout, " +
@@ -1093,6 +1111,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_1_1,
         tutorial3_1_2,
         tutorial3_1_3,
+        tutorial3_2_0,
         tutorial3_2_1,
         tutorial3_2_2,
         tutorial3_2_3,
