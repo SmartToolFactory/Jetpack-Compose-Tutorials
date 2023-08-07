@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
-
 @Preview
 @Composable
 fun Tutorial3_2Screen9() {
@@ -58,14 +57,17 @@ private fun TutorialContent() {
         // then the layout width from this measurement second time
 //        CustomLayout(
 //            modifier = Modifier
-//                .height(IntrinsicSize.Max)
+//                .border(2.dp, Color.Green)
+//                .height(IntrinsicSize.Min)
 //        ) {
-////            Text("Hello World", modifier = Modifier.border(2.dp, Color.Blue))
-//            Box(modifier = Modifier.size(100.dp).background(Color.Red))
+//            Text("Hello World", modifier = Modifier.border(2.dp, Color.Blue))
+//            Box(modifier = Modifier
+//                .width(100.dp)
+//                .height(40.dp)
+//                .background(Color.Red))
 //        }
     }
 }
-
 
 @Composable
 private fun CustomLayout(
@@ -77,15 +79,15 @@ private fun CustomLayout(
         content = content
     ) { measurables, constraints ->
 
-        println("Constraints: $constraints")
+        println("🍏 CustomLayout Measurement Scope constraints(): $constraints")
         val wrappedConstraints = constraints.copy(
-            // Comment out to see behavior
             // 🔥🔥 1- minHeight cannot be greater than maxHeight
             // and both minHeight and maxHeight cannot be Constraints.Infinity
             // because a Placeable cannot have infinite size
             /*
                THROWS: Can't represent a size of 2147483647 in Constraints
              */
+            // Comment out to see behavior
 //            minHeight = Constraints.Infinity,
 //            maxHeight = Constraints.Infinity
 
@@ -94,6 +96,7 @@ private fun CustomLayout(
            */
             // 🔥🔥 2- Mathematical operations with Constraints.Infinity are not allowed
             // If it's Constraints.Infinity check before doing operations
+            // Comment out to see behavior
 //            maxHeight = constraints.maxHeight/2
         )
 
@@ -103,12 +106,26 @@ private fun CustomLayout(
 
         var y = 0
 
-        layout(constraints.maxWidth, constraints.maxHeight) {
+        val layoutWidth = placeables.maxOf { it.width }
+        // 🔥🔥 3-) Having Constraints.Infinity with Intrinsic.Min/MaxHeight throws
+        // exception Can't represent a size of 2147483647 in Constraints
+        val layoutHeight = constraints.maxHeight
+
+        // This is for not passing infinite min and max constraints on second Placement Scope
+        // Pass if we use Intrinsic height
+//        val layoutHeight = if (constraints.hasFixedHeight && constraints.hasBoundedHeight){
+//            constraints.maxHeight
+//        }else {
+//            placeables.sumOf { it.height }
+//        }
+
+        layout(layoutWidth, layoutHeight) {
+            println("🍎 CustomLayout Placement Scope constraints(): $constraints")
+
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, y)
                 y += placeable.height
             }
         }
     }
-
 }
