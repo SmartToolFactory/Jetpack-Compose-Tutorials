@@ -50,14 +50,14 @@ private fun LambdaStabilitySample() {
     }
 
     val contextWrapper = ContextWrapper(LocalContext.current)
-    // 🔥List and Context are not @Stable so when they are read inside lambda
-    // It triggers recomposition for the function
+    // 🔥List and Context are not stable, when they are read inside lambda
+    // recomposition is triggered in Outer composable
     val context = LocalContext.current
-//    val list = remember {
-//        List(5){
-//            it
-//        }
-//    }
+    val list = remember {
+        List(5){
+            it
+        }
+    }
 
     Column {
         Text(text = "Counter $counter")
