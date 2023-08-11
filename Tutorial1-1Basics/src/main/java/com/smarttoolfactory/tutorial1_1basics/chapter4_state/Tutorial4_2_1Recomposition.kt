@@ -44,7 +44,7 @@ private fun TutorialContent() {
 
         StyleableTutorialText(
             text = "Recomposition happens in closest scope that reads any **State** change.\n" +
-                    "A scope is non-inline function that returns Unit.",
+                    "A scope is non-inline @Composable function that returns Unit.",
             bullets = false
         )
         ScopedRecompositionSample()
@@ -77,8 +77,14 @@ private fun ScopedRecompositionSample() {
         mutableStateOf(0)
     }
 
+    println("Root")
+    // Column, Row, and Box are inline functions
+    // because of that they don't create scopes.
+    // Composition scope here is ScopedRecompositionSample, not Column
+    // When Text at the bottom reads counter value and value changes
     Column {
-        println("Root")
+        println("Inside Column")
+
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { counter++ }
@@ -97,6 +103,10 @@ private fun ScopedRecompositionSample() {
 
         // 🔥🔥 Reading this value triggers recomposition
         // for whole Column and both Button scopes
+
+        // Creating a Scope with another Composable function
+        // limits composition inside that scope
+        // Refer https://stackoverflow.com/questions/68054878/how-to-favor-smart-recomposition-in-jetpack-compose
         Text(text = "Counter: $counter")
     }
 }
