@@ -47,6 +47,13 @@ private fun TutorialContent() {
         /*
             Prints:
             // ! These values are on a Pixel 5 emulator
+            I  Parent Scope
+
+            I  Child1 Scope
+            I  Box Scope
+
+            I  Child2 Outer Scope
+            I  Child2 Inner Scope
             I  🍏 Child1 Measurement Scope minHeight: 138, maxHeight: 138
             I  contentHeight: 138, layoutHeight: 138
 
@@ -57,7 +64,6 @@ private fun TutorialContent() {
 
             I  🍏 Parent Measurement Scope minHeight: 0, maxHeight: 1054
             I  contentHeight: 190, layoutHeight: 190
-
             I  🍎 Parent Placement Scope
             I  🍎 Child1 Placement Scope
             I  🍎 Child2 Outer Placement Scope
@@ -72,6 +78,7 @@ private fun TutorialContent() {
                 .border(1.dp, Color.Green),
             label = "Parent"
         ) {
+            println("Parent Scope")
             MyLayout(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -79,6 +86,7 @@ private fun TutorialContent() {
                     .border(2.dp, Color.Red),
                 label = "Child1"
             ) {
+                println("Child1 Scope")
 
                 // This Box is measured in range of min=50.dp, max=50.dp
                 // because of parent size
@@ -88,6 +96,7 @@ private fun TutorialContent() {
                         .background(Color.Red),
                     contentAlignment = Alignment.CenterStart
                 ){
+                    println("Box Scope")
                     Text(text = "Box Content", color = Color.White)
                 }
             }
@@ -96,10 +105,13 @@ private fun TutorialContent() {
                 modifier = Modifier.border(2.dp, Blue400),
                 label = "Child2 Outer"
             ) {
+                println("Child2 Outer Scope")
+
                 MyLayout(
                     modifier = Modifier.border(3.dp, BlueGrey400),
                     label = "Child2 Inner"
                 ) {
+                    println("Child2 Inner Scope")
                     Text("Child2 Bottom Content")
                 }
             }
