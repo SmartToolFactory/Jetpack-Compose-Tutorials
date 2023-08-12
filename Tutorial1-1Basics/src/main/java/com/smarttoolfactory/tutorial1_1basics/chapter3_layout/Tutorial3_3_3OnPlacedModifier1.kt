@@ -53,19 +53,22 @@ private fun TutorialContent() {
 
     /*
         Prints
+        I  😶‍️ INNER CustomLayout Placement Phase constraints: Constraints(minWidth = 100, maxWidth = 100, minHeight = 100, maxHeight = 100)
         I  🚙 INNER layout() width: 100, height: 100
+        I  😶‍️ MIDDLE CustomLayout Placement Phase constraints: Constraints(minWidth = 300, maxWidth = 300, minHeight = 300, maxHeight = 300)
         I  🚙 MIDDLE layout() width: 300, height: 300
+        I  😶‍️ OUTER CustomLayout Placement Phase constraints: Constraints(minWidth = 500, maxWidth = 500, minHeight = 500, maxHeight = 500)
         I  🚙 OUTER layout() width: 500, height: 500
-        I  🍏 OUTER onPlaced() positionInParent: 485.0
+        I  🍏 OUTER onPlaced() positionInParent: 0.0
         I  🚙🚙 OUTER layout() PLACING...
-        I  😶‍🌫️ OUTER CustomLayout layout...
+        I  😶‍😜️ OUTER CustomLayout Layout Phase...
         I  🍏 MIDDLE onPlaced() positionInParent: 0.0
         I  🚙🚙 MIDDLE layout() PLACING...
-        I  😶‍🌫️ MIDDLE CustomLayout layout...
+        I  😶‍😜️ MIDDLE CustomLayout Layout Phase...
         I  🍏 INNER onPlaced() positionInParent: 0.0
         I  🚙🚙 INNER layout() PLACING...
-        I  😶‍🌫️ INNER CustomLayout layout...
-        I  🍎 OUTER onGloballyPositioned() positionInParent: 485.0
+        I  😶‍😜️ INNER CustomLayout Layout Phase...
+        I  🍎 OUTER onGloballyPositioned() positionInParent: 0.0
         I  🍎 MIDDLE onGloballyPositioned() positionInParent: 0.0
         I  🍎 INNER onGloballyPositioned() positionInParent: 0.0
         I  🚗 OUTER drawWithContent()
@@ -217,11 +220,13 @@ private fun CustomBox(
             )
         }
 
+        println("😶‍️ $title CustomLayout Placement Phase constraints: $constraints")
+
         val width = constraints.maxWidth
         val height = constraints.maxHeight
 
         layout(width, height) {
-            println("😶‍🌫️ $title CustomLayout layout...")
+            println("😶‍😜️ $title CustomLayout Layout Phase...")
             placeables.forEach {
                 it.placeRelative(0, 0)
             }
