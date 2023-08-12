@@ -107,6 +107,7 @@ private fun TutorialContent() {
     }
 }
 
+@Preview
 @Composable
 private fun SubComposeLayoutExample1() {
 
@@ -149,6 +150,7 @@ private fun SubComposeLayoutExample1() {
     )
 }
 
+@Preview
 @Composable
 private fun SubcomposeLayoutExample2() {
     var mainText by remember { mutableStateOf(TextFieldValue("Main Component")) }
@@ -254,13 +256,13 @@ private fun SubcomposeLayoutExample2() {
     )
 }
 
+@Preview
 @Composable
 private fun SubcomposeLayoutExample3() {
     var text1 by remember { mutableStateOf(TextFieldValue("Text1 context")) }
     var text2 by remember { mutableStateOf(TextFieldValue("Text2 context")) }
     var text3 by remember { mutableStateOf(TextFieldValue("Text3 context")) }
     var text4 by remember { mutableStateOf(TextFieldValue("Text4 context")) }
-
 
     SubcomposeColumn(
         modifier = Modifier
@@ -373,6 +375,7 @@ private fun SubcomposeLayoutExample3() {
     )
 }
 
+@Preview
 @Composable
 private fun SubComposeRowExample() {
     SubcomposeRow(
@@ -380,6 +383,8 @@ private fun SubComposeRowExample() {
             .background(Color.LightGray)
             .horizontalScroll(state = rememberScrollState())
     ) {
+
+        println("🥹 SubcomposeRow scope...")
         Item(
             text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy " +
                     "eirmod tempor invidunt ut labore et dolore magna aliquyam"
@@ -420,6 +425,8 @@ private fun SubComponent(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
+        println("🔥 SubComponent Measurement Scope constraints: $constraints")
+
         // Subcompose(compose only a section) main content and get Placeable
         val mainPlaceables: List<Placeable> = subcompose(SlotsEnum.Main, mainContent).map {
             it.measure(constraints)
@@ -433,17 +440,24 @@ private fun SubComponent(
                     height = maxOf(currentMax.height, placeable.height)
                 )
             }
+        println("🔥🔥 SubComponent Measurement Scope maxSize: $maxSize")
+
+        val placeables = subcompose(SlotsEnum.Dependent) {
+            dependentContent(maxSize)
+        }.map {
+            it.measure(constraints)
+        }
 
         layout(maxSize.width, maxSize.height) {
 
-            println("🔥 SubcomposeLayout-> layout() maxSize width: ${maxSize.width}, height: ${maxSize.height}")
+            println("🔥🔥🔥 SubComponent layout() maxSize " +
+                    "width: ${maxSize.width}, " +
+                    "height: ${maxSize.height}")
             mainPlaceables.forEach { it.placeRelative(0, 0) }
 
             // Get List<Measurable> from subcompose function then get List<Placeable> and place them
-            subcompose(SlotsEnum.Dependent) {
-                dependentContent(maxSize)
-            }.forEach {
-                it.measure(constraints).placeRelative(0, 0)
+            placeables.forEach {
+                it.placeRelative(0, 0)
             }
         }
     }
@@ -500,6 +514,8 @@ private fun SubcomposeRow(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
+        println("🔥 SubcomposeRow Measurement Scope constraints: $constraints")
+
         var subcomposeIndex = 0
 
         var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
@@ -513,6 +529,8 @@ private fun SubcomposeRow(
                     height = maxOf(currentMax.height, placeable.height)
                 )
             }
+
+        println("🔥🔥 SubcomposeRow Measurement Scope rowSize: $rowSize")
 
         // Remeasure every element using height of tallest item using it as min height for
         // every composable
@@ -536,6 +554,9 @@ private fun SubcomposeRow(
         }
 
         layout(rowSize.width, rowSize.height) {
+
+            println("🔥🔥🔥 SubcomposeRow layout() rowSize: $rowSize")
+
             var xPos = 0
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(xPos, 0)
@@ -549,7 +570,7 @@ private fun SubcomposeRow(
 /**
  * In this example [BaselineDynamicWidthLayout] adjust it's width based on dependent component's
  * width. If dependent component(green) is longer it's width is used for parent, if it's
- * shorter than main component(black) depdendent component is resized to main one's width.
+ * shorter than main component(black) dependent component is resized to main one's width.
  *
  */
 @Composable
