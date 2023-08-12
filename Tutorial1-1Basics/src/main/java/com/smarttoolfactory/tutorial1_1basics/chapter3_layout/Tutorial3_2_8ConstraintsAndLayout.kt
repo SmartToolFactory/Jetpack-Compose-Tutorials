@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
@@ -265,7 +266,7 @@ fun Modifier.drawBubble(
             val width = constraints.constrainWidth(placeable.width + offsetX)
             // 🔥 Limit layout height to content height - arrow height in
             // bounds of min..max Constraints
-            val height = constraints.constrainWidth(placeable.height + offsetY)
+            val height = constraints.constrainHeight(placeable.height + offsetY)
 
             val posX = when (arrowDirection) {
                 ArrowDirection.Left -> arrowWidthPx.toInt()
