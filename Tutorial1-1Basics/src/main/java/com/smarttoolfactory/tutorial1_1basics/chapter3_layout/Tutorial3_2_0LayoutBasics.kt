@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
@@ -45,19 +46,22 @@ private fun TutorialContent() {
 
         /*
             Prints:
-            I  🍏 Child1 measure() called, minHeight: 138, maxHeight: 138
-            I  contentHeight: 138,  layoutHeight: 138
-            I  🍏 Child2 Inner measure() called, minHeight: 0, maxHeight: 2063
-            I  contentHeight: 52,  layoutHeight: 52
-            I  🍏 Child2 Outer measure() called, minHeight: 0, maxHeight: 2063
-            I  contentHeight: 52,  layoutHeight: 52
-            I  🍏 Parent measure() called, minHeight: 0, maxHeight: 2063
-            I  contentHeight: 190,  layoutHeight: 190
-            I  🍎 Parent layout() called!!!
-            I  🍎 Child1 layout() called!!!
-            I  🍎 Child2 Outer layout() called!!!
-            I  🍎 Child2 Inner layout() called!!!
+            // ! These values are on a Pixel 5 emulator
+            I  🍏 Child1 Measurement Scope minHeight: 138, maxHeight: 138
+            I  contentHeight: 138, layoutHeight: 138
 
+            I  🍏 Child2 Inner Measurement Scope minHeight: 0, maxHeight: 1054
+            I  contentHeight: 52, layoutHeight: 52
+            I  🍏 Child2 Outer Measurement Scope minHeight: 0, maxHeight: 1054
+            I  contentHeight: 52, layoutHeight: 52
+
+            I  🍏 Parent Measurement Scope minHeight: 0, maxHeight: 1054
+            I  contentHeight: 190, layoutHeight: 190
+
+            I  🍎 Parent Placement Scope
+            I  🍎 Child1 Placement Scope
+            I  🍎 Child2 Outer Placement Scope
+            I  🍎 Child2 Inner Placement Scope
          */
 
         // label is for logging, they are not part of real custom
@@ -81,8 +85,11 @@ private fun TutorialContent() {
                 Box(
                     modifier = Modifier
                         .size(100.dp)
-                        .background(Color.Black)
-                )
+                        .background(Color.Red),
+                    contentAlignment = Alignment.CenterStart
+                ){
+                    Text(text = "Box Content", color = Color.White)
+                }
             }
 
             MyLayout(
@@ -168,8 +175,11 @@ private fun MyLayout(
         }
 
         println(
-            "🍏 $label measure() called, minHeight: ${constraints.minHeight}, maxHeight: ${constraints.maxHeight}\n" +
-                    "contentHeight: $contentHeight,  layoutHeight: $layoutHeight\n"
+            "🍏 $label Measurement Scope " +
+                    "minHeight: ${constraints.minHeight}, " +
+                    "maxHeight: ${constraints.maxHeight}\n" +
+                    "contentHeight: $contentHeight, " +
+                    "layoutHeight: $layoutHeight\n"
         )
 
         // 🔥 Layout dimensions should be in Constraints range we get from parent
@@ -181,9 +191,7 @@ private fun MyLayout(
 
             var y = 0
 
-            println(
-                "🍎 $label layout() called!!!"
-            )
+            println("🍎 $label Placement Scope")
 
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, y)
