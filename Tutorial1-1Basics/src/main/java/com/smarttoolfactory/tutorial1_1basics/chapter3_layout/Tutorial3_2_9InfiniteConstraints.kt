@@ -31,7 +31,7 @@ private fun TutorialContent() {
     ) {
 
         StyleableTutorialText(
-            text = "Infinite constraints or **Constraints.Infinity** comes " +
+            text = "Infinite constraints or **Constraints.Infinity** " +
                     "are passed when **Modifier.scroll** modifier is assigned or explicitly passed " +
                     "from parent. There are some limits using infinite constraints. For, instance " +
                     "any mathematical operation with **Constraints.Infinity** throws exception when " +
