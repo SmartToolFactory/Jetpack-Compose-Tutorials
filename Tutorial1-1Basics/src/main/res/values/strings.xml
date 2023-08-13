@@ -37,10 +37,11 @@
     <string name="title3_2_0">3-2-0 Layout Basics</string>
     <string name="title3_2_1">3-2-1 Custom Layout</string>
     <string name="title_3_3_1">3-3-1 Scope and ParentDataModifier</string>
-    <string name="title_3_3_2">3-3-2 LayoutId Modifier</string>
+    <string name="title_3_3_2">3-3-2 layout Modifier</string>
     <string name="title_3_3_3">3-3-3 onPlaced Modifier1</string>
     <string name="title_3_3_4">3-3-4 onPlaced Modifier2</string>
     <string name="title_3_3_5">3-3-5 onPlaced Modifier3</string>
+    <string name="title_3_3_6">3-3-6 LayoutId Modifier</string>
     <string name="title_3_4">3-4 BoxWithConstraints</string>
     <string name="title_3_5">3-5 SubcomposeLayout</string>
     <string name="title_3_6_1">3-6-1 Custom Layout Samples1</string>

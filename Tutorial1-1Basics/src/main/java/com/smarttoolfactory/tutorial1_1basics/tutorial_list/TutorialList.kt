@@ -52,10 +52,10 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen7
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen8
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen9
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen1
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen4
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen6
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen1
@@ -913,16 +913,15 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
 
     val tutorial3_3_2 = TutorialSectionModel(
         title = stringResource(R.string.title_3_3_2),
-        description = "Use Modifier.layoutId to get a measurable, and use it to measure another" +
-                "measurable to match dimensions.",
+        description = "Use Modifier.layout to create LayoutModifier to measure with Constraints " +
+                "and place Placeables based on which order Modifier.layout is assigned.",
         action = {
-            Tutorial3_3Screen2()
+            Tutorial3_3Screen1()
         },
         tags = listOf(
             TAG_COMPOSE,
+            TAG_LAYOUT_MODIFIER,
             TAG_CUSTOM_LAYOUT,
-            TAG_SCOPE,
-            TAG_LAYOUT_ID_MODIFIER,
             TAG_MEASURABLE,
             TAG_CONSTRAINTS,
             TAG_PLACEABLE
@@ -980,6 +979,25 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_ON_PLACED_MODIFIER,
             TAG_CUSTOM_LAYOUT,
             TAG_SCOPE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_3_6 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_3_6),
+        description = "Use Modifier.layoutId to get a measurable, and use it to measure another" +
+                "measurable to match dimensions.",
+        action = {
+            Tutorial3_3Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_SCOPE,
+            TAG_LAYOUT_ID_MODIFIER,
             TAG_MEASURABLE,
             TAG_CONSTRAINTS,
             TAG_PLACEABLE
@@ -1106,7 +1124,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-
     return listOf(
         tutorial3_1_1,
         tutorial3_1_2,
@@ -1127,6 +1144,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_3_3,
         tutorial3_3_4,
         tutorial3_3_5,
+        tutorial3_3_6,
         tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,
