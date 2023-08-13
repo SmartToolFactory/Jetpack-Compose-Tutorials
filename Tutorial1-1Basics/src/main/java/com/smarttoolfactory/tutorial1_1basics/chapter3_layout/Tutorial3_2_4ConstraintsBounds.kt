@@ -83,7 +83,7 @@ private fun ConstraintsSample() {
                     "Constraints used for measuring measurables determine size " +
                     "of child Composables.\n" +
                     "Setting layout width determines where parent will be positioned and which" +
-                    "size it will cover",
+                    "size it will cover. 700px is chosen as containerWidth.",
             bullets = false
         )
 

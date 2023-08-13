@@ -56,11 +56,11 @@ private fun ConstraintsAndSiblingsSample() {
     var layoutWidth by remember { mutableStateOf(700f) }
 
     StyleableTutorialText(
-        text = "In this example we set layout width via slide but when **layoutWidth** " +
+        text = "In this example we set layout width via slider but when **layoutWidth** " +
                 "is not in range of min-max width of **Constraints** coming " +
                 "from **Modifier** layout content(Orange) is placed as in previous" +
                 " tutorial. Orange content is measured in a range between 0-and min of layout " +
-                "width and Constraints.maxWidth",
+                "width and Constraints.maxWidth.",
         bullets = false
     )
 
