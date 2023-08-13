@@ -40,9 +40,12 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen6
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen7
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen10
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen4
@@ -56,7 +59,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen4
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen5
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_3Screen6
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
@@ -700,6 +702,73 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_1_4 = TutorialSectionModel(
+        title = stringResource(R.string.title_1_4),
+        description = "BoxWithConstraints is a composable that defines its own content " +
+                "according to the available space, based on the incoming constraints " +
+                "or the current LayoutDirection.",
+        action = {
+            Tutorial3_1Screen4()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BOX_WITH_CONSTRAINTS
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_1_5 = TutorialSectionModel(
+        title = stringResource(R.string.title_1_5),
+        description = "In this example Constraints of different size modifiers are observed",
+        action = {
+            Tutorial3_1Screen5()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_MODIFIER_SIZE,
+            TAG_MODIFIER_WIDTH,
+            TAG_MODIFIER_HEIGHT
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_1_6 = TutorialSectionModel(
+        title = stringResource(R.string.title_1_6),
+        description = "Observe how chaining Modifier.size.size, Modifier.sizeIn.size or " +
+                "Modifier.size.requiredSize or other combination of size modifiers effect final " +
+                "Constraints.",
+        action = {
+            Tutorial3_1Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_COMPOSE_MODIFIER,
+            TAG_MODIFIER_SIZE,
+            TAG_MODIFIER_WIDTH,
+            TAG_MODIFIER_HEIGHT,
+            TAG_MODIFIER_REQUIRED
+        ),
+        tagColor = LayoutListColor
+    )
+
+
+    val tutorial3_1_7 = TutorialSectionModel(
+        title = "3-1-7 Modifier.wrapContentSize",
+        description = "Use Modifier.wrapContentSize/Width/Height to use content constraints " +
+                "instead of Constraints forced by parent.",
+        action = {
+            Tutorial3_1Screen7()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS
+        ),
+        tagColor = LayoutListColor
+    )
+
     val tutorial3_2_0 = TutorialSectionModel(
         title = stringResource(R.string.title3_2_0),
         description = "Create custom layout using using layout, " +
@@ -877,22 +946,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-    val tutorial3_2_10 = TutorialSectionModel(
-        title = "3-2-10 Modifier.wrapContentSize",
-        description = "Use Modifier.wrapContentSize/Width/Height to use content constraints " +
-                "instead of Constraints forced by parent.",
-        action = {
-            Tutorial3_2Screen10()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_CUSTOM_LAYOUT,
-            TAG_MEASURABLE,
-            TAG_CONSTRAINTS
-        ),
-        tagColor = LayoutListColor
-    )
-
     val tutorial3_3_1 = TutorialSectionModel(
         title = stringResource(R.string.title_3_3_1),
         description = "Add custom modifiers to Composable inside a custom layout using it's scope.",
@@ -1005,21 +1058,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-    val tutorial3_4 = TutorialSectionModel(
-        title = stringResource(R.string.title_3_4),
-        description = "BoxWithConstraints is a composable that defines its own content " +
-                "according to the available space, based on the incoming constraints " +
-                "or the current LayoutDirection.",
-        action = {
-            Tutorial3_4Screen()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_BOX_WITH_CONSTRAINTS
-        ),
-        tagColor = LayoutListColor
-    )
-
     val tutorial3_5 = TutorialSectionModel(
         title = stringResource(R.string.title_3_5),
         description = "SubcomposeLayout allows to subcompose the actual content during " +
@@ -1128,6 +1166,10 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_1_1,
         tutorial3_1_2,
         tutorial3_1_3,
+        tutorial3_1_4,
+        tutorial3_1_5,
+        tutorial3_1_6,
+        tutorial3_1_7,
         tutorial3_2_0,
         tutorial3_2_1,
         tutorial3_2_2,
@@ -1138,14 +1180,12 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_7,
         tutorial3_2_8,
         tutorial3_2_9,
-        tutorial3_2_10,
         tutorial3_3_1,
         tutorial3_3_2,
         tutorial3_3_3,
         tutorial3_3_4,
         tutorial3_3_5,
         tutorial3_3_6,
-        tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,
         tutorial3_6_2,

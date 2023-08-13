@@ -33,7 +33,9 @@
     <string name="title3_1_1">3-1-1 Custom Modifier</string>
     <string name="title3_1_2">3-1-2 onGloballyPositioned</string>
     <string name="title3_1_3">3-1-3 graphicsLayer</string>
-    <string name="title3_1_4">3-1-4 Segmented Custom Border</string>
+    <string name="title_1_4">3-1-4 BoxWithConstraints</string>
+    <string name="title_1_5">3-1-5 Size Modifiers</string>
+    <string name="title_1_6">3-1-6 Chaining Size Modifiers</string>
     <string name="title3_2_0">3-2-0 Layout Basics</string>
     <string name="title3_2_1">3-2-1 Custom Layout</string>
     <string name="title_3_3_1">3-3-1 Scope and ParentDataModifier</string>
@@ -42,7 +44,6 @@
     <string name="title_3_3_4">3-3-4 onPlaced Modifier2</string>
     <string name="title_3_3_5">3-3-5 onPlaced Modifier3</string>
     <string name="title_3_3_6">3-3-6 LayoutId Modifier</string>
-    <string name="title_3_4">3-4 BoxWithConstraints</string>
     <string name="title_3_5">3-5 SubcomposeLayout</string>
     <string name="title_3_6_1">3-6-1 Custom Layout Samples1</string>
     <string name="title_3_6_2">3-6-2 Chat SubcomposeLayout</string>

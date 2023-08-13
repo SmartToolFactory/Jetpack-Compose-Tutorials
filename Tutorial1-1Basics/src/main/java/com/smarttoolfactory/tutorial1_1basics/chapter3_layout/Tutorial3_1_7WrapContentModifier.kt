@@ -25,7 +25,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Preview
 @Composable
-fun Tutorial3_2Screen10() {
+fun Tutorial3_1Screen7() {
     TutorialContent()
 }
 
