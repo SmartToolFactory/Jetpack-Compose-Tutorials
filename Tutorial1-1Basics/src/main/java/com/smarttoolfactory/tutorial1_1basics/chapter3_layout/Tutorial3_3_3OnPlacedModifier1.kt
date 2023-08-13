@@ -53,21 +53,33 @@ private fun TutorialContent() {
 
     /*
         Prints
-        I  😶‍️ INNER CustomLayout Placement Phase constraints: Constraints(minWidth = 100, maxWidth = 100, minHeight = 100, maxHeight = 100)
-        I  🚙 INNER layout() width: 100, height: 100
-        I  😶‍️ MIDDLE CustomLayout Placement Phase constraints: Constraints(minWidth = 300, maxWidth = 300, minHeight = 300, maxHeight = 300)
-        I  🚙 MIDDLE layout() width: 300, height: 300
-        I  😶‍️ OUTER CustomLayout Placement Phase constraints: Constraints(minWidth = 500, maxWidth = 500, minHeight = 500, maxHeight = 500)
-        I  🚙 OUTER layout() width: 500, height: 500
+        I  😶‍️ INNER CustomLayout Measure Phase constraints: Constraints(minWidth = 100, maxWidth = 100, minHeight = 100, maxHeight = 100)
+        I  🚙 INNER BOTTOM layout() width: 100, height: 100
+        I  🚗 INNER TOP layout() width: 100, height: 100
+
+        I  😶‍️ MIDDLE CustomLayout Measure Phase constraints: Constraints(minWidth = 300, maxWidth = 300, minHeight = 300, maxHeight = 300)
+        I  🚙 MIDDLE BOTTOM layout() width: 300, height: 300
+        I  🚗 MIDDLE TOP layout() width: 300, height: 300
+
+        I  😶‍️ OUTER CustomLayout Measure Phase constraints: Constraints(minWidth = 500, maxWidth = 500, minHeight = 500, maxHeight = 500)
+        I  🚙 OUTER BOTTOM layout() width: 500, height: 500
+        I  🚗 OUTER TOP layout() width: 500, height: 500
+
+        I  🚗🚗 OUTER layout() PLACING...
         I  🍏 OUTER onPlaced() positionInParent: 0.0
         I  🚙🚙 OUTER layout() PLACING...
-        I  😶‍😜️ OUTER CustomLayout Layout Phase...
+        I  😶‍😜️ OUTER CustomLayout Placement Phase...
+
+        I  🚗🚗 MIDDLE layout() PLACING...
         I  🍏 MIDDLE onPlaced() positionInParent: 0.0
         I  🚙🚙 MIDDLE layout() PLACING...
-        I  😶‍😜️ MIDDLE CustomLayout Layout Phase...
+        I  😶‍😜️ MIDDLE CustomLayout Placement Phase...
+
+        I  🚗🚗 INNER layout() PLACING...
         I  🍏 INNER onPlaced() positionInParent: 0.0
         I  🚙🚙 INNER layout() PLACING...
-        I  😶‍😜️ INNER CustomLayout Layout Phase...
+        I  😶‍😜️ INNER CustomLayout Placement Phase...
+
         I  🍎 OUTER onGloballyPositioned() positionInParent: 0.0
         I  🍎 MIDDLE onGloballyPositioned() positionInParent: 0.0
         I  🍎 INNER onGloballyPositioned() positionInParent: 0.0
@@ -162,6 +174,24 @@ fun Modifier.layoutPlacementDraw(
     title: String
 ) = this.then(
     Modifier
+        .layout { measurable, constraints ->
+
+            val placeable = measurable.measure(constraints = constraints)
+
+            println(
+                "🚗 $title TOP layout() " +
+                        "width: ${placeable.width}, " +
+                        "height: ${placeable.height}\n"
+            )
+
+            layout(placeable.width, placeable.height) {
+
+                println(
+                    "🚗🚗 $title layout() PLACING..."
+                )
+                placeable.placeRelative(0, 0)
+            }
+        }
         .onPlaced { layoutCoordinates: LayoutCoordinates ->
             println(
                 "🍏 $title onPlaced() " +
@@ -184,7 +214,7 @@ fun Modifier.layoutPlacementDraw(
             val placeable = measurable.measure(constraints = constraints)
 
             println(
-                "🚙 $title layout() " +
+                "🚙 $title BOTTOM layout() " +
                         "width: ${placeable.width}, " +
                         "height: ${placeable.height}\n"
             )
@@ -220,13 +250,13 @@ private fun CustomBox(
             )
         }
 
-        println("😶‍️ $title CustomLayout Placement Phase constraints: $constraints")
+        println("😶‍️ $title CustomLayout Measure Phase constraints: $constraints")
 
         val width = constraints.maxWidth
         val height = constraints.maxHeight
 
         layout(width, height) {
-            println("😶‍😜️ $title CustomLayout Layout Phase...")
+            println("😶‍😜️ $title CustomLayout Placement Phase...")
             placeables.forEach {
                 it.placeRelative(0, 0)
             }
