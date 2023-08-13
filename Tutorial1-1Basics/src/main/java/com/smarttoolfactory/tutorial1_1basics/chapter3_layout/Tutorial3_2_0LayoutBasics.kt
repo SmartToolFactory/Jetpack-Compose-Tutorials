@@ -3,10 +3,12 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,6 +49,7 @@ private fun TutorialContent() {
         /*
             Prints:
             // ! These values are on a Pixel 5 emulator
+            🔥🔥 Depth-First Tree Traversal
             I  Parent Scope
 
             I  Child1 Scope
@@ -95,7 +98,7 @@ private fun TutorialContent() {
                         .size(100.dp)
                         .background(Color.Red),
                     contentAlignment = Alignment.CenterStart
-                ){
+                ) {
                     println("Box Scope")
                     Text(text = "Box Content", color = Color.White)
                 }
@@ -115,7 +118,40 @@ private fun TutorialContent() {
                     Text("Child2 Bottom Content")
                 }
             }
+        }
 
+        StyleableTutorialText(
+            text = "In this example in with which Constraints content is measured is overridden." +
+                    "And Composable out of bound of min=150.dp, max=300.dp is measured in min or " +
+                    "max values of this range.",
+            bullets = false
+        )
+
+        CustomConstrainLayout(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            BoxWithConstraints(
+                modifier = Modifier
+                    .width(50.dp)
+                    .background(Color.Cyan)
+            ) {
+                Text(text = "min: $minWidth, max: $maxWidth")
+            }
+            BoxWithConstraints(
+                modifier = Modifier
+                    .width(250.dp)
+                    .background(Color.Yellow)
+            ) {
+                Text(text = "min: $minWidth, max: $maxWidth")
+            }
+
+            BoxWithConstraints(
+                modifier = Modifier
+                    .width(350.dp)
+                    .background(Color.Green)
+            ) {
+                Text(text = "min: $minWidth, max: $maxWidth")
+            }
         }
     }
 }
@@ -204,6 +240,65 @@ private fun MyLayout(
             var y = 0
 
             println("🍎 $label Placement Scope")
+
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(0, y)
+                y += placeable.height
+            }
+        }
+    }
+}
+
+@Composable
+private fun CustomConstrainLayout(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+
+        val placeables = measurables.map { measurable ->
+            measurable.measure(
+
+                // 🔥🔥 We override how Composables inside this content will be measured
+                constraints.copy(
+                    minWidth = 150.dp.roundToPx(),
+                    maxWidth = 300.dp.roundToPx(),
+                    minHeight = 0
+                )
+            )
+        }
+
+        val contentWidth = placeables.maxOf { it.width }
+        val contentHeight = placeables.sumOf { it.height }
+
+        val layoutWidth = if (constraints.hasBoundedWidth && constraints.hasFixedWidth) {
+            constraints.maxWidth
+        } else {
+            contentWidth.coerceIn(constraints.minWidth, constraints.maxWidth)
+        }
+
+        val layoutHeight = if (constraints.hasBoundedHeight && constraints.hasFixedHeight) {
+            constraints.maxHeight
+        } else {
+            contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
+        }
+
+        println(
+            "🚗 CustomConstrainLayout Measurement Scope " +
+                    "minWidth: ${constraints.minWidth}, " +
+                    "maxHeight: ${constraints.maxHeight}\n" +
+                    "contentWidth: $contentWidth, " +
+                    "layoutWidth: $layoutWidth\n"
+        )
+
+        layout(layoutWidth, layoutHeight) {
+
+            var y = 0
+
+            println("🚗🚗 CustomConstrainLayout Placement Scope")
 
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, y)
