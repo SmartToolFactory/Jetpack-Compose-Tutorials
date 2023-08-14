@@ -46,79 +46,7 @@ private fun TutorialContent() {
             bullets = false
         )
 
-        /*
-            Prints:
-            // ! These values are on a Pixel 5 emulator
-            🔥🔥 Depth-First Tree Traversal
-            I  Parent Scope
-
-            I  Child1 Scope
-            I  Box Scope
-
-            I  Child2 Outer Scope
-            I  Child2 Inner Scope
-            I  🍏 Child1 Measurement Scope minHeight: 138, maxHeight: 138
-            I  contentHeight: 138, layoutHeight: 138
-
-            I  🍏 Child2 Inner Measurement Scope minHeight: 0, maxHeight: 1054
-            I  contentHeight: 52, layoutHeight: 52
-            I  🍏 Child2 Outer Measurement Scope minHeight: 0, maxHeight: 1054
-            I  contentHeight: 52, layoutHeight: 52
-
-            I  🍏 Parent Measurement Scope minHeight: 0, maxHeight: 1054
-            I  contentHeight: 190, layoutHeight: 190
-            I  🍎 Parent Placement Scope
-            I  🍎 Child1 Placement Scope
-            I  🍎 Child2 Outer Placement Scope
-            I  🍎 Child2 Inner Placement Scope
-         */
-
-        // label is for logging, they are not part of real custom
-        // layouts
-        MyLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.Green),
-            label = "Parent"
-        ) {
-            println("Parent Scope")
-            MyLayout(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(50.dp)
-                    .border(2.dp, Color.Red),
-                label = "Child1"
-            ) {
-                println("Child1 Scope")
-
-                // This Box is measured in range of min=50.dp, max=50.dp
-                // because of parent size
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .background(Color.Red),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    println("Box Scope")
-                    Text(text = "Box Content", color = Color.White)
-                }
-            }
-
-            MyLayout(
-                modifier = Modifier.border(2.dp, Blue400),
-                label = "Child2 Outer"
-            ) {
-                println("Child2 Outer Scope")
-
-                MyLayout(
-                    modifier = Modifier.border(3.dp, BlueGrey400),
-                    label = "Child2 Inner"
-                ) {
-                    println("Child2 Inner Scope")
-                    Text("Child2 Bottom Content")
-                }
-            }
-        }
+        CustomLayoutSample1()
 
         StyleableTutorialText(
             text = "In this example in with which Constraints content is measured is overridden." +
@@ -126,36 +54,139 @@ private fun TutorialContent() {
                     "max values of this range.",
             bullets = false
         )
+        CustomLayoutSample2()
+    }
+}
 
-        CustomConstrainLayout(
-            modifier = Modifier.fillMaxSize()
+@Preview
+@Composable
+private fun CustomLayoutSample1() {
+
+    /*
+        Prints:
+        🔥🔥 Depth-First Tree Traversal
+        I  Parent Scope
+
+        I  Child1 Scope
+        I  Box Scope
+
+        I  Child2 Outer Scope
+        I  Child2 Inner Scope
+
+        I  🍏 Child1 Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
+        minHeight: 50.18182.dp, maxHeight: 50.18182.dp
+        I  contentHeight: 50.18182.dp, layoutHeight: 50.18182.dp
+
+        I  🍏 Child2 Inner Measurement Scope minWidth: 0.0.dp, maxWidth: 392.72726.dp,
+        minHeight: 0.0.dp, maxHeight: 750.1818.dp
+        I  contentHeight: 18.90909.dp, layoutHeight: 18.90909.dp
+        I  🍏 Child2 Outer Measurement Scope minWidth: 0.0.dp, maxWidth: 392.72726.dp,
+        minHeight: 0.0.dp, maxHeight: 750.1818.dp
+        I  contentHeight: 18.90909.dp, layoutHeight: 18.90909.dp
+
+        I  🍏 Parent Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
+        minHeight: 0.0.dp, maxHeight: 750.1818.dp
+        I  contentHeight: 69.09091.dp, layoutHeight: 69.09091.dp
+
+        I  🍎 Parent Placement Scope
+        I  🍎 Child1 Placement Scope
+        I  🍎 Child2 Outer Placement Scope
+        I  🍎 Child2 Inner Placement Scope
+     */
+
+    // label is for logging, they are not part of real custom
+    // layouts
+    MyLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Color.Green),
+        label = "Parent"
+    ) {
+        println("Parent Scope")
+        MyLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(50.dp)
+                .border(2.dp, Color.Red),
+            label = "Child1"
         ) {
-            BoxWithConstraints(
-                modifier = Modifier
-                    .width(50.dp)
-                    .background(Color.Cyan)
-            ) {
-                Text(text = "min: $minWidth, max: $maxWidth")
-            }
-            BoxWithConstraints(
-                modifier = Modifier
-                    .width(250.dp)
-                    .background(Color.Yellow)
-            ) {
-                Text(text = "min: $minWidth, max: $maxWidth")
-            }
+            println("Child1 Scope")
 
-            BoxWithConstraints(
+            // This Box is measured in range of min=50.dp, max=50.dp
+            // because of parent size
+            Box(
                 modifier = Modifier
-                    .width(350.dp)
-                    .background(Color.Green)
+                    .size(100.dp)
+                    .background(Color.Red),
+                contentAlignment = Alignment.CenterStart
             ) {
-                Text(text = "min: $minWidth, max: $maxWidth")
+                println("Box Scope")
+                Text(text = "Box Content", color = Color.White)
+            }
+        }
+
+        MyLayout(
+            modifier = Modifier.border(2.dp, Blue400),
+            label = "Child2 Outer"
+        ) {
+            println("Child2 Outer Scope")
+
+            MyLayout(
+                modifier = Modifier.border(3.dp, BlueGrey400),
+                label = "Child2 Inner"
+            ) {
+                println("Child2 Inner Scope")
+                Text("Child2 Bottom Content")
             }
         }
     }
 }
 
+@Preview
+@Composable
+private fun CustomLayoutSample2() {
+    /*
+        Prints:
+        I  CustomConstrainLayout Scope
+        I  Top BoxWithConstraints Scope
+        I  Middle BoxWithConstraints Scope
+        I  Bottom BoxWithConstraints Scope
+        I  🚗 CustomConstrainLayout Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
+        minHeight: 750.1818.dp, maxHeight: 750.1818.dp
+        I  contentHeight: 73.09091.dp, layoutHeight: 750.1818.dp
+        I  🚗🚗 CustomConstrainLayout Placement Scope
+     */
+    CustomConstrainLayout(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        println("CustomConstrainLayout Scope")
+        BoxWithConstraints(
+            modifier = Modifier
+                .width(50.dp)
+                .background(Color.Cyan)
+        ) {
+            println("Top BoxWithConstraints Scope")
+            Text(text = "min: $minWidth, max: $maxWidth")
+        }
+        BoxWithConstraints(
+            modifier = Modifier
+                .width(250.dp)
+                .background(Color.Yellow)
+        ) {
+            println("Middle BoxWithConstraints Scope")
+            Text(text = "min: $minWidth, max: $maxWidth")
+        }
+
+        BoxWithConstraints(
+            modifier = Modifier
+                .width(350.dp)
+                .background(Color.Green)
+        ) {
+            println("Bottom BoxWithConstraints Scope")
+            Text(text = "min: $minWidth, max: $maxWidth")
+        }
+    }
+}
 
 @Composable
 private fun MyLayout(
@@ -224,10 +255,12 @@ private fun MyLayout(
 
         println(
             "🍏 $label Measurement Scope " +
-                    "minHeight: ${constraints.minHeight}, " +
-                    "maxHeight: ${constraints.maxHeight}\n" +
-                    "contentHeight: $contentHeight, " +
-                    "layoutHeight: $layoutHeight\n"
+                    "minWidth: ${constraints.minWidth.toDp()}, " +
+                    "maxWidth: ${constraints.maxWidth.toDp()}, " +
+                    "minHeight: ${constraints.minHeight.toDp()}, " +
+                    "maxHeight: ${constraints.maxHeight.toDp()}\n" +
+                    "contentHeight: ${contentHeight.toDp()}, " +
+                    "layoutHeight: ${layoutHeight.toDp()}\n"
         )
 
         // 🔥 Layout dimensions should be in Constraints range we get from parent
@@ -288,10 +321,12 @@ private fun CustomConstrainLayout(
 
         println(
             "🚗 CustomConstrainLayout Measurement Scope " +
-                    "minWidth: ${constraints.minWidth}, " +
-                    "maxHeight: ${constraints.maxHeight}\n" +
-                    "contentWidth: $contentWidth, " +
-                    "layoutWidth: $layoutWidth\n"
+                    "minWidth: ${constraints.minWidth.toDp()}, " +
+                    "maxWidth: ${constraints.maxWidth.toDp()}, " +
+                    "minHeight: ${constraints.minHeight.toDp()}, " +
+                    "maxHeight: ${constraints.maxHeight.toDp()}\n" +
+                    "contentHeight: ${contentHeight.toDp()}, " +
+                    "layoutHeight: ${layoutHeight.toDp()}\n"
         )
 
         layout(layoutWidth, layoutHeight) {

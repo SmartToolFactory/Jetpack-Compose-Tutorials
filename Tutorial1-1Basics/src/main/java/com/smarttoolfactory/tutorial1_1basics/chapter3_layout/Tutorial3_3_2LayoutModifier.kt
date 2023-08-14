@@ -74,7 +74,7 @@ private fun TutorialContent() {
                 .layout { measurable, constraints ->
 
                     // 🔥Measuring this Measurable with this Constraints
-                    // passes it to next layout
+                    // passes it to next LayoutModifier or LayoutModifierNode
                     val placeable = measurable.measure(
                         constraints.copy(
                             minWidth = 180.dp.roundToPx(),

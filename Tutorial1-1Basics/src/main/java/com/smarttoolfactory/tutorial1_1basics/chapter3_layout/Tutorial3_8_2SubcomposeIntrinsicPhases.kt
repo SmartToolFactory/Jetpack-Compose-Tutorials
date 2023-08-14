@@ -130,8 +130,45 @@ private fun LayoutPhasesSample() {
 
      Prints:
 
+    I  Child1 Outer Scope
+    I  Child1 Middle Scope
+    I  Child1 Inner Scope
+    I  Child2 Outer Scope
+    I  Child2 InnerA Scope
+    I  Child2 InnerB Scope
+    I  Child3 Outer Scope
+    I  Child3 Inner Scope
 
+    I  🍏 Child1 Inner Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 52, layoutHeight: 52
+    I  🍏 Child1 Middle Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 104, layoutHeight: 104
+    I  🍏 Child1 Outer Measurement Scope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 156, layoutHeight: 275
 
+    I  🍏 Child2 InnerA Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 52, layoutHeight: 52
+    I  🍏 Child2 InnerB Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 52, layoutHeight: 52
+    I  🍏 Child2 Outer Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 156, layoutHeight: 156
+
+    I  🍏 Child3 Inner Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 52, layoutHeight: 52
+    I  🍏 Child3 Outer Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  contentHeight: 52, layoutHeight: 52
+
+    I  🍏 Parent Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
+    I  contentHeight: 483, layoutHeight: 483
+    I  🍎 Parent Placement Scope
+    I  🍎 Child1 Outer Placement Scope
+    I  🍎 Child1 Middle Placement Scope
+    I  🍎 Child1 Inner Placement Scope
+    I  🍎 Child2 Outer Placement Scope
+    I  🍎 Child2 InnerA Placement Scope
+    I  🍎 Child2 InnerB Placement Scope
+    I  🍎 Child3 Outer Placement Scope
+    I  🍎 Child3 Inner Placement Scope
   */
 
     // label is for logging, they are not part of real custom

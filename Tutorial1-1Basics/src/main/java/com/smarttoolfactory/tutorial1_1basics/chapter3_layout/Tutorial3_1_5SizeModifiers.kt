@@ -60,9 +60,9 @@ private fun TutorialContent() {
                     "Measurement takes into consideration these min-max range while " +
                     "measuring, for instance if min=100dp, max=200dp. Content of Composable is " +
                     "measured between 100dp and 200dp\n. " +
-                    "For instance, a content with 30.dp width when measured with " +
-                    "widthIn(min=100, max=200) the width it takes is 100.dp. Because of this " +
-                    "sometimes it's required to change this bounds between min=0, max= parent width" +
+                    "For example, a content with 30.dp width when measured with " +
+                    "widthIn(min=100, max=200) the width assigned is 100.dp. Because of this " +
+                    "sometimes it's required to change bounds with min=0, max= parent width" +
                     "or Constraints.Infinity\n" +
                     "In this example observe which modifier returns which Constraints to " +
                     "be familiar with Constraints.",
