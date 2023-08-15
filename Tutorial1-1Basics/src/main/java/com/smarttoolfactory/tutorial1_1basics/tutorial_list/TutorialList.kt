@@ -44,6 +44,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen4
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen5
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen6
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen8
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen2
@@ -774,7 +775,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         description = "Use Modifier.layout to create LayoutModifier to measure with Constraints " +
                 "and place Placeables based on which order Modifier.layout is assigned.",
         action = {
-            Tutorial3_3Screen1()
+            Tutorial3_1Screen8()
         },
         tags = listOf(
             TAG_COMPOSE,
