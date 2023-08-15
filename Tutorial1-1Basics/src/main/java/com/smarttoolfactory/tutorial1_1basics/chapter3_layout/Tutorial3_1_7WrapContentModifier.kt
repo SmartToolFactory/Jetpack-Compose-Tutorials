@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Preview
@@ -39,6 +40,7 @@ private fun TutorialContent() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        TutorialHeader(text = "wrapContentSize Modifier")
 
         /**
          * Modifier.wrapContent allow the content to measure at its desired size without

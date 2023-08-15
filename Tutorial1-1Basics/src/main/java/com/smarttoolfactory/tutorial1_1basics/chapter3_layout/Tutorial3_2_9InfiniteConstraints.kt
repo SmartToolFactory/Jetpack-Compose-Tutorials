@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
@@ -29,6 +30,8 @@ private fun TutorialContent() {
         modifier = Modifier
             .fillMaxSize()
     ) {
+
+        TutorialHeader(text = "Infinite Constraints")
 
         StyleableTutorialText(
             text = "Infinite constraints or **Constraints.Infinity** " +

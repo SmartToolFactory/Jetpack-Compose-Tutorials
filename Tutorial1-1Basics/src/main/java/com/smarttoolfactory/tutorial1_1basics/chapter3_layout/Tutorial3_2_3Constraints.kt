@@ -25,6 +25,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Preview
@@ -43,6 +44,9 @@ private fun TutorialContent() {
             // set.
             .verticalScroll(rememberScrollState())
     ) {
+
+        TutorialHeader(text = "Constraints")
+
         StyleableTutorialText(
             text = "Constraints determine how children of a Composable is measured, " +
                     "default Constraints use minWidth, maxWidth, minHeight, maxHeight of the " +

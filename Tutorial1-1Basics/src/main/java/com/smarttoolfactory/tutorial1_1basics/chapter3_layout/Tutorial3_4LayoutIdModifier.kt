@@ -36,7 +36,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
-fun Tutorial3_3Screen6() {
+fun Tutorial3_4Screen() {
     TutorialContent()
 }
 
@@ -48,7 +48,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
 
-        TutorialHeader(text = "Modifier.layoutId")
+        TutorialHeader(text = "layoutId Modifier")
         StyleableTutorialText(
             text = "1-) **Modifier.layoutId**  Creates a tag associated with a " +
                     "composable " +

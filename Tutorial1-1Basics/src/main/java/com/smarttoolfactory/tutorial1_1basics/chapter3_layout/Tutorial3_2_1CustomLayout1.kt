@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.random.Random
 
 @Preview
@@ -47,6 +48,8 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
+        TutorialHeader(text = "Custom Layouts 1")
 
         ChipStaggeredGrid(
             modifier = Modifier

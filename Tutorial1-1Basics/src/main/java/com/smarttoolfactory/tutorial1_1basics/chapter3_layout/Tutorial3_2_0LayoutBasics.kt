@@ -1,7 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -9,18 +8,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
-import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
+import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 @Preview
 @Composable
@@ -31,6 +32,8 @@ fun Tutorial3_2Screen0() {
 @Composable
 private fun TutorialContent() {
     Column(modifier = Modifier.fillMaxSize()) {
+
+        TutorialHeader(text = "Layout Basics")
 
         StyleableTutorialText(
             text = "A custom layout is created using **Layout** Composable. A **MeasurePolicy** " +
@@ -98,16 +101,18 @@ private fun CustomLayoutSample1() {
     // layouts
     MyLayout(
         modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, Color.Green),
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+            .background(getRandomColor())
+            .fillMaxWidth(),
         label = "Parent"
     ) {
         println("Parent Scope")
         MyLayout(
             modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor())
                 .fillMaxWidth()
-                .size(50.dp)
-                .border(2.dp, Color.Red),
+                .size(50.dp),
             label = "Child1"
         ) {
             println("Child1 Scope")
@@ -116,8 +121,9 @@ private fun CustomLayoutSample1() {
             // because of parent size
             Box(
                 modifier = Modifier
-                    .size(100.dp)
-                    .background(Color.Red),
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .background(getRandomColor())
+                    .size(100.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 println("Box Scope")
@@ -126,13 +132,17 @@ private fun CustomLayoutSample1() {
         }
 
         MyLayout(
-            modifier = Modifier.border(2.dp, Blue400),
+            modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor()),
             label = "Child2 Outer"
         ) {
             println("Child2 Outer Scope")
 
             MyLayout(
-                modifier = Modifier.border(3.dp, BlueGrey400),
+                modifier = Modifier
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .background(getRandomColor()),
                 label = "Child2 Inner"
             ) {
                 println("Child2 Inner Scope")
@@ -162,16 +172,18 @@ private fun CustomLayoutSample2() {
         println("CustomConstrainLayout Scope")
         BoxWithConstraints(
             modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor())
                 .width(50.dp)
-                .background(Color.Cyan)
         ) {
             println("Top BoxWithConstraints Scope")
             Text(text = "min: $minWidth, max: $maxWidth")
         }
         BoxWithConstraints(
             modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor())
                 .width(250.dp)
-                .background(Color.Yellow)
         ) {
             println("Middle BoxWithConstraints Scope")
             Text(text = "min: $minWidth, max: $maxWidth")
@@ -179,8 +191,9 @@ private fun CustomLayoutSample2() {
 
         BoxWithConstraints(
             modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor())
                 .width(350.dp)
-                .background(Color.Green)
         ) {
             println("Bottom BoxWithConstraints Scope")
             Text(text = "min: $minWidth, max: $maxWidth")

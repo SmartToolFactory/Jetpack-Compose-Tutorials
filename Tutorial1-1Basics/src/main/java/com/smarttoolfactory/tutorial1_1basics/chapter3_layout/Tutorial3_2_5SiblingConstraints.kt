@@ -33,6 +33,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Preview
@@ -54,6 +55,8 @@ private fun TutorialContent() {
 private fun ConstraintsAndSiblingsSample() {
 
     var layoutWidth by remember { mutableStateOf(700f) }
+
+    TutorialHeader(text = "Sibling Constraints")
 
     StyleableTutorialText(
         text = "In this example we set layout width via slider but when **layoutWidth** " +

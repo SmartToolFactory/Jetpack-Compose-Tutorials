@@ -51,7 +51,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
     ) {
 
-        TutorialHeader(text = "CustomLayout")
+        TutorialHeader(text = "CustomLayouts 2")
         StyleableTutorialText(
             text = "1-) Custom layouts can use an object that implements **MeasurePolicy** " +
                     "interface. This example uses"

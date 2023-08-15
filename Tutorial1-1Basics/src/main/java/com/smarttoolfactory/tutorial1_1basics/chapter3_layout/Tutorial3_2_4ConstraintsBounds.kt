@@ -37,6 +37,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
 @Preview
@@ -56,6 +57,7 @@ private fun TutorialContent() {
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        TutorialHeader(text = "Constraints Bounds")
         ConstraintsSample()
     }
 }

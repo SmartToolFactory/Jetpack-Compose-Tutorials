@@ -1,13 +1,12 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
@@ -175,15 +173,16 @@ private fun LayoutPhasesSample() {
     // layouts
     MyLayout(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
-            .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
             .background(getRandomColor()),
         label = "Parent"
     ) {
         MyLayout(
             modifier = Modifier
                 .height(100.dp)
-                .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
             label = "Child1 Outer"
         ) {
@@ -193,7 +192,7 @@ private fun LayoutPhasesSample() {
 
             MyLayout(
                 modifier = Modifier
-                    .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
                 label = "Child1 Middle"
             ) {
@@ -203,7 +202,7 @@ private fun LayoutPhasesSample() {
 
                 MyLayout(
                     modifier = Modifier
-                        .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                        .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                         .background(getRandomColor()),
                     label = "Child1 Inner"
                 ) {
@@ -216,7 +215,7 @@ private fun LayoutPhasesSample() {
 
         MyLayout(
             modifier = Modifier
-                .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
             label = "Child2 Outer"
         ) {
@@ -225,7 +224,7 @@ private fun LayoutPhasesSample() {
 
             MyLayout(
                 modifier = Modifier
-                    .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
                 label = "Child2 InnerA"
             ) {
@@ -236,25 +235,27 @@ private fun LayoutPhasesSample() {
 
             MyLayout(
                 modifier = Modifier
-                    .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
                 label = "Child2 InnerB"
             ) {
                 println("Child2 InnerB Scope")
-                Text("Child2B Bottom Content")
+                Text("Child2B Inner Content")
             }
         }
 
         MyLayout(
             modifier = Modifier
-                .shadow(1.dp, shape = CutCornerShape(topEnd = 8.dp))
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
             label = "Child3 Outer"
         ) {
             println("Child3 Outer Scope")
 
             MyLayout(
-                modifier = Modifier.border(3.dp, BlueGrey400),
+                modifier = Modifier
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .background(getRandomColor()),
                 label = "Child3 Inner"
             ) {
                 println("Child3 Inner Scope")

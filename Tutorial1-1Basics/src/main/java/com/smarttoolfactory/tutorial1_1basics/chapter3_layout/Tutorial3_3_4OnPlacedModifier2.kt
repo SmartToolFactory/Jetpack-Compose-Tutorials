@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.math.roundToInt
 
 @Preview
@@ -48,6 +49,8 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
             .padding(10.dp)
     ) {
+        TutorialHeader(text = "onPlaced Modifier2")
+
         StyleableTutorialText(
             text = "**Modifier.onPlaced(onPlaced)** invokes **onPlaced** after the parent " +
                     "LayoutModifier and parent layout has been placed " +

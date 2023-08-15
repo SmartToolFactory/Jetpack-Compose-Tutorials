@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.round
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -46,6 +47,9 @@ fun Tutorial3_3Screen5() {
 
 @Composable
 private fun TutorialContent() {
+
+    TutorialHeader(text = "onPlaced Modifier3")
+
     var alignment by remember {
         mutableStateOf(Alignment.Center)
     }

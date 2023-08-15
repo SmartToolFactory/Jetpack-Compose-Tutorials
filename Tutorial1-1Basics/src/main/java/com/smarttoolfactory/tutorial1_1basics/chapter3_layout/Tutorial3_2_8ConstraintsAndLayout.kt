@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.ReceivedQuoteColor
 import com.smarttoolfactory.tutorial1_1basics.ui.SentMessageColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
@@ -56,6 +57,8 @@ private fun TutorialContent() {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        TutorialHeader(text = "Constraints and Layout")
 
         val density = LocalDensity.current
         val containerWidth = with(density) {

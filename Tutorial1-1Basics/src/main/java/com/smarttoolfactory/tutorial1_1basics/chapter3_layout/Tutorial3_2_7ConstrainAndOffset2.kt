@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 /**
  * Green rectangle is the total area of our Composable. Red
@@ -62,6 +63,8 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        TutorialHeader(text = "Constraints and Offset 2")
 
         val density = LocalDensity.current
         val containerWidth = with(density) {

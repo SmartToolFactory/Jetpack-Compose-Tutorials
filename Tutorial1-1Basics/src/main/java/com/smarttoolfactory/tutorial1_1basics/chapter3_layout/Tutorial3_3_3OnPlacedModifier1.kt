@@ -30,6 +30,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
@@ -39,6 +40,9 @@ fun Tutorial3_3Screen3() {
 
 @Composable
 private fun TutorialContent() {
+
+    TutorialHeader(text = "onPlaced Modifier1")
+
     val density = LocalDensity.current
 
     val outerWidth: Dp
