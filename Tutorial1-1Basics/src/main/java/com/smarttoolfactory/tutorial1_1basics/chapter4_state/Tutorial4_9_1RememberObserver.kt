@@ -21,12 +21,12 @@ import androidx.compose.ui.unit.dp
 @Preview
 @Composable
 fun Tutorial4_9_1Screen() {
-    Sample()
+    TutorialContent()
 }
 
 @Preview
 @Composable
-private fun Sample() {
+private fun TutorialContent() {
 
     var showSample by remember {
         mutableStateOf(false)

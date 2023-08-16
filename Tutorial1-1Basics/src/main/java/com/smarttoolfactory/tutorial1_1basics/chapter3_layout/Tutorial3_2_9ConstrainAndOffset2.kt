@@ -49,7 +49,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
  */
 @Preview
 @Composable
-fun Tutorial3_2Screen7() {
+fun Tutorial3_2Screen9() {
     TutorialContent()
 }
 

@@ -42,7 +42,7 @@ val textBackgroundColor = Color(0xff2196F3)
  */
 @Preview
 @Composable
-fun Tutorial3_2Screen6() {
+fun Tutorial3_2Screen8() {
     TutorialContent()
 }
 

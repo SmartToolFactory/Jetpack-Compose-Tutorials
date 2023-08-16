@@ -243,7 +243,8 @@ private fun MyLayout(
             measurable.measure(
                 // 🔥 This is for changing range min to 0, for example Modifier.width(100)
                 // returns minWidth= 100.dp, maxWidth = 100.dp
-                // while our Composable(Text,Image) can be smaller
+                // while our content Composables(Text,Image, etc) might have
+                // smaller content sizes due to their own measurements or contents.
                 constraints.copy(minWidth = 0, minHeight = 0)
             )
         }

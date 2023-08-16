@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
+package com.smarttoolfactory.tutorial1_1basics.chapter4_state
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -30,7 +30,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
  */
 @Preview
 @Composable
-fun Tutorial3_7Screen2() {
+fun Tutorial4_10Screen2() {
     TutorialContent()
 }
 

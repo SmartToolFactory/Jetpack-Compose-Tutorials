@@ -47,6 +47,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen7
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen8
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen10
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_2Screen4
@@ -63,9 +64,9 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
-import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
@@ -879,9 +880,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_5 = TutorialSectionModel(
-        title = "3-2-5 Sibling Constraints",
-        description = "Inspect how Constraints and assigned width of a layout effects " +
-                "position of a sibling Composable",
+        title = "3-2-5 Inner Constraints",
+        description = "Update default constraints with or out of bounds of original Constraints" +
+                ", and pass Constraints to content to change it's Constraints from size modifier",
         action = {
             Tutorial3_2Screen5()
         },
@@ -895,12 +896,10 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-
     val tutorial3_2_6 = TutorialSectionModel(
-        title = "3-2-6 Constrain&Offset",
-        description = "Use Constraints.offset and/or Constraints.constrainWidth to limit a " +
-                "Measurable inside parent bounds by creating padding Modifiers " +
-                "with different variations",
+        title = "3-2-6 Sibling Constraints",
+        description = "Inspect how Constraints and assigned width of a layout effects " +
+                "position of a sibling Composable",
         action = {
             Tutorial3_2Screen6()
         },
@@ -915,9 +914,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_7 = TutorialSectionModel(
-        title = "3-2-7 Constrain&Offset2",
-        description = "Constraints to measure measurables with Constraints.offset and " +
-                "Constraints.constrainWidth to limit maximum width or available.",
+        title = "3-2-7 Constraints.Infinity",
+        description = "Observe how using infinite constraints incorrectly leads to" +
+                "exceptions.",
         action = {
             Tutorial3_2Screen7()
         },
@@ -925,17 +924,16 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINTS,
-            TAG_PLACEABLE
+            TAG_CONSTRAINTS
         ),
         tagColor = LayoutListColor
     )
 
     val tutorial3_2_8 = TutorialSectionModel(
-        title = "3-2-8 Constraints & Modifier.layout",
-        description = "Constraints to measure measurables with Constraints.offset and " +
-                "Constraints.constrainWidth to limit maximum width or available " +
-                "space for Placeable",
+        title = "3-2-8 Constrain&Offset",
+        description = "Use Constraints.offset and/or Constraints.constrainWidth to limit a " +
+                "Measurable inside parent bounds by creating padding Modifiers " +
+                "with different variations",
         action = {
             Tutorial3_2Screen8()
         },
@@ -950,9 +948,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial3_2_9 = TutorialSectionModel(
-        title = "3-2-9 Constraints.Infinity",
-        description = "Observe how using infinite constraints incorrectly leads to" +
-                "exceptions.",
+        title = "3-2-9 Constrain&Offset2",
+        description = "Constraints to measure measurables with Constraints.offset and " +
+                "Constraints.constrainWidth to limit maximum width or available.",
         action = {
             Tutorial3_2Screen9()
         },
@@ -960,7 +958,27 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CUSTOM_LAYOUT,
             TAG_MEASURABLE,
-            TAG_CONSTRAINTS
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
+        ),
+        tagColor = LayoutListColor
+    )
+
+
+    val tutorial3_2_10 = TutorialSectionModel(
+        title = "3-2-10 Constraints & Modifier.layout",
+        description = "Constraints to measure measurables with Constraints.offset and " +
+                "Constraints.constrainWidth to limit maximum width or available " +
+                "space for Placeable",
+        action = {
+            Tutorial3_2Screen10()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_PLACEABLE
         ),
         tagColor = LayoutListColor
     )
@@ -1118,52 +1136,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
-    val tutorial3_7_1 = TutorialSectionModel(
-        title = stringResource(R.string.title_3_7_1),
-        description = "movableContentOf converts a lambda into one that moves the remembered " +
-                "state and nodes created in a previous call " +
-                "to the new location it is called.",
-        action = {
-            Tutorial3_7Screen1()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_MOVABLE_CONTENT_OF,
-            TAG_REMEMBER
-        ),
-        tagColor = LayoutListColor
-    )
-
-    val tutorial3_7_2 = TutorialSectionModel(
-        title = stringResource(R.string.title_3_7_2),
-        description = "Use movableContentOf to inspect effects on Composables when items from " +
-                "a list while are deleted",
-        action = {
-            Tutorial3_7Screen2()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_MOVABLE_CONTENT_OF,
-            TAG_SNAPSHOT_STATE_LIST,
-            TAG_REMEMBER
-        ),
-        tagColor = LayoutListColor
-    )
-
-    val tutorial3_7_3 = TutorialSectionModel(
-        title = stringResource(R.string.title_3_7_3),
-        description = "Use movableContentOf to inspect state after change in a list",
-        action = {
-            Tutorial3_7Screen3()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_MOVABLE_CONTENT_OF,
-            TAG_SNAPSHOT_STATE_LIST,
-            TAG_REMEMBER
-        ),
-        tagColor = LayoutListColor
-    )
 
     return listOf(
         tutorial3_1_1,
@@ -1184,6 +1156,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_2_7,
         tutorial3_2_8,
         tutorial3_2_9,
+        tutorial3_2_10,
         tutorial3_3_1,
         tutorial3_3_3,
         tutorial3_3_4,
@@ -1191,10 +1164,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,
-        tutorial3_6_2,
-        tutorial3_7_1,
-        tutorial3_7_2,
-        tutorial3_7_3
+        tutorial3_6_2
     )
 }
 
@@ -1523,7 +1493,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
-    val tutorial8_1 = TutorialSectionModel(
+    val tutorial4_8_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_8_1),
         description = "Remembering MeasurePolicy prevents crating new object when " +
                 "the parameter it reads changes.",
@@ -1540,7 +1510,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
-    val tutorial8_2 = TutorialSectionModel(
+    val tutorial4_8_2 = TutorialSectionModel(
         title = stringResource(R.string.title_4_8_2),
         description = "Remembering MeasurePolicy prevents crating new object when " +
                 "the parameter it reads changes. In this example Modifier like shadow " +
@@ -1556,6 +1526,54 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_PHASE_LAYOUT,
         ),
         tagColor = StateListColor
+    )
+
+
+    val tutorial4_10_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_10_1),
+        description = "movableContentOf converts a lambda into one that moves the remembered " +
+                "state and nodes created in a previous call " +
+                "to the new location it is called.",
+        action = {
+            Tutorial4_10Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MOVABLE_CONTENT_OF,
+            TAG_REMEMBER
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial4_10_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_10_2),
+        description = "Use movableContentOf to inspect effects on Composables when items from " +
+                "a list while are deleted",
+        action = {
+            Tutorial4_10Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MOVABLE_CONTENT_OF,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_REMEMBER
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial4_10_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_10_3),
+        description = "Use movableContentOf to inspect state after change in a list",
+        action = {
+            Tutorial4_10Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MOVABLE_CONTENT_OF,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_REMEMBER
+        ),
+        tagColor = LayoutListColor
     )
 
     return listOf(
@@ -1577,8 +1595,11 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_7_1,
         tutorial4_7_2,
         tutorial4_7_3,
-        tutorial8_1,
-        tutorial8_2
+        tutorial4_8_1,
+        tutorial4_8_2,
+        tutorial4_10_1,
+        tutorial4_10_2,
+        tutorial4_10_3
     )
 }
 
