@@ -136,7 +136,7 @@ private fun ConstraintsSample() {
                     "**constraints.copy(minWidth = 100, maxWidth = 500)**",
         )
 
-        // 🔥Placed at (600f-400f)/2 = 200f pixels off from start of Composable
+        // 🔥Placed at (600f-400f)/2 = 100f pixels off from start of Composable
         MyLayout4(
             modifier = Modifier
                 .widthIn(min = minWidth)

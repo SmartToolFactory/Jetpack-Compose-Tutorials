@@ -7,13 +7,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,10 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
@@ -43,6 +50,7 @@ fun Tutorial3_1Screen8() {
 private fun TutorialContent() {
     Column(
         Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(10.dp)
     ) {
@@ -57,6 +65,14 @@ private fun TutorialContent() {
         // In this example we measure a placeable with a different size Modifier
         // to replicate Modifier.wrapContent
         LayoutModifierSample()
+
+        StyleableTutorialText(
+            text = "With **Modifier.layout{}** you can increase content size bigger than parent. " +
+                    "Red background contains three Boxes, second Box size is increased by " +
+                    "40.dp and it's position is offset to left by 20.dp",
+            bullets = false
+        )
+        LayoutModifierSample2()
 
         StyleableTutorialText(
             text = "layout order is from bottom to top but Constraints come from top to bottom " +
@@ -157,6 +173,67 @@ private fun LayoutModifierSample() {
 
 @Preview
 @Composable
+private fun LayoutModifierSample2() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp), clip = false)
+            .background(Red400)
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(BlueGrey400)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // We increase dimensions of content by 40.dp
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .border(2.dp, Color.Yellow)
+                .layout { measurable: Measurable, constraints: Constraints ->
+                    val placeable = measurable.measure(
+                        constraints.copy(
+                            minWidth = constraints.maxWidth + 40.dp.roundToPx(),
+                            maxWidth = constraints.maxWidth + 40.dp.roundToPx()
+                        )
+                    )
+
+                    val layoutWidth =
+                        placeable.width.coerceIn(constraints.maxWidth, constraints.maxWidth)
+                    val layoutHeight =
+                        placeable.height.coerceIn(constraints.minHeight, constraints.maxHeight)
+
+                    layout(layoutWidth, layoutHeight) {
+                        val xPos = (layoutWidth - placeable.width) / 2
+                        placeable.placeRelative(xPos, 0)
+                    }
+                }
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(Green400)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(BlueGrey400)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Preview
+@Composable
 private fun LayoutModifierOrderSample() {
     // Also change placement position to show it affects Modifiers or
     // Constraints after Modifier.layout
@@ -173,6 +250,7 @@ private fun LayoutModifierOrderSample() {
      */
     BoxWithConstraints(
         modifier = Modifier
+            .height(300.dp)
             .shadow(4.dp, shape = RoundedCornerShape(8.dp), clip = false)
             .background(Red400)
             // This layout's Constraints come from parent (0-parent width, 0-parent height)
@@ -248,8 +326,8 @@ private fun LayoutModifierOrderSample() {
             }
             .shadow(4.dp, shape = RoundedCornerShape(8.dp), clip = false)
             .background(Purple400)
-            // 🔥 This width modifier also narrows range for the last
-            // Constraints passed from BoxWithConstraints to Text
+        // 🔥 This width modifier also narrows range for the last
+        // Constraints passed from BoxWithConstraints to Text
 //            .width(50.dp)
         ,
         contentAlignment = Alignment.Center
