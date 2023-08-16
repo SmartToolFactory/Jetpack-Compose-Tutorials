@@ -68,6 +68,8 @@ private fun CustomLayoutSample1() {
     /*
         Prints:
         🔥🔥 Depth-First Tree Traversal
+
+        // COMPOSITION Phase
         I  Parent Scope
 
         I  Child1 Scope
@@ -76,6 +78,7 @@ private fun CustomLayoutSample1() {
         I  Child2 Outer Scope
         I  Child2 Inner Scope
 
+        // LAYOUT Measurement Scope
         I  🍏 Child1 Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
         minHeight: 50.18182.dp, maxHeight: 50.18182.dp
         I  contentHeight: 50.18182.dp, layoutHeight: 50.18182.dp
@@ -91,6 +94,7 @@ private fun CustomLayoutSample1() {
         minHeight: 0.0.dp, maxHeight: 750.1818.dp
         I  contentHeight: 69.09091.dp, layoutHeight: 69.09091.dp
 
+        // LAYOUT Placement Scope
         I  🍎 Parent Placement Scope
         I  🍎 Child1 Placement Scope
         I  🍎 Child2 Outer Placement Scope
@@ -231,19 +235,20 @@ private fun MyLayout(
         // 🔥 1-) We measure Measurables Contents inside content lambda
         // with Constraints
         // ⚠️ Constraints are the range we measure them with depending on which
-        // Size Modifier or Scroll Modifier this has range changes
-        // You can check out this answer for to see which size modifier returns which
+        // Size Modifier or Scroll Modifier this Layout Composable assigned with.
+        // You can check out this answer to see which Size modifier returns which
         // Constraints
+        // https://stackoverflow.com/questions/65779226/android-jetpack-compose-width-height-size-modifier-vs-requiredwidth-requir/73316247#73316247
         val placeables = measurables.map { measurable ->
             measurable.measure(
-                // 🔥 This is for changing range min to 0, Modifier.width(100)
-                // returns minWidth 255(dp*px) while our Composable(Text,Image) can be smaller
+                // 🔥 This is for changing range min to 0, for example Modifier.width(100)
+                // returns minWidth= 100.dp, maxWidth = 100.dp
+                // while our Composable(Text,Image) can be smaller
                 constraints.copy(minWidth = 0, minHeight = 0)
             )
         }
 
-
-        // 2-) After measuring each children we decide how big this Layout/Composable should be
+        // 2-) After measuring each child we decide how big this Layout/Composable should be
         // Let's say we want to make a Column we need to set width to max of content Composables
         // while sum of content Composables
         val contentWidth = placeables.maxOf { it.width }
@@ -252,7 +257,6 @@ private fun MyLayout(
         // 🔥🔥 We calculated total content size however in some situations with Modifiers such as
         // Modifier.fillMaxSize we need to set Layout dimensions to match parent not
         // total dimensions of Content
-
 
         val layoutWidth = if (constraints.hasBoundedWidth && constraints.hasFixedWidth) {
             constraints.maxWidth
