@@ -82,7 +82,6 @@ private fun CustomLayout(
         content = content
     ) { measurables, constraints ->
 
-        println("🍏 CustomLayout Measurement Scope constraints(): $constraints")
         val wrappedConstraints = constraints.copy(
             // 🔥🔥 1- minHeight cannot be greater than maxHeight
             // and both minHeight and maxHeight cannot be Constraints.Infinity
@@ -122,8 +121,12 @@ private fun CustomLayout(
 //            placeables.sumOf { it.height }
 //        }
 
+        println("🍏 CustomLayout Measurement Scope layoutHeight: $layoutHeight\n" +
+                "constraints(): $constraints\n" +
+                "wrappedConstraints: $wrappedConstraints")
+
         layout(layoutWidth, layoutHeight) {
-            println("🍎 CustomLayout Placement Scope constraints(): $constraints")
+            println("🍎 CustomLayout Placement Scope")
 
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, y)

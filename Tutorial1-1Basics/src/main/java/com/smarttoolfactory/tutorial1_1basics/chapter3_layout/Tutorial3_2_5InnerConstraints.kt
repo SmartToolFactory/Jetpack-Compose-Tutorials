@@ -52,12 +52,40 @@ private fun TutorialContent() {
             bullets = false
         )
 
-        InnerConstraintsSample()
+        InnerConstraintsSample1()
+        StyleableTutorialText(
+            text = "In this example Modifier.layout also exist to show " +
+                    "how Custom Layout layout, measurement scope and Modifier.layout are executed.",
+            bullets = false
+        )
+        InnerConstraintsSample2()
     }
 }
 
 @Composable
-private fun InnerConstraintsSample() {
+private fun InnerConstraintsSample1() {
+    InnerCustomLayout(
+        modifier = Modifier
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp), clip = false)
+            .background(Green400)
+            .size(200.dp)
+    ) {
+        BoxWithConstraints(
+            modifier = Modifier
+                // 🔥🔥 Since we pass minWidth=120.dp, max=180 in InnerCustomLayout
+                // it's limited to 120.dp since Modifier.size calls
+                // 100.dp.coerceIn(120.dp, 180.dp) in its implementation
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp), clip = false)
+                .background(Purple400)
+                .size(100.dp)
+        ) {
+            Text(text = "minWidth: $minWidth, maxWidth: $maxWidth")
+        }
+    }
+}
+
+@Composable
+private fun InnerConstraintsSample2() {
 
     /*
         Prints:
