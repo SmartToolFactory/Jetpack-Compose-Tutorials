@@ -1542,7 +1542,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_MOVABLE_CONTENT_OF,
             TAG_REMEMBER
         ),
-        tagColor = LayoutListColor
+        tagColor = StateListColor
     )
 
     val tutorial4_10_2 = TutorialSectionModel(
@@ -1558,7 +1558,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_SNAPSHOT_STATE_LIST,
             TAG_REMEMBER
         ),
-        tagColor = LayoutListColor
+        tagColor = StateListColor
     )
 
     val tutorial4_10_3 = TutorialSectionModel(
@@ -1573,7 +1573,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
             TAG_SNAPSHOT_STATE_LIST,
             TAG_REMEMBER
         ),
-        tagColor = LayoutListColor
+        tagColor = StateListColor
     )
 
     return listOf(
