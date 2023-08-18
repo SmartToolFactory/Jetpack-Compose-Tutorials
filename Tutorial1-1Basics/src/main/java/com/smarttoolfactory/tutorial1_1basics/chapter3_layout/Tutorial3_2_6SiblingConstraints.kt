@@ -194,7 +194,7 @@ private fun CustomLayout(
             measurable.measure(
                 constraints.copy(
                     minWidth = 0,
-                    maxWidth = layoutWidth.coerceAtMost(constraints.maxWidth),
+                    maxWidth = layoutWidth,
                     // This is for demonstration purposed
                     // to not increase height a lot to not cause overflow from screen
                     maxHeight = 300
