@@ -55,7 +55,7 @@ private fun TutorialContent() {
         InnerConstraintsSample1()
         StyleableTutorialText(
             text = "In this example Modifier.layout also exist to show " +
-                    "how Custom Layout layout, measurement scope and Modifier.layout are executed.",
+                    "how Custom Layout layout, MeasureScope and Modifier.layout are executed.",
             bullets = false
         )
         InnerConstraintsSample2()
@@ -89,13 +89,13 @@ private fun InnerConstraintsSample2() {
 
     /*
         Prints:
-        I  🍎 InnerCustomLayout Measurement Scope
+        I  🍎 InnerCustomLayout MeasureScope
         I  constraints: minWidth: 200.0.dp, maxWidth: 200.0.dp
         I  wrappedConstraints minWidth: 120.0.dp, maxWidth: 180.0.dp
         I  contentWidth: 120.0.dp, layoutWidth: 200.0.dp
         I  🚗 Bottom layout() minWidth: 200.0.dp, maxWith: 200.0.dp
         I  🚙 Top layout() minWidth: 0.0.dp, maxWith: 280.0.dp
-        I  🍏 OuterCustomLayout Measurement Scope
+        I  🍏 OuterCustomLayout MeasureScope
         I  minWidth: 280.0.dp, maxWidth: 280.0.dp, contentWidth: 200.0.dp, layoutWidth: 280.0.dp
         I  🍏🍏 OuterCustomLayout Placement Scope
         I  🍎🍎 Placement Scope
@@ -183,7 +183,7 @@ private fun OuterCustomLayout(
             }
 
             println(
-                "🍏 OuterCustomLayout Measurement Scope\n" +
+                "🍏 OuterCustomLayout MeasureScope\n" +
                         "minWidth: ${constraints.minWidth.toDp()}, " +
                         "maxWidth: ${constraints.maxWidth.toDp()}, " +
                         "contentWidth: ${contentWidth.toDp()}, " +
@@ -244,7 +244,7 @@ private fun InnerCustomLayout(
             }
 
             println(
-                "🍎 InnerCustomLayout Measurement Scope\n" +
+                "🍎 InnerCustomLayout MeasureScope\n" +
                         "constraints: minWidth: ${constraints.minWidth.toDp()}, " +
                         "maxWidth: ${constraints.maxWidth.toDp()}\n" +
                         "wrappedConstraints minWidth: ${wrappedConstraints.minWidth.toDp()}, " +

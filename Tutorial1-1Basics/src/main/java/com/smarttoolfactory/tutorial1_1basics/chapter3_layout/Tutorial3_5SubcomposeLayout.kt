@@ -425,7 +425,7 @@ private fun SubComponent(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
-        println("🔥 SubComponent Measurement Scope constraints: $constraints")
+        println("🔥 SubComponent MeasureScope constraints: $constraints")
 
         // Subcompose(compose only a section) main content and get Placeable
         val mainPlaceables: List<Placeable> = subcompose(SlotsEnum.Main, mainContent).map {
@@ -440,7 +440,7 @@ private fun SubComponent(
                     height = maxOf(currentMax.height, placeable.height)
                 )
             }
-        println("🔥🔥 SubComponent Measurement Scope maxSize: $maxSize")
+        println("🔥🔥 SubComponent MeasureScope maxSize: $maxSize")
 
         val placeables = subcompose(SlotsEnum.Dependent) {
             dependentContent(maxSize)
@@ -514,7 +514,7 @@ private fun SubcomposeRow(
 
     SubcomposeLayout(modifier = modifier) { constraints ->
 
-        println("🔥 SubcomposeRow Measurement Scope constraints: $constraints")
+        println("🔥 SubcomposeRow MeasureScope constraints: $constraints")
 
         var subcomposeIndex = 0
 
@@ -530,7 +530,7 @@ private fun SubcomposeRow(
                 )
             }
 
-        println("🔥🔥 SubcomposeRow Measurement Scope rowSize: $rowSize")
+        println("🔥🔥 SubcomposeRow MeasureScope rowSize: $rowSize")
 
         // Remeasure every element using height of tallest item using it as min height for
         // every composable

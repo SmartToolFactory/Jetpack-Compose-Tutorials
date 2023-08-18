@@ -121,7 +121,7 @@ private fun CustomLayout(
 //            placeables.sumOf { it.height }
 //        }
 
-        println("🍏 CustomLayout Measurement Scope layoutHeight: $layoutHeight\n" +
+        println("🍏 CustomLayout MeasureScope layoutHeight: $layoutHeight\n" +
                 "constraints(): $constraints\n" +
                 "wrappedConstraints: $wrappedConstraints")
 

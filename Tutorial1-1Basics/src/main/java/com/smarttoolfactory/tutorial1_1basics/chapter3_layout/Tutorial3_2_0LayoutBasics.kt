@@ -78,19 +78,19 @@ private fun CustomLayoutSample1() {
         I  Child2 Outer Scope
         I  Child2 Inner Scope
 
-        // LAYOUT Measurement Scope
-        I  🍏 Child1 Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
+        // LAYOUT MeasureScope
+        I  🍏 Child1 MeasureScope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
         minHeight: 50.18182.dp, maxHeight: 50.18182.dp
         I  contentHeight: 50.18182.dp, layoutHeight: 50.18182.dp
 
-        I  🍏 Child2 Inner Measurement Scope minWidth: 0.0.dp, maxWidth: 392.72726.dp,
+        I  🍏 Child2 Inner MeasureScope minWidth: 0.0.dp, maxWidth: 392.72726.dp,
         minHeight: 0.0.dp, maxHeight: 750.1818.dp
         I  contentHeight: 18.90909.dp, layoutHeight: 18.90909.dp
-        I  🍏 Child2 Outer Measurement Scope minWidth: 0.0.dp, maxWidth: 392.72726.dp,
+        I  🍏 Child2 Outer MeasureScope minWidth: 0.0.dp, maxWidth: 392.72726.dp,
         minHeight: 0.0.dp, maxHeight: 750.1818.dp
         I  contentHeight: 18.90909.dp, layoutHeight: 18.90909.dp
 
-        I  🍏 Parent Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
+        I  🍏 Parent MeasureScope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
         minHeight: 0.0.dp, maxHeight: 750.1818.dp
         I  contentHeight: 69.09091.dp, layoutHeight: 69.09091.dp
 
@@ -165,7 +165,7 @@ private fun CustomLayoutSample2() {
         I  Top BoxWithConstraints Scope
         I  Middle BoxWithConstraints Scope
         I  Bottom BoxWithConstraints Scope
-        I  🚗 CustomConstrainLayout Measurement Scope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
+        I  🚗 CustomConstrainLayout MeasureScope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
         minHeight: 750.1818.dp, maxHeight: 750.1818.dp
         I  contentHeight: 73.09091.dp, layoutHeight: 750.1818.dp
         I  🚗🚗 CustomConstrainLayout Placement Scope
@@ -272,7 +272,7 @@ private fun MyLayout(
         }
 
         println(
-            "🍏 $label Measurement Scope " +
+            "🍏 $label MeasureScope " +
                     "minWidth: ${constraints.minWidth.toDp()}, " +
                     "maxWidth: ${constraints.maxWidth.toDp()}, " +
                     "minHeight: ${constraints.minHeight.toDp()}, " +
@@ -338,7 +338,7 @@ private fun CustomConstrainLayout(
         }
 
         println(
-            "🚗 CustomConstrainLayout Measurement Scope " +
+            "🚗 CustomConstrainLayout MeasureScope " +
                     "minWidth: ${constraints.minWidth.toDp()}, " +
                     "maxWidth: ${constraints.maxWidth.toDp()}, " +
                     "minHeight: ${constraints.minHeight.toDp()}, " +

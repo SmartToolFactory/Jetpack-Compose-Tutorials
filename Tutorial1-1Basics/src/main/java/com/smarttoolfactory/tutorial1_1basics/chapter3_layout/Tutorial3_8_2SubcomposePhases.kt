@@ -55,26 +55,26 @@ private fun SubcomposeLayoutPhasesSample() {
         I  Child1 Outer Scope
         I  Child1 Middle Scope
         I  Child1 Inner Scope
-        I  🍏 Child1 Inner Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1036
+        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1036
         I  contentHeight: 52, layoutHeight: 52
-        I  🍏 Child1 Middle Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1036
+        I  🍏 Child1 Middle MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1036
         I  contentHeight: 104, layoutHeight: 104
-        I  🍏 Child1 Outer Measurement Scope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1036
+        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1036
         I  contentHeight: 156, layoutHeight: 275
-        I  🍏 Parent Measurement Scope minHeight: 0, maxHeight: 2019, minWidth: 1036, maxWidth: 1036
+        I  🍏 Parent MeasureScope minHeight: 0, maxHeight: 2019, minWidth: 1036, maxWidth: 1036
         I  contentHeight: 275, layoutHeight: 275
         I  🌝🌝 SubcomposeLayout Parent after 1st subcompose()
         I  MySubcomposeLayout scope
         I  Child1 Outer Scope
         I  Child1 Middle Scope
         I  Child1 Inner Scope
-        I  🍏 Child1 Inner Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
+        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
         I  contentHeight: 52, layoutHeight: 52
-        I  🍏 Child1 Middle Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
+        I  🍏 Child1 Middle MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
         I  contentHeight: 104, layoutHeight: 104
-        I  🍏 Child1 Outer Measurement Scope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
+        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
         I  contentHeight: 156, layoutHeight: 275
-        I  🍏 Parent Measurement Scope minHeight: 275, maxHeight: 2019, minWidth: 0, maxWidth: 2147483647
+        I  🍏 Parent MeasureScope minHeight: 275, maxHeight: 2019, minWidth: 0, maxWidth: 2147483647
         I  contentHeight: 275, layoutHeight: 275
         I  🌝🌝🌝 SubcomposeLayout Parent after 2nd subcompose()
         I  🌝🌝🌝🌝 SubcomposeLayout Parent Placement Scope
@@ -236,26 +236,26 @@ private fun LayoutPhasesSample() {
     I  Child3 Outer Scope
     I  Child3 Inner Scope
 
-    I  🍏 Child1 Inner Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
+    I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
     I  contentHeight: 52, layoutHeight: 52
-    I  🍏 Child1 Middle Measurement Scope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
+    I  🍏 Child1 Middle MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
     I  contentHeight: 104, layoutHeight: 104
-    I  🍏 Child1 Outer Measurement Scope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1080
+    I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1080
     I  contentHeight: 156, layoutHeight: 275
 
-    I  🍏 Child2 InnerA Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  🍏 Child2 InnerA MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
     I  contentHeight: 52, layoutHeight: 52
-    I  🍏 Child2 InnerB Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  🍏 Child2 InnerB MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
     I  contentHeight: 52, layoutHeight: 52
-    I  🍏 Child2 Outer Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  🍏 Child2 Outer MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
     I  contentHeight: 156, layoutHeight: 156
 
-    I  🍏 Child3 Inner Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  🍏 Child3 Inner MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
     I  contentHeight: 52, layoutHeight: 52
-    I  🍏 Child3 Outer Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
+    I  🍏 Child3 Outer MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
     I  contentHeight: 52, layoutHeight: 52
 
-    I  🍏 Parent Measurement Scope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
+    I  🍏 Parent MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
     I  contentHeight: 483, layoutHeight: 483
     I  🍎 Parent Placement Scope
     I  🍎 Child1 Outer Placement Scope
@@ -399,7 +399,7 @@ private fun MyLayout(
             }
 
             println(
-                "🍏 $label Measurement Scope " +
+                "🍏 $label MeasureScope " +
                         "minHeight: ${constraints.minHeight}, " +
                         "maxHeight: ${constraints.maxHeight}, " +
                         "minWidth: ${constraints.minWidth}, " +
