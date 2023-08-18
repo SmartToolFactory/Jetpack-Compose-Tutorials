@@ -27,7 +27,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 @Preview
 @Composable
-fun Tutorial3_7Screen() {
+fun Tutorial3_7Screen1() {
     TutorialContent()
 }
 
@@ -45,169 +45,84 @@ private fun TutorialContent() {
 
 @Preview
 @Composable
-private fun SubcomposeLayoutPhasesSample() {
+private fun LayoutPhasesSample1() {
 
     /*
-        Prints:
 
-        I  🌝 SubcomposeLayout Parent before subcompose()
-        I  MySubcomposeLayout scope
+            Parent Layout
+             /         \
+            /           \
+           /             \
+          /               \
+    Child1 Outer         Child2
+          |
+      Child1 Inner
+
+        Prints:
+        I  Parent Scope
         I  Child1 Outer Scope
-        I  Child1 Middle Scope
         I  Child1 Inner Scope
-        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1036
+        I  Child2 Scope
+        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
         I  contentHeight: 52, layoutHeight: 52
-        I  🍏 Child1 Middle MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1036
-        I  contentHeight: 104, layoutHeight: 104
-        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1036
-        I  contentHeight: 156, layoutHeight: 275
-        I  🍏 Parent MeasureScope minHeight: 0, maxHeight: 2019, minWidth: 1036, maxWidth: 1036
-        I  contentHeight: 275, layoutHeight: 275
-        I  🌝🌝 SubcomposeLayout Parent after 1st subcompose()
-        I  MySubcomposeLayout scope
-        I  Child1 Outer Scope
-        I  Child1 Middle Scope
-        I  Child1 Inner Scope
-        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
+        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 1080
+        I  contentHeight: 104, layoutHeight: 275
+        I  🍏 Child2 MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 0, maxWidth: 1080
         I  contentHeight: 52, layoutHeight: 52
-        I  🍏 Child1 Middle MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
-        I  contentHeight: 104, layoutHeight: 104
-        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
-        I  contentHeight: 156, layoutHeight: 275
-        I  🍏 Parent MeasureScope minHeight: 275, maxHeight: 2019, minWidth: 0, maxWidth: 2147483647
-        I  contentHeight: 275, layoutHeight: 275
-        I  🌝🌝🌝 SubcomposeLayout Parent after 2nd subcompose()
-        I  🌝🌝🌝🌝 SubcomposeLayout Parent Placement Scope
+        I  🍏 Parent MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
+        I  contentHeight: 327, layoutHeight: 327
         I  🍎 Parent Placement Scope
         I  🍎 Child1 Outer Placement Scope
-        I  🍎 Child1 Middle Placement Scope
         I  🍎 Child1 Inner Placement Scope
+        I  🍎 Child2 Placement Scope
 
      */
 
-    MySubcomposeLayout(label = "Parent") {
-        println("MySubcomposeLayout scope")
+    MyLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+            .background(getRandomColor()),
+        label = "Parent"
+    ) {
+        println("Parent Scope")
         // label is for logging, they are not part of real custom
         // layouts
         MyLayout(
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
+                .height(100.dp)
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
-            label = "Parent"
+            label = "Child1 Outer"
         ) {
+            println("Child1 Outer Scope")
+            Text("Child1 Outer Content")
             MyLayout(
                 modifier = Modifier
-                    .height(100.dp)
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
-                label = "Child1 Outer"
+                label = "Child1 Inner"
             ) {
-
-                println("Child1 Outer Scope")
-                Text("Child1 Outer Content")
-
-                MyLayout(
-                    modifier = Modifier
-                        .shadow(4.dp, shape = RoundedCornerShape(8.dp))
-                        .background(getRandomColor()),
-                    label = "Child1 Middle"
-                ) {
-                    println("Child1 Middle Scope")
-                    Text("Child1 Middle Content")
-
-
-                    MyLayout(
-                        modifier = Modifier
-                            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
-                            .background(getRandomColor()),
-                        label = "Child1 Inner"
-                    ) {
-                        println("Child1 Inner Scope")
-
-                        Text("Child1 Bottom Content")
-                    }
-                }
+                println("Child1 Inner Scope")
+                Text("Child1 Inner Content")
             }
         }
-    }
-}
 
-@Composable
-private fun MySubcomposeLayout(
-    modifier: Modifier = Modifier,
-    label: String,
-    content: @Composable () -> Unit
-) {
-
-    SubcomposeLayout(modifier = modifier) { constraints: Constraints ->
-
-        var subcomposeIndex = 0
-
-        println(
-            "🌝 SubcomposeLayout $label before subcompose()"
-        )
-
-
-        var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
-            it.measure(constraints)
-        }
-
-
-        println(
-            "🌝🌝 SubcomposeLayout $label after 1st subcompose()"
-        )
-
-        var rowSize =
-            placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
-                IntSize(
-                    width = currentMax.width + placeable.width,
-                    height = maxOf(currentMax.height, placeable.height)
-                )
-            }
-
-        // Remeasure every element using height of tallest item using it as min height for
-        // every composable
-        if (placeables.isNotEmpty()) {
-            placeables = subcompose(subcomposeIndex, content).map { measurable: Measurable ->
-                measurable.measure(
-                    Constraints(
-                        minHeight = rowSize.height,
-                        maxHeight = constraints.maxHeight
-                    )
-                )
-            }
-
-            println(
-                "🌝🌝🌝 SubcomposeLayout $label after 2nd subcompose()"
-            )
-
-            rowSize =
-                placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
-                    IntSize(
-                        width = currentMax.width + placeable.width,
-                        height = maxOf(currentMax.height, placeable.height)
-                    )
-                }
-        }
-
-        layout(rowSize.width, rowSize.height) {
-
-            println("🌝🌝🌝🌝 SubcomposeLayout $label Placement Scope rowSize: $rowSize")
-
-            var xPos = 0
-            placeables.forEach { placeable: Placeable ->
-                placeable.placeRelative(xPos, 0)
-                xPos += placeable.width
-            }
+        MyLayout(
+            modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor()),
+            label = "Child2"
+        ) {
+            println("Child2 Scope")
+            Text("Child2 Content")
         }
     }
 }
 
 @Preview
 @Composable
-private fun LayoutPhasesSample() {
+private fun LayoutPhasesSample2() {
     /*
 
                 Parent Composable
@@ -361,7 +276,6 @@ private fun LayoutPhasesSample() {
                 Text("Child3 Bottom Content")
             }
         }
-
     }
 }
 
@@ -425,4 +339,164 @@ private fun MyLayout(
         content = content,
         measurePolicy = measurePolicy
     )
+}
+
+@Preview
+@Composable
+private fun SubcomposeLayoutPhasesSample() {
+
+
+    /*
+
+            MySubcomposeLayout
+             /         \
+            /           \
+           /             \
+          /               \
+    Child1 Outer         Child2
+          |
+      Child1 Inner
+
+        Prints:
+        I  🌝 SubcomposeLayout MySubcomposeLayout before subcompose()
+        I  MySubcomposeLayout Scope
+        I  Child1 Outer Scope
+        I  Child1 Inner Scope
+        I  Child2 Scope
+        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 1080
+        I  contentHeight: 52, layoutHeight: 52
+        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 1080, maxWidth: 1080
+        I  contentHeight: 104, layoutHeight: 275
+        I  🍏 Child2 MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
+        I  contentHeight: 52, layoutHeight: 52
+        I  🌝🌝 SubcomposeLayout MySubcomposeLayout after 1st subcompose()
+        I  MySubcomposeLayout scope
+        I  Child1 Outer Scope
+        I  Child1 Inner Scope
+        I  Child2 Scope
+        I  🍏 Child1 Inner MeasureScope minHeight: 0, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
+        I  contentHeight: 52, layoutHeight: 52
+        I  🍏 Child1 Outer MeasureScope minHeight: 275, maxHeight: 275, minWidth: 0, maxWidth: 2147483647
+        I  contentHeight: 104, layoutHeight: 275
+        I  🍏 Child2 MeasureScope minHeight: 275, maxHeight: 2063, minWidth: 0, maxWidth: 2147483647
+        I  contentHeight: 52, layoutHeight: 275
+        I  🌝🌝🌝 SubcomposeLayout MySubcomposeLayout after 2nd subcompose()
+        I  🌝🌝🌝🌝 SubcomposeLayout MySubcomposeLayout Placement Scope rowSize: 597 x 275
+        I  🍎 Child1 Outer Placement Scope
+        I  🍎 Child1 Inner Placement Scope
+        I  🍎 Child2 Placement Scope
+
+     */
+
+    MySubcomposeLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+            .background(getRandomColor()),
+        label = "MySubcomposeLayout"
+    ) {
+        println("MySubcomposeLayout Scope")
+        // label is for logging, they are not part of real custom
+        // layouts
+        MyLayout(
+            modifier = Modifier
+                .height(100.dp)
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor()),
+            label = "Child1 Outer"
+        ) {
+            println("Child1 Outer Scope")
+            Text("Child1 Outer Content")
+            MyLayout(
+                modifier = Modifier
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .background(getRandomColor()),
+                label = "Child1 Inner"
+            ) {
+                println("Child1 Inner Scope")
+                Text("Child1 Inner Content")
+            }
+        }
+
+        MyLayout(
+            modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                .background(getRandomColor()),
+            label = "Child2"
+        ) {
+            println("Child2 Scope")
+            Text("Child2 Content")
+        }
+    }
+}
+
+@Composable
+private fun MySubcomposeLayout(
+    modifier: Modifier = Modifier,
+    label: String,
+    content: @Composable () -> Unit
+) {
+
+    SubcomposeLayout(modifier = modifier) { constraints: Constraints ->
+
+        var subcomposeIndex = 0
+
+        println(
+            "🌝 SubcomposeLayout $label before subcompose()"
+        )
+
+
+        var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
+            it.measure(constraints)
+        }
+
+
+        println(
+            "🌝🌝 SubcomposeLayout $label after 1st subcompose()"
+        )
+
+        var rowSize =
+            placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
+                IntSize(
+                    width = currentMax.width + placeable.width,
+                    height = maxOf(currentMax.height, placeable.height)
+                )
+            }
+
+        // Remeasure every element using height of tallest item using it as min height for
+        // every composable
+        if (placeables.isNotEmpty()) {
+            placeables = subcompose(subcomposeIndex, content).map { measurable: Measurable ->
+                measurable.measure(
+                    Constraints(
+                        minHeight = rowSize.height,
+                        maxHeight = constraints.maxHeight
+                    )
+                )
+            }
+
+            println(
+                "🌝🌝🌝 SubcomposeLayout $label after 2nd subcompose()"
+            )
+
+            rowSize =
+                placeables.fold(IntSize.Zero) { currentMax: IntSize, placeable: Placeable ->
+                    IntSize(
+                        width = currentMax.width + placeable.width,
+                        height = maxOf(currentMax.height, placeable.height)
+                    )
+                }
+        }
+
+        layout(rowSize.width, rowSize.height) {
+
+            println("🌝🌝🌝🌝 SubcomposeLayout $label Placement Scope rowSize: $rowSize")
+
+            var xPos = 0
+            placeables.forEach { placeable: Placeable ->
+                placeable.placeRelative(xPos, 0)
+                xPos += placeable.width
+            }
+        }
+    }
 }

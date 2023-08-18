@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -83,6 +84,7 @@ private fun ConstraintsAndSiblingsSample() {
                     modifier = Modifier
                         .shadow(2.dp, RoundedCornerShape(8.dp))
                         .background(Orange400)
+                        .clickable {}
                 )
             }
         }
@@ -115,6 +117,7 @@ private fun ConstraintsAndSiblingsSample() {
                     modifier = Modifier
                         .shadow(2.dp, RoundedCornerShape(8.dp))
                         .background(Orange400)
+                        .clickable {}
                 )
             }
         }
@@ -148,6 +151,7 @@ private fun ConstraintsAndSiblingsSample() {
                     modifier = Modifier
                         .shadow(2.dp, RoundedCornerShape(8.dp))
                         .background(Orange400)
+                        .clickable {}
                 )
             }
         }
@@ -195,9 +199,8 @@ private fun CustomLayout(
                 constraints.copy(
                     minWidth = 0,
                     maxWidth = layoutWidth,
-                    // This is for demonstration purposed
-                    // to not increase height a lot to not cause overflow from screen
-                    maxHeight = 300
+                    minHeight = 200,
+                    maxHeight = 200
                 )
             )
         }
