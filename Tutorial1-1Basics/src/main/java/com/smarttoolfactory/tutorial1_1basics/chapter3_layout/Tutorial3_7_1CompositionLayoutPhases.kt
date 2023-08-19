@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 @Preview
@@ -40,6 +42,28 @@ private fun TutorialContent() {
             .padding(10.dp)
     ) {
 
+        // 🔥 Comment out and observe each example separately to see in which order
+        // Composition, measurement and placement in Layout phases happen
+
+        TutorialHeader(text = "Layout&SubcomposeLayout Phases")
+        StyleableTutorialText(
+            text = "In this example how Composition and Layout phases occur for a Composable " +
+                    "structure. Check out logs to see that in which order Composition and " +
+                    "Layout phases are called for Composables",
+            bullets = false
+        )
+        LayoutPhasesSample1()
+        StyleableTutorialText(
+            text = "This is similar to example above with more complicate three structure",
+            bullets = false
+        )
+        LayoutPhasesSample2()
+        StyleableTutorialText(
+            text = "In this example **SubcomposeLayout** **Composition** and **Layout** phases " +
+                    "are logged.",
+            bullets = false
+        )
+        SubcomposeLayoutPhasesSample()
     }
 }
 
@@ -71,16 +95,19 @@ private fun LayoutPhasesSample1() {
         I  contentHeight: 52, layoutHeight: 52
         I  🍏 Parent MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
         I  contentHeight: 327, layoutHeight: 327
-        I  🍎 Parent Placement Scope
-        I  🍎 Child1 Outer Placement Scope
-        I  🍎 Child1 Inner Placement Scope
-        I  🍎 Child2 Placement Scope
+        I  🍏🍏 Parent Placement Scope
+        I  🍏🍏 Child1 Outer Placement Scope
+        I  🍏🍏 Child1 Inner Placement Scope
+        I  🍏🍏 Child2 Placement Scope
 
      */
 
     MyLayout(
         modifier = Modifier
             .fillMaxWidth()
+            // 🔥🔥 Observe how it changes with Intrinsic sizes when none is set by
+            // Custo Layouts
+//            .width(IntrinsicSize.Max)
             .shadow(4.dp, shape = RoundedCornerShape(8.dp))
             .background(getRandomColor()),
         label = "Parent"
@@ -172,15 +199,15 @@ private fun LayoutPhasesSample2() {
 
     I  🍏 Parent MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
     I  contentHeight: 483, layoutHeight: 483
-    I  🍎 Parent Placement Scope
-    I  🍎 Child1 Outer Placement Scope
-    I  🍎 Child1 Middle Placement Scope
-    I  🍎 Child1 Inner Placement Scope
-    I  🍎 Child2 Outer Placement Scope
-    I  🍎 Child2 InnerA Placement Scope
-    I  🍎 Child2 InnerB Placement Scope
-    I  🍎 Child3 Outer Placement Scope
-    I  🍎 Child3 Inner Placement Scope
+    I  🍏🍏 Parent Placement Scope
+    I  🍏🍏 Child1 Outer Placement Scope
+    I  🍏🍏 Child1 Middle Placement Scope
+    I  🍏🍏 Child1 Inner Placement Scope
+    I  🍏🍏 Child2 Outer Placement Scope
+    I  🍏🍏 Child2 InnerA Placement Scope
+    I  🍏🍏 Child2 InnerB Placement Scope
+    I  🍏🍏 Child3 Outer Placement Scope
+    I  🍏🍏 Child3 Inner Placement Scope
   */
 
     // label is for logging, they are not part of real custom
@@ -324,7 +351,7 @@ private fun MyLayout(
 
             return layout(layoutWidth, layoutHeight) {
                 var y = 0
-                println("🍎 $label Placement Scope")
+                println("🍏🍏 $label Placement Scope")
 
                 placeables.forEach { placeable: Placeable ->
                     placeable.placeRelative(0, y)
@@ -382,9 +409,9 @@ private fun SubcomposeLayoutPhasesSample() {
         I  contentHeight: 52, layoutHeight: 275
         I  🌝🌝🌝 SubcomposeLayout MySubcomposeLayout after 2nd subcompose()
         I  🌝🌝🌝🌝 SubcomposeLayout MySubcomposeLayout Placement Scope rowSize: 597 x 275
-        I  🍎 Child1 Outer Placement Scope
-        I  🍎 Child1 Inner Placement Scope
-        I  🍎 Child2 Placement Scope
+        I  🍏🍏 Child1 Outer Placement Scope
+        I  🍏🍏 Child1 Inner Placement Scope
+        I  🍏🍏 Child2 Placement Scope
 
      */
 

@@ -47,6 +47,8 @@
     <string name="title_3_5">3-5 SubcomposeLayout</string>
     <string name="title_3_6_1">3-6-1 Custom Layout Samples1</string>
     <string name="title_3_6_2">3-6-2 Chat SubcomposeLayout</string>
+    <string name="title_3_7_1"><![CDATA[3-7-1 Composition&Layout]]></string>
+    <string name="title_3_7_2"><![CDATA[3-7-1 Composition&Layout2]]></string>
     <string name="title_4_1_1"><![CDATA[4-1-1 Remember&MutableState]]></string>
     <string name="title_4_1_2">4-1-2 SnapshotMutationPolicy</string>
     <string name="title_4_2_1">4-2-1 Recomposition</string>
@@ -65,8 +67,6 @@
     <string name="title_4_7_1">4-7-1 Compose Phases1</string>
     <string name="title_4_7_2">4-7-2 Compose Phases2</string>
     <string name="title_4_7_3">4-7-3 Compose Phases3</string>
-    <string name="title_4_8_1">4-8-1 Remember MeasurePolicy</string>
-    <string name="title_4_8_2">4-8-2 Remember MeasurePolicy2</string>
     <string name="title_4_10_1">4-10-1 movableContentOf1</string>
     <string name="title_4_10_2">4-10-2 movableContentOf2</string>
     <string name="title_4_10_3">4-10-3 movableContentOf3</string>

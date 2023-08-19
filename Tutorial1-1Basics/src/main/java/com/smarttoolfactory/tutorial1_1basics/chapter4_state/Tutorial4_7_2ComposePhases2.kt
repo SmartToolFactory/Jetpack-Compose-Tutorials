@@ -85,7 +85,7 @@ private fun TutorialContent() {
 @Composable
 private fun PhasesSample1() {
 
-    LogCompositions(msg = "1️⃣ PhasesSample1")
+    LogCompositions(msg = "🍏 PhasesSample1")
 
     var offsetX by remember { mutableStateOf(0f) }
 
@@ -145,7 +145,7 @@ private fun PhasesSample1() {
 @Composable
 private fun PhasesSample2() {
 
-    LogCompositions(msg = "2️⃣  PhasesSample2")
+    LogCompositions(msg = "🍏🍏  PhasesSample2")
 
     // This state is for triggering recomposition for PhasesSample2,
     // child composables don't read this state

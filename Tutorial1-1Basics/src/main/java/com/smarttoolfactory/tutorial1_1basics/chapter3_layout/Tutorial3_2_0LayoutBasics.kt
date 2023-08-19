@@ -94,11 +94,11 @@ private fun CustomLayoutSample1() {
         minHeight: 0.0.dp, maxHeight: 750.1818.dp
         I  contentHeight: 69.09091.dp, layoutHeight: 69.09091.dp
 
-        // LAYOUT Placement Scope
-        I  🍎 Parent Placement Scope
-        I  🍎 Child1 Placement Scope
-        I  🍎 Child2 Outer Placement Scope
-        I  🍎 Child2 Inner Placement Scope
+        // LAYOUT PlacementScope
+        I  🍏🍏 Parent PlacementScope
+        I  🍏🍏 Child1 PlacementScope
+        I  🍏🍏 Child2 Outer PlacementScope
+        I  🍏🍏 Child2 Inner PlacementScope
      */
 
     // label is for logging, they are not part of real custom
@@ -168,7 +168,7 @@ private fun CustomLayoutSample2() {
         I  🚗 CustomConstrainLayout MeasureScope minWidth: 392.72726.dp, maxWidth: 392.72726.dp,
         minHeight: 750.1818.dp, maxHeight: 750.1818.dp
         I  contentHeight: 73.09091.dp, layoutHeight: 750.1818.dp
-        I  🚗🚗 CustomConstrainLayout Placement Scope
+        I  🚗🚗 CustomConstrainLayout PlacementScope
      */
     CustomConstrainLayout(
         modifier = Modifier.fillMaxSize()
@@ -290,7 +290,7 @@ private fun MyLayout(
 
             var y = 0
 
-            println("🍎 $label Placement Scope")
+            println("🍏🍏 $label PlacementScope")
 
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, y)
@@ -351,7 +351,7 @@ private fun CustomConstrainLayout(
 
             var y = 0
 
-            println("🚗🚗 CustomConstrainLayout Placement Scope")
+            println("🚗🚗 CustomConstrainLayout PlacementScope")
 
             placeables.forEach { placeable: Placeable ->
                 placeable.placeRelative(0, y)
