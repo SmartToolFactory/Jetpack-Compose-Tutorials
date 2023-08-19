@@ -64,6 +64,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_4Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen3
@@ -85,8 +87,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_6Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_3Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_8_1Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_8_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_10_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_11Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen1
@@ -1136,6 +1136,42 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_7_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_7_1),
+        description = "Examine how Composition and Layout phases are called on recomposition.",
+        action = {
+            Tutorial3_7Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURE_POLICY,
+            TAG_PHASE_COMPOSITION,
+            TAG_PHASE_LAYOUT
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_7_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_7_2),
+        description = "Examine how Composition and Layout phases are called on recomposition.",
+        action = {
+            Tutorial3_7Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_MEASURABLE,
+            TAG_CONSTRAINTS,
+            TAG_CUSTOM_LAYOUT,
+            TAG_MEASURE_POLICY,
+            TAG_PHASE_COMPOSITION,
+            TAG_PHASE_LAYOUT
+        ),
+        tagColor = LayoutListColor
+    )
+
 
     return listOf(
         tutorial3_1_1,
@@ -1164,7 +1200,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_4,
         tutorial3_5,
         tutorial3_6_1,
-        tutorial3_6_2
+        tutorial3_6_2,
+        tutorial3_7_1,
+        tutorial3_7_2
     )
 }
 
@@ -1493,41 +1531,6 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
-    val tutorial4_8_1 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_8_1),
-        description = "Remembering MeasurePolicy prevents crating new object when " +
-                "the parameter it reads changes.",
-        action = {
-            Tutorial4_8_1Screen()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_COMPOSE_MODIFIER,
-            TAG_RECOMPOSITION,
-            TAG_MEASURE_POLICY,
-            TAG_PHASE_LAYOUT,
-        ),
-        tagColor = StateListColor
-    )
-
-    val tutorial4_8_2 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_8_2),
-        description = "Remembering MeasurePolicy prevents crating new object when " +
-                "the parameter it reads changes. In this example Modifier like shadow " +
-                "triggers recomposition on text changes too.",
-        action = {
-            Tutorial4_8_2Screen()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_COMPOSE_MODIFIER,
-            TAG_RECOMPOSITION,
-            TAG_MEASURE_POLICY,
-            TAG_PHASE_LAYOUT,
-        ),
-        tagColor = StateListColor
-    )
-
 
     val tutorial4_10_1 = TutorialSectionModel(
         title = stringResource(R.string.title_4_10_1),
@@ -1595,8 +1598,6 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_7_1,
         tutorial4_7_2,
         tutorial4_7_3,
-        tutorial4_8_1,
-        tutorial4_8_2,
         tutorial4_10_1,
         tutorial4_10_2,
         tutorial4_10_3
