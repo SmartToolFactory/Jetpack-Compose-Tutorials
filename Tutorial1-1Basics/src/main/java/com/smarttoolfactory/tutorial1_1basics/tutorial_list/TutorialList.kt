@@ -71,6 +71,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
@@ -1623,7 +1624,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
                 "ViewModel callback to have stable lambda and SnapshotStateList for stability " +
                 "in a scope.",
         action = {
-            Tutorial4_11Screen2()
+            Tutorial4_11Screen3()
         },
         tags = listOf(
             TAG_COMPOSE,
