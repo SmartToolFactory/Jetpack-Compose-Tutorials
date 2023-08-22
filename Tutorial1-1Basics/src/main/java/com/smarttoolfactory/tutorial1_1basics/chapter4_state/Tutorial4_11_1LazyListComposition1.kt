@@ -85,7 +85,7 @@ private fun MainScreen(
         modifier = Modifier.padding(8.dp),
 
         ) {
-        val people = viewModel.personList
+        val people = viewModel.people
 
         Text(text = "Counter $counter")
 
@@ -97,7 +97,7 @@ private fun MainScreen(
 
         ListScreen(
             people = people,
-            onItemClick = viewModel::updateItemSelection
+            onItemClick = viewModel::toggleSelection
         )
     }
 }
