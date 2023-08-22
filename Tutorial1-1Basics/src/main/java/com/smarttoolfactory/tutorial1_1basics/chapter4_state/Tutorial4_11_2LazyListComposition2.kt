@@ -46,7 +46,7 @@ private fun TutorialContent() {
         TutorialHeader(text = "LazyList Recomposition2")
         Modifier.clipToBounds()
         StyleableTutorialText(
-            text = "In this example when **MainScreen** is composed **ListItems are not " +
+            text = "In this example when **MainScreen** is composed **ListItem**s are not " +
                     "recomposed because we changed ViewModel callback. But since **ListScreen** " +
                     "is still unstable it gets recomposed while its items don't.\n" +
                     "In next example we will stabilize **ListScreen**.",
@@ -87,7 +87,7 @@ private fun MainScreen(
             Text(text = "Increase Counter")
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ListScreen(
             people = people,
@@ -112,10 +112,10 @@ private fun ListScreen(
             modifier = Modifier.border(2.dp, getRandomColor()),
             fontSize = 30.sp
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .border(3.dp, getRandomColor(), RoundedCornerShape(8.dp))

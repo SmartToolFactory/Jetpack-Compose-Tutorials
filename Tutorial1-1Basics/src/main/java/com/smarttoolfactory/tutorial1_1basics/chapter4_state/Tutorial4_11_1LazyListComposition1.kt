@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -93,7 +94,7 @@ private fun MainScreen(
             Text(text = "Increase Counter")
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ListScreen(
             people = people,
@@ -118,10 +119,10 @@ private fun ListScreen(
             modifier = Modifier.border(2.dp, getRandomColor()),
             fontSize = 30.sp
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .border(3.dp, getRandomColor(), RoundedCornerShape(8.dp))
@@ -144,7 +145,10 @@ fun ListItem(item: Person, onItemClick: (Int) -> Unit) {
     }
 
     Column(
-        modifier = Modifier.border(3.dp, getRandomColor())
+        modifier = Modifier
+            .shadow(2.dp, RoundedCornerShape(8.dp))
+            .border(2.dp, getRandomColor(), RoundedCornerShape(8.dp))
+            .background(Color.White)
     ) {
         Box(
             modifier = Modifier
@@ -154,7 +158,7 @@ fun ListItem(item: Person, onItemClick: (Int) -> Unit) {
                 }
                 .padding(8.dp)
         ) {
-            Text("Index: Name ${item.name}", fontSize = 20.sp)
+            Text("Index: ${item.id}, ${item.name}", fontSize = 20.sp)
             if (item.isSelected) {
                 Icon(
                     modifier = Modifier
@@ -174,7 +178,7 @@ data class Person(val id: Int, val name: String, val isSelected: Boolean = false
 class MyViewModel : ViewModel() {
 
     private val initialList = List(30) { index: Int ->
-        Person(id = index, name = "Name$index")
+        Person(id = index, name = "Person: $index")
     }
 
     val people = mutableStateListOf<Person>().apply {

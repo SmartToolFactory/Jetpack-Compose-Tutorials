@@ -70,6 +70,9 @@
     <string name="title_4_10_1">4-10-1 movableContentOf1</string>
     <string name="title_4_10_2">4-10-2 movableContentOf2</string>
     <string name="title_4_10_3">4-10-3 movableContentOf3</string>
+    <string name="title_4_11_1">4-11-1 LazyList Recomposition1</string>
+    <string name="title_4_11_2">4-11-2 LazyList Recomposition2</string>
+    <string name="title_4_11_3">4-11-3 LazyList Recomposition3</string>
     <string name="title_5_1_1">5-1 Clickable</string>
     <string name="title_5_1_2">5-1-2 InteractionSource1</string>
     <string name="title_5_1_3">5-1-3 InteractionSource2</string>

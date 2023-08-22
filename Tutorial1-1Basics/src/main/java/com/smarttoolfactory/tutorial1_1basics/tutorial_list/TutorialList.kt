@@ -69,6 +69,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
@@ -1002,7 +1004,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
     )
 
 
-
     val tutorial3_3_3 = TutorialSectionModel(
         title = stringResource(R.string.title_3_3_3),
         description = "Use Modifier.onPlaced invokes after the parent LayoutModifier " +
@@ -1579,6 +1580,63 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+    val tutorial4_11_1 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_11_1),
+        description = "Use SnapshotStateList to trigger recomposition only for updated item",
+        action = {
+            Tutorial4_11Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_RECOMPOSITION,
+            TAG_REMEMBER,
+            TAG_STABILITY
+
+        ),
+        tagColor = StateListColor
+    )
+
+    val tutorial4_11_2 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_11_2),
+        description = "Use SnapshotStateList to trigger recomposition only for updated item and " +
+                "ViewModel callback to have stable lambda.",
+        action = {
+            Tutorial4_11Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_RECOMPOSITION,
+            TAG_REMEMBER,
+            TAG_STABILITY
+
+        ),
+        tagColor = StateListColor
+    )
+
+    val tutorial4_11_3 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_11_3),
+        description = "Use SnapshotStateList to trigger recomposition only for updated item and " +
+                "ViewModel callback to have stable lambda and SnapshotStateList for stability " +
+                "in a scope.",
+        action = {
+            Tutorial4_11Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
+            TAG_SNAPSHOT_STATE_LIST,
+            TAG_RECOMPOSITION,
+            TAG_REMEMBER,
+            TAG_STABILITY
+
+        ),
+        tagColor = StateListColor
+    )
+
     return listOf(
         tutorial4_1_1,
         tutorial4_1_2,
@@ -1600,7 +1658,10 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_7_3,
         tutorial4_10_1,
         tutorial4_10_2,
-        tutorial4_10_3
+        tutorial4_10_3,
+        tutorial4_11_1,
+        tutorial4_11_2,
+        tutorial4_11_3
     )
 }
 

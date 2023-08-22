@@ -78,7 +78,7 @@ private fun MainScreen(
             Text(text = "Increase Counter")
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ListScreen(
             people = people,
@@ -106,10 +106,10 @@ private fun ListScreen(
             modifier = Modifier.border(2.dp, getRandomColor()),
             fontSize = 30.sp
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .border(3.dp, getRandomColor(), RoundedCornerShape(8.dp))
