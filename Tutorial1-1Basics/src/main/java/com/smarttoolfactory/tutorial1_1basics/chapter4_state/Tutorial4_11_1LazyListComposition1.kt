@@ -85,7 +85,7 @@ private fun MainScreen(
         modifier = Modifier.padding(8.dp),
 
         ) {
-        val people = viewModel.people
+        val people = viewModel.personList
 
         Text(text = "Counter $counter")
 
@@ -97,7 +97,7 @@ private fun MainScreen(
 
         ListScreen(
             people = people,
-            onItemClick = viewModel::toggleSelection
+            onItemClick = viewModel::updateItemSelection
         )
     }
 }
@@ -186,6 +186,23 @@ class MyViewModel : ViewModel() {
         val isSelected = item.isSelected
         people[index] = item.copy(isSelected = !isSelected)
     }
+
+    // 🔥 If you use list and call updateItemSelection whole list is recomposed
+    // when you chance one item selection status
+    var personList by mutableStateOf(initialList)
+
+    // 🔥 setting new value to MutableState triggers recomposition for whole LazyColumn
+    fun updateItemSelection(id: Int) {
+        val newList = personList.map {
+            if (it.id == id) {
+                it.copy(isSelected = !it.isSelected)
+            } else {
+                it
+            }
+        }
+        personList = newList
+    }
+
 }
 
 fun getRandomColor() = Color(
