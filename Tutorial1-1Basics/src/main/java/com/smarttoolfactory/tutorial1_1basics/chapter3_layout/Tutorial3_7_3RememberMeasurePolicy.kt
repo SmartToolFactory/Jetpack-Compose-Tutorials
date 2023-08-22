@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
@@ -46,6 +47,8 @@ private fun TutorialContent() {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+
+        TutorialHeader(text = "RememberMeasurePolicy")
 
         StyleableTutorialText(
             text = "Remembering MeasurePolicy prevents creating new instance when " +
