@@ -66,13 +66,13 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:1.7.2"
 
-    def nav_compose_version = "2.6.0"
+    def nav_compose_version = "2.7.0"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.3.0")
 
-    def accompanist_version = "0.30.0"
+    def accompanist_version = "0.30.1"
     // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
