@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.Layout
@@ -102,47 +107,60 @@ private fun LayoutPhasesSample1() {
 
      */
 
-    MyLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            // 🔥🔥 Observe how it changes with Intrinsic sizes when none is set by
-            // Custo Layouts
-//            .width(IntrinsicSize.Max)
-            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
-            .background(getRandomColor()),
-        label = "Parent"
-    ) {
-        println("Parent Scope")
-        // label is for logging, they are not part of real custom
-        // layouts
-        MyLayout(
+    var text by remember {
+        mutableStateOf("Type Text")
+    }
+
+    Column {
+
+        OutlinedTextField(
             modifier = Modifier
-                .height(100.dp)
+                .fillMaxWidth(),
+            value = text,
+            onValueChange = { text = it }
+        )
+
+        CustomLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                // 🔥🔥 Observe how it changes with Intrinsic sizes when none is set by
+                // Custom Layouts
+//            .width(IntrinsicSize.Max)
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
-            label = "Child1 Outer"
+            label = "Parent"
         ) {
-            println("Child1 Outer Scope")
-            Text("Child1 Outer Content")
-            MyLayout(
+            println("Parent Scope")
+            // label is for logging, they are not part of real custom
+            // layouts
+            CustomLayout(
                 modifier = Modifier
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
-                label = "Child1 Inner"
+                label = "Child1 Outer"
             ) {
-                println("Child1 Inner Scope")
-                Text("Child1 Inner Content")
+                println("Child1 Outer Scope")
+                Text("Child1 Outer Content $text")
+//            CustomLayout(
+//                modifier = Modifier
+//                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+//                    .background(getRandomColor()),
+//                label = "Child1 Inner"
+//            ) {
+//                println("Child1 Inner Scope")
+//                Text("Child1 Inner Content")
+//            }
             }
-        }
 
-        MyLayout(
-            modifier = Modifier
-                .shadow(4.dp, shape = RoundedCornerShape(8.dp))
-                .background(getRandomColor()),
-            label = "Child2"
-        ) {
-            println("Child2 Scope")
-            Text("Child2 Content")
+            CustomLayout(
+                modifier = Modifier
+                    .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+                    .background(getRandomColor()),
+                label = "Child2"
+            ) {
+                println("Child2 Scope")
+                Text("Child2 Content $text")
+            }
         }
     }
 }
@@ -212,7 +230,7 @@ private fun LayoutPhasesSample2() {
 
     // label is for logging, they are not part of real custom
     // layouts
-    MyLayout(
+    CustomLayout(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
@@ -220,7 +238,7 @@ private fun LayoutPhasesSample2() {
             .background(getRandomColor()),
         label = "Parent"
     ) {
-        MyLayout(
+        CustomLayout(
             modifier = Modifier
                 .height(100.dp)
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
@@ -231,7 +249,7 @@ private fun LayoutPhasesSample2() {
             println("Child1 Outer Scope")
             Text("Child1 Outer Content")
 
-            MyLayout(
+            CustomLayout(
                 modifier = Modifier
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
@@ -241,7 +259,7 @@ private fun LayoutPhasesSample2() {
                 Text("Child1 Middle Content")
 
 
-                MyLayout(
+                CustomLayout(
                     modifier = Modifier
                         .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                         .background(getRandomColor()),
@@ -254,7 +272,7 @@ private fun LayoutPhasesSample2() {
             }
         }
 
-        MyLayout(
+        CustomLayout(
             modifier = Modifier
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
@@ -263,7 +281,7 @@ private fun LayoutPhasesSample2() {
             println("Child2 Outer Scope")
             Text("Child2 Outer Content")
 
-            MyLayout(
+            CustomLayout(
                 modifier = Modifier
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
@@ -274,7 +292,7 @@ private fun LayoutPhasesSample2() {
                 Text("Child2A Inner Content")
             }
 
-            MyLayout(
+            CustomLayout(
                 modifier = Modifier
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
@@ -285,7 +303,7 @@ private fun LayoutPhasesSample2() {
             }
         }
 
-        MyLayout(
+        CustomLayout(
             modifier = Modifier
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
@@ -293,7 +311,7 @@ private fun LayoutPhasesSample2() {
         ) {
             println("Child3 Outer Scope")
 
-            MyLayout(
+            CustomLayout(
                 modifier = Modifier
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
@@ -307,7 +325,7 @@ private fun LayoutPhasesSample2() {
 }
 
 @Composable
-private fun MyLayout(
+fun CustomLayout(
     modifier: Modifier = Modifier,
     label: String,
     content: @Composable () -> Unit
@@ -318,6 +336,7 @@ private fun MyLayout(
             measurables: List<Measurable>,
             constraints: Constraints
         ): MeasureResult {
+
             val placeables = measurables.map { measurable ->
                 measurable.measure(
                     constraints.copy(minWidth = 0, minHeight = 0)
@@ -372,7 +391,6 @@ private fun MyLayout(
 @Composable
 private fun SubcomposeLayoutPhasesSample() {
 
-
     /*
 
             MySubcomposeLayout
@@ -425,7 +443,7 @@ private fun SubcomposeLayoutPhasesSample() {
         println("MySubcomposeLayout Scope")
         // label is for logging, they are not part of real custom
         // layouts
-        MyLayout(
+        CustomLayout(
             modifier = Modifier
                 .height(100.dp)
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
@@ -434,7 +452,7 @@ private fun SubcomposeLayoutPhasesSample() {
         ) {
             println("Child1 Outer Scope")
             Text("Child1 Outer Content")
-            MyLayout(
+            CustomLayout(
                 modifier = Modifier
                     .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                     .background(getRandomColor()),
@@ -445,7 +463,7 @@ private fun SubcomposeLayoutPhasesSample() {
             }
         }
 
-        MyLayout(
+        CustomLayout(
             modifier = Modifier
                 .shadow(4.dp, shape = RoundedCornerShape(8.dp))
                 .background(getRandomColor()),
@@ -471,7 +489,6 @@ private fun MySubcomposeLayout(
         println(
             "🌝 SubcomposeLayout $label before subcompose()"
         )
-
 
         var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
             it.measure(constraints)

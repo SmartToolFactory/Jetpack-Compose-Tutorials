@@ -93,7 +93,7 @@ private fun MeasurePolicyExample1() {
 
     Spacer(modifier = Modifier.height(10.dp))
 
-    CustomLayout(
+    CustomLayoutNoRemember(
         modifier = Modifier
             .width(140.dp)
             .border(2.dp, Color.Red),
@@ -117,7 +117,7 @@ private fun MeasurePolicyExample1() {
 
 
 @Composable
-private fun CustomLayout(
+private fun CustomLayoutNoRemember(
     modifier: Modifier = Modifier,
     verticalSpace: Float,
     content: @Composable () -> Unit
@@ -138,7 +138,7 @@ private fun CustomLayout(
             val totalHeight = placeables.sumOf { it.height }
 
             println(
-                "🍏 CustomLayout() MeasureScope " +
+                "🍏 CustomLayoutNoRemember() MeasureScope " +
                         "verticalSpace: $verticalSpace, " +
                         "totalWidth: $totalWidth, " +
                         "totalHeight: $totalHeight"
@@ -146,7 +146,7 @@ private fun CustomLayout(
 
             var y = 0
             return layout(totalWidth, totalHeight) {
-                println("🍏🍏 CustomLayout() PlacementScope")
+                println("🍏🍏 CustomLayoutNoRemember() PlacementScope")
 
                 placeables.forEach {
                     it.place(0, y)
