@@ -18,13 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.MeasurePolicy
-import androidx.compose.ui.layout.MeasureResult
-import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
@@ -59,97 +53,57 @@ private fun TutorialContent() {
 }
 
 
+@Preview
 @Composable
 private fun LayoutPhasesSample() {
-    var text by remember {
-        mutableStateOf("Type Text")
-    }
 
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth(),
-        value = text,
-        onValueChange = { text = it }
-    )
-
-    Spacer(modifier = Modifier.height(10.dp))
-
-    // 🔥 This one calls Layout's MeasureScope and PlacementScope only Text width
-    // passed above or below 140.dp
-    Column(Modifier.fillMaxSize()) {
-        CustomLayout(
-            modifier = Modifier
-                .width(140.dp)
-                .border(2.dp, Color.Red),
-            label = "🚀 With 140.dp with"
-        ) {
-            SideEffect {
-                println("🚀 CustomLayout Scope 140.dp recomposing...")
-            }
-            Text(text = text, fontSize = 20.sp)
+        var text by remember {
+            mutableStateOf("Type Text")
         }
 
-
-        // 🔥🔥 This one calls Layout's MeasureScope and PlacementScope every time Text width
-        // changes because it has to adjust width and height its content(Text) dimensions change
         CustomLayout(
-            modifier = Modifier
-                .border(2.dp, Color.Blue),
-            label = "🔥 No size"
+            // 🔥🤨 fillMaxSize changes order of Measurement and Placement scope
+            // order. with this modifier each Composable goes Placement->Measurement before
+            // waiting other placement
+//            modifier = Modifier.fillMaxSize(),
+            label = "Parent"
         ) {
-            SideEffect {
-                println("🔥 CustomLayout Scope No size recomposing...")
-            }
-            Text(text = text, fontSize = 20.sp)
-        }
-    }
-}
 
-@Composable
-private fun CustomLayout(
-    modifier: Modifier = Modifier,
-    label: String,
-    content: @Composable () -> Unit
-) {
-
-    // This measure policy is created every time CustomLayout is recomposed
-    val measurePolicy = object : MeasurePolicy {
-        override fun MeasureScope.measure(
-            measurables: List<Measurable>,
-            constraints: Constraints
-        ): MeasureResult {
-            val placeables = measurables.map { measurable: Measurable ->
-                measurable.measure(constraints)
-            }
-
-            val totalWidth = placeables.maxOf { it.width }
-            val totalHeight = placeables.sumOf { it.height }
-
-            println(
-                "🍏$label MeasureScope " +
-                        "totalWidth: $totalWidth, " +
-                        "totalHeight: $totalHeight"
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = text,
+                onValueChange = { text = it }
             )
 
-            var y = 0
-            return layout(totalWidth, totalHeight) {
-                println("🍏🍏$label PlacementScope")
-                placeables.forEach {
-                    it.place(0, y)
-                    y += it.height
+            Spacer(modifier = Modifier.height(10.dp))
+
+            CustomLayout(
+                modifier = Modifier
+                .width(140.dp)
+                .border(2.dp, Color.Red)
+                ,
+                label = "Child1"
+            ) {
+                SideEffect {
+                    println("CustomLayout Scope 140.dp recomposing...")
                 }
+                Text(text = text, fontSize = 20.sp)
+            }
+
+
+            // 🔥🔥 This one calls Layout's MeasureScope and PlacementScope every time Text width
+            // changes because it has to adjust width and height its content(Text) dimensions change
+            CustomLayout(
+                modifier = Modifier
+                .border(2.dp, Color.Blue),
+                label = "Child2"
+            ) {
+                SideEffect {
+                    println("CustomLayout Scope No size recomposing...")
+                }
+                Text(text = text, fontSize = 20.sp)
             }
         }
 
-    }
-
-    SideEffect {
-        println("😀 $label CustomComposable composed measurePolicy: $measurePolicy")
-    }
-
-    Layout(
-        modifier = modifier,
-        content = content,
-        measurePolicy = measurePolicy
-    )
 }
