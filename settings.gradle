@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Compose Tutorials"
 include ':Tutorial1-1Basics'
+include ':Tutorial2-1Unit-Testing'
