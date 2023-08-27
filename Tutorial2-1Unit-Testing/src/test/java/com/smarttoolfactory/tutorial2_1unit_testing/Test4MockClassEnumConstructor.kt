@@ -18,7 +18,6 @@ class Test4MockClassEnumConstructor {
 
         private val car = mockkClass(Car::class)
 
-
         @Test
         fun `Class mock test`() {
 
@@ -52,11 +51,8 @@ class Test4MockClassEnumConstructor {
 
     }
 
-    // TODO Finish this example
     @Nested
-    inner class Test4MockConstructor {
-
-    }
+    inner class Test4MockConstructor
 
 }
 
