@@ -1,8 +1,8 @@
-package com.smarttoolfactory.tutorial2_1unit_testing
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk
 
-import com.smarttoolfactory.tutorial2_1unit_testing.car.Car
-import com.smarttoolfactory.tutorial2_1unit_testing.car.Direction
-import com.smarttoolfactory.tutorial2_1unit_testing.car.Outcome
+import com.smarttoolfactory.tutorial2_1unit_testing.mockk.car.Car
+import com.smarttoolfactory.tutorial2_1unit_testing.mockk.car.Direction
+import com.smarttoolfactory.tutorial2_1unit_testing.mockk.car.Outcome
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.excludeRecords

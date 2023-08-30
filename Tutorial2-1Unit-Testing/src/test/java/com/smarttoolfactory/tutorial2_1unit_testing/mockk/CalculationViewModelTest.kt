@@ -1,6 +1,7 @@
-package com.smarttoolfactory.tutorial2_1unit_testing
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk
 
 import com.google.common.truth.Truth
+import com.smarttoolfactory.tutorial2_1unit_testing.CalculationViewModel
 import org.junit.jupiter.api.Test
 
 class CalculationViewModelTest {

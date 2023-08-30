@@ -1,7 +1,7 @@
-package com.smarttoolfactory.tutorial2_1unit_testing
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk
 
-import com.smarttoolfactory.tutorial2_1unit_testing.model_math_application.CalculatorService
-import com.smarttoolfactory.tutorial2_1unit_testing.model_math_application.MathApplication
+import com.smarttoolfactory.tutorial2_1unit_testing.mockk.model_math_application.CalculatorService
+import com.smarttoolfactory.tutorial2_1unit_testing.mockk.model_math_application.MathApplication
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

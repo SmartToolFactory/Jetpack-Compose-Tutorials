@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial2_1unit_testing.car
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk.car
 
 class Car {
 

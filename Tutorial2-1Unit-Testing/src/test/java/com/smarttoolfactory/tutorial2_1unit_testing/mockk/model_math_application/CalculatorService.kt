@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial2_1unit_testing.model_math_application
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk.model_math_application
 
 interface CalculatorService {
     fun add(input1: Double, input2: Double): Double

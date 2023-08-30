@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial2_1unit_testing
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk
 
 import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
