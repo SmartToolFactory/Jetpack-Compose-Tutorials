@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
@@ -33,14 +34,19 @@ fun Tutorial3_1Screen2() {
 @Composable
 private fun TutorialContent() {
     Column(modifier =Modifier.fillMaxSize()) {
+        TutorialHeader(text = "onGloballyPositioned Modifier")
+
         StyleableTutorialText(
             text = "**onGloballyPositioned** Modifier returns position of the Composable " +
                     "inside parent, root or window. Window adds **StatusBar** height to root.",
-            bullets = false)
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .background(Color.Red))
+            bullets = false
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .background(Color.Red)
+        )
         Column(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier
                 .fillMaxWidth()

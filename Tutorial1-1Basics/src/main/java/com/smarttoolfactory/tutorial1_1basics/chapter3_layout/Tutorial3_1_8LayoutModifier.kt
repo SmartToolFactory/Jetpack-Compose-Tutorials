@@ -55,7 +55,7 @@ private fun TutorialContent() {
             .padding(10.dp)
     ) {
 
-        TutorialHeader(text = "Layout Modifier")
+        TutorialHeader(text = "layout Modifier")
 
         StyleableTutorialText(
             text = "**Modifier.layout{}** creates a LayoutModifier that allows " +

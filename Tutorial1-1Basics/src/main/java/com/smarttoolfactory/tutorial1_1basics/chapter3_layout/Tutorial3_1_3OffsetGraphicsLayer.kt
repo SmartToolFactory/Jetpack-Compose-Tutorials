@@ -48,6 +48,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
@@ -65,7 +66,7 @@ private fun TutorialContent() {
             .verticalScroll(rememberScrollState())
             .padding(8.dp)
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
+        TutorialHeader(text = "graphicsLayer Modifier")
 
         StyleableTutorialText(
             text = "1-) Modifier.Element that makes content draw into a draw layer. " +
