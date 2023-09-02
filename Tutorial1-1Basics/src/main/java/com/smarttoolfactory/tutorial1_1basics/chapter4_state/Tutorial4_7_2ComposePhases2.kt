@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.layout
@@ -32,12 +31,19 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 /**
  * https://developer.android.com/jetpack/compose/phases
  * https://developer.android.com/jetpack/compose/performance#defer-reads
+ *
+ * In PhasesSample2() Composables with modifier3 and modifier4 call
+ * draw phase when they shouldn't
+ * Also another bug/issue when Phase1 and Phase2 composable in same column
+ * https://stackoverflow.com/questions/72457805/jetpack-compose-deferring-reads-in-phases-for-performance
  *
  * This tutorial shows deferring read of a value effects frame phases
  */
@@ -60,11 +66,7 @@ private fun TutorialContent() {
                     "from **Composition** to **Layout**",
             bullets = false
         )
-        Column(
-            modifier = Modifier
-                .shadow(2.dp)
-                .background(getRandomColor())
-        ) {
+        Column {
             PhasesSample1()
         }
 
@@ -72,11 +74,7 @@ private fun TutorialContent() {
             text = "**Modifier.drawBehind{}** defers reading state to **Draw**",
             bullets = false
         )
-        Column(
-            modifier = Modifier
-                .shadow(2.dp)
-                .background(getRandomColor())
-        ) {
+        Column {
             PhasesSample2()
         }
     }
@@ -85,7 +83,7 @@ private fun TutorialContent() {
 @Composable
 private fun PhasesSample1() {
 
-    LogCompositions(msg = "🍏 PhasesSample1")
+    LogCompositions(msg = "1️⃣ PhasesSample1")
 
     var offsetX by remember { mutableStateOf(0f) }
 
@@ -145,7 +143,7 @@ private fun PhasesSample1() {
 @Composable
 private fun PhasesSample2() {
 
-    LogCompositions(msg = "🍏🍏  PhasesSample2")
+    LogCompositions(msg = "2️⃣  PhasesSample2")
 
     // This state is for triggering recomposition for PhasesSample2,
     // child composables don't read this state
@@ -172,7 +170,7 @@ private fun PhasesSample2() {
         // 🔥 deferring color read in lambda only calls Draw and skips Composition and Layout
         .drawWithContent {
             println("🚗 modifier3 DRAW")
-            drawRect(getRandomColor())
+            drawRect(Green400)
             drawContent()
         }
 
@@ -186,10 +184,9 @@ private fun PhasesSample2() {
         }
         .drawWithContent {
             println("🎾 modifier4 DRAW")
+            drawRect(Orange400)
             drawContent()
         }
-        // 🔥 reading color causes Composition->Layout->Draw
-        .background(getRandomColor())
 
     MyBox(modifier = modifier3, "modifier3")
     Spacer(modifier = Modifier.height(8.dp))
