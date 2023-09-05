@@ -1,7 +1,9 @@
 package com.smarttoolfactory.tutorial2_1unit_testing.coroutines
 
+import com.google.common.truth.Truth
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -137,6 +139,31 @@ class CoroutinesTest1 {
         deferred.complete(Unit) // resume the coroutine.
         assertTrue(completed) // now the child coroutine is immediately completed.
         // ✅ Passes
+    }
+
+
+    @Test
+    fun testAsyncConcurrently() = runTest {
+        val deferred1 = async {
+            delay(100)
+            "Hello"
+        }
+
+
+        val deferred2 = async {
+            delay(100)
+            " "
+        }
+
+        val deferred3 = async {
+            delay(200)
+            "World"
+        }
+
+        val actual = deferred1.await() + deferred2.await() + deferred3.await()
+
+
+        Truth.assertThat(actual).isEqualTo("Hello World")
     }
 
 }
