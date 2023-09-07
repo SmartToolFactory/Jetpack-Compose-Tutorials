@@ -117,8 +117,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_8Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen3
-import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen4
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen5
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen6
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_10Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_11Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_12Screen
@@ -2110,21 +2110,6 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_9_4 = TutorialSectionModel(
-        title = "5-9-4 Collapsing TopAppBar",
-        description = "Create a collapsing TopAppBar using Modifier.nestedScroll " +
-                "and NestedScrollConnection",
-        action = {
-            Tutorial5_9Screen4()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_NESTED_SCROLL,
-            TAG_NESTED_SCROLL_CONNECTION
-        ),
-        tagColor = GestureListColor
-    )
-
     val tutorial5_9_5 = TutorialSectionModel(
         title = "5-9-5 Draggable&Nested Scroll",
         description = "Build a Modifier.draggable " +
@@ -2139,6 +2124,21 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_NESTED_SCROLL_CONNECTION,
             TAG_NESTED_SCROLL_DISPATCHER,
             TAG_DRAGGABLE,
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_9_6 = TutorialSectionModel(
+        title = "5-9-6 Collapsing TopAppBar",
+        description = "Create a collapsing TopAppBar using Modifier.nestedScroll " +
+                "and NestedScrollConnection",
+        action = {
+            Tutorial5_9Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_NESTED_SCROLL,
+            TAG_NESTED_SCROLL_CONNECTION
         ),
         tagColor = GestureListColor
     )
@@ -2203,8 +2203,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_9_1,
         tutorial5_9_2,
         tutorial5_9_3,
-        tutorial5_9_4,
         tutorial5_9_5,
+        tutorial5_9_6,
         tutorial5_10_1,
         tutorial5_11
     )

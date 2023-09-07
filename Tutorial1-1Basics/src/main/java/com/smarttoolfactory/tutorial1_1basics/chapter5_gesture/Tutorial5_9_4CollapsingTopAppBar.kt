@@ -37,7 +37,7 @@ import kotlin.math.roundToInt
 
 @Preview
 @Composable
-fun Tutorial5_9Screen4() {
+fun Tutorial5_9Screen6() {
     TutorialContent()
 }
 
