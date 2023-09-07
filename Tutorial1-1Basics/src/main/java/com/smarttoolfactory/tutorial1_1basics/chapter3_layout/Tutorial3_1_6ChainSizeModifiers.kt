@@ -52,9 +52,9 @@ private fun TutorialContent() {
 
         ChainSizeModifiersSample()
         StyleableTutorialText(
-            text = "3-) required modifiers can modifier min or/and max Constraints coming from " +
-                    "top or Parent. The incoming measurement Constraints will not override " +
-                    "this value. If the content chooses a size that does not satisfy the " +
+            text = "3-) required modifiers can modify min or/and max Constraints coming from " +
+                    "top or Parent, they can widen the measurement range unlike size Modifiers. " +
+                    "If the content chooses a size that does not satisfy the " +
                     "incoming Constraints, the parent layout will be reported a size coerced " +
                     "in the Constraints, and the position of the content will be automatically " +
                     "offset to be centered on the space assigned to the child by the parent " +
