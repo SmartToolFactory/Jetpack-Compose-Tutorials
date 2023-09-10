@@ -3,16 +3,22 @@ package com.smarttoolfactory.tutorial2_1unit_testing.coroutines
 import com.google.common.truth.Truth
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.currentTime
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CoroutinesTest1 {
@@ -110,6 +116,17 @@ class CoroutinesTest1 {
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ❌ Fails
     }
 
+    @Test
+    fun testFooWithTimeout() = runTest {
+        assertFailsWith<TimeoutCancellationException> {
+            withTimeout(1_000) {
+                delay(999)
+                delay(2)
+                println("this won't be reached")
+            }
+        }
+    }
+
     /*
         Like Dispatchers.Unconfined, this one does not provide guarantees about the execution
         order when several coroutines are queued in this dispatcher.
@@ -141,6 +158,26 @@ class CoroutinesTest1 {
         // ✅ Passes
     }
 
+    @Test
+    fun testEagerlyEnteringSomeChildCoroutines() = runTest(UnconfinedTestDispatcher()) {
+        var entered1 = false
+        launch {
+            entered1 = true
+        }
+        assertTrue(entered1) // `entered1 = true` already executed
+
+        var entered2 = false
+        // 🔥 To test enteredFalse StandardTestDispatcher is used
+        launch(StandardTestDispatcher(testScheduler)) {
+            // this block and every coroutine launched inside it will explicitly
+            // go through the needed dispatches
+            entered2 = true
+        }
+        assertFalse(entered2)
+        runCurrent() // need to explicitly run the dispatched continuation
+        assertTrue(entered2)
+    }
+
 
     @Test
     fun testAsyncConcurrently() = runTest {
@@ -164,6 +201,37 @@ class CoroutinesTest1 {
 
 
         Truth.assertThat(actual).isEqualTo("Hello World")
+    }
+
+    /*
+        The coroutine dispatcher used for tests is single-threaded, meaning that the child
+        coroutines of the runTest block will run on the thread that started the test,
+        and will never run in parallel.
+
+        If several coroutines are waiting to be executed next, the one scheduled after
+        the smallest delay will be chosen. The virtual time will automatically advance to the
+        point of its resumption.
+     */
+    @Test
+    fun testWithMultipleDelays() = runTest {
+        launch {
+            println("launch Start")
+            delay(1_000)
+            println("1. $currentTime") // 1000
+            delay(200)
+            println("2. $currentTime") // 1200
+            delay(2_000)
+            println("4. $currentTime") // 3200
+        }
+        val deferred = async {
+            println("async Start")
+            delay(3_000)
+            println("3. $currentTime") // 3000
+            delay(500)
+            println("5. $currentTime") // 3500
+        }
+        println("Testing...")
+        deferred.await()
     }
 
 }
