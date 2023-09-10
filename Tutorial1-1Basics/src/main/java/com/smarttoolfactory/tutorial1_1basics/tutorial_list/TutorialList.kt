@@ -119,6 +119,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen5
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen6
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_9Screen7
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_10Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_11Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_12Screen
@@ -2143,6 +2144,22 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_9_7 = TutorialSectionModel(
+        title = "5-9-7 Collapsing TopAppBar2",
+        description = "Create a collapsing TopAppBar using Modifier.nestedScroll " +
+                "and NestedScrollConnection and change scroll with ScrollState",
+        action = {
+            Tutorial5_9Screen7()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_NESTED_SCROLL,
+            TAG_NESTED_SCROLL_CONNECTION,
+
+            ),
+        tagColor = GestureListColor
+    )
+
     val tutorial5_10_1 = TutorialSectionModel(
         title = "5-10-1 Image Touch Detection",
         description = "Detect touch position on image and get color at touch position.",
@@ -2205,6 +2222,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_9_3,
         tutorial5_9_5,
         tutorial5_9_6,
+        tutorial5_9_7,
         tutorial5_10_1,
         tutorial5_11
     )
