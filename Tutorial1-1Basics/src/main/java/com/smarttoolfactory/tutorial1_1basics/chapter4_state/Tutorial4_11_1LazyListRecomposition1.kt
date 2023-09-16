@@ -39,7 +39,7 @@ import androidx.lifecycle.ViewModel
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
-import kotlin.random.Random
+import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
 @Preview
 @Composable
@@ -208,10 +208,3 @@ class MyViewModel : ViewModel() {
     }
 
 }
-
-fun getRandomColor() = Color(
-    Random.nextInt(256),
-    Random.nextInt(256),
-    Random.nextInt(256),
-    alpha = 255
-)
