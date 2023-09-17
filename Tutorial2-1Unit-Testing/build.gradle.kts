@@ -40,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packagingOptions {
         resources {
@@ -55,14 +55,18 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
+    // lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     // AndroidX Test - JVM testing
     testImplementation("androidx.arch.core:core-testing:2.2.0")
