@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial2_1unit_testing
+package com.smarttoolfactory.tutorial2_1unit_testing.mockk
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
