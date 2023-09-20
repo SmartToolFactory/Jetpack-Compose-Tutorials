@@ -9,7 +9,7 @@ class UserRepository {
         users.add(user)
     }
 
-    suspend fun registerUserAsync(user: String) {
+    suspend fun registerUserWithDelay(user: String) {
         delay(100)
         users.add(user)
     }

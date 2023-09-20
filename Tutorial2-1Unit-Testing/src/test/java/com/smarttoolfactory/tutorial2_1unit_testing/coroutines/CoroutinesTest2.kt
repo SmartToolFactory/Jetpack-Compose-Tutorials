@@ -1,8 +1,6 @@
 package com.smarttoolfactory.tutorial2_1unit_testing.coroutines
 
 import com.google.common.truth.Truth
-import com.smarttoolfactory.tutorial2_1unit_testing.HomeViewModel
-import com.smarttoolfactory.tutorial2_1unit_testing.ResponseResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -21,17 +19,17 @@ class CoroutinesTest2 {
 
     @Test
     fun loadMessageTest() = runTest {
-        val viewModel = HomeViewModel()
+        val viewModel = CoroutinesViewModel()
         viewModel.loadMessage()
         Truth.assertThat(viewModel.message.value).isEqualTo("Greetings!")
     }
 
     @Test
-    fun loadResultAsyncTest() = runTest {
+    fun loadResultWithDelayTest() = runTest {
         // given
-        val viewModel = HomeViewModel()
+        val viewModel = CoroutinesViewModel()
         // when
-        viewModel.loadResultAsync()
+        viewModel.loadResultWithDelay()
         val loading = viewModel.result
         advanceUntilIdle()
         val result = (viewModel.result as ResponseResult.Success).data

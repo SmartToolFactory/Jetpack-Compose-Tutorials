@@ -45,7 +45,7 @@ class CoroutinesTest1 {
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ✅ Passes
     }
 
-    // 🔥 This test passes with registerUserAsync too
+    // 🔥 This test passes with registerUserWithDelay too
     @Test
     fun standardTest2() = runTest {
         val userRepo = UserRepository()
@@ -71,7 +71,7 @@ class CoroutinesTest1 {
      */
 
 
-    // 🔥 This test fails with registerUserAsync(delay)
+    // 🔥 This test fails with registerUserWithDelay(delay)
     @Test
     fun unconfinedTest() = runTest(UnconfinedTestDispatcher()) {
         val userRepo = UserRepository()
@@ -86,8 +86,8 @@ class CoroutinesTest1 {
     fun unconfinedTest2() = runTest(UnconfinedTestDispatcher()) {
         val userRepo = UserRepository()
 
-        launch { userRepo.registerUserAsync("Alice") }
-        launch { userRepo.registerUserAsync("Bob") }
+        launch { userRepo.registerUserWithDelay("Alice") }
+        launch { userRepo.registerUserWithDelay("Bob") }
         // 🔥 Need to call for past to test
         advanceUntilIdle()
 

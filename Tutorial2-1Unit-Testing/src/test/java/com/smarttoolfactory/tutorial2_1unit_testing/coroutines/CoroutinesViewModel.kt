@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial2_1unit_testing
+package com.smarttoolfactory.tutorial2_1unit_testing.coroutines
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class CoroutinesViewModel : ViewModel() {
 
     var result by mutableStateOf<ResponseResult>(ResponseResult.Idle)
 
@@ -23,7 +23,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun loadResultAsync() {
+    fun loadResultWithDelay() {
         viewModelScope.launch {
             result = ResponseResult.Loading
             delay(100)
