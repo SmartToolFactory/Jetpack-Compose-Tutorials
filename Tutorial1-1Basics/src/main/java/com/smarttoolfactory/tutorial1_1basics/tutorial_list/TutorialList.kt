@@ -72,6 +72,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen6
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
@@ -1639,6 +1640,24 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
+
+    val tutorial4_11_6 = TutorialSectionModel(
+        title = stringResource(R.string.title_4_11_6),
+        description = "Detect scroll direction of a LazyColumn using ",
+        action = {
+            Tutorial4_11Screen6()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
+            TAG_REMEMBER,
+            TAG_LAZY_LIST_STATE,
+            TAG_DERIVED_STATE,
+            TAG_SNAPSHOT_FLOW
+        ),
+        tagColor = StateListColor
+    )
+
     return listOf(
         tutorial4_1_1,
         tutorial4_1_2,
@@ -1663,7 +1682,8 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_10_3,
         tutorial4_11_1,
         tutorial4_11_2,
-        tutorial4_11_3
+        tutorial4_11_3,
+        tutorial4_11_6
     )
 }
 

@@ -40,6 +40,7 @@ const val TAG_BITMAP = "Bitmap"
 
 // LazyColumn
 const val TAG_LAZY_COLUMN = "LazyColumn"
+const val TAG_LAZY_LIST_STATE = "LazyListState"
 const val TAG_LAZY_COLUMN_VERTICAL_ARRANGEMENT = "Vertical Arrangement"
 const val TAG_LAZY_COLUMN_CONTENT_PADDING = "Content Padding"
 const val TAG_LAZY_COLUMN_SCROLL = "LazyColumn Scroll"
