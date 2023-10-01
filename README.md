@@ -96,7 +96,7 @@ previous searches using a database, domain with ViewModel.
 | <h3>4-7-3 Compose Phases3</h3><br/>How deferring a state read changes which phases of frame(Composition, Layout, Draw) are called.<br><br>• Modifier<br>• Recomposition<br>• Composition<br>• Layout<br>• Draw<br>                                                                                       | <img src ="/./screenshots/tutorial4_7_3.gif" width=200>  |
 |                                                                                                                                                                                                                                                                                                          |                                                          |
 | <h3>4-11-6 Scroll Direction</h3><br/>Detect scroll direction of a LazyColumn using LazyListStated.<br><br>• Modifier<br>• LazyColumn<br>• LazyListState<br>• derivedStateOf<br>• snapshotFlow<br>                                                                                                        | <img src ="/./screenshots/tutorial4_11_6.gif" width=200> |
-|
+ |
 
 ### Gesture
 
