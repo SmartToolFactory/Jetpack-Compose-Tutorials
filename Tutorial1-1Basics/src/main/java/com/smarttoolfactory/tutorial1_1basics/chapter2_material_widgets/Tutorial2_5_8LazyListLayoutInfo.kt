@@ -90,7 +90,9 @@ private fun TutorialContent() {
                 val beforeContentPadding = lazyLayoutInfo.beforeContentPadding
                 val afterContentPadding = lazyLayoutInfo.afterContentPadding
 
-                var tempText = "viewportSize: $viewportSize\n" +
+                var tempText = "firstVisibleItemIndex: ${state.firstVisibleItemIndex}\n" +
+                        "firstVisibleItemScrollOffset: ${state.firstVisibleItemScrollOffset}\n" +
+                        "viewportSize: $viewportSize\n" +
                         "viewportStartOffset: $viewportStartOffset\n" +
                         "viewportEndOffset: $viewportEndOffset\n" +
                         "beforeContentPadding: $beforeContentPadding\n" +
