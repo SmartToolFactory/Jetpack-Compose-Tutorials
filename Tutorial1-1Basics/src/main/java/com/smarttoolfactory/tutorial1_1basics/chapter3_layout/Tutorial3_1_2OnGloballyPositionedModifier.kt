@@ -170,7 +170,10 @@ private fun ParentLayoutCoordinatesSample() {
 
         // 200px below root top
         Column(
-            modifier = Modifier.fillMaxWidth().height(parentHeight).border(2.dp, Color.Red)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(parentHeight)
+                .border(2.dp, Color.Red)
         ) {
             Box(modifier = Modifier.fillMaxWidth().height(topSpace2))
             // 440px below root top
