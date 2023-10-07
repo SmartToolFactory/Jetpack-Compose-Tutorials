@@ -95,6 +95,7 @@ private fun MyComposable() {
 @Composable
 private fun ParentLayoutCoordinatesSample() {
 
+
     // This example shows the difference between parentCoordinates and parentLayoutCoordinates
     val positionModifier1 = Modifier.onGloballyPositioned { layoutCoordinates: LayoutCoordinates ->
 
@@ -102,7 +103,7 @@ private fun ParentLayoutCoordinatesSample() {
         val parentLayoutCoordinates = layoutCoordinates.parentLayoutCoordinates
 
         println(
-            "🔥 parentCoordinates\n" +
+            "😜 parentCoordinates\n" +
                     "positionInRoot ${parentCoordinates?.positionInRoot()}, " +
                     "positionInParent ${parentCoordinates?.positionInParent()}\n" +
                     "boundsInRoot ${parentCoordinates?.boundsInRoot()}, " +
@@ -127,13 +128,47 @@ private fun ParentLayoutCoordinatesSample() {
                     "${parentLayoutCoordinates?.size}\n"
         )
     }
+    /*
+        prints :
+        I  😜 parentCoordinates
+        I  positionInRoot Offset(0.0, 200.0), positionInParent Offset(0.0, 200.0)
+        I  boundsInRoot Rect.fromLTRB(0.0, 200.0, 1080.0, 1200.0), boundsInParent Rect.fromLTRB(0.0, 200.0, 1080.0, 1200.0)
+
+        I  parentLayoutCoordinates
+        I  positionInRoot Offset(0.0, 200.0), positionInParent Offset(0.0, 200.0)
+        I  boundsInRoot Rect.fromLTRB(0.0, 200.0, 1080.0, 1200.0), boundsInParent Rect.fromLTRB(0.0, 200.0, 1080.0, 1200.0)
+
+        I  ✅ parentCoordinates == parentLayoutCoordinates true
+        I  🥹 ParentCoordinates 1080 x 1000, parentLayoutCoordinates: 1080 x 1000
+
+     */
+
+    // 🔥parentCoordinates returns coordinates after layout modifiers if any available
+    // 🔥parentLayoutCoordinates return parent layout coordinates
+
+    /*
+        prints:
+        🔥🔥Parent coordinates here are the coordinates of Modifier.height(parentHeight)
+
+        before positionModifier2
+
+        I  😜😜 parentCoordinates
+        I  positionInRoot Offset(0.0, 440.0), positionInParent Offset(0.0, 240.0)
+        I  boundsInRoot Rect.fromLTRB(0.0, 440.0, 394.0, 834.0), boundsInParent Rect.fromLTRB(0.0, 240.0, 394.0, 634.0)
+
+        I  parentLayoutCoordinates
+        I  positionInRoot Offset(0.0, 200.0), positionInParent Offset(0.0, 200.0)
+        I  boundsInRoot Rect.fromLTRB(0.0, 200.0, 1080.0, 1200.0), boundsInParent Rect.fromLTRB(0.0, 200.0, 1080.0, 1200.0)
+        I  ❌ parentCoordinates == parentLayoutCoordinates false
+        I  🥹🥹 ParentCoordinates 394 x 394, parentLayoutCoordinates: 1080 x 1000
+     */
 
     val positionModifier2 = Modifier.onGloballyPositioned { layoutCoordinates: LayoutCoordinates ->
         val parentCoordinates = layoutCoordinates.parentCoordinates
         val parentLayoutCoordinates = layoutCoordinates.parentLayoutCoordinates
 
         println(
-            "🔥🔥 parentCoordinates\n" +
+            "😜😜 parentCoordinates\n" +
                     "positionInRoot ${parentCoordinates?.positionInRoot()}, " +
                     "positionInParent ${parentCoordinates?.positionInParent()}\n" +
                     "boundsInRoot ${parentCoordinates?.boundsInRoot()}, " +
