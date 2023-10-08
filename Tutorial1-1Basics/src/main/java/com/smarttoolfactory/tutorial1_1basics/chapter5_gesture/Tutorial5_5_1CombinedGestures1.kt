@@ -68,6 +68,8 @@ private fun TutorialContent() {
 @Composable
 private fun CombinedDragTapGestureSample() {
 
+    // 🔥 In this example detectTapGestures and detectDragGestures
+    // can be replaced. detectTapGestures only consumes awaitFirstDown()
     var gestureText by remember { mutableStateOf("Tap, press or long press gestures") }
     var gestureColor by remember { mutableStateOf(Color(0xffBDBDBD)) }
 
