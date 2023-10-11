@@ -136,6 +136,7 @@ private fun AwaitFirstDownExample() {
     GestureDisplayBox(pointerModifier, touchText)
 }
 
+@Preview
 @Composable
 private fun AwaitPointerEventExample() {
 
@@ -144,37 +145,37 @@ private fun AwaitPointerEventExample() {
 
     val pointerModifier = Modifier
         .pointerInput(Unit) {
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    awaitFirstDown()
-                    gestureColor = Orange400
+                awaitFirstDown()
+                gestureColor = Orange400
 
-                    do {
-                        // 🔥🔥 This PointerEvent contains details including events,
-                        // id, position and more
-                        // Other events such as drag are structured with consume events
-                        // using awaitPointerEvent in a while loop
-                        val event: PointerEvent = awaitPointerEvent()
+                do {
+                    // 🔥🔥 This PointerEvent contains details including events,
+                    // id, position and more
+                    // Other events such as drag are structured with consume events
+                    // using awaitPointerEvent in a while loop
+                    val event: PointerEvent = awaitPointerEvent()
 
-                        var eventChanges = ""
+                    var eventChanges = ""
 
-                        event.changes
-                            .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
+                    event.changes
+                        .forEachIndexed { index: Int, pointerInputChange: PointerInputChange ->
 
-                                // 🔥🔥 If consume() is not called
-                                // vertical scroll or other events interfere with current event
-                                pointerInputChange.consume()
+                            // 🔥🔥 If consume() is not called
+                            // vertical scroll or other events interfere with current event
+                            pointerInputChange.consume()
 
-                                eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
-                                        "pos: ${pointerInputChange.position}\n"
-                            }
+                            eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
+                                    "pos: ${pointerInputChange.position}\n"
+                        }
 
-                        touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
-                        gestureColor = Blue400
-                    } while (event.changes.any { it.pressed })
+                    touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
+                    gestureColor = Blue400
+                } while (event.changes.any { it.pressed })
 
-                    gestureColor = Green400
-                }
+                gestureColor = Green400
+            }
         }
 
     Box(
@@ -192,6 +193,7 @@ private fun AwaitPointerEventExample() {
 /**
  * Same example as the one above. This one uses while(true) instead of do-while.
  */
+@Preview
 @Composable
 private fun AwaitPointerEventExample2() {
 
@@ -206,17 +208,17 @@ private fun AwaitPointerEventExample2() {
     val pointerModifier = Modifier
         .pointerInput(Unit) {
 
-                awaitPointerEventScope {
+            awaitEachGesture {
 
-                    awaitFirstDown()
-                    gestureColor = Orange400
+                awaitFirstDown()
+                gestureColor = Orange400
 
-                    // This is preferred way in default Compose gesture codes
-                    // to loop gesture events and use consume or position changes to
-                    // break while loop
-                    while (true) {
-                        // 🔥🔥 This PointerEvent contains details including events,
-                        // id, position and more
+                // This is preferred way in default Compose gesture codes
+                // to loop gesture events and use consume or position changes to
+                // break while loop
+                while (true) {
+                    // 🔥🔥 This PointerEvent contains details including events,
+                    // id, position and more
                         // Other events such as drag are structured with consume events
                         // using awaitPointerEvent in a while loop
                         val event: PointerEvent = awaitPointerEvent()
