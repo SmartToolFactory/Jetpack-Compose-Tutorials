@@ -1,11 +1,20 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.editbox
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.InfiniteTransition
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -43,8 +52,6 @@ fun ScaleEditBox(
                 val rawHeight = intSize.height.toDp()
                 DpSize(rawWidth, rawHeight)
             }
-
-            Modifier.offset()
 
             ScaleEditBoxImpl(
                 modifier = Modifier.size(dpSize),
@@ -155,15 +162,19 @@ private fun ScaleEditBoxImpl(
                                 TouchRegion.TopLeft -> {
                                     distanceToEdgeFromTouch = rectTemp.topLeft - positionActual
                                 }
+
                                 TouchRegion.TopRight -> {
                                     distanceToEdgeFromTouch = rectTemp.topRight - positionActual
                                 }
+
                                 TouchRegion.BottomLeft -> {
                                     distanceToEdgeFromTouch = rectTemp.bottomLeft - positionActual
                                 }
+
                                 TouchRegion.BottomRight -> {
                                     distanceToEdgeFromTouch = rectTemp.bottomRight - positionActual
                                 }
+
                                 else -> {
                                     distanceToEdgeFromTouch = Offset.Zero
                                 }
