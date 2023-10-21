@@ -144,6 +144,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Scree
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_5Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_6Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_7Screen
@@ -2495,6 +2496,26 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_4_3 = TutorialSectionModel(
+        title = "6-4-3 Canvas Touch Positions",
+        description = "Detect touch position on canvas and if it's inside bounds of any " +
+                "drawing, circle in this sample, move it",
+        action = {
+            Tutorial6_4Screen3()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_POINTER_INPUT_CHANGE,
+            TAG_AWAIT_FIRST_DOWN,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_5 = TutorialSectionModel(
         title = "6-5 Color Picker",
         description = "Color Picker that calculates angle from center and gets a color " +
@@ -2768,6 +2789,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_4_0,
         tutorial6_4_1,
         tutorial6_4_2,
+        tutorial6_4_3,
         tutorial6_5,
         tutorial6_6,
         tutorial6_7,
