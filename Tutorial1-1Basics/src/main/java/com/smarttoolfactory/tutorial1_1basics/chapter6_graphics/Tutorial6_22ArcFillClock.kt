@@ -24,7 +24,22 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlinx.coroutines.delay
+
+@Preview
+@Composable
+fun Tutorial6_22Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    Column {
+        TutorialHeader(text = "Arc Fill Clock", modifier = Modifier.padding(8.dp))
+        ClockArcSample()
+    }
+}
 
 @Preview
 @Composable
