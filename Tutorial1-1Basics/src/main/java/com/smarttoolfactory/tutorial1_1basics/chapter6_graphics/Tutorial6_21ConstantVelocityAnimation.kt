@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -26,7 +27,24 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.math.sqrt
+
+@Preview
+@Composable
+fun Tutorial6_21Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    Column {
+        TutorialHeader(text = "Constant Velocity Animation", modifier = Modifier.padding(8.dp))
+        // Rec circles animate in constant time , green circles animate in constant velocity
+        // Click to start animation
+        AnimationVelocityTest()
+    }
+}
 
 @Preview
 @Composable
