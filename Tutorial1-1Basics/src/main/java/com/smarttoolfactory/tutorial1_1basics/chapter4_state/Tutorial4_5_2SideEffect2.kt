@@ -260,7 +260,7 @@ private fun ProduceStateExample() {
             Toast.makeText(context, "✅ ProduceStateExample() Result.Success", Toast.LENGTH_SHORT)
                 .show()
 
-            val image = (imageState!!.value as Result.Success).image
+            val image = (imageState.value as Result.Success).image
 
             Image(
                 painterResource(id = image.imageIdRes),
@@ -295,14 +295,14 @@ private fun loadNetworkImage(
 }
 
 sealed class Result {
-    object Loading : Result()
-    object Error : Result()
+    data object Loading : Result()
+    data object Error : Result()
     class Success(val image: ImageRes) : Result()
 }
 
 class ImageRes(val imageIdRes: Int)
 
-class ImageRepository() {
+class ImageRepository {
 
     /**
      * Returns a drawable resource or null to simulate Result with Success or Error states
