@@ -2793,6 +2793,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_CANVAS,
+            TAG_PATH,
             TAG_PATH_PARSER,
             TAG_PATH_SEGMENT,
             TAG_ANIMATE_FLOAT_AS_STATE
