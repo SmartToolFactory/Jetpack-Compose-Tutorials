@@ -142,6 +142,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_20Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_21Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_23Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_24Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
@@ -2803,7 +2804,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_21 = TutorialSectionModel(
         title = "6-21 Constant Velocity Animation",
-        description = "Create constant time animation",
+        description = "Create constant time animation.",
         action = {
             Tutorial6_21Screen()
         },
@@ -2834,7 +2835,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_23 = TutorialSectionModel(
         title = "6-23 Tab/Switch Animation",
-        description = "Create a Tab/Switch with fluent blending text and shadow",
+        description = "Create a Tab/Switch with fluent blending text and shadow.",
         action = {
             Tutorial6_23Screen()
         },
@@ -2843,6 +2844,22 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_BLEND_MODE,
             TAG_ANIMATE_DP_AS_STATE
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_24 = TutorialSectionModel(
+        title = "6-24 Projection change with Lerp",
+        description = "Animate projection of rotating circle between inner and " +
+                "outer projection with lerp function.",
+        action = {
+            Tutorial6_24Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_INFINITE_TRANSITION,
+            TAG_ANIMATE_FLOAT_AS_STATE
         ),
         tagColor = GraphicsListColor
     )
@@ -2880,6 +2897,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_20,
         tutorial6_21,
         tutorial6_22,
-        tutorial6_23
+        tutorial6_23,
+        tutorial6_24
     )
 }
