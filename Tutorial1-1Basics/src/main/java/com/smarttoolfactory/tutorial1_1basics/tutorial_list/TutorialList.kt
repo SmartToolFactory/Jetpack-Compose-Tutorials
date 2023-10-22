@@ -2361,7 +2361,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_DRAW_SCOPE,
             TAG_PATH,
-            TAG_PATH_EFFECT
+            TAG_PATH_EFFECT,
+            TAG_INFINITE_TRANSITION
         ),
         tagColor = GraphicsListColor
     )
@@ -2605,6 +2606,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_CANVAS,
             TAG_NEON_GLOW,
+            TAG_INFINITE_TRANSITION
         ),
         tagColor = GraphicsListColor
     )
@@ -2662,7 +2664,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE_MODIFIER,
             TAG_COMPOSED_MODIFIER,
             TAG_CANVAS,
-            TAG_BRUSH
+            TAG_BRUSH,
+            TAG_INFINITE_TRANSITION
         ),
         tagColor = GraphicsListColor
     )
@@ -2678,6 +2681,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_PATH,
             TAG_PATH_SEGMENT,
             TAG_CANVAS,
+            TAG_ANIMATE_FLOAT_AS_STATE
         ),
         tagColor = GraphicsListColor
     )
@@ -2742,6 +2746,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_BRUSH,
             TAG_BLEND_MODE,
+            TAG_INFINITE_TRANSITION
         ),
         tagColor = GraphicsListColor
     )
@@ -2757,7 +2762,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE_MODIFIER,
             TAG_COMPOSED_MODIFIER,
             TAG_CANVAS,
-            TAG_BRUSH
+            TAG_BRUSH,
+            TAG_INFINITE_TRANSITION
         ),
         tagColor = GraphicsListColor
     )
@@ -2789,7 +2795,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_PATH_PARSER,
             TAG_PATH_SEGMENT,
-            TAG_ANIMATE_FLOAT
+            TAG_ANIMATE_FLOAT_AS_STATE
         ),
         tagColor = GraphicsListColor
     )

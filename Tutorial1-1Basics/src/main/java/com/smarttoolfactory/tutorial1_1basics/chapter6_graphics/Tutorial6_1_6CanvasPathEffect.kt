@@ -125,7 +125,8 @@ private fun DashedEffectExample() {
 @Composable
 private fun DashPathEffectAnimatedExample() {
 
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = "path effect")
+
     val phase by transition.animateFloat(
         initialValue = 0f,
         targetValue = 40f,
@@ -135,7 +136,7 @@ private fun DashPathEffectAnimatedExample() {
                 easing = LinearEasing
             ),
             repeatMode = RepeatMode.Restart
-        )
+        ), label = "path effect"
     )
 
     val pathEffect = PathEffect.dashPathEffect(
