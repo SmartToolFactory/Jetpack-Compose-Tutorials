@@ -138,6 +138,10 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Scree
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen5
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen6
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_20Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_21Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_23Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
@@ -2688,6 +2692,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_TEXT_MEASURER,
             TAG_CANVAS,
+            TAG_ANIMATABLE
         ),
         tagColor = GraphicsListColor
     )
@@ -2702,6 +2707,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE,
             TAG_TEXT_MEASURER,
             TAG_CANVAS,
+            TAG_ANIMATABLE,
             TAG_DETECT_TAP_GESTURES
         ),
         tagColor = GraphicsListColor
@@ -2718,8 +2724,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_COMPOSE_MODIFIER,
             TAG_COMPOSED_MODIFIER,
             TAG_CANVAS,
-
-            ),
+        ),
         tagColor = GraphicsListColor
     )
 
@@ -2757,7 +2762,6 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
-
     val tutorial6_19 = TutorialSectionModel(
         title = "6-19 Custom Carousel",
         description = "Custom carousel with gestures",
@@ -2774,6 +2778,67 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_20 = TutorialSectionModel(
+        title = "6-20 PathParser and PathMeasure",
+        description = "Create Path from string and animate segments via PathMeasure",
+        action = {
+            Tutorial6_20Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_PATH_PARSER,
+            TAG_PATH_SEGMENT,
+            TAG_ANIMATE_FLOAT
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_21 = TutorialSectionModel(
+        title = "6-21 Constant Velocity Animation",
+        description = "Create constant time animation",
+        action = {
+            Tutorial6_21Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_ANIMATE_OFFSET_AS_STATE,
+            TAG_ANIMATE_VALUE_AS_STATE
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_22 = TutorialSectionModel(
+        title = "6-22 Arc fill clock",
+        description = "Create a clock and set time via LaunchedEffect.",
+        action = {
+            Tutorial6_22Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_LAUNCHED_EFFECT,
+            TAG_REMEMBER_UPDATED
+
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_23 = TutorialSectionModel(
+        title = "6-23 Tab/Switch Animation",
+        description = "Create a Tab/Switch with fluent blending text and shadow",
+        action = {
+            Tutorial6_23Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_BLEND_MODE,
+            TAG_ANIMATE_DP_AS_STATE
+        ),
+        tagColor = GraphicsListColor
+    )
 
     return listOf(
         tutorial6_1_1,
@@ -2804,6 +2869,10 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_16,
         tutorial6_17,
         tutorial6_18,
-        tutorial6_19
+        tutorial6_19,
+        tutorial6_20,
+        tutorial6_21,
+        tutorial6_22,
+        tutorial6_23
     )
 }
