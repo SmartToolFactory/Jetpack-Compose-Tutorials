@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import android.annotation.SuppressLint
 import android.graphics.Matrix
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.InfiniteTransition
@@ -41,14 +42,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.PathParser
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.gradientColors
 
 @Preview
 @Composable
 fun Tutorial6_20Screen() {
-    TutorialContent()
+    Column {
+        TutorialHeader(text = "PathParser and Segments", modifier = Modifier.padding(8.dp))
+
+        StyleableTutorialText(
+            text = "Use **PathParser** to create path from string and **PathMeasure** to " +
+                    "create segments of a **Path**.",
+            bullets = false
+        )
+
+        TutorialContent()
+    }
 }
 
+@SuppressLint("RestrictedApi")
 @Composable
 private fun TutorialContent() {
 

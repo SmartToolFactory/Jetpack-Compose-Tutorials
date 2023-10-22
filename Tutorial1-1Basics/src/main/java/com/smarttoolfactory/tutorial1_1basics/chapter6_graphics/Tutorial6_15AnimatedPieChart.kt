@@ -21,6 +21,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.Yellow400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
@@ -35,6 +36,7 @@ private fun TutorialContent() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+        TutorialHeader(text = "Pie Chart with Touch Animation")
 
         val context = LocalContext.current
 

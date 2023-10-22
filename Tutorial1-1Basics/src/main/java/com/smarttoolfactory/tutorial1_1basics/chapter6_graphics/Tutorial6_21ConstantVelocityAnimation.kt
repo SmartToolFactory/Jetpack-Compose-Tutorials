@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.math.sqrt
 
@@ -40,8 +41,12 @@ fun Tutorial6_21Screen() {
 private fun TutorialContent() {
     Column {
         TutorialHeader(text = "Constant Velocity Animation", modifier = Modifier.padding(8.dp))
-        // Rec circles animate in constant time , green circles animate in constant velocity
-        // Click to start animation
+
+        StyleableTutorialText(
+            text = "Red circles animate with constant time, " +
+                    "green circles animate with constant velocity.",
+            bullets = false
+        )
         AnimationVelocityTest()
     }
 }

@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTextApi::class)
-
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.animation.core.Animatable
@@ -24,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +36,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.Yellow400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -55,6 +53,7 @@ private fun TutorialContent() {
             .fillMaxSize()
             .padding(20.dp)
     ) {
+        TutorialHeader(text = "Pie Chart")
         PieChartWithRoundedStrokesAndLabels()
         Spacer(modifier = Modifier.height(10.dp))
         PieChart()

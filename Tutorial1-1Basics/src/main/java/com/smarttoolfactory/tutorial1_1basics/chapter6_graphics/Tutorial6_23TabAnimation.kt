@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
@@ -55,6 +56,11 @@ fun Tutorial6_23Screen() {
 private fun TutorialContent() {
     Column(modifier = Modifier.padding(8.dp)) {
         TutorialHeader(text = "Animated Switch/Tab")
+        StyleableTutorialText(
+            text = "Tab/Switch with fluid blending text change with animated background " +
+                    "position when selection changes.",
+            bullets = false
+        )
         TextSwitchTest()
     }
 }
@@ -69,7 +75,6 @@ private fun TextSwitchTest() {
     var selectedIndex by remember {
         mutableStateOf(0)
     }
-
 
     Column {
         TextSwitch(
