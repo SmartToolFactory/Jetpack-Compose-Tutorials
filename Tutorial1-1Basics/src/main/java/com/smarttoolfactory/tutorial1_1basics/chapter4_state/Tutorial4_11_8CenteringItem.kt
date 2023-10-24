@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -57,10 +56,18 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import kotlinx.coroutines.launch
 
 
+@Preview
+@Composable
+fun Tutorial4_11Screen8() {
+    Column {
+        TutorialContent()
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun CenterViewScreen() {
+private fun TutorialContent() {
     BoxWithConstraints {
         val screenHeight = maxHeight
         val scrollState = rememberScrollState()
@@ -96,7 +103,6 @@ fun CenterViewScreen() {
                 }
                 val coroutineScope = rememberCoroutineScope()
 
-
                 TabRow(
                     modifier = Modifier.fillMaxWidth(),
                     backgroundColor = Color.White,
@@ -118,7 +124,6 @@ fun CenterViewScreen() {
 
                 HorizontalPager(
                     modifier = Modifier.fillMaxWidth()
-                        .wrapContentHeight()
                         .nestedScroll(
                             remember {
                                 object : NestedScrollConnection {

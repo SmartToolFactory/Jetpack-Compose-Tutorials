@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.layout.positionInRoot
@@ -36,177 +34,27 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 
 @Preview
 @Composable
-private fun ScrollTest() {
+fun Tutorial4_11Screen7() {
+    TutorialContent()
+}
 
-    var isVisible by remember {
-        mutableStateOf(false)
-    }
-
-    var coordinates by remember {
-        mutableStateOf<LayoutCoordinates?>(null)
-    }
-
-    val context = LocalContext.current
-
-    var visibleTime by remember {
-        mutableLongStateOf(0L)
-    }
-
-    LaunchedEffect(isVisible) {
-
-        if (isVisible) {
-            visibleTime = System.currentTimeMillis()
-            Toast.makeText(context, "😆 Item 30% threshold is passed $isVisible", Toast.LENGTH_SHORT)
-                .show()
-        } else if (visibleTime != 0L) {
-            val currentTime = System.currentTimeMillis()
-            val totalTime = currentTime - visibleTime
-            Toast.makeText(context, "🥵 Item was visible for $totalTime ms", Toast.LENGTH_SHORT)
-                .show()
-        }
-    }
-
-
+@Composable
+private fun TutorialContent() {
     Column {
-
-        Box(modifier = Modifier.height(100.dp))
-
-//        LazyColumn(
-//            modifier = Modifier
-//                .onPlaced { layoutCoordinates: LayoutCoordinates ->
-//                    coordinates = layoutCoordinates
-//                }
-//                .weight(1f)
-//                .fillMaxSize()
-//                .border(2.dp, Color.Black)
-//        ) {
-//            items(60) { index: Int ->
-//                if (index == 15) {
-//                    Column(
-//                        modifier = Modifier.fillMaxWidth().height(300.dp)
-//                            .border(6.dp, if (isVisible) Color.Green else Color.Red)
-//                            .isVisible(parentCoordinates = coordinates, threshold = 30) {
-//                                isVisible = it
-//                            }
-//                    ) {
-//                        Box(modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Yellow))
-//                        Box(modifier = Modifier.fillMaxWidth().weight(4f).background(Color.Cyan))
-//                        Box(modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Magenta))
-//                    }
-//                } else {
-//                    Text(
-//                        text = "Row $index",
-//                        fontSize = 24.sp,
-//                        modifier = Modifier.fillMaxWidth().padding(8.dp)
-//                    )
-//                }
-//            }
-//        }
-
-        Column(
-            modifier = Modifier
-                .onPlaced { layoutCoordinates: LayoutCoordinates ->
-                    coordinates = layoutCoordinates
-                }
-                .weight(1f)
-                .fillMaxSize()
-                .border(2.dp, Color.Black)
-                .verticalScroll(rememberScrollState())
-        ) {
-            repeat(60) { index ->
-                if (index == 15) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().height(300.dp)
-                            .border(6.dp, if (isVisible) Color.Green else Color.Red)
-                            .isVisible(parentCoordinates = coordinates, threshold = 30) {
-                                isVisible = it
-                            }
-                    ) {
-                        Box(modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Yellow))
-                        Box(modifier = Modifier.fillMaxWidth().weight(4f).background(Color.Cyan))
-                        Box(modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Magenta))
-                    }
-                } else {
-                    Text(
-                        text = "Row $index",
-                        fontSize = 24.sp,
-                        modifier = Modifier.fillMaxWidth().padding(8.dp)
-                    )
-                }
-            }
-        }
-        Box(modifier = Modifier.height(100.dp))
-
+        TutorialHeader("Visibility Percentage")
+        ScrollTest1()
     }
 }
-
-fun Modifier.isVisible(
-    parentCoordinates: LayoutCoordinates?,
-    threshold: Int,
-    onVisibilityChange: (Boolean) -> Unit
-) = composed {
-
-    val view = LocalView.current
-
-    Modifier.onGloballyPositioned { layoutCoordinates: LayoutCoordinates ->
-
-        if (parentCoordinates == null) return@onGloballyPositioned
-
-        val parentLayoutCoordinates = layoutCoordinates.parentLayoutCoordinates
-        val parentCoordinates2 = layoutCoordinates.parentCoordinates
-
-        println(
-            "🔥 layoutCoordinates as param\n" +
-                    "positionInRoot ${parentCoordinates.positionInRoot()}, " +
-                    "positionInParent ${parentCoordinates.positionInParent()}\n" +
-                    "boundsInRoot ${parentCoordinates.boundsInRoot()}, " +
-                    "boundsInParent ${parentCoordinates.boundsInParent()}\n" +
-                    "layoutCoordinates.parentLayoutCoordinates\n" +
-                    "positionInRoot ${parentLayoutCoordinates?.positionInRoot()}, " +
-                    "positionInParent ${parentLayoutCoordinates?.positionInParent()}\n" +
-                    "boundsInRoot ${parentLayoutCoordinates?.boundsInRoot()}, " +
-                    "boundsInParent ${parentLayoutCoordinates?.boundsInParent()}\n" +
-                    "layoutCoordinates.parentCoordinates2\n" +
-                    "positionInRoot ${parentCoordinates2?.positionInRoot()}, " +
-                    "positionInParent ${parentCoordinates2?.positionInParent()}\n" +
-                    "boundsInRoot ${parentCoordinates2?.boundsInRoot()}, " +
-                    "boundsInParent ${parentCoordinates2?.boundsInParent()}\n"
-        )
-
-        val layoutHeight = layoutCoordinates.size.height
-        val thresholdHeight = layoutHeight * threshold / 100
-        val layoutTop = layoutCoordinates.positionInRoot().y
-
-        val parentTop = parentCoordinates.positionInParent().y
-
-        val parentHeight = parentCoordinates.size.height
-        val parentBottom = (parentTop + parentHeight).coerceAtMost(view.height.toFloat())
-
-        if (
-            parentBottom - layoutTop > thresholdHeight &&
-            (layoutTop - parentTop > thresholdHeight - layoutHeight)
-        ) {
-            onVisibilityChange(true)
-        } else {
-            onVisibilityChange(false)
-        }
-    }
-}
-
 
 @Preview
 @Composable
-private fun ScrollTest2() {
+private fun ScrollTest1() {
     Column {
-        TopAppBar(
-            modifier = Modifier.height(200.dp)
-        ) {
-            Text("TopAppbar")
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -293,9 +141,8 @@ private fun MyCustomBox(
 fun Modifier.isVisible(
     threshold: Int,
     onVisibilityChange: (Boolean) -> Unit
-) = composed {
-
-    Modifier.onGloballyPositioned { layoutCoordinates: LayoutCoordinates ->
+) = this.then(
+    Modifier.onPlaced { layoutCoordinates: LayoutCoordinates ->
         val layoutHeight = layoutCoordinates.size.height
         val thresholdHeight = layoutHeight * threshold / 100
         val layoutTop = layoutCoordinates.positionInRoot().y
@@ -374,5 +221,177 @@ fun Modifier.isVisible(
             }
         }
     }
+)
+
+@Preview
+@Composable
+private fun ScrollTest2() {
+    Column {
+
+        var isVisible by remember {
+            mutableStateOf(false)
+        }
+
+        var coordinates by remember {
+            mutableStateOf<LayoutCoordinates?>(null)
+        }
+
+        val context = LocalContext.current
+
+        var visibleTime by remember {
+            mutableLongStateOf(0L)
+        }
+
+        LaunchedEffect(isVisible) {
+
+            if (isVisible) {
+                visibleTime = System.currentTimeMillis()
+                Toast.makeText(
+                    context,
+                    "😆 Item 30% threshold is passed $isVisible",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else if (visibleTime != 0L) {
+                val currentTime = System.currentTimeMillis()
+                val totalTime = currentTime - visibleTime
+                Toast.makeText(context, "🥵 Item was visible for $totalTime ms", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+
+        Column {
+
+            Box(modifier = Modifier.height(50.dp))
+
+//        LazyColumn(
+//            modifier = Modifier
+//                .onPlaced { layoutCoordinates: LayoutCoordinates ->
+//                    coordinates = layoutCoordinates
+//                }
+//                .weight(1f)
+//                .fillMaxSize()
+//                .border(2.dp, Color.Black)
+//        ) {
+//            items(60) { index: Int ->
+//                if (index == 15) {
+//                    Column(
+//                        modifier = Modifier.fillMaxWidth().height(300.dp)
+//                            .border(6.dp, if (isVisible) Color.Green else Color.Red)
+//                            .isVisible(parentCoordinates = coordinates, threshold = 30) {
+//                                isVisible = it
+//                            }
+//                    ) {
+//                        Box(modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Yellow))
+//                        Box(modifier = Modifier.fillMaxWidth().weight(4f).background(Color.Cyan))
+//                        Box(modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Magenta))
+//                    }
+//                } else {
+//                    Text(
+//                        text = "Row $index",
+//                        fontSize = 24.sp,
+//                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+//                    )
+//                }
+//            }
+//        }
+
+            Column(
+                modifier = Modifier
+                    .onPlaced { layoutCoordinates: LayoutCoordinates ->
+                        coordinates = layoutCoordinates
+                    }
+                    .weight(1f)
+                    .fillMaxSize()
+                    .border(2.dp, Color.Black)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                repeat(60) { index ->
+                    if (index == 15) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().height(300.dp)
+                                .border(6.dp, if (isVisible) Color.Green else Color.Red)
+                                .isVisible(parentCoordinates = coordinates, threshold = 30) {
+                                    isVisible = it
+                                }
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth().weight(3f)
+                                    .background(Color.Yellow)
+                            )
+                            Box(
+                                modifier = Modifier.fillMaxWidth().weight(4f).background(Color.Cyan)
+                            )
+                            Box(
+                                modifier = Modifier.fillMaxWidth().weight(3f)
+                                    .background(Color.Magenta)
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = "Row $index",
+                            fontSize = 24.sp,
+                            modifier = Modifier.fillMaxWidth().padding(8.dp)
+                        )
+                    }
+                }
+            }
+            Box(modifier = Modifier.height(100.dp))
+
+        }
+    }
 }
 
+fun Modifier.isVisible(
+    parentCoordinates: LayoutCoordinates?,
+    threshold: Int,
+    onVisibilityChange: (Boolean) -> Unit
+) = composed {
+
+    val view = LocalView.current
+
+    Modifier.onPlaced { layoutCoordinates: LayoutCoordinates ->
+
+        if (parentCoordinates == null) return@onPlaced
+
+        val parentLayoutCoordinates = layoutCoordinates.parentLayoutCoordinates
+        val parentCoordinates2 = layoutCoordinates.parentCoordinates
+
+        println(
+            "🔥 layoutCoordinates as param\n" +
+                    "positionInRoot ${parentCoordinates.positionInRoot()}, " +
+                    "positionInParent ${parentCoordinates.positionInParent()}\n" +
+                    "boundsInRoot ${parentCoordinates.boundsInRoot()}, " +
+                    "boundsInParent ${parentCoordinates.boundsInParent()}\n" +
+                    "layoutCoordinates.parentLayoutCoordinates\n" +
+                    "positionInRoot ${parentLayoutCoordinates?.positionInRoot()}, " +
+                    "positionInParent ${parentLayoutCoordinates?.positionInParent()}\n" +
+                    "boundsInRoot ${parentLayoutCoordinates?.boundsInRoot()}, " +
+                    "boundsInParent ${parentLayoutCoordinates?.boundsInParent()}\n" +
+                    "layoutCoordinates.parentCoordinates2\n" +
+                    "positionInRoot ${parentCoordinates2?.positionInRoot()}, " +
+                    "positionInParent ${parentCoordinates2?.positionInParent()}\n" +
+                    "boundsInRoot ${parentCoordinates2?.boundsInRoot()}, " +
+                    "boundsInParent ${parentCoordinates2?.boundsInParent()}\n"
+        )
+
+        val layoutHeight = layoutCoordinates.size.height
+        val thresholdHeight = layoutHeight * threshold / 100
+        val layoutTop = layoutCoordinates.positionInRoot().y
+
+        val parentTop = parentCoordinates.positionInParent().y
+
+        val parentHeight = parentCoordinates.size.height
+        val parentBottom = (parentTop + parentHeight).coerceAtMost(view.height.toFloat())
+
+        if (
+            parentBottom - layoutTop > thresholdHeight &&
+            (layoutTop - parentTop > thresholdHeight - layoutHeight)
+        ) {
+            onVisibilityChange(true)
+        } else {
+            onVisibilityChange(false)
+        }
+    }
+}

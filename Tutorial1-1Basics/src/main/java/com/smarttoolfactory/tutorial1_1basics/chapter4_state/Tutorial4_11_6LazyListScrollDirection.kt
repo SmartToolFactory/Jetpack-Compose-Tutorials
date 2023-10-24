@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -42,7 +43,10 @@ import kotlinx.coroutines.launch
 @Preview
 @Composable
 fun Tutorial4_11Screen6() {
-    TutorialContent()
+    Column {
+        TutorialHeader("LazyList Scroll Direction")
+        TutorialContent()
+    }
 }
 
 
