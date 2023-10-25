@@ -1194,7 +1194,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_LAZY_COLUMN,
-            TAG_REMEMBER,
             TAG_LAZY_LIST_STATE,
             TAG_ON_PLACED_MODIFIER
         ),
@@ -1210,7 +1209,6 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_LAZY_COLUMN,
-            TAG_REMEMBER,
             TAG_ON_PLACED_MODIFIER
         ),
         tagColor = LayoutListColor
