@@ -1685,7 +1685,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_11_8 = TutorialSectionModel(
         title = stringResource(R.string.title_4_11_8),
-        description = "Detect scroll direction of a LazyColumn using LazyListState.",
+        description = "Detect position in parent and center an item while its parent is scrolled.",
         action = {
             Tutorial4_11Screen8()
         },
