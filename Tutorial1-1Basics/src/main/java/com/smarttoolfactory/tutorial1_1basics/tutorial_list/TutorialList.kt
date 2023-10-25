@@ -982,7 +982,7 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         title = "3-2-10 Constraints & Modifier.layout",
         description = "Constraints to measure measurables with Constraints.offset and " +
                 "Constraints.constrainWidth to limit maximum width or available " +
-                "space for Placeable",
+                "space for Placeable.",
         action = {
             Tutorial3_2Screen10()
         },
