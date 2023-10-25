@@ -49,6 +49,8 @@
     <string name="title_3_6_2">3-6-2 Chat SubcomposeLayout</string>
     <string name="title_3_7_1"><![CDATA[3-7-1 Composition&Layout]]></string>
     <string name="title_3_7_2"><![CDATA[3-7-1 Composition&Layout2]]></string>
+    <string name="title_3_9">3-9 Visibility Percentage</string>
+    <string name="title_3_10">3-10 Center Item on Scroll</string>
     <string name="title_4_1_1"><![CDATA[4-1-1 Remember&MutableState]]></string>
     <string name="title_4_1_2">4-1-2 SnapshotMutationPolicy</string>
     <string name="title_4_2_1">4-2-1 Recomposition</string>
@@ -74,8 +76,6 @@
     <string name="title_4_11_2">4-11-2 LazyList Recomposition2</string>
     <string name="title_4_11_3">4-11-3 LazyList Recomposition3</string>
     <string name="title_4_11_6">4-11-6 LazyList Scroll Direction</string>
-    <string name="title_4_11_7">4-11-7 Visibility Percentage</string>
-    <string name="title_4_11_8">4-11-8 Center Item on Scroll</string>
     <string name="title_5_1_1">5-1 Clickable</string>
     <string name="title_5_1_2">5-1-2 InteractionSource1</string>
     <string name="title_5_1_3">5-1-3 InteractionSource2</string>

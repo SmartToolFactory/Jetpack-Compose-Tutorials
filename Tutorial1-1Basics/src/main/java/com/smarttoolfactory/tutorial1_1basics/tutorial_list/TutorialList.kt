@@ -37,6 +37,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_9Screen4
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_10Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_1Screen3
@@ -66,6 +67,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_6Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_7Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.Tutorial3_9Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_10Screen3
@@ -73,8 +75,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen6
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen7
-import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_11Screen8
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_2_1Screen
@@ -1184,6 +1184,38 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tagColor = LayoutListColor
     )
 
+    val tutorial3_9 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_9),
+        description = "Detect percentage of visibility of a Composable using Modifier.onPlaced " +
+                "inside Column with vertical scroll or LazyColumn.",
+        action = {
+            Tutorial3_9Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
+            TAG_REMEMBER,
+            TAG_LAZY_LIST_STATE,
+            TAG_ON_PLACED_MODIFIER
+        ),
+        tagColor = LayoutListColor
+    )
+
+    val tutorial3_10 = TutorialSectionModel(
+        title = stringResource(R.string.title_3_10),
+        description = "Detect position in parent and center an item while its parent is scrolled.",
+        action = {
+            Tutorial3_10Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_LAZY_COLUMN,
+            TAG_REMEMBER,
+            TAG_ON_PLACED_MODIFIER
+        ),
+        tagColor = LayoutListColor
+    )
+
 
     return listOf(
         tutorial3_1_1,
@@ -1214,7 +1246,9 @@ fun createLayoutTutorialList(): List<TutorialSectionModel> {
         tutorial3_6_1,
         tutorial3_6_2,
         tutorial3_7_1,
-        tutorial3_7_2
+        tutorial3_7_2,
+        tutorial3_9,
+        tutorial3_10
     )
 }
 
@@ -1666,38 +1700,6 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tagColor = StateListColor
     )
 
-    val tutorial4_11_7 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_11_7),
-        description = "Detect percentage of visibility of a Composable using Modifier.onPlaced " +
-                "inside Column with vertical scroll or LazyColumn.",
-        action = {
-            Tutorial4_11Screen7()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_LAZY_COLUMN,
-            TAG_REMEMBER,
-            TAG_LAZY_LIST_STATE,
-            TAG_ON_PLACED_MODIFIER
-        ),
-        tagColor = StateListColor
-    )
-
-    val tutorial4_11_8 = TutorialSectionModel(
-        title = stringResource(R.string.title_4_11_8),
-        description = "Detect position in parent and center an item while its parent is scrolled.",
-        action = {
-            Tutorial4_11Screen8()
-        },
-        tags = listOf(
-            TAG_COMPOSE,
-            TAG_LAZY_COLUMN,
-            TAG_REMEMBER,
-            TAG_ON_PLACED_MODIFIER
-        ),
-        tagColor = StateListColor
-    )
-
     return listOf(
         tutorial4_1_1,
         tutorial4_1_2,
@@ -1723,9 +1725,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
         tutorial4_11_1,
         tutorial4_11_2,
         tutorial4_11_3,
-        tutorial4_11_6,
-        tutorial4_11_7,
-        tutorial4_11_8
+        tutorial4_11_6
     )
 }
 

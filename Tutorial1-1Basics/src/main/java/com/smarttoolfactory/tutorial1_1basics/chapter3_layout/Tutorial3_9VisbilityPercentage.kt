@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter4_state
+package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -39,7 +39,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
-fun Tutorial4_11Screen7() {
+fun Tutorial3_9Screen() {
     TutorialContent()
 }
 

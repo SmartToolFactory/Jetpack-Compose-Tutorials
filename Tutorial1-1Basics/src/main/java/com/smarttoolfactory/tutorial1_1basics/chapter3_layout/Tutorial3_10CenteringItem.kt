@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter4_state
+package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun Tutorial4_11Screen8() {
+fun Tutorial3_10Screen() {
     Column {
         TutorialContent()
     }
