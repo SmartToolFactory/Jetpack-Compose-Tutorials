@@ -1669,7 +1669,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
     val tutorial4_11_7 = TutorialSectionModel(
         title = stringResource(R.string.title_4_11_7),
         description = "Detect percentage of visibility of a Composable using Modifier.onPlaced " +
-                "inside Column with vertical scroll or LazyColumn",
+                "inside Column with vertical scroll or LazyColumn.",
         action = {
             Tutorial4_11Screen7()
         },
@@ -1685,7 +1685,7 @@ fun createStateTutorialList(): List<TutorialSectionModel> {
 
     val tutorial4_11_8 = TutorialSectionModel(
         title = stringResource(R.string.title_4_11_8),
-        description = "Detect scroll direction of a LazyColumn using LazyListState",
+        description = "Detect scroll direction of a LazyColumn using LazyListState.",
         action = {
             Tutorial4_11Screen8()
         },
