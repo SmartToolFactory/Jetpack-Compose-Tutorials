@@ -56,6 +56,9 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"
 
+    // Material 3
+    implementation "androidx.compose.material3:material3:1.1.2"
+
     // Util Functions of Jetpack Compose
     implementation "androidx.compose.ui:ui-util:$compose_version"
 
