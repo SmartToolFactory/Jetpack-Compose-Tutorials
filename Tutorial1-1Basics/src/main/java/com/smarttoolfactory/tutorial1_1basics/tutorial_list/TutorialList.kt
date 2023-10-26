@@ -145,6 +145,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_21Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_23Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_24Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_25Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
@@ -2898,6 +2899,22 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_25 = TutorialSectionModel(
+        title = "6-25 BeforeAfter Layout",
+        description = "Create animatable BeforeAfter layout with Generic or BlendMode.",
+        action = {
+            Tutorial6_25Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BLEND_MODE,
+            TAG_COMPOSE_SHAPE,
+            TAG_INFINITE_TRANSITION,
+            TAG_ANIMATE_FLOAT_AS_STATE
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -2932,6 +2949,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_21,
         tutorial6_22,
         tutorial6_23,
-        tutorial6_24
+        tutorial6_24,
+        tutorial6_25
     )
 }
