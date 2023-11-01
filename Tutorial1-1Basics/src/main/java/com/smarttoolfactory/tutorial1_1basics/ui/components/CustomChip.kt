@@ -2,15 +2,26 @@ package com.smarttoolfactory.tutorial1_1basics.ui.components
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -26,7 +37,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.model.SuggestionModel
 
 @Composable
-fun TutorialChip(modifier: Modifier = Modifier, text: String, color:Color = Color(0xff00BCD4)) {
+fun TutorialChip(modifier: Modifier = Modifier, text: String, color: Color = Color(0xff00BCD4)) {
     Card(
         elevation = 0.dp,
         modifier = modifier,
@@ -50,7 +61,7 @@ fun TutorialChip(modifier: Modifier = Modifier, text: String, color:Color = Colo
 }
 
 @Composable
-fun Chip(
+fun CustomChip(
     modifier: Modifier = Modifier,
     text: String,
     @DrawableRes drawableRes: Int = -1,
@@ -154,7 +165,7 @@ fun CancelableChip(
 
 
 @Composable
-fun OutlinedChip(
+fun CustomOutlinedChip(
     modifier: Modifier = Modifier,
     text: String,
     @DrawableRes drawableRes: Int = -1,
@@ -191,10 +202,10 @@ fun OutlinedChip(
 }
 
 @Composable
-fun CircleCloseButton(modifier: Modifier = Modifier) {
+fun CircleCloseButton(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
     Surface(color = Color.DarkGray, modifier = modifier, shape = CircleShape) {
         IconButton(
-            onClick = {},
+            onClick = { onClick?.invoke() },
             modifier = Modifier
                 .size(16.dp)
                 .padding(1.dp)
@@ -205,6 +216,31 @@ fun CircleCloseButton(modifier: Modifier = Modifier) {
                 contentDescription = null
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun CustomChipExamples() {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Spacer(Modifier.height(20.dp))
+        TutorialChip(text = "Tutorial Chip")
+        Spacer(Modifier.height(20.dp))
+        CustomChip(
+            text = "CustomChip",
+            drawableRes = R.drawable.avatar_1_raster,
+            cancelable = true
+        )
+        Spacer(Modifier.height(20.dp))
+        CancelableChip(suggestion = SuggestionModel("Suggestion"))
+        Spacer(Modifier.height(20.dp))
+        CustomOutlinedChip(
+            text = "Outlined",
+            drawableRes = R.drawable.avatar_2_raster,
+            closable = true
+        )
     }
 }
 
@@ -221,7 +257,7 @@ private fun TutorialChipReview() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 private fun ChipPreview() {
-    Chip(text = "Chip", drawableRes = R.drawable.avatar_1_raster, cancelable = true)
+    CustomChip(text = "CustomChip", drawableRes = R.drawable.avatar_1_raster, cancelable = true)
 }
 
 @Composable
@@ -248,6 +284,6 @@ private fun SuggestionChipWithIconReview() {
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(device = Devices.PIXEL_C)
 private fun OutlinedChipPreview() {
-    OutlinedChip(text = "Outlined", drawableRes = R.drawable.avatar_2_raster, closable = true)
+    CustomOutlinedChip(text = "Outlined", drawableRes = R.drawable.avatar_2_raster, closable = true)
 
 }

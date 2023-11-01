@@ -1,21 +1,34 @@
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
+
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Chip
+import androidx.compose.material.ChipDefaults
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -26,6 +39,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -35,17 +49,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
-import com.smarttoolfactory.tutorial1_1basics.ui.components.Chip
+import com.smarttoolfactory.tutorial1_1basics.ui.components.CustomChip
+import com.smarttoolfactory.tutorial1_1basics.ui.components.CustomOutlinedChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.FullWidthRow
-import com.smarttoolfactory.tutorial1_1basics.ui.components.OutlinedChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -84,7 +102,9 @@ private fun TutorialContent() {
             FloatingActionButtonExample(paddingModifier)
 
             TutorialHeader(text = "Chip")
-            ChipExample(paddingModifier)
+            ChipExamples()
+            TutorialHeader(text = "Custom Chip")
+            CustomChipExample(paddingModifier)
         }
     }
 }
@@ -470,21 +490,133 @@ private fun FloatingActionButtonExample(modifier: Modifier) {
     }
 }
 
+@Preview
 @Composable
-fun ChipExample(modifier: Modifier) {
+private fun ChipExamples() {
 
-    // Chips are not available natively as of Compose 1.0.0-alpha09 but can be implemented
-    // with ease with Cards, Surfaces or Buttons.
+    val context = LocalContext.current
 
+    FlowRow(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        Chip(
+            onClick = {
+                Toast.makeText(context, "I'm clicked", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            Text("Chip")
+        }
+
+
+        Chip(
+            enabled = false,
+            onClick = {}
+        ) {
+            Text("Disabled Chip")
+        }
+
+        Chip(
+            onClick = {},
+            border = BorderStroke(1.dp, Green400.copy(alpha = .9f)),
+            colors = ChipDefaults.chipColors(
+                backgroundColor = Green400,
+                contentColor = Color.White
+            )
+        ) {
+            Text("Colored Chip")
+        }
+
+        Chip(
+            shape = RoundedCornerShape(50),
+            onClick = {
+                Toast.makeText(context, "I'm clicked", Toast.LENGTH_SHORT).show()
+            },
+            leadingIcon = {
+                Image(
+                    painter = painterResource(R.drawable.avatar_1_raster),
+                    modifier = Modifier
+                        .border(1.dp, Color.Green)
+                        .padding(vertical = 4.dp)
+                        .size(32.dp)
+                        .clip(CircleShape),
+                    contentDescription = null
+                )
+            }
+        ) {
+            Row(
+                modifier = Modifier.border(1.dp, Color.Red),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Chip")
+                Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                Icon(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            Toast.makeText(context, "Cancel clicked", Toast.LENGTH_SHORT).show()
+                        }
+                        .background(Color.Black.copy(alpha = .6f))
+                        .size(20.dp)
+                        .padding(4.dp),
+                    imageVector = Icons.Filled.Close,
+                    tint = Color(0xFFE0E0E0),
+                    contentDescription = null
+                )
+            }
+        }
+
+        Chip(
+            shape = RoundedCornerShape(50),
+            onClick = {
+                Toast.makeText(context, "I'm clicked", Toast.LENGTH_SHORT).show()
+            },
+            border = BorderStroke(1.dp, Green400.copy(alpha = .9f)),
+            colors = ChipDefaults.chipColors(
+                backgroundColor = Green400,
+                contentColor = Color.White
+            ),
+            leadingIcon = {
+                Image(
+                    painter = painterResource(R.drawable.avatar_1_raster),
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .size(32.dp)
+                        .clip(CircleShape),
+                    contentDescription = null
+                )
+            }
+        ) {
+            Text("Chip")
+            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+            Icon(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable {
+                        Toast.makeText(context, "Cancel clicked", Toast.LENGTH_SHORT).show()
+                    }
+                    .background(Color.Black.copy(alpha = .6f))
+                    .size(20.dp)
+                    .padding(4.dp),
+                imageVector = Icons.Filled.Close,
+                tint = Color(0xFFE0E0E0),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+fun CustomChipExample(modifier: Modifier) {
     FullWidthRow {
         TutorialChip(modifier = modifier, text = "Chip")
-        Chip(
+        CustomChip(
             modifier = modifier,
-            text = "Chip",
+            text = "CustomChip",
             drawableRes = R.drawable.avatar_1_raster,
             cancelable = true
         )
-        OutlinedChip(
+        CustomOutlinedChip(
             modifier = modifier,
             text = "Outlined",
             drawableRes = R.drawable.avatar_2_raster,
