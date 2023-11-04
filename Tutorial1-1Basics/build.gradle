@@ -68,7 +68,7 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:1.8.0"
 
-    def nav_compose_version = "2.7.4"
+    def nav_compose_version = "2.7.5"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
@@ -83,6 +83,8 @@ dependencies {
     implementation 'dev.chrisbanes.accompanist:accompanist-coil:0.6.2'
     implementation 'dev.chrisbanes.accompanist:accompanist-picasso:0.6.2'
     implementation 'dev.chrisbanes.accompanist:accompanist-glide:0.6.2'
+
+    implementation("com.google.modernstorage:modernstorage-photopicker:1.0.0-alpha06")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
