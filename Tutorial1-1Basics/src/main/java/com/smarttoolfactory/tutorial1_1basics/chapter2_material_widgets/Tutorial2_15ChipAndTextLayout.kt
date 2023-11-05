@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -54,12 +55,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -124,14 +124,19 @@ private fun MyChip(
                 painter = rememberAsyncImagePainter(data.uri),
                 modifier = Modifier
                     .padding(vertical = 4.dp)
-                    .size(32.dp)
+                    .size(34.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.FillBounds,
                 contentDescription = null
             )
         }
     ) {
-        Text(data.text)
+        Text(
+            text = data.text,
+            modifier = Modifier.weight(1f, fill = false),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
         Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
         Icon(
             modifier = Modifier
@@ -141,7 +146,7 @@ private fun MyChip(
                 }
                 .background(Color.Black.copy(alpha = .4f))
                 .size(16.dp)
-                .padding(4.dp),
+                .padding(2.dp),
             imageVector = Icons.Filled.Close,
             tint = Color(0xFFE0E0E0),
             contentDescription = null
@@ -169,8 +174,6 @@ fun ChipAndTextFieldLayout(
 
     val keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
 
-    val textMeasurer = rememberTextMeasurer()
-
     val photoPicker =
         rememberLauncherForActivityResult(PhotoPicker()) { uris ->
             uris.firstOrNull()?.let { uri: Uri ->
@@ -181,6 +184,8 @@ fun ChipAndTextFieldLayout(
                     )
                 )
                 text = ""
+                // Open keyboard after new chip is added
+                keyboardController?.show()
             }
         }
 
@@ -189,24 +194,12 @@ fun ChipAndTextFieldLayout(
         focusRequester.requestFocus()
     }
 
-    val result = remember(text) {
-        textMeasurer.measure(
-            text = text,
-            style = TextStyle(fontSize = 20.sp)
-        )
-    }
-
-    val density = LocalDensity.current
-    val textWidthDp = with(density) {
-        result.size.width.toDp()
-    }
-
     FlowRow(
         modifier = modifier
             .drawWithContent {
                 drawContent()
                 drawLine(
-                    Green400.copy(alpha = .6f),
+                    backgroundColor,
                     start = Offset(0f, size.height),
                     end = Offset(size.width, size.height),
                     strokeWidth = 4.dp.toPx()
@@ -222,7 +215,12 @@ fun ChipAndTextFieldLayout(
         }
 
         Box(
-            modifier = Modifier.height(54.dp).width(40.dp.coerceAtLeast(textWidthDp)),
+            modifier = Modifier
+                .height(54.dp)
+                // This minimum width that TextField can be
+                // if reserved space is smaller it's moved to next line
+                .widthIn(min = 80.dp)
+                .weight(1f),
             contentAlignment = Alignment.CenterStart
         ) {
             BasicTextField(
@@ -232,7 +230,7 @@ fun ChipAndTextFieldLayout(
                     fontSize = 20.sp
                 ),
                 cursorBrush = SolidColor(backgroundColor),
-                maxLines = 1,
+                singleLine = true,
                 onValueChange = { text = it },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done
