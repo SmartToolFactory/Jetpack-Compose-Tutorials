@@ -217,9 +217,10 @@ fun ChipAndTextFieldLayout(
         Box(
             modifier = Modifier
                 .height(54.dp)
-                // This minimum width that TextField can be
-                // if reserved space is smaller it's moved to next line
+                // This minimum width that TextField can have
+                // if remaining space in same row is smaller it's moved to next line
                 .widthIn(min = 80.dp)
+                // TextField can grow as big as Composable width
                 .weight(1f),
             contentAlignment = Alignment.CenterStart
         ) {
