@@ -62,6 +62,10 @@ private fun PopupTest() {
         mutableStateOf(IntRect.Zero)
     }
 
+    var popUpData by remember {
+        mutableStateOf(PopUpData.Zero)
+    }
+
     val tipOffset = if (popUpBounds == IntRect.Zero) {
         IntOffset.Zero
     } else {
@@ -148,7 +152,8 @@ private fun PopupTest() {
                                 println("Before Padding onPlaced(): ${it.boundsInWindow()}, size: ${it.size}")
                             }
                             .border(2.dp, Color.Red)
-                            .padding(start = 20.dp, end = 30.dp)
+                            .padding(start = 40.dp)
+//                            .padding(start = 20.dp, end = 30.dp)
                             .border(2.dp, Color.Blue)
                             .onPlaced {
 
@@ -172,7 +177,7 @@ private fun PopupTest() {
                                     bottom = bottomRight.y
                                 )
 
-                                PopUpData(
+                                popUpData = PopUpData(
                                     bounds = popUpBounds,
                                     paddingValues = paddingValues
                                 )
