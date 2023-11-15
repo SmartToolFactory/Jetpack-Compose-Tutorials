@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial2_2ui_testing
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -117,9 +118,44 @@ class MyComposeTest {
     }
 
     @Test
+    fun merged_node_tree_test() {
+        composeTestRule.setContent {
+            Column(
+                modifier = Modifier.semantics(mergeDescendants = true) {}
+            ) {
+                Text("Hello")
+                Text("World")
+            }
+        }
+
+        composeTestRule.onRoot(useUnmergedTree = false).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("useUnmergedTree")
+
+        composeTestRule.onNodeWithText("Hello").assertIsDisplayed()
+    }
+
+    @Test
     fun button_clear_semantics_test() {
         composeTestRule.setContent {
-            ButtonClearSemanticsSample()
+            Button(
+                // Clear semantics for button and set contentDescription
+                modifier = Modifier.clearAndSetSemantics {
+                    contentDescription = "Button"
+                },
+                onClick = {}
+            ) {
+
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "favorite"
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                // We can find this Text with  contentDescription
+                Text("Like", modifier = Modifier.semantics {
+                    contentDescription = "Like Text"
+                }
+                )
+            }
         }
 
         /*
@@ -153,16 +189,61 @@ class MyComposeTest {
     @Test
     fun merge_descendants_test() {
         composeTestRule.setContent {
-            MergeSemanticsSample()
+            Row(
+                modifier = Modifier
+                    .clickable { }
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = "Like Button"
+                    }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "favorite"
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                // We can find this Text with  contentDescription
+                Text("Like", modifier = Modifier.semantics {
+                    contentDescription = "Like Text"
+                }
+                )
+            }
         }
 
 
+        /*
+            Printing with useUnmergedTree = 'false'
+            Node #1 at (l=0.0, t=145.0, r=156.0, b=211.0)px
+             |-Node #2 at (l=0.0, t=145.0, r=156.0, b=211.0)px
+               ContentDescription = '[Like Button, favorite, Like Text]'
+               Focused = 'false'
+               Text = '[Like]'
+               Actions = [OnClick, RequestFocus, GetTextLayoutResult]
+               MergeDescendants = 'true'
+         */
         composeTestRule.onRoot(useUnmergedTree = false).printToLog("useUnmergedTree")
 
+        /*
+            Printing with useUnmergedTree = 'true'
+            Node #1 at (l=0.0, t=145.0, r=156.0, b=211.0)px
+             |-Node #2 at (l=0.0, t=145.0, r=156.0, b=211.0)px
+               ContentDescription = '[Like Button]'
+               Focused = 'false'
+               Actions = [OnClick, RequestFocus]
+               MergeDescendants = 'true'
+                |-Node #3 at (l=0.0, t=145.0, r=66.0, b=211.0)px
+                | ContentDescription = '[favorite]'
+                | Role = 'Image'
+                |-Node #5 at (l=88.0, t=145.0, r=156.0, b=197.0)px
+                  Text = '[Like]'
+                  ContentDescription = '[Like Text]'
+                  Actions = [GetTextLayoutResult]
+         */
         composeTestRule.onRoot(useUnmergedTree = true).printToLog("useUnmergedTree")
+
         composeTestRule.onNodeWithContentDescription("Like Button").performClick()
 
     }
+
 }
 
 @Composable
@@ -196,50 +277,5 @@ fun ButtonClickSample2() {
         }
     ) {
         Text("Counter $counter")
-    }
-}
-
-@Composable
-fun ButtonClearSemanticsSample() {
-    Button(
-        // Clear semantics for button and set contentDescription
-        modifier = Modifier.clearAndSetSemantics {
-            contentDescription = "Button"
-        },
-        onClick = {}
-    ) {
-
-        Icon(
-            imageVector = Icons.Filled.Favorite,
-            contentDescription = "favorite"
-        )
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-        // We can find this Text with  contentDescription
-        Text("Like", modifier = Modifier.semantics {
-            contentDescription = "Like Text"
-        }
-        )
-    }
-}
-
-@Composable
-private fun MergeSemanticsSample() {
-    Row(
-        modifier = Modifier
-            .clickable { }
-            .semantics(mergeDescendants = true) {
-                contentDescription = "Like Button"
-            }
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Favorite,
-            contentDescription = "favorite"
-        )
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-        // We can find this Text with  contentDescription
-        Text("Like", modifier = Modifier.semantics {
-            contentDescription = "Like Text"
-        }
-        )
     }
 }
