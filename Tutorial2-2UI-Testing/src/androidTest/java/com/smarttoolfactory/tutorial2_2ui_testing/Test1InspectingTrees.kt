@@ -36,7 +36,7 @@ import com.smarttoolfactory.tutorial2_2ui_testing.ui.theme.ComposeTutorialsTheme
 import org.junit.Rule
 import org.junit.Test
 
-class MyComposeTest {
+class Test1InspectingTrees {
 
     @get:Rule
     val composeTestRule = createComposeRule()
