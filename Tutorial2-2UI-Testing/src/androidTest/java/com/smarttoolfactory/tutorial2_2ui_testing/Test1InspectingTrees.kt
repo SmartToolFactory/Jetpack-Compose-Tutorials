@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,13 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.printToLog
 import com.smarttoolfactory.tutorial2_2ui_testing.ui.theme.ComposeTutorialsTheme
 import org.junit.Rule
@@ -63,7 +67,7 @@ class MyComposeTest {
                Actions = [OnClick, RequestFocus, GetTextLayoutResult]
                MergeDescendants = 'true'
          */
-        composeTestRule.onRoot(useUnmergedTree = false).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = false).printToLog("test tag")
         /*
            Printing with useUnmergedTree = 'true'
             Node #1 at (l=0.0, t=145.0, r=293.0, b=277.0)px
@@ -76,7 +80,7 @@ class MyComposeTest {
                   Text = '[Like]'
                   Actions = [GetTextLayoutResult]
          */
-        composeTestRule.onRoot(useUnmergedTree = true).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("test tag")
 
         // Assert that Button with text Like is on screen
         composeTestRule.onNodeWithText("Like").assertIsDisplayed()
@@ -128,8 +132,8 @@ class MyComposeTest {
             }
         }
 
-        composeTestRule.onRoot(useUnmergedTree = false).printToLog("useUnmergedTree")
-        composeTestRule.onRoot(useUnmergedTree = true).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = false).printToLog("test tag")
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("test tag")
 
         composeTestRule.onNodeWithText("Hello").assertIsDisplayed()
     }
@@ -165,7 +169,7 @@ class MyComposeTest {
                ContentDescription = '[Button]'
                ClearAndSetSemantics = 'true'
          */
-        composeTestRule.onRoot(useUnmergedTree = false).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = false).printToLog("test tag")
 
         /*
             Printing with useUnmergedTree = 'true'
@@ -181,7 +185,7 @@ class MyComposeTest {
                   ContentDescription = '[Like Text]'
                   Actions = [GetTextLayoutResult]
          */
-        composeTestRule.onRoot(useUnmergedTree = true).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("test tag")
 
         composeTestRule.onNodeWithContentDescription("Button").performClick()
     }
@@ -220,7 +224,7 @@ class MyComposeTest {
                Actions = [OnClick, RequestFocus, GetTextLayoutResult]
                MergeDescendants = 'true'
          */
-        composeTestRule.onRoot(useUnmergedTree = false).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = false).printToLog("test tag")
 
         /*
             Printing with useUnmergedTree = 'true'
@@ -238,9 +242,87 @@ class MyComposeTest {
                   ContentDescription = '[Like Text]'
                   Actions = [GetTextLayoutResult]
          */
-        composeTestRule.onRoot(useUnmergedTree = true).printToLog("useUnmergedTree")
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("test tag")
 
         composeTestRule.onNodeWithContentDescription("Like Button").performClick()
+
+    }
+
+    @Test
+    fun merge_textfield_descendants_test() {
+
+        composeTestRule.setContent {
+            var text by remember {
+                mutableStateOf("")
+            }
+
+            TextField(
+                modifier = Modifier.semantics {
+                    contentDescription = "input"
+                },
+                label = {
+                    Text("Label Text")
+                },
+                placeholder = {
+                    Text("Placeholder Text")
+                },
+                value = text,
+                onValueChange = {
+                    text = it
+                }
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription("input").performTextInput("100")
+
+        /*
+            Printing with useUnmergedTree = 'false'
+            Node #1 at (l=0.0, t=145.0, r=770.0, b=299.0)px
+             |-Node #2 at (l=0.0, t=145.0, r=770.0, b=299.0)px
+               ImeAction = 'Default'
+               EditableText = '100'
+               TextSelectionRange = 'TextRange(3, 3)'
+               Focused = 'true'
+               ContentDescription = '[input]'
+               Text = '[Label Text]'
+               Actions = [GetTextLayoutResult, SetText, InsertTextAtCursor, SetSelection, PerformImeAction, OnClick, OnLongClick, PasteText, RequestFocus, MagnifierPositionInRoot]
+               MergeDescendants = 'true'
+         */
+        composeTestRule.onRoot(useUnmergedTree = false).printToLog("test tag")
+
+        /*
+            Printing with useUnmergedTree = 'true'
+            Node #1 at (l=0.0, t=145.0, r=770.0, b=299.0)px
+             |-Node #2 at (l=0.0, t=145.0, r=770.0, b=299.0)px
+               ImeAction = 'Default'
+               EditableText = '100'
+               TextSelectionRange = 'TextRange(3, 3)'
+               Focused = 'true'
+               ContentDescription = '[input]'
+               Actions = [GetTextLayoutResult, SetText, InsertTextAtCursor, SetSelection, PerformImeAction, OnClick, OnLongClick, PasteText, RequestFocus]
+               MergeDescendants = 'true'
+                |-Node #3 at (l=0.0, t=145.0, r=770.0, b=299.0)px
+                   |-Node #7 at (l=44.0, t=167.0, r=209.0, b=211.0)px
+                   | Text = '[Label Text]'
+                   | Actions = [GetTextLayoutResult]
+                   |-Node #9 at (l=44.0, t=218.0, r=726.0, b=270.0)px
+                     Actions = [MagnifierPositionInRoot]
+         */
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("test tag")
+
+        composeTestRule.onNodeWithContentDescription("input")
+            .assert(hasText("100", ignoreCase = true))
+
+        /*
+            https://stackoverflow.com/a/73179947/5457853
+
+            assertTextEquals() takes the value of Text and EditableText in your semantics
+            node combines them and then does a check against the values you pass in.
+            The order does not matter, just make sure to pass in the value
+            of the Text as one of the arguments.
+         */
+        composeTestRule.onNodeWithContentDescription("input")
+            .assertTextEquals("Label Text", "100")
 
     }
 
