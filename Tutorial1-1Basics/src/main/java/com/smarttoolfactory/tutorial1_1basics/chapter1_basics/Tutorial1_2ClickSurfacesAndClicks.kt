@@ -305,7 +305,6 @@ fun SurfaceClickPropagationExample() {
             modifier = Modifier
                 .size(150.dp)
                 .padding(12.dp)
-                .clip(RoundedCornerShape(10.dp))
                 .clickable(onClick = {
                     Toast
                         .makeText(
@@ -318,10 +317,10 @@ fun SurfaceClickPropagationExample() {
         ) {
 
             Surface(
+                shape = CircleShape,
                 modifier = Modifier
                     .size(80.dp)
                     .offset(x = 50.dp, y = (-20).dp)
-                    .clip(CircleShape)
                     .clickable(onClick = {
                         Toast
                             .makeText(
@@ -338,11 +337,11 @@ fun SurfaceClickPropagationExample() {
         }
 
         Surface(
+            shape = CutCornerShape(10.dp),
             modifier = Modifier
                 .size(110.dp)
                 .padding(12.dp)
                 .offset(x = 110.dp, y = 20.dp)
-                .clip(CutCornerShape(10.dp))
                 .clickable(onClick = {
                     Toast
                         .makeText(
