@@ -599,18 +599,6 @@ class PhoneVisualTransformation : VisualTransformation {
     }
 }
 
-fun passwordFilter(text: AnnotatedString): TransformedText {
-    return TransformedText(
-        AnnotatedString("*".repeat(text.text.length)),
-
-        /**
-         * [OffsetMapping.Identity] is a predefined [OffsetMapping] that can be used for the
-         * transformation that does not change the character count.
-         */
-        OffsetMapping.Identity
-    )
-}
-
 /**
  * VisualTransformation that transforms user input into in appearance, actual text is not
  * as displayed.
