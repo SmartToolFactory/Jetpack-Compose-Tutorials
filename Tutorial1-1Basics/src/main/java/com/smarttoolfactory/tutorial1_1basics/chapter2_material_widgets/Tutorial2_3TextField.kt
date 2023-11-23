@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Badge
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -168,7 +167,6 @@ private fun TutorialContent() {
             )
 
             TutorialText2(text = "Shape")
-Badge()
             Surface(
                 // This sets text color for Text if not set in textFieldColors
                 contentColor = Color.White,
