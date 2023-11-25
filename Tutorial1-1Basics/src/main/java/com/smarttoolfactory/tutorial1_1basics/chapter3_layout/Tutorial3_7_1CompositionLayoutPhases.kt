@@ -403,7 +403,7 @@ private fun SubcomposeLayoutPhasesSample() {
       Child1 Inner
 
         Prints:
-        I  🌝 SubcomposeLayout MySubcomposeLayout before subcompose()
+        I  🌝 MySubcomposeLayout before subcompose()
         I  MySubcomposeLayout Scope
         I  Child1 Outer Scope
         I  Child1 Inner Scope
@@ -414,7 +414,7 @@ private fun SubcomposeLayoutPhasesSample() {
         I  contentHeight: 104, layoutHeight: 275
         I  🍏 Child2 MeasureScope minHeight: 0, maxHeight: 2063, minWidth: 1080, maxWidth: 1080
         I  contentHeight: 52, layoutHeight: 52
-        I  🌝🌝 SubcomposeLayout MySubcomposeLayout after 1st subcompose()
+        I  🌝🌝 MySubcomposeLayout after 1st subcompose()
         I  MySubcomposeLayout scope
         I  Child1 Outer Scope
         I  Child1 Inner Scope
@@ -425,8 +425,8 @@ private fun SubcomposeLayoutPhasesSample() {
         I  contentHeight: 104, layoutHeight: 275
         I  🍏 Child2 MeasureScope minHeight: 275, maxHeight: 2063, minWidth: 0, maxWidth: 2147483647
         I  contentHeight: 52, layoutHeight: 275
-        I  🌝🌝🌝 SubcomposeLayout MySubcomposeLayout after 2nd subcompose()
-        I  🌝🌝🌝🌝 SubcomposeLayout MySubcomposeLayout Placement Scope rowSize: 597 x 275
+        I  🌝🌝🌝 MySubcomposeLayout after 2nd subcompose()
+        I  🌝🌝🌝🌝 MySubcomposeLayout Placement Scope rowSize: 597 x 275
         I  🍏🍏 Child1 Outer Placement Scope
         I  🍏🍏 Child1 Inner Placement Scope
         I  🍏🍏 Child2 Placement Scope
@@ -437,8 +437,7 @@ private fun SubcomposeLayoutPhasesSample() {
         modifier = Modifier
             .fillMaxWidth()
             .shadow(4.dp, shape = RoundedCornerShape(8.dp))
-            .background(getRandomColor()),
-        label = "MySubcomposeLayout"
+            .background(getRandomColor())
     ) {
         println("MySubcomposeLayout Scope")
         // label is for logging, they are not part of real custom
@@ -478,7 +477,6 @@ private fun SubcomposeLayoutPhasesSample() {
 @Composable
 private fun MySubcomposeLayout(
     modifier: Modifier = Modifier,
-    label: String,
     content: @Composable () -> Unit
 ) {
 
@@ -487,7 +485,7 @@ private fun MySubcomposeLayout(
         var subcomposeIndex = 0
 
         println(
-            "🌝 SubcomposeLayout $label before subcompose()"
+            "🌝 MySubcomposeLayout before subcompose()"
         )
 
         var placeables: List<Placeable> = subcompose(subcomposeIndex++, content).map {
@@ -496,7 +494,7 @@ private fun MySubcomposeLayout(
 
 
         println(
-            "🌝🌝 SubcomposeLayout $label after 1st subcompose()"
+            "🌝🌝 MySubcomposeLayout after 1st subcompose()"
         )
 
         var rowSize =
@@ -520,7 +518,7 @@ private fun MySubcomposeLayout(
             }
 
             println(
-                "🌝🌝🌝 SubcomposeLayout $label after 2nd subcompose()"
+                "🌝🌝🌝 MySubcomposeLayout after 2nd subcompose()"
             )
 
             rowSize =
@@ -534,7 +532,7 @@ private fun MySubcomposeLayout(
 
         layout(rowSize.width, rowSize.height) {
 
-            println("🌝🌝🌝🌝 SubcomposeLayout $label Placement Scope rowSize: $rowSize")
+            println("🌝🌝🌝🌝 MySubcomposeLayout Placement Scope rowSize: $rowSize")
 
             var xPos = 0
             placeables.forEach { placeable: Placeable ->
