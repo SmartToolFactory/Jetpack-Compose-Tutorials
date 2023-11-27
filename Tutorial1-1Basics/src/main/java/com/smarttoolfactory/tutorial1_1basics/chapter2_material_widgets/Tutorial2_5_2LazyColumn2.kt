@@ -67,8 +67,9 @@ private fun TutorialContent() {
 
             Button(
                 onClick = {
+                    if (list.size <= 0) return@Button
                     coroutineScope.launch {
-                        scrollState.animateScrollToItem(snacks.size - 1)
+                        scrollState.animateScrollToItem(list.lastIndex)
                     }
                 },
                 shape = RoundedCornerShape(8.dp)

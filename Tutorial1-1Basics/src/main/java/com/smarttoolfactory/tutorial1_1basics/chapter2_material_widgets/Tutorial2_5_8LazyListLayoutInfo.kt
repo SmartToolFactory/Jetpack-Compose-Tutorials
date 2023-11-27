@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -54,9 +55,6 @@ private fun TutorialContent() {
         Spacer(modifier = Modifier.height(30.dp))
 
         val state = rememberLazyListState()
-
-        val lazyRowWidthDp = LocalDensity.current.run { 1000f.toDp() }
-
 
         var contentPaddingStart by remember {
             mutableStateOf(0f)
@@ -116,7 +114,7 @@ private fun TutorialContent() {
         }
 
         LazyRow(
-            modifier = Modifier.width(lazyRowWidthDp),
+            modifier = Modifier.fillMaxWidth(),
             state = state,
             contentPadding = PaddingValues(
                 start = contentPaddingStart.toInt().dp,

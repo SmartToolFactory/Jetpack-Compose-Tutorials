@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -106,20 +107,36 @@ fun HorizontalSnackCard(
 
         Column {
 
-            Image(
-                contentScale = ContentScale.None,
-                modifier = modifier
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        crossfade(true)
+                        placeholder(drawableResId = R.drawable.placeholder)
+                    }).build(),
+                modifier = Modifier
                     .size(160.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { },
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
-                        .apply(block = fun ImageRequest.Builder.() {
-                            placeholder(drawableResId = R.drawable.placeholder)
-                        }).build()
-                ),
-                contentDescription = null
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop,
+                contentDescription = "",
             )
+            // TODO:
+            //  contentScale does not work when image fist loaded.
+            //  AsyncImage works properly.
+//            Image(
+//                contentScale = ContentScale.Crop,
+//                modifier = modifier
+//                    .size(160.dp)
+//                    .clip(RoundedCornerShape(8.dp))
+//                    .clickable { },
+//                painter = rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+//                        .apply(block = fun ImageRequest.Builder.() {
+//                            crossfade(true)
+//                            placeholder(drawableResId = R.drawable.placeholder)
+//                        }).build()
+//                ),
+//                contentDescription = null
+//            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -149,7 +166,7 @@ fun GridSnackCard(
 
 
         Image(
-            contentScale = ContentScale.None,
+            contentScale = ContentScale.Crop,
             modifier = modifier
                 .size(120.dp)
                 .clip(RoundedCornerShape(8.dp))
@@ -157,6 +174,7 @@ fun GridSnackCard(
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
                     .apply(block = fun ImageRequest.Builder.() {
+                        crossfade(true)
                         placeholder(drawableResId = R.drawable.placeholder)
                     }).build()
             ),
