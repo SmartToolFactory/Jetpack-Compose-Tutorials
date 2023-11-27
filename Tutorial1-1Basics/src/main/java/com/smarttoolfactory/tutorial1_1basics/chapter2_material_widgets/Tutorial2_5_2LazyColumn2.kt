@@ -68,7 +68,10 @@ private fun TutorialContent() {
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        scrollState.animateScrollToItem(snacks.size - 1)
+                        if (snacks.isNotEmpty()) {
+                            scrollState.animateScrollToItem(snacks.lastIndex)
+
+                        }
                     }
                 },
                 shape = RoundedCornerShape(8.dp)
