@@ -107,7 +107,7 @@ fun HorizontalSnackCard(
         Column {
 
             Image(
-                contentScale = ContentScale.None,
+                contentScale = ContentScale.FillBounds,
                 modifier = modifier
                     .size(160.dp)
                     .clip(RoundedCornerShape(8.dp))
@@ -149,7 +149,7 @@ fun GridSnackCard(
 
 
         Image(
-            contentScale = ContentScale.None,
+            contentScale = ContentScale.FillBounds,
             modifier = modifier
                 .size(120.dp)
                 .clip(RoundedCornerShape(8.dp))
