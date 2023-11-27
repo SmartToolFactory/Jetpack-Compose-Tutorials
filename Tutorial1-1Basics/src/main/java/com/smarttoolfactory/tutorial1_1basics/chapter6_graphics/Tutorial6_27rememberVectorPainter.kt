@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.Group
-import androidx.compose.ui.graphics.vector.Path
 import androidx.compose.ui.graphics.vector.PathNode
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -126,6 +125,8 @@ fun Netherlands(modifier: Modifier = Modifier, selectedIndex: Int) {
         )
 
         var index = 0
+
+        var selectedProvince: String? = null
         for (entry in Netherlands.PathNodeMap) {
             val (province, paths) = entry
 
@@ -137,29 +138,83 @@ fun Netherlands(modifier: Modifier = Modifier, selectedIndex: Int) {
 
             val center = pathForSize.getBounds().center
 
-            Group(
-                name = province,
-                scaleX = if (index == selectedIndex) scale else 1.0f,
-                scaleY = if (index == selectedIndex) scale else 1.0f,
-                pivotX = center.x,
-                pivotY = center.y
-            ) {
-                for (path in paths) {
-                    Path(
-                        stroke = SolidColor(Color.White),
-                        pathData = path,
-                        fill = SolidColor(if (index == selectedIndex) Color.Red else Color.Black),
-                    )
+            if (selectedIndex == index) {
+                selectedProvince = province
+            }
+
+            if (selectedIndex != index) {
+                Group(
+                    name = province,
+                    scaleX = 1.0f,
+                    scaleY = 1.0f,
+                    pivotX = center.x,
+                    pivotY = center.y
+                ) {
+                    for (path in paths) {
+                        androidx.compose.ui.graphics.vector.Path(
+                            stroke = SolidColor(Color.White),
+                            pathData = path,
+                            fill = SolidColor(Color.Black),
+                        )
+                    }
+                }
+            } else {
+                Group(
+                    name = province,
+                    scaleX = 1.0f,
+                    scaleY = 1.0f,
+                    pivotX = center.x,
+                    pivotY = center.y
+                ) {
+                    for (path in paths) {
+                        androidx.compose.ui.graphics.vector.Path(
+                            stroke = SolidColor(Color.White),
+                            pathData = path,
+                            fill = SolidColor(Color.White),
+                        )
+                    }
                 }
             }
 
             index++
         }
+
+        // This is drawn above other path nodes
+        selectedProvince?.let { province ->
+            Netherlands.PathNodeMap[province]?.let { paths: List<List<PathNode>> ->
+
+                println("SelectedIndex: $selectedIndex, selectedProvince: $selectedProvince")
+
+                val pathList = Netherlands.PathMap[province]
+                val pathForSize = Path()
+                pathList?.forEach {
+                    pathForSize.addPath(it)
+                }
+
+                val center = pathForSize.getBounds().center
+
+                Group(
+                    name = province,
+                    scaleX = scale,
+                    scaleY = scale,
+                    pivotX = center.x,
+                    pivotY = center.y
+                ) {
+                    for (path in paths) {
+                        androidx.compose.ui.graphics.vector.Path(
+                            stroke = SolidColor(Color.White),
+                            pathData = path,
+                            fill = SolidColor(Color.Red),
+                        )
+                    }
+                }
+            }
+        }
     }
+
     Image(
         modifier = modifier,
         painter = vectorPainter,
         contentDescription = null
     )
 }
-
