@@ -24,12 +24,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlinx.coroutines.launch
 
 
 @Preview
 @Composable
-fun TimerTest() {
+fun Tutorial6_26Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    Column(modifier = Modifier.padding(8.dp)) {
+        TutorialHeader(text = "Animated Countdown Timer")
+        AnimatedCountdownTimerSample()
+    }
+}
+
+
+@Preview
+@Composable
+private fun AnimatedCountdownTimerSample() {
 
 
     var timer by remember {
