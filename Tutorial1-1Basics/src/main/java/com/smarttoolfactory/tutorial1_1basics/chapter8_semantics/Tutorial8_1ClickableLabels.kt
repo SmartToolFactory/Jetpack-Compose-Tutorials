@@ -80,8 +80,6 @@ private fun TutorialContent() {
             Text("Clickable with onClickLabel", color = Color.White)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         StyleableTutorialText(
             // This removes Text semantics to not announce anything
             modifier = Modifier.clearAndSetSemantics { },
