@@ -297,8 +297,8 @@ private fun AnimatedMapSectionPathTouchSample() {
         }
     }
 
-
-    animatedMapDataList.forEachIndexed { index, it ->
+    // This is for animating paths on selection or deselection animations
+    animatedMapDataList.forEach {
         LaunchedEffect(key1 = it.isSelected) {
             val targetValue = if (it.isSelected) 1.2f else 1f
 
