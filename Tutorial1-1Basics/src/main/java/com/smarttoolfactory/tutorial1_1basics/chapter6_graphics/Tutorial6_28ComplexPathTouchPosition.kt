@@ -6,6 +6,7 @@ import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -36,6 +38,7 @@ import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,14 +69,27 @@ private fun TutorialContent() {
 @Preview
 @Composable
 private fun PathTouchSample() {
-    val pathList = remember {
-        mutableStateListOf<Path>()
-    }
 
-    var touchPosition by remember {
-        mutableStateOf(Offset.Zero)
+    var touchIndex by remember {
+        mutableIntStateOf(-1)
     }
-
+    val pathDataList = remember {
+        mutableStateListOf<PathData>().apply {
+            repeat(5) {
+                val cx = 170f * (it + 1)
+                val cy = 170f * (it + 1)
+                val radius = 120f
+                val sides = 3 + it
+                val path = createPolygonPath(cx, cy, sides, radius)
+                add(
+                    PathData(
+                        path = path,
+                        center = Offset(0f, 0f)
+                    )
+                )
+            }
+        }
+    }
 
     Canvas(
         modifier = Modifier
@@ -81,40 +97,83 @@ private fun PathTouchSample() {
             .fillMaxWidth()
             .aspectRatio(1f)
             .pointerInput(Unit) {
-                detectTapGestures {
-                    touchPosition = it
-                }
+                detectDragGestures(
+                    onDragStart = { offset: Offset ->
+
+                        val touchPath = Path().apply {
+                            addRect(
+                                Rect(
+                                    center = offset,
+                                    radius = .5f
+                                )
+                            )
+                        }
+
+                        pathDataList.forEachIndexed { index, data ->
+
+                            val path = data.path
+
+                            val differencePath =
+                                Path.combine(
+                                    operation = PathOperation.Difference,
+                                    touchPath,
+                                    path
+                                )
+
+                            val isInBounds = differencePath.isEmpty
+
+                            if (isInBounds) {
+                                touchIndex = index
+                            }
+                        }
+                    },
+                    onDrag = { change: PointerInputChange, dragAmount: Offset ->
+                        val pathData = pathDataList.getOrNull(touchIndex)
+
+                        pathData?.let {
+
+                            val matrix = Matrix().apply {
+                                postTranslate(dragAmount.x, dragAmount.y)
+                            }
+
+                            pathData.path.asAndroidPath().transform(matrix)
+
+                            pathDataList[touchIndex] = it.copy(
+                                center = dragAmount
+                            )
+
+                        }
+
+                    },
+                    onDragCancel = {
+                        touchIndex = -1
+                    },
+                    onDragEnd = {
+                        touchIndex = -1
+                    }
+                )
             }
     ) {
 
-        if (pathList.isEmpty()) {
-            repeat(5) {
-                val cx = 170f * (it + 1)
-                val cy = 170f * (it + 1)
-                val radius = 120f
-                val sides = 3 + it
-                val path = createPolygonPath(cx, cy, sides, radius)
-                pathList.add(path)
+        pathDataList.forEachIndexed { index: Int, pathData: PathData ->
+
+            val path = pathData.path
+
+            if (touchIndex != index) {
+                drawPath(
+                    path,
+                    color = Color.Black
+                )
             }
         }
 
-        val touchPath = Path().apply {
-            addRect(
-                Rect(
-                    center = touchPosition,
-                    radius = .5f
-                )
-            )
-        }
+        pathDataList.getOrNull(touchIndex)?.let { pathData ->
 
-        pathList.forEachIndexed { index, path: Path ->
-            val differencePath = Path.combine(operation = PathOperation.Difference, touchPath, path)
-
-            val isTouched = differencePath.isEmpty
+            val path = pathData.path
 
             drawPath(
-                path,
-                color = if (isTouched) Color.Green else Color.Black
+                path = path,
+                color = Color.Green
             )
         }
     }
@@ -217,6 +276,7 @@ private fun MapSectionPathTouchSample() {
 @Preview
 @Composable
 private fun AnimatedMapSectionPathTouchSample() {
+
     val animatedMapDataList = remember {
         Netherlands.PathMap.entries.map {
             val path = Path()
@@ -241,7 +301,6 @@ private fun AnimatedMapSectionPathTouchSample() {
     animatedMapDataList.forEachIndexed { index, it ->
         LaunchedEffect(key1 = it.isSelected) {
             val targetValue = if (it.isSelected) 1.2f else 1f
-            println("Index: $index, selected: ${it.isSelected}")
 
             it.animatable.animateTo(targetValue, animationSpec = tween(1000))
         }
@@ -294,7 +353,6 @@ private fun AnimatedMapSectionPathTouchSample() {
                     .aspectRatio(1f)
                     .clipToBounds()
             ) {
-
 
                 animatedMapDataList.forEach { data ->
 
@@ -352,11 +410,10 @@ private fun AnimatedMapSectionPathTouchSample() {
     }
 }
 
-@Stable
+@Immutable
 data class PathData(
     val path: Path,
-    val offset: Offset,
-    val selected: Boolean = false
+    val center: Offset
 )
 
 @Stable
