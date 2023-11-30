@@ -7,7 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
 
 
 typealias Province = String
@@ -84,9 +86,9 @@ fun CustomVectorDrawableSample() {
     Column {
         Netherlands(
             modifier = Modifier
+                .background(Blue400)
                 .fillMaxWidth()
-                .aspectRatio(1f)
-                .border(2.dp, Color.Green),
+                .aspectRatio(1f),
             index.toInt()
         )
 
@@ -151,7 +153,7 @@ fun Netherlands(modifier: Modifier = Modifier, selectedIndex: Int) {
                 ) {
                     for (path in paths) {
                         androidx.compose.ui.graphics.vector.Path(
-                            stroke = SolidColor(Color.White),
+                            stroke = SolidColor(Blue400),
                             pathData = path,
                             fill = SolidColor(Color.Black),
                         )
@@ -167,9 +169,9 @@ fun Netherlands(modifier: Modifier = Modifier, selectedIndex: Int) {
                 ) {
                     for (path in paths) {
                         androidx.compose.ui.graphics.vector.Path(
-                            stroke = SolidColor(Color.White),
+                            stroke = SolidColor(Blue400),
                             pathData = path,
-                            fill = SolidColor(Color.White),
+                            fill = SolidColor(Blue400),
                         )
                     }
                 }
@@ -203,7 +205,7 @@ fun Netherlands(modifier: Modifier = Modifier, selectedIndex: Int) {
                         androidx.compose.ui.graphics.vector.Path(
                             stroke = SolidColor(Color.White),
                             pathData = path,
-                            fill = SolidColor(Color.Red),
+                            fill = SolidColor(Orange400),
                         )
                     }
                 }
