@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 
 typealias Province = String
 
-private object Netherlands {
+internal object Netherlands {
     val PathParserMap = mapOf<Province, List<PathParser>>(
         "Overijssel" to listOf(
             PathParser().parsePathString(
@@ -71,12 +71,11 @@ private object Netherlands {
                 it.toPath()
             }
         }
-
 }
 
 @Preview
 @Composable
-fun MapTest() {
+fun CustomVectorDrawableSample() {
 
     var index by remember {
         mutableStateOf(0f)
