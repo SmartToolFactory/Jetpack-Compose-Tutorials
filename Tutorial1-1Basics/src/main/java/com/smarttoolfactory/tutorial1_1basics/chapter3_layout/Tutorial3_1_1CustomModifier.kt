@@ -97,7 +97,7 @@ private fun TutorialContent() {
         }
 
         StyleableTutorialText(
-            text = "2-) **LayoutModifier**  and it's **MeasureScope.measure** function can be" +
+            text = "2-) **LayoutModifier**  and it's **MeasureScope.measure** function can be " +
                     "used to measure a measurable to get a placeable and place it to " +
                     "add padding."
         )
@@ -185,10 +185,6 @@ private fun TutorialContent() {
  * This is a fake modifier that adds space on both sides of [Measurable] with specified dp
  * and aligns this [Measurable] based on specified horizontal alignment
  */
-/**
- * This is a fake modifier that adds space on both sides of [Measurable] with specified dp
- * and aligns this [Measurable] based on specified horizontal alignment
- */
 fun Modifier.customAlign(
     space: Int = 60,
     align: HorizontalAlign = HorizontalAlign.CENTER
@@ -221,12 +217,6 @@ enum class HorizontalAlign {
     START, CENTER, END
 }
 
-/**
- * Let's say you want to display a Text on the screen and control the distance from the top to
- * the baseline of the first line of texts. In order to do that, you'd need to manually place
- * the composable on the screen using the layout modifier.
- *
- */
 /**
  * Let's say you want to display a Text on the screen and control the distance from the top to
  * the baseline of the first line of texts. In order to do that, you'd need to manually place

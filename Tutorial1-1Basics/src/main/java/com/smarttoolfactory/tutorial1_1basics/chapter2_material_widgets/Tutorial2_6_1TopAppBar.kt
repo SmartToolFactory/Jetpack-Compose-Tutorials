@@ -195,7 +195,7 @@ fun ActionTopAppbar(onBack: (() -> Unit)? = null, elevation: Dp) {
         title = {
             Text(text = "TopAppBar")
         },
-        elevation = 8.dp,
+        elevation = elevation,
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onSurface,
         navigationIcon = {
