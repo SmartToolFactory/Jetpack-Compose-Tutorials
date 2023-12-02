@@ -183,6 +183,7 @@ private fun PathTouchSample() {
 @Preview
 @Composable
 private fun MapSectionPathTouchSample() {
+
     val pathList = remember {
         Netherlands.PathMap.entries.map {
             val path = Path()
@@ -191,14 +192,20 @@ private fun MapSectionPathTouchSample() {
                 it.value.forEach {
                     addPath(it)
                 }
-
-                val matrix = Matrix().apply {
-                    preScale(5f, 5f)
-                    postTranslate(-140f, 0f)
-                }
-                this.asAndroidPath().transform(matrix)
             }
         }
+    }
+
+    val pathForScale = remember {
+        Path().apply {
+            pathList.forEach { path ->
+                addPath(path)
+            }
+        }
+    }
+
+    var isScaled by remember {
+        mutableStateOf(false)
     }
 
 
@@ -253,6 +260,38 @@ private fun MapSectionPathTouchSample() {
                     .clipToBounds()
             ) {
 
+                // Scale map once based on canvas size and if
+                // scaled path bounds has top left offset nullify it with matrix
+                if (isScaled.not()) {
+
+                    val width = size.width
+                    val height = size.height
+
+                    val pathSize = pathForScale.getBounds().size
+
+                    val scaleX = width / pathSize.width
+                    val scaleY = height / pathSize.height
+
+                    val scaleMatrix = Matrix().apply {
+                        preScale(scaleX, scaleY)
+                    }
+
+                    pathForScale.asAndroidPath().transform(scaleMatrix)
+
+                    val drawMatrix = Matrix().apply {
+                        preScale(scaleX, scaleY)
+                        postTranslate(
+                            -pathForScale.getBounds().left, -pathForScale.getBounds().top
+                        )
+                    }
+
+                    pathList.forEach { path: Path ->
+                        path.asAndroidPath().transform(drawMatrix)
+
+                    }
+
+                    isScaled = true
+                }
 
                 pathList.forEachIndexed { index, path: Path ->
 
@@ -267,7 +306,6 @@ private fun MapSectionPathTouchSample() {
                     drawPath(it, Color.Green)
                     drawPath(it, color = Color.White, style = Stroke(1.dp.toPx()))
                 }
-
             }
         }
     }
