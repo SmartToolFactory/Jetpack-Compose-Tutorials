@@ -208,7 +208,6 @@ private fun MapSectionPathTouchSample() {
         mutableStateOf(false)
     }
 
-
     var touchIndex by remember {
         mutableIntStateOf(-1)
     }
@@ -269,8 +268,8 @@ private fun MapSectionPathTouchSample() {
 
                     val pathSize = pathForScale.getBounds().size
 
-                    val scaleX = width / pathSize.width
-                    val scaleY = height / pathSize.height
+                    val scaleX = 0.8f * width / pathSize.width
+                    val scaleY = 0.8f * height / pathSize.height
 
                     val scaleMatrix = Matrix().apply {
                         preScale(scaleX, scaleY)
@@ -278,10 +277,16 @@ private fun MapSectionPathTouchSample() {
 
                     pathForScale.asAndroidPath().transform(scaleMatrix)
 
+                    val pathForScaleBounds = pathForScale.getBounds().size
+
                     val drawMatrix = Matrix().apply {
                         preScale(scaleX, scaleY)
                         postTranslate(
                             -pathForScale.getBounds().left, -pathForScale.getBounds().top
+                        )
+                        postTranslate(
+                            (width - pathForScaleBounds.width) / 2,
+                            (height - pathForScaleBounds.height) / 2
                         )
                     }
 
@@ -315,6 +320,10 @@ private fun MapSectionPathTouchSample() {
 @Composable
 private fun AnimatedMapSectionPathTouchSample() {
 
+    var isScaled by remember {
+        mutableStateOf(false)
+    }
+
     val animatedMapDataList = remember {
         Netherlands.PathMap.entries.map {
             val path = Path()
@@ -323,15 +332,17 @@ private fun AnimatedMapSectionPathTouchSample() {
                 it.value.forEach {
                     addPath(it)
                 }
-
-                val matrix = Matrix().apply {
-                    preScale(5f, 5f)
-                    postTranslate(-140f, 0f)
-                }
-                this.asAndroidPath().transform(matrix)
             }
 
             AnimatedMapData(path = path)
+        }
+    }
+
+    val pathForScale = remember {
+        Path().apply {
+            animatedMapDataList.forEach { data ->
+                addPath(data.path)
+            }
         }
     }
 
@@ -391,6 +402,44 @@ private fun AnimatedMapSectionPathTouchSample() {
                     .aspectRatio(1f)
                     .clipToBounds()
             ) {
+
+                // Scale map once based on canvas size and if
+                // scaled path bounds has top left offset nullify it with matrix
+                if (isScaled.not()) {
+
+                    val width = size.width
+                    val height = size.height
+
+                    val pathSize = pathForScale.getBounds().size
+
+
+                    val scaleX = 0.8f * width / pathSize.width
+                    val scaleY = 0.8f * height / pathSize.height
+
+                    val scaleMatrix = Matrix().apply {
+                        preScale(scaleX, scaleY)
+                    }
+
+                    pathForScale.asAndroidPath().transform(scaleMatrix)
+                    val pathForScaleBounds = pathForScale.getBounds().size
+
+                    val drawMatrix = Matrix().apply {
+                        preScale(scaleX, scaleY)
+                        postTranslate(
+                            -pathForScale.getBounds().left, -pathForScale.getBounds().top
+                        )
+                        postTranslate(
+                            (width - pathForScaleBounds.width) / 2,
+                            (height - pathForScaleBounds.height) / 2
+                        )
+                    }
+
+                    animatedMapDataList.forEach { data: AnimatedMapData ->
+                        data.path.asAndroidPath().transform(drawMatrix)
+                    }
+
+                    isScaled = true
+                }
 
                 animatedMapDataList.forEach { data ->
 
