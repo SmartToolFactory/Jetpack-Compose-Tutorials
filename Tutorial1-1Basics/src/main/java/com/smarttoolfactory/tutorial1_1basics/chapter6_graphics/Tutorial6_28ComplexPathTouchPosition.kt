@@ -268,8 +268,8 @@ private fun MapSectionPathTouchSample() {
 
                     val pathSize = pathForScale.getBounds().size
 
-                    val scaleX = 0.8f * width / pathSize.width
-                    val scaleY = 0.8f * height / pathSize.height
+                    val scaleX = 0.6f * width / pathSize.width
+                    val scaleY = 0.6f * height / pathSize.height
 
                     val scaleMatrix = Matrix().apply {
                         preScale(scaleX, scaleY)
@@ -412,9 +412,8 @@ private fun AnimatedMapSectionPathTouchSample() {
 
                     val pathSize = pathForScale.getBounds().size
 
-
-                    val scaleX = 0.8f * width / pathSize.width
-                    val scaleY = 0.8f * height / pathSize.height
+                    val scaleX = 0.6f * width / pathSize.width
+                    val scaleY = 0.6f * height / pathSize.height
 
                     val scaleMatrix = Matrix().apply {
                         preScale(scaleX, scaleY)
