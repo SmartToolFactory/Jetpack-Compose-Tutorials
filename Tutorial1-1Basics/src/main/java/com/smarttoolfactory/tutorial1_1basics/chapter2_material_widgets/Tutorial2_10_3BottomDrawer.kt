@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,7 +51,12 @@ private fun TutorialContent() {
             Checkbox(gesturesEnabled, null)
             Text(text = if (gesturesEnabled) "Gestures Enabled" else "Gestures Disabled")
         }
-        val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+        val drawerState = rememberBottomDrawerState(
+            initialValue = BottomDrawerValue.Closed,
+            confirmStateChange = { bottomDrawerValue: BottomDrawerValue ->
+                true
+            }
+        )
 
         BottomDrawer(
             gesturesEnabled = gesturesEnabled,
@@ -91,7 +95,14 @@ private fun TutorialContent() {
                     val openText = if (gesturesEnabled) "▲▲▲ Pull up ▲▲▲" else "Click the button!"
                     Text(text = if (drawerState.isClosed) openText else "▼▼▼ Drag down ▼▼▼")
                     Spacer(Modifier.height(20.dp))
-                    Button(onClick = { scope.launch { drawerState.open() } }) {
+                    Button(onClick = {
+                        scope.launch {
+                            drawerState.open()
+                            // Expands full height
+//                            drawerState.expand()
+                        }
+                    }
+                    ) {
                         Text("Click to open")
                     }
                 }

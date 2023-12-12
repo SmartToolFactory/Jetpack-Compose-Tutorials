@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +26,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -52,8 +55,23 @@ fun Tutorial2_10Screen1() {
 @ExperimentalMaterialApi
 @Composable
 private fun TutorialContent() {
+
+    val context = LocalContext.current
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        bottomSheetState = rememberBottomSheetState(
+            initialValue = BottomSheetValue.Collapsed,
+            confirmStateChange = { bottomSheetValue: BottomSheetValue ->
+                // This callback gets called twice in Jetpack Compose version 1.5.4
+                println("State changed to $bottomSheetValue")
+                Toast.makeText(
+                    context,
+                    "State changed to $bottomSheetValue",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+        )
     )
 
     BottomSheetScaffold(

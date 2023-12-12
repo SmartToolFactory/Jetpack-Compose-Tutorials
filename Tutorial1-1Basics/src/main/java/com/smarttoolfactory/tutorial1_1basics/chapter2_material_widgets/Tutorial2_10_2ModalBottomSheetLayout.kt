@@ -41,7 +41,11 @@ fun Tutorial2_10Screen2() {
 private fun TutorialContent() {
 
     val modalBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.HalfExpanded
+        initialValue = ModalBottomSheetValue.HalfExpanded,
+        skipHalfExpanded = false,
+        confirmValueChange = { modalBottomSheetValue: ModalBottomSheetValue ->
+            true
+        }
     )
     val coroutineScope = rememberCoroutineScope()
 
@@ -70,9 +74,11 @@ private fun TutorialContent() {
                 // 🔥 Uncomment to see states on modal bottom sheet content
 //                MainContent(modalBottomSheetState, Color(0xff4CAF50))
                 SheetContent()
-            }) {
-            MainContent(modalBottomSheetState)
-        }
+            },
+            content = {
+                MainContent(modalBottomSheetState)
+            }
+        )
     }
 }
 
@@ -130,13 +136,7 @@ private fun MainContent(
 @ExperimentalMaterialApi
 @Composable
 private fun SheetContent() {
-    Column(
-        // 🔥🔥  Height of this Composable cannot be less than half height of screen
-        // if initialValue is ModalBottomSheetValue.HalfExpanded
-        // or it crashes with java.lang.IllegalArgumentException:
-        // The initial value must have an associated anchor.
-//        modifier =Modifier.height(200.dp)
-    ) {
+    Column {
 
         LazyColumn {
 
