@@ -104,6 +104,7 @@ private fun MyComposable() {
         .padding(horizontal = 20.dp)
         .fillMaxWidth()
         .height(300.dp)
+        .verticalScroll(rememberScrollState())
         .border(2.dp, Color.Red)
         .onGloballyPositioned {
             val positionInParent: Offset = it.positionInParent()
