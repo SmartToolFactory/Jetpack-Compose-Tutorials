@@ -43,7 +43,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
@@ -64,17 +64,17 @@ dependencies {
 
 
     // Jetpack Compose Constraint Layout
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13"
 
-    implementation "androidx.activity:activity-compose:1.8.0"
+    implementation "androidx.activity:activity-compose:1.8.2"
 
-    def nav_compose_version = "2.7.5"
+    def nav_compose_version = "2.7.6"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
 
-    def accompanist_version = "0.30.1"
+    def accompanist_version = "0.32.0"
     // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
