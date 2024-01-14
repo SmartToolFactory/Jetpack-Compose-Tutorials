@@ -123,7 +123,8 @@ private fun TutorialContent() {
                 }
 
                 HorizontalPager(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .nestedScroll(
                             remember {
                                 object : NestedScrollConnection {
@@ -153,6 +154,7 @@ private fun TutorialContent() {
                     flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
                     key = null,
                     pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+                        pagerState,
                         Orientation.Horizontal
                     ),
                     pageContent = { page ->
@@ -192,7 +194,8 @@ fun ListLazyColumn(itemsCount: Int) {
             }
         } else {
             Column(
-                Modifier.align(Alignment.Center)
+                Modifier
+                    .align(Alignment.Center)
                     .onPlaced { layoutCoordinates: LayoutCoordinates ->
                         val contentHeight = layoutCoordinates.size.height
 
