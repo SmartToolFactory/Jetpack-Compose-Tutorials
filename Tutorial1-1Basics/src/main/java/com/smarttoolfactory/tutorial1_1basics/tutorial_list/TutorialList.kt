@@ -146,6 +146,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_23Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_24Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_25Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_29ToolTipPieChart
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
@@ -2915,6 +2916,22 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_29 = TutorialSectionModel(
+        title = "6-29 Pie Chart with Tool tip",
+        description = "Animate Pie Chart with tool tip.",
+        action = {
+            Tutorial6_29ToolTipPieChart()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_TEXT_MEASURER,
+            TAG_CANVAS,
+            TAG_ANIMATABLE,
+            TAG_DETECT_TAP_GESTURES
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -2950,6 +2967,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_22,
         tutorial6_23,
         tutorial6_24,
-        tutorial6_25
+        tutorial6_25,
+        tutorial6_29
     )
 }
