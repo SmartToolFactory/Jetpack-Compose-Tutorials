@@ -8,8 +8,10 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,17 +26,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -85,6 +95,11 @@ private fun TutorialContent() {
             bullets = false
         )
         ShimmerIconSample()
+        StyleableTutorialText(
+            text = "Clip image with polygon",
+            bullets = false
+        )
+        ImageShapeClipSample()
     }
 }
 
@@ -263,5 +278,58 @@ private fun ShimmerIconSample() {
             .size(100.dp),
         contentDescription = null
     )
+}
+
+
+@Preview
+@Composable
+fun ImageShapeClipSample() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(32.dp)
+    ) {
+        val imageBitmap = ImageBitmap.imageResource(R.drawable.avatar_1_raster)
+
+        Box(
+            Modifier
+                .size(200.dp)
+                .border(2.dp, Color.Green)
+                .graphicsLayer {
+                    compositingStrategy = CompositingStrategy.Offscreen
+                }
+                .drawWithCache {
+                    val canvasWidth = size.width
+                    val canvasHeight = size.height
+                    val cx = canvasWidth / 2
+                    val cy = canvasHeight / 2
+                    val radius = canvasHeight / 4
+                    val path = createPolygonPath(cx, cy, 6, radius)
+
+                    onDrawWithContent {
+
+                        // Source
+                        drawPath(
+                            path = path,
+                            color = Color.Red,
+                            style = Stroke(
+                                width = canvasHeight / 2,
+                                pathEffect = PathEffect.cornerPathEffect(15f)
+                            )
+                        )
+
+                        drawCircle(
+                            color = Color.Red,
+                            radius = 10f
+                        )
+
+                        // Destination
+                        drawImage(
+                            image = imageBitmap,
+                            dstSize = IntSize(size.width.toInt(), size.height.toInt()),
+                            blendMode = BlendMode.SrcIn
+                        )
+                    }
+                }
+        )
+    }
 }
 
