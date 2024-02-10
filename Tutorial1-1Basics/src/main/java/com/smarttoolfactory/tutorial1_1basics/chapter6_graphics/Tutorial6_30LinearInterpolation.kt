@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,8 +50,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.round
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.util.lerp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -93,7 +95,7 @@ fun LerpAnimationSample() {
 
     val coroutineScope = rememberCoroutineScope()
     val animatedCardList = remember {
-        mutableListOf<AnimatedCard>().apply {
+        mutableStateListOf<AnimatedCard>().apply {
             snacks.forEach {
                 add(AnimatedCard(snack = it, color = getRandomColor()))
             }
@@ -103,7 +105,8 @@ fun LerpAnimationSample() {
         mutableStateOf(0)
     }
 
-    BackHandler {
+
+    BackHandler(enabled = animatable.targetValue != 0f) {
         coroutineScope.launch {
             animatable.animateTo(
                 targetValue = 0f,
@@ -121,12 +124,25 @@ fun LerpAnimationSample() {
         BoxWithConstraints {
             val maxWidth = constraints.maxWidth.toFloat()
 
+            val density = LocalDensity.current
+            val endHeight = density.run { 310.dp.toPx() }
+
+            val animatedCard = animatedCardList[selectedIndex]
+
+            val startRect = animatedCard.rect
+
+            val endRect = Rect(
+                offset = Offset.Zero,
+                size = Size(
+                    maxWidth, endHeight
+                )
+            )
+
             TopAppBar(
                 backgroundColor = Color.White,
                 title = {
                     Text("Title")
                 },
-                elevation = 0.dp,
                 navigationIcon = {
                     IconButton(onClick = { }) {
                         Icon(
@@ -137,9 +153,8 @@ fun LerpAnimationSample() {
                 }
             )
 
-
             Column {
-                Spacer(modifier = Modifier.fillMaxWidth().height(64.dp))
+                Spacer(modifier = Modifier.fillMaxWidth().height(72.dp))
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp)
@@ -147,12 +162,19 @@ fun LerpAnimationSample() {
 
                     itemsIndexed(snacks) { index, snack ->
                         SnackCard(
-                            modifier = Modifier.size(210.dp).onGloballyPositioned {
-                                animatedCardList[index].apply {
-                                    rect = it.boundsInRoot()
-                                }
+                            modifier = Modifier.size(210.dp)
+                                .onGloballyPositioned {
 
-                            },
+                                    // 🔥boundsInX rectangles return from (0,0) position and
+                                    // size is set as actual size - size offscreen
+                                    val rect = Rect(
+                                        offset = it.positionInRoot(),
+                                        size = it.size.toSize()
+                                    )
+                                    animatedCardList[index] = animatedCardList[index]
+                                        .copy(rect = rect)
+
+                                },
                             snack = snack,
                             textColor = animatedCardList[index].color,
                             onClick = {
@@ -174,19 +196,7 @@ fun LerpAnimationSample() {
 
             if (animatable.value > 0) {
 
-                val density = LocalDensity.current
-                val endHeight = density.run { 310.dp.toPx() }
-
-                val animatedCard = animatedCardList[selectedIndex]
-
-                val startRect = animatedCard.rect
-
-                val endRect = Rect(
-                    offset = Offset.Zero,
-                    size = Size(
-                        maxWidth, endHeight
-                    )
-                )
+                println("Animating start: $startRect, endRect: $endRect")
 
                 val progress = animatable.value
 
@@ -212,10 +222,10 @@ fun LerpAnimationSample() {
     }
 }
 
-class AnimatedCard(
+data class AnimatedCard(
     val snack: Snack,
     val color: Color,
-    var rect: Rect = Rect.Zero
+    val rect: Rect = Rect.Zero
 )
 
 @Composable
@@ -241,8 +251,8 @@ fun SnackCard(
     ) {
 
 
-        // 🔥 This is lerping between .6f and 1f by changing start from 0f to .6f
-        val fraction = scale(0f, 1f, progress, .6f, 1f)
+        // 🔥 This is lerping between .77f and 1f by changing start from 0f to .6f
+        val fraction = scale(0f, 1f, progress, .77f, 1f)
 
         Image(
             contentScale = ContentScale.Crop,
@@ -260,7 +270,7 @@ fun SnackCard(
 
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .align(Alignment.BottomStart)
 
         ) {
@@ -291,6 +301,14 @@ fun SnackCard(
             color = textColor
         )
     }
+}
+
+@Preview
+@Composable
+fun Test() {
+    val scaledValue = scale(0f, 1f, 0.5f, 100f, 200f)
+
+    println("scaledValue: $scaledValue")
 }
 
 // Scale x1 from a1..b1 range to a2..b2 range
