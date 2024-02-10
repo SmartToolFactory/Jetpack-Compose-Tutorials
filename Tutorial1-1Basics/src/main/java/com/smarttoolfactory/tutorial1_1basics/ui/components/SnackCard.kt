@@ -40,8 +40,6 @@ fun SnackCard(
         .fillMaxWidth()
         .height(160.dp)
 ) {
-
-    println("🍭 SnackCard() id: ${snack.id}, textColor: $textColor")
     Card(
         modifier = Modifier
             .background(Color.White)
