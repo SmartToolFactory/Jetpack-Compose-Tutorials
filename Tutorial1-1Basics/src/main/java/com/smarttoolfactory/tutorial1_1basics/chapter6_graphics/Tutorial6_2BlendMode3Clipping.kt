@@ -7,8 +7,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -20,6 +20,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -100,6 +102,11 @@ private fun TutorialContent() {
             bullets = false
         )
         ImageShapeClipSample()
+        StyleableTutorialText(
+            text = "Clip part(circle from) of image",
+            bullets = false
+        )
+        ImageShapeClipSample2()
     }
 }
 
@@ -293,8 +300,7 @@ fun ImageShapeClipSample() {
 
         Box(
             Modifier
-                .size(200.dp)
-                .border(2.dp, Color.Green)
+                .size(120.dp)
                 .graphicsLayer {
                     compositingStrategy = CompositingStrategy.Offscreen
                 }
@@ -335,3 +341,48 @@ fun ImageShapeClipSample() {
     }
 }
 
+
+@Preview
+@Composable
+fun ImageShapeClipSample2() {
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(32.dp)
+    ) {
+        Image(
+            modifier = Modifier
+                .size(120.dp)
+                .graphicsLayer {
+                    compositingStrategy = CompositingStrategy.Offscreen
+                }
+                .drawWithContent {
+                    val radius = 24.dp.toPx()
+                    val badgeRadius = 16.dp.toPx()
+
+                    val center = Offset(
+                        size.width - radius,
+                        size.height - radius
+                    )
+
+                    // Destination
+                    drawContent()
+
+                    // Source
+                    drawCircle(
+                        color = Color.Transparent,
+                        radius = radius,
+                        center = center,
+                        blendMode = BlendMode.Clear
+                    )
+
+                    drawCircle(
+                        color = Color.Red,
+                        radius = badgeRadius,
+                        center = center
+                    )
+                },
+            imageVector = Icons.Default.AccountCircle,
+            contentDescription = null
+        )
+    }
+}
