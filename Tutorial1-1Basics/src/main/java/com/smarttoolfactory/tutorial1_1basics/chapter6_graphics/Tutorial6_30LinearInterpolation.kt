@@ -22,6 +22,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
@@ -31,7 +34,7 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -94,17 +97,16 @@ fun LerpAnimationSample() {
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val animatedCardList = remember {
-        mutableStateListOf<AnimatedCard>().apply {
+    val snackDataLists = remember {
+        mutableStateListOf<SnackData>().apply {
             snacks.forEach {
-                add(AnimatedCard(snack = it, color = getRandomColor()))
+                add(SnackData(snack = it, color = getRandomColor()))
             }
         }
     }
     var selectedIndex by remember {
         mutableStateOf(0)
     }
-
 
     BackHandler(enabled = animatable.targetValue != 0f) {
         coroutineScope.launch {
@@ -127,9 +129,9 @@ fun LerpAnimationSample() {
             val density = LocalDensity.current
             val endHeight = density.run { 310.dp.toPx() }
 
-            val animatedCard = animatedCardList[selectedIndex]
+            val snackDataList = snackDataLists[selectedIndex]
 
-            val startRect = animatedCard.rect
+            val startRect = snackDataList.rect
 
             val endRect = Rect(
                 offset = Offset.Zero,
@@ -146,7 +148,7 @@ fun LerpAnimationSample() {
                 navigationIcon = {
                     IconButton(onClick = { }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
                         )
                     }
@@ -171,12 +173,12 @@ fun LerpAnimationSample() {
                                         offset = it.positionInRoot(),
                                         size = it.size.toSize()
                                     )
-                                    animatedCardList[index] = animatedCardList[index]
+                                    snackDataLists[index] = snackDataLists[index]
                                         .copy(rect = rect)
 
                                 },
                             snack = snack,
-                            textColor = animatedCardList[index].color,
+                            textColor = snackDataLists[index].color,
                             onClick = {
                                 selectedIndex = index
                                 coroutineScope.launch {
@@ -195,9 +197,6 @@ fun LerpAnimationSample() {
             }
 
             if (animatable.value > 0) {
-
-                println("Animating start: $startRect, endRect: $endRect")
-
                 val progress = animatable.value
 
                 val interpolatedRect =
@@ -212,9 +211,9 @@ fun LerpAnimationSample() {
                             intOffset
                         }
                         .size(sizeDp),
-                    snack = animatedCard.snack,
+                    snack = snackDataList.snack,
                     progress = progress,
-                    textColor = animatedCardList[selectedIndex].color,
+                    textColor = snackDataLists[selectedIndex].color,
                     onClick = {}
                 )
             }
@@ -222,7 +221,153 @@ fun LerpAnimationSample() {
     }
 }
 
-data class AnimatedCard(
+@Preview
+@Composable
+fun GridLerpAnimationSample() {
+    lerp(1f, 1f, 0f)
+
+    val animatable = remember {
+        Animatable(0f)
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+    val snackDataLists = remember {
+        mutableStateListOf<SnackData>().apply {
+            snacks.forEach {
+                add(SnackData(snack = it, color = getRandomColor()))
+            }
+        }
+    }
+    var selectedIndex by remember {
+        mutableStateOf(0)
+    }
+
+    BackHandler(enabled = animatable.targetValue != 0f) {
+        coroutineScope.launch {
+            animatable.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(
+                    1000,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().background(backgroundColor)
+    ) {
+        BoxWithConstraints {
+            val maxWidth = constraints.maxWidth.toFloat()
+
+            val density = LocalDensity.current
+            val endHeight = density.run { 340.dp.toPx() }
+
+            val snackDataList = snackDataLists[selectedIndex]
+
+            val startRect = snackDataList.rect
+
+            val endRect = Rect(
+                offset = Offset.Zero,
+                size = Size(
+                    maxWidth, endHeight
+                )
+            )
+
+            TopAppBar(
+                backgroundColor = Color.White,
+                title = {
+                    Text("Title")
+                },
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+
+            Column {
+                Spacer(modifier = Modifier.fillMaxWidth().height(72.dp))
+                LazyVerticalGrid(
+                    modifier = Modifier.graphicsLayer {
+                        alpha = 1 - animatable.value
+                    },
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+
+                    itemsIndexed(snacks) { index, snack ->
+                        SnackCard(
+                            modifier = Modifier.size(210.dp)
+                                .graphicsLayer {
+                                    alpha =
+                                        if (selectedIndex == index && animatable.value != 0f)
+                                            0f else 1f
+                                }
+
+
+                                .onGloballyPositioned {
+
+                                    // 🔥boundsInX rectangles return from (0,0) position and
+                                    // size is set as actual size - size offscreen
+                                    val rect = Rect(
+                                        offset = it.positionInRoot(),
+                                        size = it.size.toSize()
+                                    )
+                                    snackDataLists[index] = snackDataLists[index]
+                                        .copy(rect = rect)
+
+                                },
+                            snack = snack,
+                            textColor = snackDataLists[index].color,
+                            onClick = {
+                                selectedIndex = index
+                                coroutineScope.launch {
+                                    animatable.animateTo(
+                                        targetValue = 1f,
+                                        animationSpec = tween(
+                                            1000,
+                                            easing = FastOutSlowInEasing
+                                        )
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+
+            if (animatable.value > 0) {
+                val progress = animatable.value
+
+                val interpolatedRect =
+                    androidx.compose.ui.geometry.lerp(startRect, endRect, progress)
+
+                val sizeDp = density.run { interpolatedRect.size.toDpSize() }
+                val intOffset = interpolatedRect.topLeft.round()
+
+                SnackCard(
+                    modifier = Modifier
+                        .offset {
+                            intOffset
+                        }
+                        .size(sizeDp),
+                    snack = snackDataList.snack,
+                    progress = progress,
+                    textColor = snackDataLists[selectedIndex].color,
+                    onClick = {}
+                )
+            }
+        }
+    }
+}
+
+data class SnackData(
     val snack: Snack,
     val color: Color,
     val rect: Rect = Rect.Zero
@@ -256,10 +401,12 @@ fun SnackCard(
 
         Image(
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .fillMaxHeight(fraction),
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current).data(data = snack.imageUrl)
+                    .size(coil.size.Size.ORIGINAL)
                     .apply(block = fun ImageRequest.Builder.() {
                         crossfade(true)
                         placeholder(drawableResId = R.drawable.placeholder)
@@ -280,6 +427,7 @@ fun SnackCard(
                 // 🔥 Interpolate Color
                 color = lerp(textColor, Color.Black, progress),
                 fontWeight = FontWeight.Bold,
+                maxLines = 1,
                 text = snack.name
             )
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
