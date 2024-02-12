@@ -83,7 +83,8 @@ fun Tutorial6_30Screen() {
 
 @Composable
 private fun TutorialContent() {
-    LerpAnimationSample()
+//    LerpAnimationSample()
+    GridLerpAnimationSample()
 }
 
 @Preview
