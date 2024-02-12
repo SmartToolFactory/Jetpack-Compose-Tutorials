@@ -87,8 +87,6 @@ private fun TutorialContent() {
         sheetContent = {
             SheetContent()
         },
-        drawerGesturesEnabled = true,
-        drawerScrimColor = Color(0xff000000),
         // This is the height in collapsed state
         sheetPeekHeight = 70.dp,
         floatingActionButton = {
