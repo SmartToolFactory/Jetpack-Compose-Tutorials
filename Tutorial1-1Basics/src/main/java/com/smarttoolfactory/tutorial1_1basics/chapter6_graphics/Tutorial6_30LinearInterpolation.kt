@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -141,26 +139,24 @@ fun LerpAnimationSample() {
                 )
             )
 
-            TopAppBar(
-                backgroundColor = Color.White,
-                title = {
-                    Text("Title")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-
             Column {
-                Spacer(modifier = Modifier.fillMaxWidth().height(72.dp))
+                TopAppBar(
+                    backgroundColor = Color.White,
+                    title = {
+                        Text("Title")
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-//                    contentPadding = PaddingValues( 16.dp)
+                    contentPadding = PaddingValues(16.dp)
                 ) {
 
                     itemsIndexed(snacks) { index, snack ->
