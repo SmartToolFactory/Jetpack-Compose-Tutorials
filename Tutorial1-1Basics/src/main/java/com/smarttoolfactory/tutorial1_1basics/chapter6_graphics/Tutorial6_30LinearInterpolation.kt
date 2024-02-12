@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -113,7 +114,7 @@ fun LerpAnimationSample() {
             animatable.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(
-                    1000,
+                    600,
                     easing = FastOutSlowInEasing
                 )
             )
@@ -159,7 +160,7 @@ fun LerpAnimationSample() {
                 Spacer(modifier = Modifier.fillMaxWidth().height(72.dp))
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
+//                    contentPadding = PaddingValues( 16.dp)
                 ) {
 
                     itemsIndexed(snacks) { index, snack ->
@@ -185,8 +186,8 @@ fun LerpAnimationSample() {
                                     animatable.animateTo(
                                         targetValue = 1f,
                                         animationSpec = tween(
-                                            1000,
-                                            easing = FastOutSlowInEasing
+                                            600,
+                                            easing = FastOutLinearInEasing
                                         )
                                     )
                                 }
@@ -247,8 +248,8 @@ fun GridLerpAnimationSample() {
             animatable.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(
-                    1000,
-                    easing = FastOutSlowInEasing
+                    600,
+                    easing = FastOutLinearInEasing
                 )
             )
         }
@@ -274,23 +275,21 @@ fun GridLerpAnimationSample() {
                 )
             )
 
-            TopAppBar(
-                backgroundColor = Color.White,
-                title = {
-                    Text("Title")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-
             Column {
-                Spacer(modifier = Modifier.fillMaxWidth().height(72.dp))
+                TopAppBar(
+                    backgroundColor = Color.White,
+                    title = {
+                        Text("Title")
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                )
                 LazyVerticalGrid(
                     modifier = Modifier.graphicsLayer {
                         alpha = 1 - animatable.value
@@ -298,7 +297,7 @@ fun GridLerpAnimationSample() {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
+                    contentPadding = PaddingValues(16.dp)
                 ) {
 
                     itemsIndexed(snacks) { index, snack ->
@@ -309,10 +308,7 @@ fun GridLerpAnimationSample() {
                                         if (selectedIndex == index && animatable.value != 0f)
                                             0f else 1f
                                 }
-
-
                                 .onGloballyPositioned {
-
                                     // 🔥boundsInX rectangles return from (0,0) position and
                                     // size is set as actual size - size offscreen
                                     val rect = Rect(
@@ -331,7 +327,7 @@ fun GridLerpAnimationSample() {
                                     animatable.animateTo(
                                         targetValue = 1f,
                                         animationSpec = tween(
-                                            1000,
+                                            600,
                                             easing = FastOutSlowInEasing
                                         )
                                     )
