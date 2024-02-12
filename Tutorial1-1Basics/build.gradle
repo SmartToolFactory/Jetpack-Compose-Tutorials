@@ -34,7 +34,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.9"
     }
     namespace 'com.smarttoolfactory.tutorial1_1basics'
 }
@@ -57,7 +57,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime:$compose_version"
 
     // Material 3
-    implementation "androidx.compose.material3:material3:1.1.2"
+    implementation "androidx.compose.material3:material3:1.2.0"
 
     // Util Functions of Jetpack Compose
     implementation "androidx.compose.ui:ui-util:$compose_version"
@@ -68,7 +68,7 @@ dependencies {
 
     implementation "androidx.activity:activity-compose:1.8.2"
 
-    def nav_compose_version = "2.7.6"
+    def nav_compose_version = "2.7.7"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
 
     // Coil
