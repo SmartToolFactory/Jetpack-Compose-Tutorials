@@ -74,7 +74,6 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.FavoriteButton
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import kotlinx.coroutines.launch
 
-
 @Preview
 @Composable
 fun Tutorial6_30Screen() {
@@ -97,7 +96,7 @@ fun LerpAnimationSample() {
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val snackDataLists = remember {
+    val snackDataList = remember {
         mutableStateListOf<SnackData>().apply {
             snacks.forEach {
                 add(SnackData(snack = it, color = getRandomColor()))
@@ -129,9 +128,9 @@ fun LerpAnimationSample() {
             val density = LocalDensity.current
             val endHeight = density.run { 310.dp.toPx() }
 
-            val snackDataList = snackDataLists[selectedIndex]
+            val snackData = snackDataList[selectedIndex]
 
-            val startRect = snackDataList.rect
+            val startRect = snackData.rect
 
             val endRect = Rect(
                 offset = Offset.Zero,
@@ -171,12 +170,12 @@ fun LerpAnimationSample() {
                                         offset = it.positionInRoot(),
                                         size = it.size.toSize()
                                     )
-                                    snackDataLists[index] = snackDataLists[index]
+                                    snackDataList[index] = snackDataList[index]
                                         .copy(rect = rect)
 
                                 },
                             snack = snack,
-                            textColor = snackDataLists[index].color,
+                            textColor = snackDataList[index].color,
                             onClick = {
                                 selectedIndex = index
                                 coroutineScope.launch {
@@ -209,9 +208,9 @@ fun LerpAnimationSample() {
                             intOffset
                         }
                         .size(sizeDp),
-                    snack = snackDataList.snack,
+                    snack = snackData.snack,
                     progress = progress,
-                    textColor = snackDataLists[selectedIndex].color,
+                    textColor = snackDataList[selectedIndex].color,
                     onClick = {}
                 )
             }
@@ -229,7 +228,7 @@ fun GridLerpAnimationSample() {
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val snackDataLists = remember {
+    val snackDataList = remember {
         mutableStateListOf<SnackData>().apply {
             snacks.forEach {
                 add(SnackData(snack = it, color = getRandomColor()))
@@ -261,9 +260,9 @@ fun GridLerpAnimationSample() {
             val density = LocalDensity.current
             val endHeight = density.run { 340.dp.toPx() }
 
-            val snackDataList = snackDataLists[selectedIndex]
+            val snackData = snackDataList[selectedIndex]
 
-            val startRect = snackDataList.rect
+            val startRect = snackData.rect
 
             val endRect = Rect(
                 offset = Offset.Zero,
@@ -312,12 +311,12 @@ fun GridLerpAnimationSample() {
                                         offset = it.positionInRoot(),
                                         size = it.size.toSize()
                                     )
-                                    snackDataLists[index] = snackDataLists[index]
+                                    snackDataList[index] = snackDataList[index]
                                         .copy(rect = rect)
 
                                 },
                             snack = snack,
-                            textColor = snackDataLists[index].color,
+                            textColor = snackDataList[index].color,
                             onClick = {
                                 selectedIndex = index
                                 coroutineScope.launch {
@@ -350,9 +349,9 @@ fun GridLerpAnimationSample() {
                             intOffset
                         }
                         .size(sizeDp),
-                    snack = snackDataList.snack,
+                    snack = snackData.snack,
                     progress = progress,
-                    textColor = snackDataLists[selectedIndex].color,
+                    textColor = snackDataList[selectedIndex].color,
                     onClick = {}
                 )
             }
@@ -389,7 +388,7 @@ fun SnackCard(
     ) {
 
 
-        // 🔥 This is lerping between .77f and 1f by changing start from 0f to .6f
+        // 🔥 This is lerping between .77f and 1f by changing start from 0f to .77f
         val fraction = scale(0f, 1f, progress, .77f, 1f)
 
         Image(
@@ -453,7 +452,7 @@ fun Test() {
 }
 
 // Scale x1 from a1..b1 range to a2..b2 range
-private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
+fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
     lerp(a2, b2, calcFraction(a1, b1, x1))
 
 
