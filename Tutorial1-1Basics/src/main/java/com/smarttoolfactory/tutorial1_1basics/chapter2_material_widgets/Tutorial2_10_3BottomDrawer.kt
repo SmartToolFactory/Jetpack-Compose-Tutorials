@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_10Screen3() {
     TutorialContent()

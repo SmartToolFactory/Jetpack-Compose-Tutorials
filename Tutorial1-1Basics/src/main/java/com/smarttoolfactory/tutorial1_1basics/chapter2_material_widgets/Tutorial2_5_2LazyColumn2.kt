@@ -23,7 +23,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.FullWidthRow
 import com.smarttoolfactory.tutorial1_1basics.ui.components.SnackCard
 import kotlinx.coroutines.launch
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_5Screen2() {
     TutorialContent()

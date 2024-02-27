@@ -68,7 +68,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_2Screen() {
     TutorialContent()

@@ -60,7 +60,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_12Screen() {
     TutorialContent()

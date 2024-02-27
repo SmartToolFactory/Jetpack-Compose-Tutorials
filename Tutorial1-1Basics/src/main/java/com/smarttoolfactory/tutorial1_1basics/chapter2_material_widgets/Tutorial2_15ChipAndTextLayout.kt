@@ -77,7 +77,7 @@ data class ChipData(
     val id: String = UUID.randomUUID().toString()
 )
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ChipSampleAndTextLayoutSample() {
 

@@ -28,7 +28,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun DecoupledConstraintLayout() {
     BoxWithConstraints {
@@ -65,7 +65,7 @@ private fun decoupledConstraints(margin: Dp): ConstraintSet {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ConstraintLayoutGuidlineSample() {
     ConstraintLayout(
@@ -104,7 +104,7 @@ private fun ConstraintLayoutGuidlineSample() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ConstraintLayoutDemo() {
     ConstraintLayout(modifier = Modifier.size(200.dp)) {
@@ -143,7 +143,7 @@ fun ConstraintLayoutDemo() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ConstraintLayoutAnimationTest() {
 

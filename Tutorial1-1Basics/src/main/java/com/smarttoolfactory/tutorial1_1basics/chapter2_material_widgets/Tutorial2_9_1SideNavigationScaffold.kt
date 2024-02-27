@@ -193,9 +193,9 @@ fun AppDrawer(
     }
 }
 
-@Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
+@Preview(showBackground = true)
+@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(device = Devices.PIXEL_C, showBackground = true)
 @Composable
 private fun AppDrawerPreview() {
     ComposeTutorialsTheme {

@@ -45,10 +45,9 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
  * Order of modifiers matter. Depending on which order **padding** is added
  * it makes UI component(Compose) to have either margin or padding.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial1_1Screen() {
-
     TutorialContent()
 }
 
@@ -511,9 +510,9 @@ fun WeightAndSpacerExample() {
     Spacer(modifier = Modifier.height(16.dp))
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
+@Preview(device = Devices.PIXEL_C, showBackground = true)
 @Composable
 private fun Tutorial1_1Preview() {
     TutorialContent()
