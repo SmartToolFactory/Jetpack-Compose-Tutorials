@@ -63,13 +63,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.isInPreview
 import com.smarttoolfactory.tutorial1_1basics.ui.components.FullWidthColumn
 import com.smarttoolfactory.tutorial1_1basics.ui.components.FullWidthRow
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_4Screen() {
     TutorialContent()
@@ -128,7 +129,10 @@ private fun TutorialContent() {
                         "set it to Image component."
             )
 
-            ImageDownloadWithGlideExample()
+            // Previews rendered within Android Studio cannot access Network to load images. Skipping this Composable while rendering Preview.
+            if (!isInPreview) {
+                ImageDownloadWithGlideExample()
+            }
 
             StyleableTutorialText(
                 text = "8) Use Coil library to fetch an image resource from network and " +
