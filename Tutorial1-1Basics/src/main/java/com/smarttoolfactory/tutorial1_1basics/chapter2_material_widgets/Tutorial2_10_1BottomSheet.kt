@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -157,7 +158,10 @@ private fun FloatingActionButtonComponent(
         },
         backgroundColor = Color(0xffFFA000)
     ) {
-        Icon(Icons.Filled.Navigation, tint = Color.White, contentDescription = "Icon Rotation", modifier = Modifier.rotate(iconRotation))
+        Icon(
+            imageVector = Icons.Filled.Navigation, tint = Color.White,
+            contentDescription = "Icon Rotation", modifier = Modifier.graphicsLayer { this.rotationZ = iconRotation }
+        )
     }
 }
 
