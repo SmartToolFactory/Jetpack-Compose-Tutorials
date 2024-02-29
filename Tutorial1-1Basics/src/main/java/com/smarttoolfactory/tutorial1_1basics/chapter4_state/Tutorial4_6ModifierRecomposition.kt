@@ -16,7 +16,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -73,9 +73,9 @@ private fun TutorialContent() {
 @Composable
 private fun ModifierRecompositionSample() {
 
-    var padding by remember { mutableStateOf(0f) }
-    var offsetX by remember { mutableStateOf(0f) }
-    var height by remember { mutableStateOf(150f) }
+    var padding by remember { mutableFloatStateOf(0f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var height by remember { mutableFloatStateOf(150f) }
 
     Text(text = "Padding")
     Slider(value = padding,

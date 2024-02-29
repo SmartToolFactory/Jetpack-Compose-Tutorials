@@ -14,7 +14,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -87,7 +87,7 @@ private fun Sample1() {
             .background(getRandomColor())
             .padding(4.dp)
     ) {
-        var counter by remember { mutableStateOf(0) }
+        var counter by remember { mutableIntStateOf(0) }
 
         Text("Sample1", color = getRandomColor())
         Button(
@@ -111,8 +111,8 @@ private fun Sample2() {
             .background(getRandomColor())
             .padding(4.dp)
     ) {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         Text("Sample2", color = getRandomColor())
@@ -158,7 +158,7 @@ private fun Sample2() {
         ) {
 
             println("🚀 Inner Column")
-            var update3 by remember { mutableStateOf(0) }
+            var update3 by remember { mutableIntStateOf(0) }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -200,8 +200,8 @@ private fun Sample3() {
             .background(getRandomColor())
             .padding(4.dp)
     ) {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         Text("Sample3", color = getRandomColor())
@@ -248,7 +248,7 @@ private fun Sample3() {
         ) {
 
             println("🚀 Inner Column")
-            var update3 by remember { mutableStateOf(0) }
+            var update3 by remember { mutableIntStateOf(0) }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -307,8 +307,8 @@ private fun Sample4() {
             .background(getRandomColor())
             .padding(4.dp)
     ) {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         Text("Sample4", color = getRandomColor())
@@ -355,7 +355,7 @@ private fun Sample4() {
         ) {
 
             println("🚀 Inner Column")
-            var update3 by remember { mutableStateOf(0) }
+            var update3 by remember { mutableIntStateOf(0) }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -413,8 +413,8 @@ private fun Sample5() {
             .background(getRandomColor())
             .padding(4.dp)
     ) {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         Text("Sample5", color = getRandomColor())

@@ -124,10 +124,10 @@ class BadgeState(
     var text by mutableStateOf("0")
         private set
 
-    var numberOnBadge by mutableStateOf(0)
+    var numberOnBadge by mutableIntStateOf(0)
         private set
 
-    var showBadgeThreshold by mutableStateOf(showBadgeThreshold)
+    var showBadgeThreshold by mutableIntStateOf(showBadgeThreshold)
 
     /**
      * Badge has circle or rounded corner rectangle shape

@@ -18,7 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -55,7 +55,7 @@ private fun TutorialContent() {
 @Composable
 private fun ConstraintsAndSiblingsSample() {
 
-    var layoutWidth by remember { mutableStateOf(700f) }
+    var layoutWidth by remember { mutableFloatStateOf(700f) }
 
     TutorialHeader(text = "Sibling Constraints")
 

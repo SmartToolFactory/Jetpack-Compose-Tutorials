@@ -16,6 +16,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -76,7 +77,7 @@ private fun OnPlacedModifierSample() {
     }
 
     var alignmentValue by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var targetOffset by remember { mutableStateOf(IntOffset.Zero) }
@@ -156,7 +157,7 @@ private fun OnPlacedAndOffsetModifierSample() {
     }
 
     var alignmentValue by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var targetOffset by remember { mutableStateOf(IntOffset.Zero) }

@@ -14,7 +14,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -55,10 +55,10 @@ private fun TutorialContent() {
 
 @Composable
 private fun PhasesSample() {
-    var offsetX by remember { mutableStateOf(0f) }
-    var red by remember { mutableStateOf(0f) }
-    var green by remember { mutableStateOf(0f) }
-    var blue by remember { mutableStateOf(0f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var red by remember { mutableFloatStateOf(0f) }
+    var green by remember { mutableFloatStateOf(0f) }
+    var blue by remember { mutableFloatStateOf(0f) }
 
     Text(text = "offsetX")
     Slider(value = offsetX,

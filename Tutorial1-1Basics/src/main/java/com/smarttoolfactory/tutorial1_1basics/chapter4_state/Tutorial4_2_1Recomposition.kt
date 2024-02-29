@@ -14,7 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -70,11 +70,11 @@ private fun TutorialContent() {
 @Composable
 private fun ScopedRecompositionSample() {
     var counter by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     var counter2 by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     println("Root")
@@ -115,7 +115,7 @@ private fun ScopedRecompositionSample() {
 @Composable
 private fun ComposeScopeSample() {
     var counter by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     /*
@@ -283,7 +283,7 @@ private fun SomeInnerComposable() {
 @Preview
 @Composable
 fun MyComponent() {
-    var counter by remember { mutableStateOf(0) }
+    var counter by remember { mutableIntStateOf(0) }
 
     LogCompositions("🔥 MyComposable function")
 

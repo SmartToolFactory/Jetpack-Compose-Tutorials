@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -120,7 +121,7 @@ private fun TutorialContent() {
 @Composable
 private fun LaunchedEffectExample(scaffoldState: ScaffoldState) {
 
-    var counter by remember { mutableStateOf(0) }
+    var counter by remember { mutableIntStateOf(0) }
 
     if (counter > 0 && counter % 3 == 0) {
         // `LaunchedEffect` will cancel and re-launch if
@@ -156,7 +157,7 @@ private fun CoroutineScopeExample(
     val scope = rememberCoroutineScope()
 
     // This button increase counter that will trigger CoroutineScope
-    var counter by remember { mutableStateOf(0) }
+    var counter by remember { mutableIntStateOf(0) }
 
     OutlinedButton(
         modifier = Modifier
@@ -179,7 +180,7 @@ private fun CoroutineScopeExample(
 @Composable
 private fun UpdatedRememberExample() {
     var myInput by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     OutlinedButton(

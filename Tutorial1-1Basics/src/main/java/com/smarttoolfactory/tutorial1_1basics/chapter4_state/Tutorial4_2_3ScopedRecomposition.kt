@@ -16,7 +16,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -71,7 +71,7 @@ private fun TutorialContent() {
 @Composable
 private fun Sample1() {
     RandomColorColumn {
-        var counter by remember { mutableStateOf(0) }
+        var counter by remember { mutableIntStateOf(0) }
 
         Text("Sample1", color = getRandomColor())
         RandomColorButton(onClick = { counter++ }) {
@@ -84,8 +84,8 @@ private fun Sample1() {
 @Composable
 private fun Sample2() {
     RandomColorColumn {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         RandomColorText("Sample2")
@@ -103,7 +103,7 @@ private fun Sample2() {
         RandomColorColumn {
 
             println("🚀 Inner Column")
-            var update3 by remember { mutableStateOf(0) }
+            var update3 by remember { mutableIntStateOf(0) }
 
             RandomColorButton(onClick = { update3++ }) {
                 println("✅ Button 3")
@@ -122,8 +122,8 @@ private fun Sample2() {
 @Composable
 private fun Sample3() {
     RandomColorColumn {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         RandomColorText("Sample3")
@@ -140,7 +140,7 @@ private fun Sample3() {
 
         RandomColorColumn {
             println("🚀 Inner Column")
-            var update3 by remember { mutableStateOf(0) }
+            var update3 by remember { mutableIntStateOf(0) }
             RandomColorButton(onClick = { update3++ }) {
 
                 println("✅ Button 3")
@@ -162,8 +162,8 @@ private fun Sample3() {
 @Composable
 private fun Sample4() {
     RandomColorColumn {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
         println("ROOT")
         RandomColorText("Sample4")
         RandomColorButton(onClick = { update1++ }) {
@@ -180,7 +180,7 @@ private fun Sample4() {
 
         RandomColorColumn {
             println("🚀 Inner Column")
-            var update3 by remember { mutableStateOf(0) }
+            var update3 by remember { mutableIntStateOf(0) }
 
             RandomColorButton(onClick = { update3++ }) {
                 println("✅ Button 3")
@@ -216,8 +216,8 @@ private fun Sample4() {
 @Composable
 private fun Sample5() {
     RandomColorColumn {
-        var update1 by remember { mutableStateOf(0) }
-        var update2 by remember { mutableStateOf(0) }
+        var update1 by remember { mutableIntStateOf(0) }
+        var update2 by remember { mutableIntStateOf(0) }
 
         println("ROOT")
         RandomColorText("Sample5")

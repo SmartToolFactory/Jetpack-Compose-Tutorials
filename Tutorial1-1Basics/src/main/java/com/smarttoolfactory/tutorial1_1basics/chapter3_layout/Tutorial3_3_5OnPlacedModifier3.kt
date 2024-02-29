@@ -19,6 +19,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,7 +56,7 @@ private fun TutorialContent() {
     }
 
     var alignmentValue by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     alignment = when (alignmentValue.roundToInt()) {

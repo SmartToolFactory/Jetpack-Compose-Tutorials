@@ -36,6 +36,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -123,9 +124,9 @@ private fun SideEffectExample() {
     val context = LocalContext.current
 
     // Updates composable that listens changes in value of this State
-    var counterOuter by remember { mutableStateOf(0) }
+    var counterOuter by remember { mutableIntStateOf(0) }
     // Updates composable that listens changes in value of this State
-    var counterInner by remember { mutableStateOf(0) }
+    var counterInner by remember { mutableIntStateOf(0) }
 
     // only runs first time SideEffectSample is called
     SideEffect {
@@ -335,7 +336,7 @@ class ImageRepository {
 private fun DerivedStateOfExample() {
 
     var numberOfItems by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     // Use derivedStateOf when a certain state is calculated or derived from other state objects.
@@ -420,7 +421,7 @@ private fun DerivedStateOfSample2(scrollState: LazyListState) {
 @Composable
 private fun SnapshotFlowExample(scrollState: LazyListState) {
 
-    var sentLogCount by remember { mutableStateOf(0) }
+    var sentLogCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.firstVisibleItemIndex }

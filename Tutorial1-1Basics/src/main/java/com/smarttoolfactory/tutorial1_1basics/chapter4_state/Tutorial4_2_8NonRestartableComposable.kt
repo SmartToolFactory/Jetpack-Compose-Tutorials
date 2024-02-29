@@ -12,7 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -51,11 +51,11 @@ private fun TutorialContent() {
 @Composable
 private fun NonRestartableComposableSample() {
     var counter1 by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     var counter2 by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     Column(
@@ -102,7 +102,7 @@ private fun NonRestartableComposableSample() {
 private fun Counter(counter: Int) {
 
     var value by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     Column(

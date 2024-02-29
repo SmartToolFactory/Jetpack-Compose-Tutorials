@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,7 +53,7 @@ private fun TutorialContent() {
 @Composable
 private fun RememberKeyExample() {
     var operation by remember { mutableStateOf(MathOperation.INCREASE) }
-    var counter by remember(operation) { mutableStateOf(0) }
+    var counter by remember(operation) { mutableIntStateOf(0) }
 
 
     Button(
@@ -97,7 +98,7 @@ private fun RememberMultipleKeysExample() {
     var key1Text by remember { mutableStateOf("key1") }
     var key2Text by remember { mutableStateOf("key2") }
 
-    var counter by remember(key1 = key1Text, key2 = key2Text) { mutableStateOf(0) }
+    var counter by remember(key1 = key1Text, key2 = key2Text) { mutableIntStateOf(0) }
 
     Column {
 

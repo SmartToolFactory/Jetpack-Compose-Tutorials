@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -93,15 +93,15 @@ private fun TutorialContent() {
      */
 
     var outerOffsetX by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var middleOffsetX by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var innerOffsetX by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     Column(
