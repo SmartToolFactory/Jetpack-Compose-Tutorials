@@ -60,7 +60,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
 @ExperimentalMaterialApi
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_11Screen() {
     TutorialContent()

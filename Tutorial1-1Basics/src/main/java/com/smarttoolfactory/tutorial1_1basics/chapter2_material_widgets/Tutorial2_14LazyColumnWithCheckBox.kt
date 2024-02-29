@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
 @ExperimentalMaterialApi
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_14Screen() {
     val taskViewModel = TaskViewModel()

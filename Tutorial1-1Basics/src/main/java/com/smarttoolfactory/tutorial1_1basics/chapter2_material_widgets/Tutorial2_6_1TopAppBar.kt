@@ -359,9 +359,9 @@ fun ActionMenu(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview("dark", uiMode = UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
+@Preview(device = Devices.PIXEL_C, showBackground = true)
 @Composable
 private fun ActionMenuReview() {
     val items = listOf(

@@ -66,7 +66,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
  * As of 1.0.1 it does not have Assistive Text, Error Text, Character Counter,
  * Prefix, and Suffix.
  */
-@Preview
+@Preview(showBackground = true)
 @ExperimentalComposeUiApi
 @Composable
 fun Tutorial2_3Screen() {
@@ -656,7 +656,7 @@ fun creditCardFilter(text: AnnotatedString): TransformedText {
  * A sample for displaying label, placeholder and clickability with enabled or and readOnly
  * param variations
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun TextFieldDisableTest() {
     var value by remember {

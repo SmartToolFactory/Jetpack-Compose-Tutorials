@@ -55,7 +55,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.DrawerButton
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_9Screen2() {
     TutorialContent()

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial2_5Screen8() {
     TutorialContent()
