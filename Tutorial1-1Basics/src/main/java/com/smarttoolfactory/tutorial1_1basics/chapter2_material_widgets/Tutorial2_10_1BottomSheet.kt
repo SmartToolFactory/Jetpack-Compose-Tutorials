@@ -36,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.model.places
@@ -54,13 +56,12 @@ fun Tutorial2_10Screen1() {
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
-private fun TutorialContent() {
-
+private fun TutorialContent(initialState: BottomSheetValue = BottomSheetValue.Collapsed) {
     val context = LocalContext.current
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(
-            initialValue = BottomSheetValue.Collapsed,
+            initialValue = initialState,
             confirmStateChange = { bottomSheetValue: BottomSheetValue ->
                 // This callback gets called twice in Jetpack Compose version 1.5.4
                 println("State changed to $bottomSheetValue")
@@ -209,13 +210,23 @@ private fun FloatingActionButtonComponentPreview() {
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Preview
-@Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
 @Composable
-private fun TutorialContentPreview() {
+private fun TutorialContentPreview(
+    @PreviewParameter(BottomSheetStateProvider::class)
+    state: BottomSheetValue
+) {
     ComposeTutorialsTheme {
-        TutorialContent()
+        TutorialContent(initialState = state)
     }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+private class BottomSheetStateProvider : PreviewParameterProvider<BottomSheetValue> {
+    override val values: Sequence<BottomSheetValue>
+        get() = sequenceOf(
+            BottomSheetValue.Collapsed,
+            BottomSheetValue.Expanded
+        )
 }
 
 @ExperimentalAnimationApi
