@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -66,7 +67,7 @@ private fun RememberObserverSample() {
 
 private class SampleUiState : RememberObserver {
 
-    var counter by mutableStateOf(0)
+    var counter by mutableIntStateOf(0)
 
 
     override fun onAbandoned() {

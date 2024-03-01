@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -162,7 +163,7 @@ internal fun Counter() {
     // everything else does unless counter is increased or decreased until 10 🤯
 
     var counter by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     SideEffect {

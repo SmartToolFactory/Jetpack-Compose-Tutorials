@@ -11,7 +11,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -75,7 +75,7 @@ private fun Counter1() {
             .fillMaxWidth()
             .padding(4.dp)
     ) {
-        var counter by remember { mutableStateOf(0) }
+        var counter by remember { mutableIntStateOf(0) }
         val myData = remember { MyData() }
         var myVal = 0
 
@@ -107,7 +107,7 @@ private fun Counter2() {
             .fillMaxWidth()
             .padding(4.dp)
     ) {
-        var counter by remember { mutableStateOf(0) }
+        var counter by remember { mutableIntStateOf(0) }
         val myData = remember { MyData() }
         var myVal = remember { 0 }
 
@@ -138,7 +138,7 @@ private fun Counter3() {
             .padding(4.dp)
     ) {
 
-        var counter by remember { mutableStateOf(0) }
+        var counter by remember { mutableIntStateOf(0) }
         val myData = remember { MyData() }
         var myVal = 0
 
@@ -168,7 +168,7 @@ private fun Counter4() {
             .padding(4.dp)
     ) {
 
-        var counter by remember { mutableStateOf(0) }
+        var counter by remember { mutableIntStateOf(0) }
         var myData = remember { MyData() }
         var myVal = remember { 0 }
 

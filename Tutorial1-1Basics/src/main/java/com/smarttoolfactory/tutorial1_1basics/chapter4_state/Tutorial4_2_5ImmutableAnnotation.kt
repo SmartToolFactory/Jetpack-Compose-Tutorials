@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,7 +65,7 @@ data class ImmutableListWrapper(val list: List<Int>)
 private fun ImmutableAnnotationSample() {
 
     var counter by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     val listWrapper by remember {

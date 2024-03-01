@@ -18,7 +18,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -166,11 +166,11 @@ private fun ConstraintsSample() {
 @Composable
 private fun ConstraintsOffsetAndBoundsSample() {
 
-    var minWidth by remember { mutableStateOf(100f) }
-    var maxWidth by remember { mutableStateOf(700f) }
-    var constraintsMinWidth by remember { mutableStateOf(100f) }
-    var constraintsMaxWidth by remember { mutableStateOf(700f) }
-    var layoutWidth by remember { mutableStateOf(700f) }
+    var minWidth by remember { mutableFloatStateOf(100f) }
+    var maxWidth by remember { mutableFloatStateOf(700f) }
+    var constraintsMinWidth by remember { mutableFloatStateOf(100f) }
+    var constraintsMaxWidth by remember { mutableFloatStateOf(700f) }
+    var layoutWidth by remember { mutableFloatStateOf(700f) }
 
     LayoutWithWidthParams(
         minWidth = minWidth.toInt(),

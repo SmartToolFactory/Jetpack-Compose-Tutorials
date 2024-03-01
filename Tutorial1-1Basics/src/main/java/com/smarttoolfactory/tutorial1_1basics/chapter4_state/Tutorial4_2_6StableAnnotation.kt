@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,7 +60,7 @@ class UnstableUiState(
     // makes this type Unstable
     var list: List<Int> = listOf(1, 2, 3)
 ) {
-    var count by mutableStateOf(0)
+    var count by mutableIntStateOf(0)
     var text by mutableStateOf("UnstableUiState")
 }
 
@@ -69,7 +70,7 @@ class StableUiState(
     // makes this type Stable
     var list: List<Int> = listOf(1, 2, 3)
 ) {
-    var count by mutableStateOf(0)
+    var count by mutableIntStateOf(0)
     var text by mutableStateOf("StableUiState")
 }
 
@@ -77,7 +78,7 @@ class StableUiState(
 @Composable
 private fun StableAnnotationSample() {
     var counter by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     var unStableUiState by remember {

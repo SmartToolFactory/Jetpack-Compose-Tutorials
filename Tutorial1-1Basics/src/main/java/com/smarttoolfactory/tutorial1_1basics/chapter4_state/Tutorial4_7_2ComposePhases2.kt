@@ -17,7 +17,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -85,7 +85,7 @@ private fun PhasesSample1() {
 
     LogCompositions(msg = "1️⃣ PhasesSample1")
 
-    var offsetX by remember { mutableStateOf(0f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(text = "OffsetX")
@@ -147,7 +147,7 @@ private fun PhasesSample2() {
 
     // This state is for triggering recomposition for PhasesSample2,
     // child composables don't read this state
-    var someValue by remember { mutableStateOf(0f) }
+    var someValue by remember { mutableFloatStateOf(0f) }
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(text = "someValue")
         Spacer(modifier = Modifier.width(5.dp))

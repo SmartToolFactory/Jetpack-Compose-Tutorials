@@ -123,7 +123,7 @@ private fun TutorialContent() {
                 .padding(horizontal = 8.dp)
                 .fillMaxWidth()
         ) {
-            var counter by remember { mutableStateOf(0) }
+            var counter by remember { mutableIntStateOf(0) }
 
             Button(
                 onClick = { counter++ },
