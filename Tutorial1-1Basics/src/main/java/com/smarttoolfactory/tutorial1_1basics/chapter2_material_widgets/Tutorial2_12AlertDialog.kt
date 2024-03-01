@@ -55,6 +55,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ColorWheel
+import com.smarttoolfactory.tutorial1_1basics.isInPreview
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
@@ -68,7 +69,6 @@ fun Tutorial2_12Screen() {
 
 @Composable
 private fun TutorialContent() {
-
     // To show dialog we set one of the flags to true and set it back to false
     // in onDismissRequest function of dialog.
     var showAlertDialog by remember { mutableStateOf(false) }
@@ -78,6 +78,7 @@ private fun TutorialContent() {
     var showCustomDialogWithResult by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val isInPreview = isInPreview
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -158,19 +159,24 @@ private fun TutorialContent() {
                     CustomDialogExample(
                         onDismiss = {
                             showCustomDialog = !showCustomDialog
-                            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
+                            if (!isInPreview) {
+                                Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
                                 .show()
+                            }
                         },
                         onNegativeClick = {
                             showCustomDialog = !showCustomDialog
-                            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
-                                .show()
-
+                            if (!isInPreview) {
+                                Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         },
                         onPositiveClick = {
                             showCustomDialog = !showCustomDialog
-                            Toast.makeText(context, "Positive Button Clicked!", Toast.LENGTH_SHORT)
-                                .show()
+                            if (!isInPreview) {
+                                Toast.makeText(context, "Positive Button Clicked!", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
                     )
                 }
@@ -192,19 +198,24 @@ private fun TutorialContent() {
                         initialColor = Color.Black,
                         onDismiss = {
                             showCustomDialogWithResult = !showCustomDialogWithResult
-                            Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
-                                .show()
+                            if (!isInPreview) {
+                                Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         },
                         onNegativeClick = {
                             showCustomDialogWithResult = !showCustomDialogWithResult
-                            Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
-                                .show()
-
+                            if (!isInPreview) {
+                                Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         },
                         onPositiveClick = { color ->
                             showCustomDialogWithResult = !showCustomDialogWithResult
-                            Toast.makeText(context, "Selected color: $color", Toast.LENGTH_SHORT)
-                                .show()
+                            if (!isInPreview) {
+                                Toast.makeText(context, "Selected color: $color", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
                     )
                 }
