@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.isInPreview
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
@@ -100,12 +101,15 @@ private fun SnackBarExample() {
 
     TutorialText2(text = "Action SnackBar")
     val context = LocalContext.current
+    val isInPreview = isInPreview
     Snackbar(modifier = Modifier.padding(4.dp),
         action = {
             Text(
                 text = "Action",
                 modifier = Modifier.clickable {
-                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    if (!isInPreview) {
+                        Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    }
                 })
         }) {
         Text("Action Snackbar")
@@ -118,7 +122,9 @@ private fun SnackBarExample() {
             Text(text = "Action",
                 color = Color(0xffCE93D8),
                 modifier = Modifier.clickable {
-                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    if (!isInPreview) {
+                        Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
         }) {
@@ -137,7 +143,9 @@ private fun SnackBarExample() {
             Text(
                 text = "Action",
                 modifier = Modifier.clickable {
-                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    if (!isInPreview) {
+                        Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    }
                 })
         }) {
         Text("Snackbar with custom shape and colors")
@@ -154,7 +162,9 @@ private fun SnackBarExample() {
                 color = Color(0xffD32F2F),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    if (!isInPreview) {
+                        Toast.makeText(context, "Action is clicked", Toast.LENGTH_SHORT).show()
+                    }
                 })
         }) {
         Text("Snackbar with custom shape and colors")
