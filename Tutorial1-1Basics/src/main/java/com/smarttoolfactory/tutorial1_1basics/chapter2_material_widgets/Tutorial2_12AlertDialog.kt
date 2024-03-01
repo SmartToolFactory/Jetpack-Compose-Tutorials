@@ -563,3 +563,33 @@ val dialogText = """
     Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown 
     printer took a galley of type and scrambled it to make a type specimen book.
 """.trimIndent()
+
+@Preview
+@Composable
+fun AlertDialogExamplePreview() {
+    AlertDialogExample(onDismiss = { })
+}
+
+@Preview
+@Composable
+fun AlertDialogExample2Preview() {
+    AlertDialogExample2(onDismiss = { })
+}
+
+@Preview
+@Composable
+fun DialogExamplePreview() {
+    DialogExample(onDismiss = { })
+}
+
+@Preview
+@Composable
+fun CustomDialogExamplePreview() {
+    CustomDialogExample(onDismiss = {}, onNegativeClick = {}, onPositiveClick = {})
+}
+
+@Preview
+@Composable
+fun CustomDialogWithResultExamplePreview() {
+    CustomDialogWithResultExample(initialColor = Color.Red, onDismiss = {}, onNegativeClick = {}, onPositiveClick = {})
+}
