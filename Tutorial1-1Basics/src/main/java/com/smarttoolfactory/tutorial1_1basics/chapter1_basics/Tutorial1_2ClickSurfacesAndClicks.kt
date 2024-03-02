@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial1_2Screen() {
     TutorialContent()
@@ -358,9 +358,9 @@ fun SurfaceClickPropagationExample() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Preview("dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(device = Devices.PIXEL_C)
+@Preview(device = Devices.PIXEL_C, showBackground = true)
 @Composable
 private fun Tutorial1_2Preview() {
     TutorialContent()

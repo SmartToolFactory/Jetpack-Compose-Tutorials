@@ -14,7 +14,7 @@ import androidx.constraintlayout.compose.SwipeMode
 import androidx.constraintlayout.compose.SwipeSide
 import androidx.constraintlayout.compose.SwipeTouchUp
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun Test() {
     MotionLayout(
