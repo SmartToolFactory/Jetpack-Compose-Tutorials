@@ -40,7 +40,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_3Screen5() {
     TutorialContent()

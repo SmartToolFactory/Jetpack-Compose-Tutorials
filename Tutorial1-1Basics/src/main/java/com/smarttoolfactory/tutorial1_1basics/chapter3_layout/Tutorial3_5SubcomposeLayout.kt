@@ -57,7 +57,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
  *  When remeasuring take into consideration that new measurement must be done with new
  *  [Constraints] that use that property as one of parameters.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_5Screen() {
     TutorialContent()
@@ -107,7 +107,7 @@ private fun TutorialContent() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SubComposeLayoutExample1() {
 
@@ -150,7 +150,7 @@ private fun SubComposeLayoutExample1() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SubcomposeLayoutExample2() {
     var mainText by remember { mutableStateOf(TextFieldValue("Main Component")) }
@@ -256,7 +256,7 @@ private fun SubcomposeLayoutExample2() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SubcomposeLayoutExample3() {
     var text1 by remember { mutableStateOf(TextFieldValue("Text1 context")) }
@@ -375,7 +375,7 @@ private fun SubcomposeLayoutExample3() {
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SubComposeRowExample() {
     SubcomposeRow(

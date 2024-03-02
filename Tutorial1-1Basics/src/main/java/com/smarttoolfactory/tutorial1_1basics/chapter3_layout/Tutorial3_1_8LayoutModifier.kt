@@ -40,7 +40,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_1Screen8() {
     TutorialContent()
@@ -85,7 +85,7 @@ private fun TutorialContent() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LayoutModifierSample() {
 
@@ -171,7 +171,7 @@ private fun LayoutModifierSample() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LayoutModifierSample2() {
     Column(
@@ -232,7 +232,7 @@ private fun LayoutModifierSample2() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LayoutModifierOrderSample() {
     // Also change placement position to show it affects Modifiers or

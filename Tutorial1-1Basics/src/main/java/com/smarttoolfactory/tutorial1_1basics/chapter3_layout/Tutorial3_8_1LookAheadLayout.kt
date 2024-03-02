@@ -91,7 +91,7 @@ val colors = listOf(
 
 
 @OptIn(ExperimentalComposeUiApi::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun Test() {
 

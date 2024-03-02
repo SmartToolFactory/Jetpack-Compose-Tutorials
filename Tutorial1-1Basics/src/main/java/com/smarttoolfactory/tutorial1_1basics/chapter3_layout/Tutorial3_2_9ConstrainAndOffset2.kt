@@ -47,7 +47,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
  * This is the inner area after we remove nip's dimensions and padding dimensions like in padding
  * example in first section.
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_2Screen9() {
     TutorialContent()

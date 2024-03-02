@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_9Screen() {
     TutorialContent()
@@ -51,7 +51,7 @@ private fun TutorialContent() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ScrollTest1() {
     Column {
@@ -223,7 +223,7 @@ fun Modifier.isVisible(
     }
 )
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ScrollTest2() {
     Column {

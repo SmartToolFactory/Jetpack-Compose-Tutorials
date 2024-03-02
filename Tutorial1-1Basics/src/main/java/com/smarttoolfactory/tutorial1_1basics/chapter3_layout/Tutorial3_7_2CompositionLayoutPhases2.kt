@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_7Screen2() {
     TutorialContent()
@@ -53,7 +53,7 @@ private fun TutorialContent() {
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LayoutPhasesSample() {
 

@@ -56,7 +56,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import kotlinx.coroutines.launch
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_10Screen() {
     Column {
@@ -65,7 +65,7 @@ fun Tutorial3_10Screen() {
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun TutorialContent() {
     BoxWithConstraints {

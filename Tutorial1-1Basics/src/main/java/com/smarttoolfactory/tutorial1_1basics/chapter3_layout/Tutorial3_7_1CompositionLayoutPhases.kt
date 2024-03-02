@@ -32,7 +32,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialTex
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_7Screen1() {
     TutorialContent()
@@ -72,7 +72,7 @@ private fun TutorialContent() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LayoutPhasesSample1() {
 
@@ -165,7 +165,7 @@ private fun LayoutPhasesSample1() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LayoutPhasesSample2() {
     /*
@@ -387,7 +387,7 @@ fun CustomLayout(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SubcomposeLayoutPhasesSample() {
 

@@ -32,7 +32,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_3Screen3() {
     TutorialContent()
