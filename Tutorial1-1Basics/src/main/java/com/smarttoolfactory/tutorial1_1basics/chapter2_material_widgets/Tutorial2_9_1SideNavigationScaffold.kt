@@ -77,7 +77,7 @@ private fun PreviewTutorialContent(
     )
 }
 
-private class DrawerStateProvider: PreviewParameterProvider<DrawerValue> {
+class DrawerStateProvider: PreviewParameterProvider<DrawerValue> {
     override val values: Sequence<DrawerValue>
         get() = sequenceOf(
             DrawerValue.Closed,
@@ -163,10 +163,11 @@ private fun TutorialContent(scaffoldState: ScaffoldState = rememberScaffoldState
                 }
             }
         }
-    ) {
+    ) { contentPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.HOME_ROUTE
+            startDestination = Routes.HOME_ROUTE,
+            modifier = Modifier.padding(contentPadding)
         ) {
             composable(Routes.HOME_ROUTE) {
                 HomeComponent()
