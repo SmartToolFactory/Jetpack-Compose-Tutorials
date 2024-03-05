@@ -60,7 +60,13 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun Tutorial2_9Screen1(
+fun Tutorial2_9Screen1() {
+    TutorialContent()
+}
+
+@Preview
+@Composable
+private fun PreviewTutorialContent(
     @PreviewParameter(DrawerStateProvider::class)
     drawerValue: DrawerValue
 ) {
