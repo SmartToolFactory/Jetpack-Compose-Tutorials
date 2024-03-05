@@ -138,10 +138,11 @@ private fun TutorialContent() {
                 }
             }
         }
-    ) {
+    ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Routes.HOME_ROUTE
+            startDestination = Routes.HOME_ROUTE,
+            modifier = Modifier.padding(paddingValues)
         ) {
             composable(Routes.HOME_ROUTE) {
                 HomeComponent()
