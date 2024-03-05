@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -109,7 +110,11 @@ private fun TutorialContent(initialState: BottomSheetValue = BottomSheetValue.Co
 private fun MainContent(bottomSheetState: BottomSheetState) {
 
     val currentValue: BottomSheetValue = bottomSheetState.currentValue
-    val offset = bottomSheetState.requireOffset()
+    val offset = try {
+        bottomSheetState.requireOffset()
+    } catch (e: Exception) {
+        Offset.Zero
+    }
 
     val progress = bottomSheetState.progress
 
