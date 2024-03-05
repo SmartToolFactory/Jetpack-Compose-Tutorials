@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_1Screen2() {
     TutorialContent()
@@ -95,7 +95,7 @@ private fun TutorialContent() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun MyComposable() {
 
@@ -145,7 +145,7 @@ private fun MyComposable() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ParentLayoutCoordinatesSample() {
 
@@ -284,7 +284,7 @@ private fun ParentLayoutCoordinatesSample() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ParentLayoutCoordinatesSample2() {
 
@@ -396,7 +396,7 @@ private fun ParentLayoutCoordinatesSample2() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ParentLayoutCoordinatesSample3() {
 

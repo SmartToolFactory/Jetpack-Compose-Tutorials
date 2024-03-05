@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.random.Random
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_2Screen1() {
     TutorialContent()

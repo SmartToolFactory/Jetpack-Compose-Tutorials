@@ -52,7 +52,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
 import kotlin.math.roundToInt
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_1Screen3() {
     TutorialContent()
