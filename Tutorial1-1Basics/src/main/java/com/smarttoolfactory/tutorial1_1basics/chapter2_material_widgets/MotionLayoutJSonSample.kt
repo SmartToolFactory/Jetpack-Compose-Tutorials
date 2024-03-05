@@ -38,7 +38,7 @@ import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import com.smarttoolfactory.tutorial1_1basics.R
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun MotionLayoutSample1() {
 
@@ -123,7 +123,7 @@ fun MotionLayoutSample1() {
 // on below line we are creating
 // a motion layout button method.
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun MotionLayoutButtonTest() {
     // on below line we are creating a box
@@ -328,7 +328,7 @@ fun MotionLayoutButton() {
 }
 
 
-@Preview(group = "motion8")
+@Preview(group = "motion8", showBackground = true)
 @Composable
 fun AttributesRotationXY() {
 
