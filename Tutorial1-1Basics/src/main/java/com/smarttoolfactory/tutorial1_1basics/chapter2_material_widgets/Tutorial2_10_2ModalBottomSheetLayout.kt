@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -34,16 +36,37 @@ fun Tutorial2_10Screen2() {
     TutorialContent()
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalMaterialApi
+@Preview
+@Composable
+private fun TutorialContentPreview(
+    @PreviewParameter(ModalBottomSheetValueProvider::class)
+    initialModalBottomSheetValue: ModalBottomSheetValue
+) {
+    TutorialContent(initialModalBottomSheetValue)
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+class ModalBottomSheetValueProvider : PreviewParameterProvider<ModalBottomSheetValue> {
+    override val values: Sequence<ModalBottomSheetValue>
+        get() = sequenceOf(
+            ModalBottomSheetValue.Hidden,
+            ModalBottomSheetValue.HalfExpanded,
+            ModalBottomSheetValue.Expanded
+        )
+}
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
-private fun TutorialContent() {
+private fun TutorialContent(initialModalBottomSheetValue: ModalBottomSheetValue = ModalBottomSheetValue.HalfExpanded) {
 
     val modalBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.HalfExpanded,
+        initialValue = initialModalBottomSheetValue,
         skipHalfExpanded = false,
-        confirmValueChange = { modalBottomSheetValue: ModalBottomSheetValue ->
+        confirmValueChange = { _: ModalBottomSheetValue ->
             true
         }
     )
