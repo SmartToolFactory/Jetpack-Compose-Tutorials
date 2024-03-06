@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.DrawerValue
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
@@ -25,6 +27,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,12 +45,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.isInPreview
 import com.smarttoolfactory.tutorial1_1basics.ui.ComposeTutorialsTheme
 import com.smarttoolfactory.tutorial1_1basics.ui.components.DrawerButton
 import kotlinx.coroutines.launch
@@ -58,17 +64,38 @@ fun Tutorial2_9Screen1() {
     TutorialContent()
 }
 
+@Preview
 @Composable
-private fun TutorialContent() {
+private fun PreviewTutorialContent(
+    @PreviewParameter(DrawerStateProvider::class)
+    drawerValue: DrawerValue
+) {
+    TutorialContent(
+        scaffoldState = rememberScaffoldState(
+            drawerState = rememberDrawerState(initialValue = drawerValue)
+        )
+    )
+}
+
+class DrawerStateProvider: PreviewParameterProvider<DrawerValue> {
+    override val values: Sequence<DrawerValue>
+        get() = sequenceOf(
+            DrawerValue.Closed,
+            DrawerValue.Open
+        )
+}
+
+@Composable
+private fun TutorialContent(scaffoldState: ScaffoldState = rememberScaffoldState()) {
 
     var currentRoute by remember { mutableStateOf(Routes.HOME_ROUTE) }
-    val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
     val closeDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.close() } }
 
     val context = LocalContext.current
+    val isInPreview = isInPreview
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -123,13 +150,11 @@ private fun TutorialContent() {
                         Text(text = "Action",
                             modifier = Modifier
                                 .clickable {
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            "Action invoked",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        .show()
+                                    if (!isInPreview) {
+                                        Toast
+                                            .makeText(context, "Action invoked", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
                                 }
                                 .padding(4.dp)
                         )
@@ -138,10 +163,11 @@ private fun TutorialContent() {
                 }
             }
         }
-    ) {
+    ) { contentPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.HOME_ROUTE
+            startDestination = Routes.HOME_ROUTE,
+            modifier = Modifier.padding(contentPadding)
         ) {
             composable(Routes.HOME_ROUTE) {
                 HomeComponent()
