@@ -25,9 +25,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun Tutorial2_10Screen3() {
@@ -35,8 +38,28 @@ fun Tutorial2_10Screen3() {
 }
 
 @OptIn(ExperimentalMaterialApi::class)
+@Preview(showBackground = true)
 @Composable
-private fun TutorialContent() {
+private fun TutorialContentPreview(
+    @PreviewParameter(BottomDrawerValueProvider::class)
+    initialBottomDrawerValue: BottomDrawerValue
+) {
+    TutorialContent(initialBottomDrawerValue)
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+class BottomDrawerValueProvider : PreviewParameterProvider<BottomDrawerValue> {
+    override val values: Sequence<BottomDrawerValue>
+        get() = sequenceOf(
+            BottomDrawerValue.Closed,
+            BottomDrawerValue.Open,
+            BottomDrawerValue.Expanded
+        )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun TutorialContent(initialBottomDrawerValue: BottomDrawerValue = BottomDrawerValue.Closed) {
     val (gesturesEnabled, toggleGesturesEnabled) = remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
     Column {
@@ -52,8 +75,8 @@ private fun TutorialContent() {
             Text(text = if (gesturesEnabled) "Gestures Enabled" else "Gestures Disabled")
         }
         val drawerState = rememberBottomDrawerState(
-            initialValue = BottomDrawerValue.Closed,
-            confirmStateChange = { bottomDrawerValue: BottomDrawerValue ->
+            initialValue = initialBottomDrawerValue,
+            confirmStateChange = { _: BottomDrawerValue ->
                 true
             }
         )
@@ -89,7 +112,9 @@ private fun TutorialContent() {
             },
             content = {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val openText = if (gesturesEnabled) "▲▲▲ Pull up ▲▲▲" else "Click the button!"
