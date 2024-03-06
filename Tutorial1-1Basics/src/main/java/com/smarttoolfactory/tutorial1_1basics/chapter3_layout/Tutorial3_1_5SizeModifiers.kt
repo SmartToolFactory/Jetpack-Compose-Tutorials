@@ -37,7 +37,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
     Refer this answer for more details
     https://stackoverflow.com/a/73316247/5457853
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_1Screen5() {
     TutorialContent()
@@ -76,7 +76,7 @@ private fun TutorialContent() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SizeModifierConstraintsSample() {
     Column(modifier = Modifier) {
@@ -187,7 +187,7 @@ private fun SizeModifierConstraintsSample() {
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SizeInModifierSample() {
     TutorialText2(text = "200.dp WidthIn(min) and HeightIn(min)")
@@ -217,7 +217,7 @@ private fun SizeInModifierSample() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun RequiredSizeModifierSample() {
     Column {

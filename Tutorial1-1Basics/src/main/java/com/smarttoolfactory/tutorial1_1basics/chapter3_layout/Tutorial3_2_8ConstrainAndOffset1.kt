@@ -40,7 +40,7 @@ val textBackgroundColor = Color(0xff2196F3)
  * especially when our Composable dimensions are at same size of or bigger than its Parent.
  *
  */
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_2Screen8() {
     TutorialContent()

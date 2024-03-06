@@ -52,6 +52,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,11 +70,30 @@ fun Tutorial2_10Screen4() {
 }
 
 @ExperimentalMaterialApi
+@Preview
 @Composable
-private fun TutorialContent() {
+private fun TutorialContentPreview(
+    @PreviewParameter(BottomDrawerValueProvider::class)
+    initialBottomDrawerValue: BottomDrawerValue
+) {
+    TutorialContent(initialBottomDrawerValue)
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+private class BottomDrawerValueProvider : PreviewParameterProvider<BottomDrawerValue> {
+    override val values: Sequence<BottomDrawerValue>
+        get() = sequenceOf(
+            BottomDrawerValue.Closed,
+            BottomDrawerValue.Expanded
+        )
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun TutorialContent(initialBottomDrawerValue: BottomDrawerValue = BottomDrawerValue.Closed) {
 
     val coroutineScope = rememberCoroutineScope()
-    val drawerState: BottomDrawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+    val drawerState: BottomDrawerState = rememberBottomDrawerState(initialValue = initialBottomDrawerValue)
     val openDrawer: () -> Unit = { coroutineScope.launch { drawerState.expand() } }
     val closeDrawer: () -> Unit = { coroutineScope.launch { drawerState.close() } }
     var selectedBottomDrawerIndex by remember { mutableStateOf(0) }

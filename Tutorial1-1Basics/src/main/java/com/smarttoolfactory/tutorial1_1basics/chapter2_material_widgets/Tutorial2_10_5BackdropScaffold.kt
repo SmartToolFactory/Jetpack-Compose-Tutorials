@@ -46,6 +46,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.model.places
 import com.smarttoolfactory.tutorial1_1basics.ui.components.PlacesToBookVerticalComponent
@@ -82,13 +84,33 @@ fun Tutorial2_10Screen5() {
     TutorialContent()
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalMaterialApi
+@Preview
+@Composable
+private fun TutorialContentPreview(
+    @PreviewParameter(BackdropValueProvider::class)
+    initialBackdropValue: BackdropValue
+) {
+    TutorialContent(initialBackdropValue)
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+private class BackdropValueProvider : PreviewParameterProvider<BackdropValue> {
+    override val values: Sequence<BackdropValue>
+        get() = sequenceOf(
+            BackdropValue.Concealed,
+            BackdropValue.Revealed
+        )
+}
+
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
-private fun TutorialContent() {
+private fun TutorialContent(initialBackdropValue: BackdropValue = BackdropValue.Revealed) {
 
     val backdropScaffoldState =
-        rememberBackdropScaffoldState(initialValue = BackdropValue.Revealed)
+        rememberBackdropScaffoldState(initialValue = initialBackdropValue)
     val coroutineScope = rememberCoroutineScope()
 
     BackdropScaffold(

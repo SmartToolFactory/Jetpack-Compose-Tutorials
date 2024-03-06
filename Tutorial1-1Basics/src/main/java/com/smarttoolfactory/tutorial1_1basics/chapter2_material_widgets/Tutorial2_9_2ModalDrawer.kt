@@ -48,14 +48,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.components.DrawerButton
 import kotlinx.coroutines.launch
 
-@ExperimentalMaterialApi
-@Preview(showBackground = true)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Tutorial2_9Screen2() {
     TutorialContent()
@@ -68,9 +68,19 @@ private fun TutorialContent() {
 }
 
 @ExperimentalMaterialApi
+@Preview(showBackground = true)
 @Composable
-private fun ModalDrawerComponent() {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
+private fun ModalDrawerPreview(
+    @PreviewParameter(DrawerStateProvider::class)
+    drawerValue: DrawerValue
+) {
+    ModalDrawerComponent(drawerValue = drawerValue)
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun ModalDrawerComponent(drawerValue: DrawerValue = DrawerValue.Closed) {
+    val drawerState = rememberDrawerState(initialValue = drawerValue)
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { drawerState.open() } }
     val closeDrawer: () -> Unit = { coroutineScope.launch { drawerState.close() } }

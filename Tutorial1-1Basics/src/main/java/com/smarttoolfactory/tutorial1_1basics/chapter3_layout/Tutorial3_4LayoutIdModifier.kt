@@ -34,7 +34,7 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Tutorial3_4Screen() {
     TutorialContent()
