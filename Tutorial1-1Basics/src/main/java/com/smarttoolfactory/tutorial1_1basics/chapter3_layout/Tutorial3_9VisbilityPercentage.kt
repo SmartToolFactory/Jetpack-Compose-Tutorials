@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -34,7 +36,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.isInPreview
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
+import kotlinx.coroutines.delay
 
 
 @Preview(showBackground = true)
@@ -55,6 +59,8 @@ private fun TutorialContent() {
 @Composable
 private fun ScrollTest1() {
     Column {
+        var toastMessage by remember { mutableStateOf("") }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,7 +72,8 @@ private fun ScrollTest1() {
             repeat(60) { index ->
                 if (index == 15) {
                     MyCustomBox(
-                        modifier = Modifier.fillMaxWidth().height(300.dp)
+                        modifier = Modifier.fillMaxWidth().height(300.dp),
+                        onShowPreviewToast = { toastMessage = it }
                     ) {
                         Column {
                             Box(
@@ -77,8 +84,7 @@ private fun ScrollTest1() {
                                 modifier = Modifier.fillMaxWidth().weight(4f).background(Color.Cyan)
                             )
                             Box(
-                                modifier = Modifier.fillMaxWidth().weight(3f)
-                                    .background(Color.Magenta)
+                                modifier = Modifier.fillMaxWidth().weight(3f).background(Color.Magenta)
                             )
                         }
                     }
@@ -91,16 +97,29 @@ private fun ScrollTest1() {
                 }
             }
         }
+
+        LaunchedEffect(toastMessage) {
+            if (toastMessage.isNotBlank()) {
+                delay(3000)
+                toastMessage = ""
+            }
+        }
+
+        if (isInPreview) {
+            Text(
+                text = toastMessage,
+                modifier = Modifier.alpha(if (toastMessage.isNotBlank()) 1f else 0f) // Toggling alpha instead of removing item from Composition to avoid items jumping/flickering
+            )
+        }
         Box(modifier = Modifier.height(100.dp))
-
     }
-
 }
 
 @Composable
 private fun MyCustomBox(
     modifier: Modifier = Modifier,
     threshold: Int = 30,
+    onShowPreviewToast: (String) -> Unit,
     content: @Composable () -> Unit
 ) {
     var isVisible by remember {
@@ -108,22 +127,30 @@ private fun MyCustomBox(
     }
 
     val context = LocalContext.current
+    val isInPreview = isInPreview
 
     var visibleTime by remember {
         mutableLongStateOf(0L)
     }
 
     LaunchedEffect(isVisible) {
-
         if (isVisible) {
             visibleTime = System.currentTimeMillis()
-            Toast.makeText(context, "😆 Item 30% threshold is passed $isVisible", Toast.LENGTH_SHORT)
-                .show()
+            val toastMessage = "😆 Item 30% threshold is passed $isVisible"
+            if (!isInPreview) {
+                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            } else {
+                onShowPreviewToast(toastMessage)
+            }
         } else if (visibleTime != 0L) {
             val currentTime = System.currentTimeMillis()
             val totalTime = currentTime - visibleTime
-            Toast.makeText(context, "🥵 Item was visible for $totalTime ms", Toast.LENGTH_SHORT)
-                .show()
+            val toastMessage = "🥵 Item was visible for $totalTime ms"
+            if (!isInPreview) {
+                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            } else {
+                onShowPreviewToast(toastMessage)
+            }
         }
     }
 
@@ -237,6 +264,7 @@ private fun ScrollTest2() {
         }
 
         val context = LocalContext.current
+        val isInPreview = isInPreview
 
         var visibleTime by remember {
             mutableLongStateOf(0L)
@@ -246,17 +274,21 @@ private fun ScrollTest2() {
 
             if (isVisible) {
                 visibleTime = System.currentTimeMillis()
-                Toast.makeText(
-                    context,
-                    "😆 Item 30% threshold is passed $isVisible",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                if (!isInPreview) {
+                    Toast.makeText(
+                        context,
+                        "😆 Item 30% threshold is passed $isVisible",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
             } else if (visibleTime != 0L) {
                 val currentTime = System.currentTimeMillis()
                 val totalTime = currentTime - visibleTime
-                Toast.makeText(context, "🥵 Item was visible for $totalTime ms", Toast.LENGTH_SHORT)
+                if (!isInPreview) {
+                    Toast.makeText(context, "🥵 Item was visible for $totalTime ms", Toast.LENGTH_SHORT)
                     .show()
+                }
             }
         }
 
@@ -343,15 +375,16 @@ private fun ScrollTest2() {
     }
 }
 
+@Composable
 fun Modifier.isVisible(
     parentCoordinates: LayoutCoordinates?,
     threshold: Int,
     onVisibilityChange: (Boolean) -> Unit
-) = composed {
+) : Modifier {
 
     val view = LocalView.current
 
-    Modifier.onPlaced { layoutCoordinates: LayoutCoordinates ->
+    val newModifier = Modifier.onPlaced { layoutCoordinates: LayoutCoordinates ->
 
         if (parentCoordinates == null) return@onPlaced
 
@@ -394,4 +427,5 @@ fun Modifier.isVisible(
             onVisibilityChange(false)
         }
     }
+    return this then newModifier
 }
