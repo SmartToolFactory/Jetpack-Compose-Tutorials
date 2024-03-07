@@ -34,6 +34,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.ChatMessage
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageStatus
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageTimeText
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.widget.ChatFlexBoxLayout
+import com.smarttoolfactory.tutorial1_1basics.isInPreview
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import com.smarttoolfactory.tutorial1_1basics.ui.Orange400
@@ -70,6 +71,7 @@ private fun TutorialContent() {
     val messages = remember { mutableStateListOf<ChatMessage>() }
     val sdf = remember { SimpleDateFormat("hh:mm a", Locale.ROOT) }
     val context = LocalContext.current
+    val isInPreview = isInPreview
 
     println("🎃 Tutorial3_6Screen messages: $messages, sdf: $sdf")
 
@@ -86,7 +88,9 @@ private fun TutorialContent() {
             title = "Flexible ChatRows",
             description = description,
             onClick = {
-                Toast.makeText(context, description, Toast.LENGTH_SHORT).show()
+                if (!isInPreview) {
+                    Toast.makeText(context, description, Toast.LENGTH_SHORT).show()
+                }
             }
         )
 
@@ -99,7 +103,7 @@ private fun TutorialContent() {
             items(messages) { message: ChatMessage ->
 
                 // Remember random stats icon to not create in every recomposition
-                val messageStatus = remember { MessageStatus.values()[Random.nextInt(3)] }
+                val messageStatus = remember { MessageStatus.entries[Random.nextInt(3)] }
 
 
                 Column(

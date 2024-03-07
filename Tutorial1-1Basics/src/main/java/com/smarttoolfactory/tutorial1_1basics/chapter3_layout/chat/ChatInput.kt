@@ -29,7 +29,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
 internal fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) -> Unit) {
 
     var input by remember { mutableStateOf(TextFieldValue("")) }
-    val textEmpty: Boolean by derivedStateOf { input.text.isEmpty() }
+    val textEmpty: Boolean by remember { derivedStateOf { input.text.isEmpty() } }
 
     Row(
         modifier = modifier
@@ -114,6 +114,7 @@ private fun ChatTextField(
                         ),
                         value = input,
                         onValueChange = onValueChange,
+                        maxLines = 6,
                         cursorBrush = SolidColor(Color(0xff00897B)),
                         decorationBox = { innerTextField ->
                             if (empty) {
