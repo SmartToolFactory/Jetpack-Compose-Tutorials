@@ -163,11 +163,11 @@ private fun TutorialContent(scaffoldState: ScaffoldState = rememberScaffoldState
                 }
             }
         }
-    ) { contentPadding ->
+    ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = Routes.HOME_ROUTE,
-            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier.padding(paddingValues)
         ) {
             composable(Routes.HOME_ROUTE) {
                 HomeComponent()
