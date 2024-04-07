@@ -33,7 +33,7 @@ fun TutorialSectionCard(
     expanded: Boolean
 ) {
     Card(
-        elevation = 1.dp,
+        elevation = 1.dp, backgroundColor = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(8.dp)
     ) {
         Box(

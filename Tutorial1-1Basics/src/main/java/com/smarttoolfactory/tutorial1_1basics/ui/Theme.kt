@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -11,21 +12,30 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = purple200,
-    primaryVariant = purple700,
     secondary = teal200,
-    background = Color.White,
+    primaryVariant = purple700,
+    error = Color(0xFFB3261E),
+    background = Color(0xFF1C1B1F),
+    surface = Color(0xFF201F24),
+    onPrimary = Color.Black,
+    onSecondary = Color.White,
+    onBackground = Color(0xFFE6E1E5),
+    onSurface = Color(0xFFE6E1E5),
+    onError = Color.White
 )
 
 private val LightColorPalette = lightColors(
     primary = purple500,
-    primaryVariant = purple700,
     secondary = teal200,
-    background = Color.White,
-    surface = Color.White,
+    primaryVariant = purple700,
+    error = Color(0xFFF2B8B5),
+    surface = Color(0xFFE6E1E5),
+    background = Color(0xFFE6E1E5),
     onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
+    onSecondary = Color.White,
+    onBackground = Color(0xFF201F24),
+    onSurface = Color(0xFF201F24),
+    onError = Color(0xFF601410)
 )
 
 @Composable
