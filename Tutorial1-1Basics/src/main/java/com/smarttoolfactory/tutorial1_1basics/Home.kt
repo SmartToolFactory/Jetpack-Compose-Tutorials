@@ -79,7 +79,9 @@ fun HomeScreen(
     ) {
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
     ) {
 
         val context = LocalContext.current
@@ -169,7 +171,7 @@ fun HomeScreen(
             SearchDisplay.SearchInProgress -> {
                 Box(
                     modifier = Modifier
-                        .background(Color.White)
+                        .background(MaterialTheme.colors.background)
                         .fillMaxSize()
                 )
             }
@@ -304,7 +306,7 @@ fun TutorialListContent(
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = Color(0xffEEEEEE)
+        color = MaterialTheme.colors.background
     ) {
 
         Box {

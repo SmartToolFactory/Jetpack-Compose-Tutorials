@@ -41,8 +41,9 @@ fun TutorialChip(modifier: Modifier = Modifier, text: String, color: Color = Col
     Card(
         elevation = 0.dp,
         modifier = modifier,
-        backgroundColor = Color(0xFFE0E0E0),
-        shape = RoundedCornerShape(16.dp)
+        backgroundColor = MaterialTheme.colors.background,
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, color = MaterialTheme.colors.onSurface)
     ) {
         Row(
             modifier = Modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp),
@@ -110,8 +111,9 @@ fun CancelableChip(
     Surface(
         elevation = 0.dp,
         modifier = modifier,
-        color = Color(0xFFE0E0E0),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colors.background,
+        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

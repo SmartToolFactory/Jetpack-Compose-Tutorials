@@ -1,7 +1,9 @@
 package com.smarttoolfactory.tutorial1_1basics
 
+import android.content.res.Resources.Theme
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,8 +23,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -47,7 +51,7 @@ fun SearchBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.White),
+            .background(MaterialTheme.colors.background),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -106,8 +110,9 @@ fun SearchTextField(
                         end = 16.dp
                     )
             ),
-        color = Color(0xffF5F5F5),
+        color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(percent = 50),
+        border = BorderStroke(1.dp, MaterialTheme.colors.onBackground)
     ) {
 
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
@@ -123,6 +128,8 @@ fun SearchTextField(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     BasicTextField(
                         value = query,
+                        cursorBrush = SolidColor(MaterialTheme.colors.onBackground),
+                        textStyle = TextStyle(color = MaterialTheme.colors.onBackground),
                         onValueChange = onQueryChange,
                         modifier = Modifier
                             .fillMaxHeight()
@@ -168,7 +175,7 @@ private fun SearchHint(modifier: Modifier = Modifier) {
 
     ) {
         Text(
-            color = Color(0xffBDBDBD),
+            color = MaterialTheme.colors.onSurface,
             text = "Search a Tag or Description",
         )
     }
