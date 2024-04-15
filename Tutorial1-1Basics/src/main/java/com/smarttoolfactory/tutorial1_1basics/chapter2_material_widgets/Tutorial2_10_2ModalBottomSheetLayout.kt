@@ -11,9 +11,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Expand
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -92,7 +102,7 @@ private fun TutorialContent(initialModalBottomSheetValue: ModalBottomSheetValue 
 
         ModalBottomSheetLayout(sheetState = modalBottomSheetState,
             sheetElevation = 8.dp,
-            scrimColor = Color(0xccAAABBB),
+//            scrimColor = Color(0xccAAABBB),
             sheetContent = {
                 // 🔥 Uncomment to see states on modal bottom sheet content
 //                MainContent(modalBottomSheetState, Color(0xff4CAF50))

@@ -7,6 +7,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +37,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -89,8 +92,6 @@ private fun TutorialContent() {
 @Preview
 @Composable
 fun LerpAnimationSample() {
-    lerp(1f, 1f, 0f)
-
     val animatable = remember {
         Animatable(0f)
     }
@@ -104,15 +105,21 @@ fun LerpAnimationSample() {
         }
     }
     var selectedIndex by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
+
+    val idle by remember {
+        derivedStateOf { animatable.value == 0f }
+    }
+
+    println("Idle: $idle")
 
     BackHandler(enabled = animatable.targetValue != 0f) {
         coroutineScope.launch {
             animatable.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(
-                    600,
+                    300,
                     easing = FastOutSlowInEasing
                 )
             )
@@ -120,7 +127,16 @@ fun LerpAnimationSample() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(backgroundColor)
+        modifier = Modifier.fillMaxSize().background(backgroundColor).then(
+            if (idle.not()) {
+                Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {}
+                )
+                    .border(1.dp, Color.Red)
+            } else Modifier
+        )
     ) {
         BoxWithConstraints {
             val maxWidth = constraints.maxWidth.toFloat()
@@ -182,8 +198,8 @@ fun LerpAnimationSample() {
                                     animatable.animateTo(
                                         targetValue = 1f,
                                         animationSpec = tween(
-                                            600,
-                                            easing = FastOutLinearInEasing
+                                            300,
+                                            easing = FastOutSlowInEasing
                                         )
                                     )
                                 }
@@ -244,7 +260,7 @@ fun GridLerpAnimationSample() {
             animatable.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(
-                    600,
+                    300,
                     easing = FastOutLinearInEasing
                 )
             )
