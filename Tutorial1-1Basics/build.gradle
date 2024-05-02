@@ -41,7 +41,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
 
@@ -57,7 +57,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime:$compose_version"
 
     // Material 3
-    implementation "androidx.compose.material3:material3:1.2.0"
+    implementation "androidx.compose.material3:material3:1.2.1"
 
     // Util Functions of Jetpack Compose
     implementation "androidx.compose.ui:ui-util:$compose_version"
@@ -66,7 +66,7 @@ dependencies {
     // Jetpack Compose Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13"
 
-    implementation "androidx.activity:activity-compose:1.8.2"
+    implementation "androidx.activity:activity-compose:1.9.0"
 
     def nav_compose_version = "2.7.7"
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"
