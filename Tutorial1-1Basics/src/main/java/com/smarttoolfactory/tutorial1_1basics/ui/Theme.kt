@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -26,16 +25,14 @@ private val DarkColorPalette = darkColors(
 
 private val LightColorPalette = lightColors(
     primary = purple500,
-    secondary = teal200,
     primaryVariant = purple700,
-    error = Color(0xFFF2B8B5),
-    surface = Color(0xFFE6E1E5),
-    background = Color(0xFFE6E1E5),
+    secondary = teal200,
+    background = Color.White,
+    surface = Color.White,
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onBackground = Color(0xFF201F24),
-    onSurface = Color(0xFF201F24),
-    onError = Color(0xFF601410)
+    onSecondary = Color.Black,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
 )
 
 @Composable
