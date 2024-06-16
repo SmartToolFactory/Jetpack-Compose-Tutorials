@@ -62,6 +62,8 @@ private fun AnimatedCountdownTimerSample() {
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             modifier = Modifier.graphicsLayer {
                 scaleX = animatedCountdownTimer.scale
@@ -89,7 +91,7 @@ private fun AnimatedCountdownTimerSample() {
     }
 }
 
-class AnimatedCountdownTimer(initialValue: Int = 0) {
+class AnimatedCountdownTimer {
 
     private val animatableScale = Animatable(1f)
     private val animatableAlpha = Animatable(1f)

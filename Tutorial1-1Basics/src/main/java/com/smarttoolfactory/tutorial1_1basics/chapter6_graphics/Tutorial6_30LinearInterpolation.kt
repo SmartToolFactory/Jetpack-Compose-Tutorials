@@ -468,7 +468,7 @@ fun Test() {
 }
 
 // Scale x1 from a1..b1 range to a2..b2 range
-fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
+internal fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
     lerp(a2, b2, calcFraction(a1, b1, x1))
 
 
