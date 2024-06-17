@@ -33,11 +33,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -73,8 +73,12 @@ private fun TutorialContent(initialState: BottomSheetValue = BottomSheetValue.Co
             confirmStateChange = { bottomSheetValue: BottomSheetValue ->
                 // This callback gets called twice in Jetpack Compose version 1.5.4
                 println("State changed to $bottomSheetValue")
-                if(!isInPreview) {
-                    Toast.makeText(context, "State changed to $bottomSheetValue", Toast.LENGTH_SHORT).show()
+                if (!isInPreview) {
+                    Toast.makeText(
+                        context,
+                        "State changed to $bottomSheetValue",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 true
             }
@@ -116,7 +120,7 @@ private fun MainContent(bottomSheetState: BottomSheetState) {
         Offset.Zero
     }
 
-    val progress = bottomSheetState.progress
+    val progress = bottomSheetState.progress(from =, to =)
 
     Column(
         modifier = Modifier
@@ -150,7 +154,11 @@ private fun FloatingActionButtonComponent(
     bottomSheetState: BottomSheetState
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val iconRotation by animateFloatAsState(targetValue = if (bottomSheetState.isCollapsed) 0f else 180f, label = "Icon Rotation Anim", animationSpec = tween())
+    val iconRotation by animateFloatAsState(
+        targetValue = if (bottomSheetState.isCollapsed) 0f else 180f,
+        label = "Icon Rotation Anim",
+        animationSpec = tween()
+    )
 
     FloatingActionButton(
         onClick = {
@@ -165,8 +173,10 @@ private fun FloatingActionButtonComponent(
         backgroundColor = Color(0xffFFA000)
     ) {
         Icon(
-            imageVector = Icons.Filled.Navigation, tint = Color.White,
-            contentDescription = "Icon Rotation", modifier = Modifier.graphicsLayer { this.rotationZ = iconRotation }
+            imageVector = Icons.Filled.Navigation,
+            tint = Color.White,
+            contentDescription = "Icon Rotation",
+            modifier = Modifier.graphicsLayer { this.rotationZ = iconRotation }
         )
     }
 }
@@ -211,7 +221,10 @@ private fun SheetContent() {
 private fun FloatingActionButtonComponentPreview() {
 
     val bottomSheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        bottomSheetState = BottomSheetState(
+            initialValue = BottomSheetValue.Collapsed,
+            density = LocalDensity.current
+        )
     ).bottomSheetState
 
     ComposeTutorialsTheme {
@@ -250,7 +263,10 @@ private class BottomSheetStateProvider : PreviewParameterProvider<BottomSheetVal
 private fun MainContentPreview() {
 
     val bottomSheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        bottomSheetState = BottomSheetState(
+            initialValue = BottomSheetValue.Collapsed,
+            density = LocalDensity.current
+        )
     ).bottomSheetState
 
     ComposeTutorialsTheme {

@@ -26,7 +26,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
@@ -35,11 +34,10 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Videocam
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
@@ -201,7 +199,7 @@ fun ActionTopAppbar(onBack: (() -> Unit)? = null, elevation: Dp) {
         navigationIcon = {
             IconButton(onClick = { onBack?.invoke() }) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null
                 )
             }
@@ -276,7 +274,7 @@ private fun OverflowTopAppBarReview() {
 fun OverflowTopAppBar2() {
     val items = listOf(
         ActionItemSpec("Call", Icons.Default.Call, ActionItemMode.ALWAYS_SHOW) {},
-        ActionItemSpec("Send", Icons.Default.Send, ActionItemMode.IF_ROOM) {},
+        ActionItemSpec("Send", Icons.AutoMirrored.Filled.Send, ActionItemMode.IF_ROOM) {},
         ActionItemSpec("Email", Icons.Default.Email, ActionItemMode.IF_ROOM) {},
         ActionItemSpec("Delete", Icons.Default.Delete, ActionItemMode.IF_ROOM) {},
     )
@@ -366,7 +364,7 @@ fun ActionMenu(
 private fun ActionMenuReview() {
     val items = listOf(
         ActionItemSpec("Call", Icons.Default.Call, ActionItemMode.ALWAYS_SHOW) {},
-        ActionItemSpec("Send", Icons.Default.Send, ActionItemMode.IF_ROOM) {},
+        ActionItemSpec("Send", Icons.AutoMirrored.Filled.Send, ActionItemMode.IF_ROOM) {},
         ActionItemSpec("Email", Icons.Default.Email, ActionItemMode.IF_ROOM) {},
         ActionItemSpec("Delete", Icons.Default.Delete, ActionItemMode.IF_ROOM) {},
     )
@@ -405,7 +403,7 @@ fun ChatAppbar(
             ) {
 
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null
                 )
 
@@ -473,7 +471,7 @@ private fun ChatAppbarActions(
     ) {
         IndicatingIconButton(
             onClick = { /* doSomething() */ },
-            indication = rememberRipple(bounded = false, radius = 22.dp),
+            indication = ripple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
         ) {
             Icon(
@@ -485,7 +483,7 @@ private fun ChatAppbarActions(
 
         IndicatingIconButton(
             onClick = { /* doSomething() */ },
-            indication = rememberRipple(bounded = false, radius = 22.dp),
+            indication = ripple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
         ) {
             Icon(
@@ -497,7 +495,7 @@ private fun ChatAppbarActions(
 
         IndicatingIconButton(
             onClick = { /* doSomething() */ },
-            indication = rememberRipple(bounded = false, radius = 22.dp),
+            indication = ripple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
         ) {
             Icon(

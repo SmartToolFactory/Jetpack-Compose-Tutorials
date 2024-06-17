@@ -19,10 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material.ripple
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
@@ -135,7 +135,7 @@ fun CustomRippleExample() {
             modifier = modifierWithClip
                 .clickable(
                     interactionSource = MutableInteractionSource(),
-                    indication = rememberRipple(
+                    indication = ripple(
                         bounded = true,
                         radius = 250.dp,
                         color = Color.Green
@@ -144,7 +144,7 @@ fun CustomRippleExample() {
                 )
         ) {
             Text(
-                text = "rememberRipple() bounded",
+                text = "ripple() bounded",
                 color = Color.White
             )
         }
@@ -157,7 +157,7 @@ fun CustomRippleExample() {
             modifier = modifierNoClip
                 .clickable(
                     interactionSource = MutableInteractionSource(),
-                    indication = rememberRipple(
+                    indication = ripple(
                         bounded = false,
                         radius = 250.dp,
                         color = Color.Green
@@ -166,7 +166,7 @@ fun CustomRippleExample() {
                 )
         ) {
             Text(
-                text = "rememberRipple() unbounded",
+                text = "ripple() unbounded",
                 color = Color.White
             )
         }

@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +62,7 @@ private fun RippleSample() {
         .background(Color.Cyan)
         .clickable(
             interactionSource = MutableInteractionSource(),
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = false,
                 radius = 300.dp
             ),
@@ -108,8 +108,8 @@ private fun RippleOnCanvasSample() {
                                 targetValue = .3f,
                                 animationSpec = keyframes {
                                     durationMillis = 150
-                                    0.0f at 0 with LinearOutSlowInEasing
-                                    0.2f at 75 with FastOutLinearInEasing
+                                    0.0f at 0 using LinearOutSlowInEasing
+                                    0.2f at 75 using FastOutLinearInEasing
                                     0.25f at 100
                                     0.3f at 150
                                 }
@@ -121,9 +121,9 @@ private fun RippleOnCanvasSample() {
                                 targetValue = radius.toFloat(),
                                 animationSpec = keyframes {
                                     durationMillis = 150
-                                    0.0f at 0 with LinearOutSlowInEasing
-                                    radius * 0.4f at 30 with FastOutLinearInEasing
-                                    radius * 0.5f at 75 with FastOutLinearInEasing
+                                    0.0f at 0 using LinearOutSlowInEasing
+                                    radius * 0.4f at 30 using FastOutLinearInEasing
+                                    radius * 0.5f at 75 using FastOutLinearInEasing
                                     radius * 0.7f at 100
                                     radius * 1f at 150
                                 }

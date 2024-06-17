@@ -151,9 +151,7 @@ private fun TutorialContent(initialBackdropValue: BackdropValue = BackdropValue.
         frontLayerContent = {
             FrontLayerContent()
         }
-    ) {
-
-    }
+    )
 }
 
 @Composable

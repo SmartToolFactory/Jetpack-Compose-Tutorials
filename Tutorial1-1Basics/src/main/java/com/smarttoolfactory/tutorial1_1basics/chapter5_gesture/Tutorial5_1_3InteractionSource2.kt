@@ -29,7 +29,7 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -210,7 +210,7 @@ private fun DiscreteInteractionSourceExample() {
                     .background(color = Blue400)
                     .clickable(
                         interactionSource = interactionSource,
-                        indication = rememberRipple(),
+                        indication = ripple(),
                         onClick = {
                             Toast
                                 .makeText(context, "🔥 Inner one is clicked", Toast.LENGTH_SHORT)
@@ -260,7 +260,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                 .background(SentMessageColor)
                 .clickable(
                     interactionSource = interactionSourceSentRow,
-                    indication = rememberRipple(),
+                    indication = ripple(),
                     onClick = {}
                 ),
 
@@ -275,7 +275,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable(
                             interactionSource = interactionSourceSentQuote,
-                            indication = rememberRipple(),
+                            indication = ripple(),
                             onClick = {}
                         ),
                     quotedMessage = "quotedMessage",
@@ -332,7 +332,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                 .background(Color.White)
                 .clickable(
                     interactionSource = interactionSourceReceivedRow,
-                    indication = rememberRipple(),
+                    indication = ripple(),
                     onClick = {}
                 ),
             content = {
@@ -352,7 +352,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable(
                             interactionSource = interactionSourceReceivedQuote,
-                            indication = rememberRipple(),
+                            indication = ripple(),
                             onClick = {}
                         ),
                     quotedMessage = "quotedMessage",

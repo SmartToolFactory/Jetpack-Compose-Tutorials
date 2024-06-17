@@ -268,7 +268,7 @@ private fun InfinitePagerSample() {
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
             state = pagerState,
-            beyondBoundsPageCount = 1,
+            beyondViewportPageCount = 1,
             pageSpacing = 16.dp
         ) {
 

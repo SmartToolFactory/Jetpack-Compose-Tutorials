@@ -247,7 +247,7 @@ private fun HomeContent(
     HorizontalPager(
         modifier = Modifier,
         pageSpacing = 0.dp,
-        beyondBoundsPageCount = 2,
+        beyondViewportPageCount = 1,
         pageSize = PageSize.Fill,
         state = pagerState
     ) { page: Int ->
@@ -260,29 +260,6 @@ private fun HomeContent(
             else -> ComingSoonScreen()
         }
     }
-
-//    HorizontalPager(
-//        modifier = Modifier,
-//        state = pagerState,
-//        pageSpacing = 0.dp,
-//        userScrollEnabled = true,
-//        reverseLayout = false,
-//        contentPadding = PaddingValues(0.dp),
-//        beyondBoundsPageCount = 2,
-//        pageSize = PageSize.Fill,
-//        flingBehavior = PagerDefaults.flingBehavior(state = state),
-//        key = null,
-//        pageContent = fun PagerScope.(page: Int) {
-//            when (page) {
-//                0 -> TutorialListContent(modifier, tutorialList[0], navigateToTutorial)
-//                1 -> TutorialListContent(modifier, tutorialList[1], navigateToTutorial)
-//                2 -> TutorialListContent(modifier, tutorialList[2], navigateToTutorial)
-//                3 -> TutorialListContent(modifier, tutorialList[3], navigateToTutorial)
-//                4 -> TutorialListContent(modifier, tutorialList[4], navigateToTutorial)
-//                else -> ComingSoonScreen()
-//            }
-//        }
-//    )
 }
 
 @Composable
