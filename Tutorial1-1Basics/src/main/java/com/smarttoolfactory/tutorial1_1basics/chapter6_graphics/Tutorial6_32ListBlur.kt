@@ -1,21 +1,15 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
@@ -35,9 +29,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.ui.Green400
-import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import kotlinx.coroutines.launch
 
 @Preview
@@ -50,7 +41,7 @@ fun Tutorial6_32Screen() {
 private fun TutorialContent() {
 
     val pagerState = rememberPagerState {
-        2
+        3
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -96,29 +87,14 @@ private fun TutorialContent() {
                     .padding(horizontal = 8.dp)
                     .drawBlur(
                         scrollState = scrollState,
-                        blurDimension = 60.dp,
+                        blurDimension = 50.dp,
                         blurPosition = blurPosition
                     )
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
-                repeat(14) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
-                            .background(Color.White, RoundedCornerShape(16.dp))
-                            .padding(16.dp)
-                    ) {
-                        Text("Title", fontSize = 26.sp, color = Green400)
-                        Text(
-                            "Some text for demonstrating list blur",
-                            fontSize = 20.sp,
-                            color = Red400
-                        )
-                    }
-                }
+                Text(sampleText)
             }
         }
     }
@@ -131,7 +107,7 @@ fun Modifier.drawBlur(
     endAlpha: Float = 0f,
     blurPosition: BlurPosition = BlurPosition.Bottom
 ) = this.then(
-    graphicsLayer {
+    Modifier.graphicsLayer {
         compositingStrategy = CompositingStrategy.Offscreen
     }
         .drawWithCache {
@@ -212,3 +188,22 @@ fun Modifier.drawBlur(
 enum class BlurPosition {
     Top, Bottom
 }
+
+private val sampleText = """
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac erat vitae tortor ultrices vestibulum id quis mi. Aliquam erat volutpat. Praesent ullamcorper eros at sapien commodo lobortis. Mauris consequat elit quis eros mollis vulputate. Ut egestas porta tincidunt. Pellentesque suscipit pulvinar mauris a fringilla. Fusce volutpat sem non est facilisis, non aliquet ligula finibus. Sed id quam sit amet massa iaculis fermentum. Nullam luctus justo ultricies condimentum scelerisque. Curabitur sed fermentum lectus, ac suscipit est. Praesent nisi lorem, viverra a feugiat eu, pretium ac odio. Curabitur dapibus justo at nisi sagittis mattis. Sed molestie orci nec quam consequat, consequat sagittis elit lacinia.
+
+    1. Lorem Ipsum
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac erat vitae tortor ultrices vestibulum id quis mi. Aliquam erat volutpat. Praesent ullamcorper eros at sapien commodo lobortis. Mauris consequat elit quis eros mollis vulputate. Ut egestas porta tincidunt. Pellentesque suscipit pulvinar mauris a fringilla. Fusce volutpat sem non est facilisis, non aliquet ligula finibus. Sed id quam sit amet massa iaculis fermentum. Nullam luctus justo ultricies condimentum scelerisque.
+
+    2. Lorem Ipsum
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac erat vitae tortor ultrices vestibulum id quis mi. Aliquam erat volutpat. Praesent ullamcorper eros at sapien commodo lobortis. Mauris consequat elit quis eros mollis vulputate. Ut egestas porta tincidunt. Pellentesque suscipit pulvinar mauris a fringilla. Fusce volutpat sem non est facilisis, non aliquet ligula finibus. Sed id quam sit amet massa iaculis fermentum. Nullam luctus justo ultricies condimentum scelerisque.
+
+    3. Lorem Ipsum
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac erat vitae tortor ultrices vestibulum id quis mi. Aliquam erat volutpat. Praesent ullamcorper eros at sapien commodo lobortis. Mauris consequat elit quis eros mollis vulputate. Ut egestas porta tincidunt. Pellentesque suscipit pulvinar mauris a fringilla. Fusce volutpat sem non est facilisis, non aliquet ligula finibus. Sed id quam sit amet massa iaculis fermentum. Nullam luctus justo ultricies condimentum scelerisque.
+
+    4. Lorem Ipsum
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac erat vitae tortor ultrices vestibulum id quis mi. Aliquam erat volutpat. Praesent ullamcorper eros at sapien commodo lobortis. Mauris consequat elit quis eros mollis vulputate. Ut egestas porta tincidunt. Pellentesque suscipit pulvinar mauris a fringilla. Fusce volutpat sem non est facilisis, non aliquet ligula finibus. Sed id quam sit amet massa iaculis fermentum. Nullam luctus justo ultricies condimentum scelerisque.
+
+    5. Lorem Ipsum
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac erat vitae tortor ultrices vestibulum id quis mi. Aliquam erat volutpat. Praesent ullamcorper eros at sapien commodo lobortis. Mauris consequat elit quis eros mollis vulputate. Ut egestas porta tincidunt. Pellentesque suscipit pulvinar mauris a fringilla. Fusce volutpat sem non est facilisis, non aliquet ligula finibus. Sed id quam sit amet massa iaculis fermentum. Nullam luctus justo ultricies condimentum scelerisque.
+""".trimIndent()
