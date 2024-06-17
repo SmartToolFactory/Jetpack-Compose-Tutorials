@@ -2,7 +2,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +20,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Mic
@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.IndicatingIconButton
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) -> Unit) {
 
@@ -90,7 +89,6 @@ internal fun ChatInput(modifier: Modifier = Modifier, onMessageChange: (String) 
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ChatTextField(
     modifier: Modifier = Modifier,

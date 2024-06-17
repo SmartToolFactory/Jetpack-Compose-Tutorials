@@ -120,7 +120,8 @@ private fun MainContent(bottomSheetState: BottomSheetState) {
         Offset.Zero
     }
 
-    val progress = bottomSheetState.progress(from =, to =)
+    val progress =
+        bottomSheetState.progress(from = BottomSheetValue.Collapsed, to = BottomSheetValue.Expanded)
 
     Column(
         modifier = Modifier

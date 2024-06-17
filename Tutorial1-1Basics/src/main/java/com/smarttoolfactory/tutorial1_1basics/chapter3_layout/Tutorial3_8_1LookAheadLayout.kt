@@ -3,9 +3,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector2D
-import androidx.compose.animation.core.VectorConverter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,64 +21,63 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LookaheadScope
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.round
-import kotlinx.coroutines.launch
 
 
 // Creates a custom modifier to animate the local position of the layout within the
 // given LookaheadScope, whenever the relative position changes.
 @SuppressLint("UnrememberedMutableState")
 fun Modifier.animatePlacementInScope(lookaheadScope: LookaheadScope) = composed {
-    // Creates an offset animation
-    var offsetAnimation: Animatable<IntOffset, AnimationVector2D>? by mutableStateOf(
-        null
-    )
-    var targetOffset: IntOffset? by mutableStateOf(null)
 
-    this.intermediateLayout { measurable, constraints ->
-        val placeable = measurable.measure(constraints)
-        layout(placeable.width, placeable.height) {
-            // Converts coordinates of the current layout to LookaheadCoordinates
-            val coordinates = coordinates
-            if (coordinates != null) {
-                // Calculates the target offset within the lookaheadScope
-                val target = with(lookaheadScope) {
-                    lookaheadScopeCoordinates
-                        .localLookaheadPositionOf(coordinates)
-                        .round().also { targetOffset = it }
-                }
+    // TODO Fix LookAheadLayout
+//    // Creates an offset animation
+//    var offsetAnimation: Animatable<IntOffset, AnimationVector2D>? by mutableStateOf(
+//        null
+//    )
+//    var targetOffset: IntOffset? by mutableStateOf(null)
+//
+//    this.intermediateLayout { measurable, constraints ->
+//        val placeable = measurable.measure(constraints)
+//        layout(placeable.width, placeable.height) {
+//            // Converts coordinates of the current layout to LookaheadCoordinates
+//            val coordinates = coordinates
+//            if (coordinates != null) {
+//                // Calculates the target offset within the lookaheadScope
+//                val target = with(lookaheadScope) {
+//                    lookaheadScopeCoordinates
+//                        .localLookaheadPositionOf(coordinates)
+//                        .round().also { targetOffset = it }
+//                }
+//
+//                // Uses the target offset to start an offset animation
+//                if (target != offsetAnimation?.targetValue) {
+//                    offsetAnimation?.run {
+//                        launch { animateTo(target) }
+//                    } ?: Animatable(target, IntOffset.VectorConverter).let {
+//                        offsetAnimation = it
+//                    }
+//                }
+//                // Calculates the *current* offset within the given LookaheadScope
+//                val placementOffset =
+//                    lookaheadScopeCoordinates.localPositionOf(
+//                        coordinates,
+//                        Offset.Zero
+//                    ).round()
+//                // Calculates the delta between animated position in scope and current
+//                // position in scope, and places the child at the delta offset. This puts
+//                // the child layout at the animated position.
+//                val (x, y) = requireNotNull(offsetAnimation).run { value - placementOffset }
+//                placeable.place(x, y)
+//            } else {
+//                placeable.place(0, 0)
+//            }
+//        }
+//    }
 
-                // Uses the target offset to start an offset animation
-                if (target != offsetAnimation?.targetValue) {
-                    offsetAnimation?.run {
-                        launch { animateTo(target) }
-                    } ?: Animatable(target, IntOffset.VectorConverter).let {
-                        offsetAnimation = it
-                    }
-                }
-                // Calculates the *current* offset within the given LookaheadScope
-                val placementOffset =
-                    lookaheadScopeCoordinates.localPositionOf(
-                        coordinates,
-                        Offset.Zero
-                    ).round()
-                // Calculates the delta between animated position in scope and current
-                // position in scope, and places the child at the delta offset. This puts
-                // the child layout at the animated position.
-                val (x, y) = requireNotNull(offsetAnimation).run { value - placementOffset }
-                placeable.place(x, y)
-            } else {
-                placeable.place(0, 0)
-            }
-        }
-    }
+    Modifier
 }
 
 val colors = listOf(
