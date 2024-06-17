@@ -31,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
@@ -130,12 +131,13 @@ private fun PagerScrollSample() {
 
         Box(
             modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
                 .clickable {
                     Toast.makeText(context, "Clicked $it", Toast.LENGTH_SHORT).show()
                 }
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color.LightGray, RoundedCornerShape(16.dp)),
+                .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -226,12 +228,13 @@ private fun PagerScrollSample2() {
 
             Box(
                 modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
                     .clickable {
                         Toast.makeText(context, "Clicked $it", Toast.LENGTH_SHORT).show()
                     }
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color.LightGray, RoundedCornerShape(16.dp)),
+                    .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
                 Text(

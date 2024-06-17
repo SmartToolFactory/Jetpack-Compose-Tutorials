@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -111,12 +112,13 @@ private fun TutorialContent() {
 
             Box(
                 modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
                     .clickable {
                         Toast.makeText(context, "Clicked $it", Toast.LENGTH_SHORT).show()
                     }
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color.LightGray, RoundedCornerShape(16.dp))
+                    .background(Color.LightGray)
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
