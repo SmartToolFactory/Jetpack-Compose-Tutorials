@@ -7,8 +7,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +49,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -61,6 +67,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.components.CancelableChip
 import com.smarttoolfactory.tutorial1_1basics.ui.components.JumpToTopButton
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StaggeredGrid
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialSectionCard
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 internal val tabList = listOf("Components", "Layout", "State", "Gesture", "Graphics", "Theming")
@@ -212,6 +219,10 @@ private fun HomeContent(
     navigateToTutorial: (String) -> Unit
 ) {
 
+    var shouldScrollToFirstPage by remember {
+        mutableStateOf(false)
+    }
+
     val pagerState: PagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
@@ -245,9 +256,56 @@ private fun HomeContent(
     }
 
     HorizontalPager(
-        modifier = Modifier,
+        modifier = Modifier
+            .pointerInput(Unit) {
+                awaitEachGesture {
+                    val down = awaitFirstDown(pass = PointerEventPass.Initial)
+                    shouldScrollToFirstPage = false
+
+                    val firstTouchX = down.position.x
+
+                    do {
+                        val event: PointerEvent = awaitPointerEvent(
+                            pass = PointerEventPass.Initial
+                        )
+
+                        event.changes.forEach {
+
+                            val diff = firstTouchX - it.position.x
+                            val posX = it.position.x
+
+                            val valid = pagerState.currentPage == tabList.lastIndex &&
+                                    pagerState.settledPage == pagerState.currentPage &&
+                                    (diff > size.width * .2f ||
+                                            (it.position.x > 0 && it.position.x < size.width * .2f)) &&
+                                    shouldScrollToFirstPage.not()
+
+                            println(
+                                "Diff $diff, posX: $posX , " +
+                                        "current page: ${pagerState.currentPage}, " +
+                                        "valid: $valid"
+                            )
+
+                            if (valid) {
+                                coroutineScope.launch {
+                                    println("🔥 Scrolling...")
+                                    shouldScrollToFirstPage = true
+                                    delay(50)
+                                    pagerState.animateScrollToPage(
+                                        0,
+                                        animationSpec = tween(500)
+                                    )
+                                    shouldScrollToFirstPage = false
+                                }
+                            }
+                        }
+
+                    } while (event.changes.any { it.pressed })
+                }
+            },
         pageSpacing = 0.dp,
         beyondViewportPageCount = 1,
+        userScrollEnabled = shouldScrollToFirstPage.not(),
         pageSize = PageSize.Fill,
         state = pagerState
     ) { page: Int ->

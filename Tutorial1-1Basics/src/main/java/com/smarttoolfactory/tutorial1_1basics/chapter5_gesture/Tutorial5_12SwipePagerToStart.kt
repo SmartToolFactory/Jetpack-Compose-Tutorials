@@ -1,10 +1,7 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import android.widget.Toast
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -191,6 +188,7 @@ private fun PagerScrollSample2() {
                                 val posX = it.position.x
 
                                 val valid = pagerState.currentPage == 4 &&
+                                        pagerState.currentPage == pagerState.settledPage &&
                                         // Scroll if user scrolled 10% from first touch position
                                         // or pointer is at the left of 20% of page
                                         (diff > size.width * .10f ||
