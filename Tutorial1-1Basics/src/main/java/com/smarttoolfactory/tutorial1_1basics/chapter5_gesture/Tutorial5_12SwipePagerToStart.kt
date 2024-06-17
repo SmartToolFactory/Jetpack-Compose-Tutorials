@@ -104,7 +104,7 @@ private fun PagerScrollSample() {
                         event.changes.forEach {
 
                             if (pagerState.currentPage == 4 &&
-                                pagerState.currentPageOffsetFraction == 0f &&
+                                pagerState.currentPage == pagerState.settledPage &&
                                 // current position of pointer
                                 it.position.x < 200f &&
                                 shouldScrollToFirstPage.not()
