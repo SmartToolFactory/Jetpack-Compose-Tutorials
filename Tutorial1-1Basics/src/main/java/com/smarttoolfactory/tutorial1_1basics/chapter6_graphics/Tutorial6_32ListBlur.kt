@@ -47,7 +47,7 @@ fun Tutorial6_32Screen() {
 private fun TutorialContent() {
 
     val pagerState = rememberPagerState {
-        3
+        2
     }
 
     val coroutineScope = rememberCoroutineScope()
