@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListItemInfo
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -16,8 +18,12 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -87,7 +93,7 @@ private fun TutorialContent() {
                     .padding(horizontal = 8.dp)
                     .drawBlur(
                         scrollState = scrollState,
-                        blurDimension = 50.dp,
+                        blurDimension = 80.dp,
                         blurPosition = blurPosition
                     )
                     .verticalScroll(scrollState),
@@ -184,6 +190,114 @@ fun Modifier.drawBlur(
             }
         }
 )
+
+// TODO
+fun Modifier.drawBlur(
+    scrollState: LazyListState,
+    blurDimension: Dp,
+    startAlpha: Float = 1f,
+    endAlpha: Float = 0f,
+    blurPosition: BlurPosition = BlurPosition.Bottom
+) = composed {
+
+    val itemPos: Int by remember {
+        derivedStateOf {
+            val totalItems = scrollState.layoutInfo.totalItemsCount
+            val visibleItemsInfo: List<LazyListItemInfo> = scrollState.layoutInfo.visibleItemsInfo
+
+            if (blurPosition == BlurPosition.Bottom) {
+                val lastItemVisible: LazyListItemInfo? = visibleItemsInfo.firstOrNull {
+                    it.index == totalItems - 1
+                }
+
+                lastItemVisible?.offset?.let {
+                    (scrollState.layoutInfo.viewportEndOffset - it).coerceIn(
+                        0,
+                        lastItemVisible.size
+                    )
+                } ?: run {
+                    0
+                }
+            } else {
+                val firstItemVisible: LazyListItemInfo? = visibleItemsInfo.firstOrNull {
+                    it.index == 0
+                }
+                firstItemVisible?.offset?.coerceIn(
+                    0,
+                    firstItemVisible.size
+                ) ?: run {
+                    0
+                }
+            }
+        }
+    }
+
+    println("itemPos: $itemPos")
+
+    Modifier
+        .graphicsLayer {
+            compositingStrategy = CompositingStrategy.Offscreen
+        }
+        .drawWithCache {
+            val blurDimensionPx = blurDimension.toPx()
+
+            val ratio = (
+                    if (blurPosition == BlurPosition.Bottom) {
+                        itemPos / blurDimensionPx
+                    } else {
+                        itemPos / blurDimensionPx
+                    }
+                    ).coerceIn(0f, 1f)
+
+            val alphaStart = scale(0f, 1f, ratio, startAlpha, 1f)
+            val alphaEnd = scale(0f, 1f, ratio, endAlpha, 1f)
+
+
+            val blurColor = Color.Transparent
+
+            val startY = if (blurPosition == BlurPosition.Bottom) {
+                size.height - blurDimensionPx
+            } else {
+                0f
+            }
+            val endY = if (blurPosition == BlurPosition.Bottom) {
+                size.height
+            } else {
+                blurDimensionPx
+            }
+
+            val start = if (blurPosition == BlurPosition.Bottom) alphaStart else alphaEnd
+            val end = if (blurPosition == BlurPosition.Bottom) alphaEnd else alphaStart
+
+            val brush = Brush.verticalGradient(
+                startY = startY,
+                endY = endY,
+                colors = listOf(
+                    blurColor.copy(alpha = start),
+                    blurColor.copy(alpha = end)
+                )
+            )
+
+            onDrawWithContent {
+                // Destination
+                drawContent()
+
+                // Source
+                val topLeftY = if (blurPosition == BlurPosition.Bottom) {
+                    size.height - blurDimensionPx
+                } else {
+                    0f
+                }
+
+                drawRect(
+                    brush = brush,
+                    topLeft = Offset(0f, topLeftY),
+                    size = Size(size.width, blurDimensionPx),
+                    blendMode = BlendMode.DstIn
+                )
+            }
+        }
+}
 
 enum class BlurPosition {
     Top, Bottom
