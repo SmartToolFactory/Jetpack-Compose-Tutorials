@@ -32,9 +32,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @Preview
@@ -94,13 +96,19 @@ private fun TutorialContent() {
                     .drawBlur(
                         scrollState = scrollState,
                         blurDimension = 80.dp,
+                        startAlpha = .7f,
+                        endAlpha = 0f,
                         blurPosition = blurPosition
                     )
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
-                Text(sampleText)
+                Text(
+                    text = sampleText,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
             }
         }
     }
@@ -168,6 +176,13 @@ fun Modifier.drawBlur(
                     blurColor.copy(alpha = start),
                     blurColor.copy(alpha = end)
                 )
+
+                // Also can use stops for better pixel erase look
+//                colorStops = arrayOf(
+//                    Pair(.0f, blurColor.copy(alpha = start)),
+//                    Pair(.1f, blurColor.copy(alpha = (start + end) / 2)),
+//                    Pair(1f, blurColor.copy(alpha = end)),
+//                )
             )
 
             onDrawWithContent {
@@ -187,6 +202,15 @@ fun Modifier.drawBlur(
                     size = Size(size.width, blurDimensionPx),
                     blendMode = BlendMode.DstIn
                 )
+
+                // This is of seeing bounds of blend mode applied area
+//                drawRect(
+//                    color = Color.Red,
+//                    topLeft = Offset(0f, topLeftY),
+//                    size = Size(size.width, blurDimensionPx),
+//                    style = Stroke(2.dp.toPx())
+//                )
+
             }
         }
 )
