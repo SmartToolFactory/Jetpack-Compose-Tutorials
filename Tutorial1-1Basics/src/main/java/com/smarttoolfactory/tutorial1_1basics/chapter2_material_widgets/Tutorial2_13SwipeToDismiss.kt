@@ -76,7 +76,7 @@ private fun TutorialContent(viewModel: MyViewModel) {
             items(items = usersList.value, key = { user -> user.id }) { user ->
 
                 // https://stackoverflow.com/questions/75040603/is-composes-swipe-to-dismiss-state-always-remember-the-old-item-based-on-id-ev
-                // This is required as expalined in the link stackoverflow link
+                // This is required as explained in the link stackoverflow link
                 val currentItem by rememberUpdatedState(user)
 
                 val dismissState = rememberDismissState(
