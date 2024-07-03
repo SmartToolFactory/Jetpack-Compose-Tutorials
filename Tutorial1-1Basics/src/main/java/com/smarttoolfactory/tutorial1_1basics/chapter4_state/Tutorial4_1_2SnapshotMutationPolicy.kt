@@ -125,9 +125,9 @@ private fun StructuralEqualitySample() {
 
     val context = LocalContext.current
 
-    var oneTimeEventData by remember {
+    var someEventData by remember {
         mutableStateOf(
-            value = OneTimeEventData(message = "structuralEqualityPolicy message"),
+            value = SomeEventData(message = "structuralEqualityPolicy message"),
             // 🔥 For recomposition to be triggered we need to assign an object with
             // different message since data class checks primary constructor values
             // for equals function
@@ -136,7 +136,7 @@ private fun StructuralEqualitySample() {
     }
 
     // This is for showing toast message only on each recomposition
-    Toast.makeText(context, oneTimeEventData.message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, someEventData.message, Toast.LENGTH_SHORT).show()
 
     Column(
         modifier = Modifier
@@ -149,8 +149,8 @@ private fun StructuralEqualitySample() {
                 .fillMaxWidth()
                 .padding(vertical = 4.dp),
             onClick = {
-                oneTimeEventData =
-                    oneTimeEventData.copy(message = "structuralEqualityPolicy message")
+                someEventData =
+                    someEventData.copy(message = "structuralEqualityPolicy message")
 
             }
         ) {
@@ -162,7 +162,7 @@ private fun StructuralEqualitySample() {
                 .border(2.dp, getRandomColor())
                 .fillMaxWidth()
                 .padding(10.dp),
-            text = oneTimeEventData.message,
+            text = someEventData.message,
             fontSize = 16.sp
         )
     }
@@ -175,14 +175,15 @@ private fun ReferentialEqualitySample() {
     val context = LocalContext.current
 
 
-    var oneTimeEventData by remember {
+    var someEventData by remember {
         mutableStateOf(
-            value = OneTimeEventData(message = "referentialEqualityPolicy message"),
+            value = SomeEventData(message = "referentialEqualityPolicy message"),
             policy = referentialEqualityPolicy()
         )
     }
 
-    Toast.makeText(context, oneTimeEventData.message, Toast.LENGTH_SHORT).show()
+    // This is for showing toast message only on each recomposition
+    Toast.makeText(context, someEventData.message, Toast.LENGTH_SHORT).show()
 
     Column(
         modifier = Modifier
@@ -195,8 +196,8 @@ private fun ReferentialEqualitySample() {
                 .fillMaxWidth()
                 .padding(vertical = 4.dp),
             onClick = {
-                oneTimeEventData =
-                    oneTimeEventData.copy(message = "referentialEqualityPolicy message")
+                someEventData =
+                    someEventData.copy(message = "referentialEqualityPolicy message")
 
             }
         ) {
@@ -208,10 +209,126 @@ private fun ReferentialEqualitySample() {
                 .border(2.dp, getRandomColor())
                 .fillMaxWidth()
                 .padding(10.dp),
-            text = oneTimeEventData.message,
+            text = someEventData.message,
             fontSize = 16.sp
         )
     }
 }
 
-private data class OneTimeEventData(val message: String)
+private data class SomeEventData(val message: String)
+
+
+@Preview
+@Composable
+fun ForceRecpompositionSample() {
+    Column {
+        ComposableWithDefaultPolicy()
+        ComposableWithReferentialEqualityPolicy()
+        Composable1()
+        Composable2()
+    }
+}
+
+@Composable
+fun ComposableWithDefaultPolicy() {
+    var myCounter by remember {
+        mutableStateOf(MyCounter(0))
+    }
+
+    Column(
+        modifier = Modifier.border(2.dp, getRandomColor()).fillMaxWidth().padding(8.dp)
+    ) {
+        Button(
+            onClick = {
+                myCounter = myCounter.copy(value = 5)
+            }
+        ) {
+            Text("Update MyCounter")
+
+        }
+        Text("Value: ${myCounter.value}")
+    }
+}
+
+@Composable
+fun ComposableWithReferentialEqualityPolicy() {
+    var myCounter by remember {
+        mutableStateOf(
+            value = MyCounter(0),
+            policy = referentialEqualityPolicy()
+        )
+    }
+
+    Column(
+        modifier = Modifier.border(2.dp, getRandomColor()).fillMaxWidth().padding(8.dp)
+    ) {
+        Button(
+            onClick = {
+                myCounter = myCounter.copy(value = 5)
+            }
+        ) {
+            Text("Update MyCounter")
+
+        }
+        Text("Value: ${myCounter.value}")
+    }
+}
+
+@Composable
+fun Composable1() {
+    var myCounter by remember {
+        mutableStateOf(MyCounter(0))
+    }
+
+    Column(
+        modifier = Modifier.border(2.dp, getRandomColor()).fillMaxWidth().padding(8.dp)
+    ) {
+
+        Button(
+            onClick = {
+                val innerCounter = myCounter.innerCounter
+                val newValue = innerCounter.value + 1
+                innerCounter.value = newValue
+                myCounter = myCounter.copy(innerCounter = innerCounter)
+            }
+        ) {
+            Text("Update MyCounter")
+
+        }
+        Text("Value: ${myCounter.value}")
+    }
+}
+
+@Composable
+fun Composable2() {
+    var myCounter by remember {
+        mutableStateOf(
+            value = MyCounter(0)
+        )
+    }
+
+    Column(
+        modifier = Modifier.border(2.dp, getRandomColor()).fillMaxWidth().padding(8.dp)
+    ) {
+        Button(
+            onClick = {
+                val innerCounter = myCounter.innerCounter
+                val newValue = innerCounter.value + 1
+                // 🔥 need to change params of myCounter to trigger recomposition
+                myCounter =
+                    myCounter.copy(innerCounter = myCounter.innerCounter.copy(value = newValue))
+            }
+        ) {
+            Text("Update MyCounter")
+
+        }
+        Text("Value: ${myCounter.value}")
+    }
+}
+
+data class MyCounter(
+    val value: Int,
+    val innerCounter: InnerCounter = InnerCounter()
+)
+
+data class InnerCounter(var value: Int = 0)
