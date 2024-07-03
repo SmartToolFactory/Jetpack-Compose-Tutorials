@@ -90,7 +90,7 @@ private fun ComposeScopeSample() {
     }
 
     val stableData by remember {
-        mutableStateOf(StableDataClas(0))
+        mutableStateOf(StableDataClass(0))
     }
 
     Column {
@@ -121,7 +121,7 @@ private fun ComposeScopeSample() {
 data class UnStableDataClass(var value: Int)
 
 // A class with all of its params immutable is Stable
-data class StableDataClas(val value: Int)
+data class StableDataClass(val value: Int)
 
 @Composable
 private fun UnstableComposable(data: UnStableDataClass) {
@@ -141,7 +141,7 @@ private fun UnstableComposable(data: UnStableDataClass) {
 }
 
 @Composable
-private fun StableComposable(data: StableDataClas) {
+private fun StableComposable(data: StableDataClass) {
     SideEffect {
         println("🍏 StableComposable")
     }
