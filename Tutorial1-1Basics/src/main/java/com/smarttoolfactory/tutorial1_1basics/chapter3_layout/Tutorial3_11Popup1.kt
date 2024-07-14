@@ -148,15 +148,11 @@ private fun PopUpSample() {
 
                                                 val tooltipWidth = size.width
                                                 val tooltipHeight = size.height
-                                                val tooltipLeft =
-                                                    popupContentRect.left.coerceAtMost(0)
-                                                val tooltipRight =
-                                                    popupContentRect.right.coerceAtMost(screenWidth)
+                                                val tooltipLeft = popupContentRect.left
+                                                val tooltipRight = popupContentRect.right
                                                 val tooltipCenterX = popupContentRect.center.x
 
-                                                val anchorLeft = rect.left
                                                 val anchorMid = rect.center.x
-                                                val anchorWidth = rect.width
 
                                                 val caretWidth = 24.dp.toPx()
                                                 val caretHeight = 16.dp.toPx()
@@ -167,21 +163,19 @@ private fun PopUpSample() {
                                                 caretX =
                                                         // Popup is positioned left but might overflow from left
                                                         // if clip is enabled
-                                                    if (popupContentRect.left <= 0) {
+                                                    if (tooltipLeft <= 0) {
                                                         anchorMid - caretHalfWidth
 
                                                         // pop is center of the screen neither touches right or left
                                                         // side of the screen
-                                                    } else if (popupContentRect.right <= screenWidth) {
+                                                    } else if (tooltipRight <= screenWidth) {
                                                         tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
 
                                                         // Popup is positioned right but might overflow from right
                                                         // if clip is enabled
                                                     } else {
-                                                        // FIXME Solve this equation to place caret correctly
-//                                                        val diff = contentRect.right - screenWidth
-//                                                        screenWidth - contentRect.left - diff - caretHalfWidth
-                                                        0f
+                                                        val diff = tooltipRight - screenWidth
+                                                        anchorMid - tooltipLeft + diff + -caretHalfWidth
                                                     }
 
                                                 path.apply {
@@ -233,7 +227,7 @@ private fun PopUpSample() {
                                         }
                                     }
                                     .padding(horizontal = 16.dp)
-                                    .fillMaxWidth()
+//                                    .fillMaxWidth()
                                     .border(2.dp, Color.Cyan)
                                     .padding(16.dp)
                             ) {
@@ -366,7 +360,7 @@ class AlignmentPopupPositionProvider(
                     "popupContentSize: $popupContentSize"
         )
 
-        // TODO Get statusBarHeight from user
+        // TODO Get statusBarHeight from Window insets
         val statusBarHeight = 150
         var verticalBias = (alignment as BiasAlignment).verticalBias
 
