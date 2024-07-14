@@ -1,8 +1,10 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,264 +13,298 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onPlaced
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.roundToIntRect
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 
 @Preview
 @Composable
 private fun PopupTest() {
-
-    val viewWidth = LocalView.current.width
-
-    var showPopup by remember {
-        mutableStateOf(false)
-    }
-
-    var anchorBounds by remember {
-        mutableStateOf(IntRect.Zero)
-    }
-
-    var popUpBounds by remember {
-        mutableStateOf(IntRect.Zero)
-    }
-
-    var popUpData by remember {
-        mutableStateOf(PopUpData.Zero)
-    }
-
-    val tipOffset = if (popUpBounds == IntRect.Zero) {
-        IntOffset.Zero
-    } else {
-        val popUpTopLeft = calculatePopUpPosition(
-            anchorBounds = anchorBounds,
-            layoutDirection = LocalLayoutDirection.current,
-            popupContentSize = popUpBounds.size
-        )
-
-        println("POP UP LEFT: $popUpTopLeft, popUpBounds: $popUpBounds")
-
-        // PopUp overflows from start
-        val xPos = if (popUpTopLeft.x < 0) {
-            popUpTopLeft.x + popUpBounds.width / 2 - popUpBounds.left
-            // PopUp overflows from end
-        } else if (popUpTopLeft.x + popUpBounds.width > viewWidth) {
-            val paddingEnd = (viewWidth - popUpTopLeft.x - popUpBounds.width)
-            val overFlowFromEnd = (popUpTopLeft.x + popUpBounds.width - viewWidth).coerceAtLeast(
-                0
-            )
-            println("Padding end: $paddingEnd, overFlowFromEnd: $overFlowFromEnd")
-            anchorBounds.center.x - popUpTopLeft.x + overFlowFromEnd
-        } else {
-            // PopUp is in bounds
-            anchorBounds.center.x - popUpTopLeft.x
-        }
-        IntOffset(xPos, popUpTopLeft.y)
-    }
-
-    var padding by remember {
-        mutableFloatStateOf(0f)
-    }
-
-    println(
-        "🔥 anchorBounds " +
-                "viewWidth: $viewWidth, " +
-                "center: ${anchorBounds.center.x}, " +
-                "popUpTopLeft.x: ${popUpBounds.bottomCenter.x}, " +
-                "tipOffset: $tipOffset"
-    )
-
     Column(
-        modifier = Modifier.fillMaxSize().background(backgroundColor)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
     ) {
+        PopUpSample()
+    }
+}
 
-        Slider(
-            value = padding,
-            onValueChange = {
-                padding = it
-            },
-            valueRange = 0f..350f
-        )
+@Preview
+@Composable
+private fun PopUpSample() {
+    Column(
+        modifier = Modifier.fillMaxWidth().border(2.dp, Color.Red)
+    ) {
+        val density = LocalDensity.current
 
-        Spacer(modifier = Modifier.height(50.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        val popupState = remember {
+            PopupState(
+                alignment = Alignment.TopCenter,
+                offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
+            )
+        }
+        var paddingStart by remember {
+            mutableFloatStateOf(200f)
+        }
+
+        var paddingTop by remember {
+            mutableStateOf(0f)
+        }
+
+        var showPopup by remember {
+            mutableStateOf(false)
+        }
+
+        Column(
+            modifier = Modifier.weight(1f)
         ) {
-
-            Text("Info")
-            Spacer(modifier = Modifier.width(padding.dp))
-
-            Box {
-
-                // This is content
-                AnchorContent(
-                    modifier = Modifier
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = {
-                                    showPopup = showPopup.not()
-                                }
-                            )
-                        }
-                        .onPlaced {
-                            anchorBounds = it.boundsInWindow().roundToIntRect()
-                        }
-                )
-
-                if (showPopup) {
-                    PopUpContent(
-                        modifier = Modifier
-                            .onPlaced {
-                                println("Before Padding onPlaced(): ${it.boundsInWindow()}, size: ${it.size}")
-                            }
-                            .border(2.dp, Color.Red)
-                            .padding(start = 40.dp)
-//                            .padding(start = 20.dp, end = 30.dp)
-                            .border(2.dp, Color.Blue)
-                            .onPlaced {
-
-                                popUpBounds = it.boundsInWindow().roundToIntRect()
-
-                                val parentBound =
-                                    it.parentCoordinates?.boundsInWindow()?.roundToIntRect()
-                                        ?: popUpBounds
-
-                                // This are padding values on each side of the popUp
-                                // This is difference between red and blue rectangle
-
-                                val topLeft = popUpBounds.topLeft.minus(parentBound.topLeft)
-                                val bottomRight =
-                                    parentBound.bottomRight.minus(popUpBounds.bottomRight)
-
-                                val paddingValues = PopUpPaddingValues(
-                                    start = topLeft.x,
-                                    top = topLeft.y,
-                                    end = bottomRight.x,
-                                    bottom = bottomRight.y
-                                )
-
-                                popUpData = PopUpData(
-                                    bounds = popUpBounds,
-                                    paddingValues = paddingValues
-                                )
-                                println(
-                                    "After Padding onPlaced(): ${it.boundsInWindow()}, " +
-                                            "size: ${it.size}\n" +
-                                            "parentBound: $parentBound, " +
-                                            "parent size: ${parentBound.size}, " +
-                                            "paddingValues: $paddingValues"
-                                )
+            Spacer(modifier = Modifier.height(paddingTop.dp))
 
 
-                            },
-                        offset = IntOffset(0, popUpBounds.height),
-                        tipOffset = tipOffset,
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Spacer(modifier = Modifier.width(paddingStart.dp))
+
+                Box {
+                    PopUpBox(
                         onDismissRequest = {
                             showPopup = false
+                        },
+                        isVisible = showPopup,
+                        popupPositionProvider = AlignmentPopupPositionProvider(
+//                            alignment = Alignment.TopStart,
+                            offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
+                            popupState = popupState
+                        ),
+//                        popupPositionProvider = rememberPlainTooltipPositionProvider(
+//                            spacingBetweenTooltipAndAnchor = 16.dp
+//                        ),
+//                        popupPositionProvider = ToolTipPositionProvider(
+//                            alignment = Alignment.TopStart,
+//                            offset = IntOffset(0, yOffset)
+//                        ),
+                        anchor = {
+                            AnchorContent(
+                                modifier = Modifier
+                                    .border(2.dp, Color.Blue)
+                                    .size(60.dp)
+                                    .clickable {
+                                        showPopup = showPopup.not()
+                                        println("CLICKED showPopup: $showPopup")
+                                    }
+                            )
+                        },
+                        content = { anchorLayoutCoordinates: LayoutCoordinates? ->
+                            Box(
+                                modifier = Modifier
+                                    .drawWithCache {
+
+                                        val path = Path()
+
+                                        var caretX = 0f
+                                        anchorLayoutCoordinates?.boundsInWindow()
+                                            ?.let { rect: Rect ->
+
+                                                val contentRect = popupState.contentRect
+                                                val screenWidth = popupState.windowSize.width
+
+                                                val tooltipWidth = size.width
+                                                val tooltipHeight = size.height
+                                                val tooltipLeft = contentRect.left.coerceAtMost(0)
+                                                val tooltipRight =
+                                                    contentRect.right.coerceAtMost(screenWidth)
+                                                val tooltipCenterX = contentRect.center.x
+
+                                                val anchorLeft = rect.left
+                                                val anchorMid = rect.center.x
+                                                val anchorWidth = rect.width
+
+                                                val caretWidth = 24.dp.toPx()
+                                                val caretHeight = 16.dp.toPx()
+
+                                                val caretHalfWidth = caretWidth / 2
+                                                val popupAlignment = popupState.dynamicAlignment
+
+
+                                                caretX =
+                                                        // Popup is positioned left but should overflow from left
+                                                        // if clip is enabled
+                                                    if (contentRect.left <= 0) {
+                                                        anchorMid - caretHalfWidth
+
+                                                        // pop is center of the screen neither touches right or left
+                                                        // side of the screen
+                                                    } else if (contentRect.right <= screenWidth) {
+                                                        tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
+
+                                                        // Popup is positioned right but should overflow from right
+                                                        // if clip is enabled
+                                                    } else {
+                                                        // FIXME Solve this equation
+//                                                        val diff = contentRect.right - screenWidth
+//                                                        screenWidth - contentRect.left - diff - caretHalfWidth
+                                                        0f
+                                                    }
+
+                                                path.apply {
+                                                    println("DRAW with CACHE anchor rect: $rect, contentRect: $contentRect caretX: $caretX")
+
+                                                    if (popupAlignment.topAlignment()) {
+                                                        moveTo(caretX, tooltipHeight)
+                                                        lineTo(
+                                                            caretX + caretHalfWidth,
+                                                            tooltipHeight + caretHeight
+                                                        )
+
+                                                        lineTo(
+                                                            caretX + caretWidth,
+                                                            tooltipHeight
+                                                        )
+
+                                                    } else if (popupAlignment.bottomAlignment()) {
+                                                        moveTo(
+                                                            caretX,
+                                                            0f
+                                                        )
+                                                        lineTo(
+                                                            caretX + caretHalfWidth,
+                                                            -caretHeight
+                                                        )
+                                                        lineTo(
+                                                            caretX + caretWidth,
+                                                            0f
+                                                        )
+                                                    }
+                                                    close()
+                                                }
+                                            }
+
+                                        onDrawWithContent {
+                                            drawContent()
+                                            if (path.isEmpty.not()) {
+                                                drawPath(
+                                                    path = path,
+                                                    color = Color.Cyan
+                                                )
+                                            }
+
+                                            drawCircle(
+                                                color = Color.Red,
+                                                radius = 10f,
+                                                center = Offset(caretX, 0f)
+                                            )
+                                        }
+                                    }
+                                    .padding(horizontal = 16.dp)
+                                    .fillMaxWidth()
+                                    .border(2.dp, Color.Cyan)
+                                    .padding(16.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier,
+                                    text = "This is PopUp Content",
+                                    fontSize = 16.sp
+                                )
+                            }
                         }
                     )
                 }
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(Color.Gray)
-        )
 
+        Column {
+
+            Text("paddingStart: ${paddingStart}.dp")
+            Slider(
+                value = paddingStart,
+                onValueChange = {
+                    paddingStart = it
+                },
+                valueRange = 0f..350f
+            )
+
+            Text("paddingTop: ${paddingTop}.dp")
+            Slider(
+                value = paddingTop,
+                onValueChange = {
+                    paddingTop = it
+                },
+                valueRange = 0f..650f
+            )
+        }
     }
 }
 
-data class PopUpData(
-    val bounds: IntRect,
-    val paddingValues: PopUpPaddingValues,
-) {
-    companion object {
-        val Zero = PopUpData(
-            bounds = IntRect.Zero,
-            paddingValues = PopUpPaddingValues()
-        )
-    }
-}
-
-data class PopUpPaddingValues(
-    val start: Int = 0,
-    val top: Int = 0,
-    val end: Int = 0,
-    val bottom: Int = 0,
-)
-
 @Composable
-private fun CustomPopUp(
-    modifier: Modifier = Modifier,
-    anchor: @Composable () -> Unit,
-    content: @Composable () -> Unit
-) {
-
-}
-
-@Composable
-private fun PopUpContent(
-    modifier: Modifier = Modifier,
-    offset: IntOffset = IntOffset.Zero,
-    tipOffset: IntOffset = IntOffset.Zero,
-    alignment: Alignment = Alignment.BottomCenter,
-    onDismissRequest: () -> Unit
+private fun PopUpBox(
+    isVisible: Boolean,
+    popupPositionProvider: PopupPositionProvider,
+    onDismissRequest: () -> Unit,
+    content: @Composable (LayoutCoordinates?) -> Unit,
+    anchor: @Composable () -> Unit
 
 ) {
-    Popup(
-        properties = PopupProperties(),
-        alignment = alignment,
-        offset = offset,
-        onDismissRequest = onDismissRequest
-    ) {
+    var anchorBounds: LayoutCoordinates? by remember { mutableStateOf(null) }
+
+    val wrappedAnchor: @Composable () -> Unit = {
         Box(
-            modifier = modifier
-                .drawWithContent {
-                    drawContent()
-
-                    drawCircle(
-                        radius = 10f,
-//                        center = Offset(center.x + tipOffset.x, 0f),
-                        center = Offset(tipOffset.x.toFloat(), 0f),
-                        color = Color.Green
-                    )
-                }
-                .background(Color.White)
-                .padding(8.dp)
+            modifier = Modifier.onGloballyPositioned { anchorBounds = it }
         ) {
-            Text("Pop up Content Some content")
+            anchor()
+        }
+    }
+
+    Box {
+        if (isVisible) {
+            Popup(
+                properties = PopupProperties(clippingEnabled = true),
+                popupPositionProvider = popupPositionProvider,
+                onDismissRequest = onDismissRequest
+            ) {
+                content(anchorBounds)
+            }
+        }
+
+        Box {
+            wrappedAnchor()
         }
     }
 }
@@ -277,7 +313,7 @@ private fun PopUpContent(
 private fun AnchorContent(
     modifier: Modifier
 ) {
-    // This is content
+    // This is anchor for Popup
     Icon(
         modifier = modifier,
         imageVector = Icons.Default.Info,
@@ -285,43 +321,116 @@ private fun AnchorContent(
     )
 }
 
-private fun calculatePopUpPosition(
-    alignment: Alignment = Alignment.BottomCenter,
-    offset: IntOffset = IntOffset.Zero,
-    anchorBounds: IntRect,
-    layoutDirection: LayoutDirection,
-    popupContentSize: IntSize
-): IntOffset {
-    var popupPosition = IntOffset(0, 0)
+class AlignmentPopupPositionProvider(
+    val offset: IntOffset,
+    val popupState: PopupState,
+) : PopupPositionProvider {
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize
+    ): IntOffset {
 
-    // Get the aligned point inside the parent
-    val parentAlignmentPoint = alignment.align(
-        IntSize.Zero,
-        IntSize(anchorBounds.width, anchorBounds.height),
-        layoutDirection
-    )
-    // Get the aligned point inside the child
-    val relativePopupPos = alignment.align(
-        IntSize.Zero,
-        IntSize(popupContentSize.width, popupContentSize.height),
-        layoutDirection
-    )
+        val alignment = popupState.alignment
 
-    // Add the position of the parent
-    popupPosition += IntOffset(anchorBounds.left, anchorBounds.top)
+        val anchorAlignmentPoint = alignment.align(
+            IntSize.Zero,
+            anchorBounds.size,
+            layoutDirection
+        )
 
-    // Add the distance between the parent's top left corner and the alignment point
-    popupPosition += parentAlignmentPoint
+        // Note the negative sign. Popup alignment point contributes negative offset.
+        val popupAlignmentPoint = -alignment.align(
+            IntSize.Zero,
+            popupContentSize,
+            layoutDirection
+        )
 
-    // Subtract the distance between the children's top left corner and the alignment point
-    popupPosition -= IntOffset(relativePopupPos.x, relativePopupPos.y)
+        val resolvedUserOffset = IntOffset(
+            offset.x * (if (layoutDirection == LayoutDirection.Ltr) 1 else -1),
+            offset.y
+        )
 
-    // Add the user offset
-    val resolvedOffset = IntOffset(
-        offset.x * (if (layoutDirection == LayoutDirection.Ltr) 1 else -1),
-        offset.y
-    )
-    popupPosition += resolvedOffset
+        var calculatedOffset = anchorBounds.topLeft +
+                anchorAlignmentPoint +
+                popupAlignmentPoint +
+                resolvedUserOffset
 
-    return popupPosition
+        println(
+            "😹 PopupPositionProvider " +
+                    "anchorAlignmentPoint: $anchorAlignmentPoint, " +
+                    "popupAlignmentPoint: ${-popupAlignmentPoint}, " +
+                    "resolvedUserOffset: ${-resolvedUserOffset}, " +
+                    "calculatedOffset: $calculatedOffset"
+        )
+
+        // TODO Get statusBarHeight from user
+        val statusBarHeight = 150
+        var verticalBias = (alignment as BiasAlignment).verticalBias
+
+        if (alignment.topAlignment()) {
+            var popupTop = anchorBounds.top - popupContentSize.height - resolvedUserOffset.y
+
+            if (popupTop < statusBarHeight) {
+                popupTop = anchorBounds.bottom + resolvedUserOffset.y
+                verticalBias = 1f
+            } else {
+                verticalBias = -1f
+            }
+            calculatedOffset = IntOffset(calculatedOffset.x, popupTop)
+
+        } else if (alignment.bottomAlignment()) {
+            var popupTop = anchorBounds.bottom + resolvedUserOffset.y
+
+            if (popupTop > windowSize.height - popupContentSize.height - resolvedUserOffset.y) {
+                popupTop = anchorBounds.top - resolvedUserOffset.y - popupContentSize.height
+                verticalBias = -1f
+            } else {
+                verticalBias = 1f
+            }
+
+            calculatedOffset = IntOffset(calculatedOffset.x, popupTop)
+        }
+
+        val popupAlignment = popupState.dynamicAlignment
+        (popupAlignment as? BiasAlignment)?.let {
+            popupState.dynamicAlignment = BiasAlignment(
+                horizontalBias = popupAlignment.horizontalBias,
+                verticalBias = verticalBias
+            )
+        }
+
+        popupState.contentRect = IntRect(
+            offset = calculatedOffset,
+            size = popupContentSize
+        )
+
+        popupState.windowSize = windowSize
+
+        println("FINAL Calculated offset: $calculatedOffset, contentSize: $popupContentSize, windowSize: $windowSize")
+        return calculatedOffset
+    }
+}
+
+fun Alignment.topAlignment() = this ==
+        Alignment.TopStart ||
+        this == Alignment.TopCenter ||
+        this == Alignment.TopEnd
+
+fun Alignment.bottomAlignment() = this ==
+        Alignment.BottomStart ||
+        this == Alignment.BottomCenter ||
+        this == Alignment.BottomEnd
+
+
+@Stable
+class PopupState(
+    val alignment: Alignment,
+    offset: IntOffset
+) {
+    var dynamicAlignment by mutableStateOf(alignment)
+    var offset by mutableStateOf(offset)
+    var contentRect by mutableStateOf(IntRect.Zero)
+    var windowSize by mutableStateOf(IntSize.Zero)
 }
