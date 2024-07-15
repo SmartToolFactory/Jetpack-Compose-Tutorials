@@ -56,13 +56,13 @@ private fun PopupTest() {
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        PopUpSample1()
+        PopUpSample()
     }
 }
 
 @Preview
 @Composable
-private fun PopUpSample1() {
+private fun PopUpSample() {
     Box(
         modifier = Modifier.fillMaxSize().border(2.dp, Color.Red)
     ) {
@@ -114,7 +114,7 @@ private fun PopupSample(modifier: Modifier = Modifier) {
 
         val popupState = remember {
             PopupState(
-                alignment = Alignment.BottomCenter,
+                alignment = Alignment.TopCenter,
                 offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
             )
         }
@@ -124,7 +124,6 @@ private fun PopupSample(modifier: Modifier = Modifier) {
 
             },
             popupPositionProvider = AlignmentPopupPositionProvider(
-//                            alignment = Alignment.TopStart,
                 offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
                 popupState = popupState
             ),
@@ -178,7 +177,21 @@ private fun PlainPopupContent(
     content: @Composable () -> Unit
 ) {
     Box(
-        Modifier.drawWithCache {
+        Modifier
+            .drawCaret(caretProperties, anchorLayoutCoordinates, popupState)
+            .then(modifier)
+    ) {
+        content()
+    }
+}
+
+private fun Modifier.drawCaret(
+    caretProperties: CaretProperties,
+    anchorLayoutCoordinates: LayoutCoordinates?,
+    popupState: PopupState
+) = this.then(
+    Modifier
+        .drawWithCache {
             val caretWidthPx = caretProperties.caretWidth.toPx()
             val caretHeightPx = caretProperties.caretHeight.toPx()
 
@@ -273,11 +286,8 @@ private fun PlainPopupContent(
                     )
                 }
             }
-        }.then(modifier)
-    ) {
-        content()
-    }
-}
+        }
+)
 
 @Composable
 private fun PopUpBox(
