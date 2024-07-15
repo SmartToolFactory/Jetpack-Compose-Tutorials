@@ -7,14 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -36,6 +31,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -59,189 +55,28 @@ private fun PopupTest() {
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        PopUpSample()
+        PopUpSample1()
     }
 }
 
 @Preview
 @Composable
-private fun PopUpSample() {
-    Column(
-        modifier = Modifier.fillMaxWidth().border(2.dp, Color.Red)
+private fun PopUpSample1() {
+    Box(
+        modifier = Modifier.fillMaxSize().border(2.dp, Color.Red)
     ) {
-        val density = LocalDensity.current
 
-
-        val popupState = remember {
-            PopupState(
-                alignment = Alignment.TopCenter,
-                offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
-            )
-        }
         var paddingStart by remember {
             mutableFloatStateOf(200f)
         }
 
         var paddingTop by remember {
-            mutableStateOf(0f)
-        }
-
-        var showPopup by remember {
-            mutableStateOf(false)
+            mutableFloatStateOf(0f)
         }
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.align(Alignment.BottomStart)
         ) {
-            Spacer(modifier = Modifier.height(paddingTop.dp))
-
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Spacer(modifier = Modifier.width(paddingStart.dp))
-
-                Box {
-                    PopUpBox(
-                        onDismissRequest = {
-                            showPopup = false
-                        },
-                        isVisible = showPopup,
-                        popupPositionProvider = AlignmentPopupPositionProvider(
-//                            alignment = Alignment.TopStart,
-                            offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
-                            popupState = popupState
-                        ),
-//                        popupPositionProvider = rememberPlainTooltipPositionProvider(
-//                            spacingBetweenTooltipAndAnchor = 16.dp
-//                        ),
-//                        popupPositionProvider = ToolTipPositionProvider(
-//                            alignment = Alignment.TopStart,
-//                            offset = IntOffset(0, yOffset)
-//                        ),
-                        anchor = {
-                            AnchorContent(
-                                modifier = Modifier
-                                    .border(2.dp, Color.Blue)
-                                    .size(60.dp)
-                                    .clickable {
-                                        showPopup = showPopup.not()
-                                        println("CLICKED showPopup: $showPopup")
-                                    }
-                            )
-                        },
-                        content = { anchorLayoutCoordinates: LayoutCoordinates? ->
-                            Box(
-                                modifier = Modifier
-                                    .drawWithCache {
-                                        val caretWidth = 24.dp.toPx()
-                                        val caretHeight = 16.dp.toPx()
-
-                                        val path = Path()
-
-                                        anchorLayoutCoordinates?.boundsInWindow()
-                                            ?.let { rect: Rect ->
-
-                                                val screenWidth = popupState.windowSize.width
-
-                                                val tooltipRect = popupState.contentRect
-                                                val tooltipWidth = size.width
-                                                val tooltipHeight = size.height
-                                                val tooltipLeft = tooltipRect.left
-                                                val tooltipRight = tooltipRect.right
-                                                val tooltipCenterX = tooltipRect.center.x
-
-                                                val anchorMid = rect.center.x
-
-                                                val caretHalfWidth = caretWidth / 2
-                                                val popupAlignment = popupState.popupAlignment
-
-                                                val caretX =
-                                                        // Popup is positioned left but might overflow from left
-                                                        // if clip is enabled
-                                                    if (tooltipLeft <= 0) {
-                                                        anchorMid - caretHalfWidth
-
-                                                        // pop is center of the screen neither touches right or left
-                                                        // side of the screen
-                                                    } else if (tooltipRight <= screenWidth) {
-                                                        tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
-
-                                                        // Popup is positioned right but might overflow from right
-                                                        // if clip is enabled
-                                                    } else {
-                                                        val diff = tooltipRight - screenWidth
-                                                        anchorMid - tooltipLeft + diff + -caretHalfWidth
-                                                    }
-
-                                                val caretY = if (popupAlignment.bottomAlignment) {
-                                                    0f
-                                                } else {
-                                                    tooltipHeight
-                                                }
-
-                                                path.apply {
-                                                    println("DRAW with CACHE anchor rect: $rect, popupContentRect: $tooltipRect caretX: $caretX")
-
-                                                    if (popupAlignment.bottomAlignment) {
-                                                        moveTo(
-                                                            caretX,
-                                                            caretY
-                                                        )
-                                                        lineTo(
-                                                            caretX + caretHalfWidth,
-                                                            -caretHeight
-                                                        )
-                                                        lineTo(
-                                                            caretX + caretWidth,
-                                                            caretY
-                                                        )
-                                                    } else if (popupAlignment.topAlignment) {
-                                                        moveTo(caretX, caretY)
-                                                        lineTo(
-                                                            caretX + caretHalfWidth,
-                                                            caretY + caretHeight
-                                                        )
-
-                                                        lineTo(
-                                                            caretX + caretWidth,
-                                                            caretY
-                                                        )
-                                                    }
-                                                    close()
-                                                }
-                                            }
-
-                                        onDrawWithContent {
-                                            drawContent()
-                                            if (path.isEmpty.not()) {
-                                                drawPath(
-                                                    path = path,
-                                                    color = Color.Cyan
-                                                )
-                                            }
-
-                                        }
-                                    }
-                                    .padding(horizontal = 16.dp)
-//                                    .fillMaxWidth()
-                                    .border(2.dp, Color.Cyan)
-                                    .padding(16.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier,
-                                    text = "This is PopUp Content",
-                                    fontSize = 16.sp
-                                )
-                            }
-                        }
-                    )
-                }
-            }
-        }
-
-        Column {
 
             Text("paddingStart: ${paddingStart}.dp")
             Slider(
@@ -258,15 +93,179 @@ private fun PopUpSample() {
                 onValueChange = {
                     paddingTop = it
                 },
-                valueRange = 0f..650f
+                valueRange = 0f..750f
             )
         }
+
+        PopupSample(
+            modifier = Modifier.padding(
+                start = paddingStart.dp,
+                top = paddingTop.dp
+            )
+        )
+    }
+}
+
+@Composable
+private fun PopupSample(modifier: Modifier = Modifier) {
+    Box(modifier) {
+
+        var showPopup by remember {
+            mutableStateOf(false)
+        }
+
+        val density = LocalDensity.current
+
+
+        val popupState = remember {
+            PopupState(
+                alignment = Alignment.BottomCenter,
+                offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
+            )
+        }
+
+        PopUpBox(
+            onDismissRequest = {
+                showPopup = false
+            },
+            isVisible = showPopup,
+            popupPositionProvider = AlignmentPopupPositionProvider(
+//                            alignment = Alignment.TopStart,
+                offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
+                popupState = popupState
+            ),
+            popupState = popupState,
+//                        popupPositionProvider = rememberPlainTooltipPositionProvider(
+//                            spacingBetweenTooltipAndAnchor = 16.dp
+//                        ),
+//                        popupPositionProvider = ToolTipPositionProvider(
+//                            alignment = Alignment.TopStart,
+//                            offset = IntOffset(0, yOffset)
+//                        ),
+            anchor = {
+                AnchorContent(
+                    modifier = Modifier
+                        .border(2.dp, Color.Blue)
+                        .clickable {
+                            showPopup = showPopup.not()
+                            println("CLICKED showPopup: $showPopup")
+                        }
+                )
+            },
+            content = { anchorLayoutCoordinates: LayoutCoordinates? ->
+                Box(
+                    modifier = Modifier
+                        .drawWithCache {
+                            val caretWidth = 24.dp.toPx()
+                            val caretHeight = 16.dp.toPx()
+
+                            val path = Path()
+
+                            anchorLayoutCoordinates?.boundsInWindow()
+                                ?.let { rect: Rect ->
+
+                                    val screenWidth = popupState.windowSize.width
+
+                                    val tooltipRect = popupState.contentRect
+                                    val tooltipWidth = size.width
+                                    val tooltipHeight = size.height
+                                    val tooltipLeft = tooltipRect.left
+                                    val tooltipRight = tooltipRect.right
+                                    val tooltipCenterX = tooltipRect.center.x
+
+                                    val anchorMid = rect.center.x
+
+                                    val caretHalfWidth = caretWidth / 2
+                                    val popupAlignment = popupState.popupAlignment
+
+                                    val caretX =
+                                    // Popup is positioned left but might overflow from left
+                                        // if clip is enabled
+                                        if (tooltipLeft <= 0) {
+                                            anchorMid - caretHalfWidth
+
+                                            // pop is center of the screen neither touches right or left
+                                            // side of the screen
+                                        } else if (tooltipRight <= screenWidth) {
+                                            tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
+
+                                            // Popup is positioned right but might overflow from right
+                                            // if clip is enabled
+                                        } else {
+                                            val diff = tooltipRight - screenWidth
+                                            anchorMid - tooltipLeft + diff + -caretHalfWidth
+                                        }
+
+                                    val caretY = if (popupAlignment.bottomAlignment) {
+                                        0f
+                                    } else {
+                                        tooltipHeight
+                                    }
+
+                                    path.apply {
+                                        println("DRAW with CACHE anchor rect: $rect, popupContentRect: $tooltipRect caretX: $caretX")
+
+                                        if (popupAlignment.bottomAlignment) {
+                                            moveTo(
+                                                caretX,
+                                                caretY
+                                            )
+                                            lineTo(
+                                                caretX + caretHalfWidth,
+                                                -caretHeight
+                                            )
+                                            lineTo(
+                                                caretX + caretWidth,
+                                                caretY
+                                            )
+                                        } else if (popupAlignment.topAlignment) {
+                                            moveTo(caretX, caretY)
+                                            lineTo(
+                                                caretX + caretHalfWidth,
+                                                caretY + caretHeight
+                                            )
+
+                                            lineTo(
+                                                caretX + caretWidth,
+                                                caretY
+                                            )
+                                        }
+                                        close()
+                                    }
+                                }
+
+                            onDrawWithContent {
+                                drawContent()
+                                if (path.isEmpty.not()) {
+                                    drawPath(
+                                        path = path,
+                                        color = Color.Cyan
+                                    )
+                                }
+
+                            }
+                        }
+                        .padding(horizontal = 16.dp)
+//                                    .fillMaxWidth()
+                        .border(2.dp, Color.Cyan)
+                        .background(Color.White, RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        modifier = Modifier,
+                        text = "This is PopUp Content",
+                        fontSize = 16.sp
+                    )
+                }
+            }
+        )
     }
 }
 
 @Composable
 private fun PopUpBox(
     isVisible: Boolean,
+    popupState: PopupState,
     popupPositionProvider: PopupPositionProvider,
     onDismissRequest: () -> Unit,
     content: @Composable (LayoutCoordinates?) -> Unit,
@@ -277,7 +276,12 @@ private fun PopUpBox(
 
     val wrappedAnchor: @Composable () -> Unit = {
         Box(
-            modifier = Modifier.onGloballyPositioned { anchorBounds = it }
+            modifier = Modifier.onGloballyPositioned {
+                anchorBounds = it
+                // Get statusBar height
+                popupState.statusBarHeight = it.boundsInWindow().top - it.boundsInRoot().top
+
+            }
         ) {
             anchor()
         }
@@ -325,6 +329,9 @@ class AlignmentPopupPositionProvider(
 
         val alignment = popupState.alignment
 
+        // Anchor bounds are boundsInWindow because of that even at (0,0) in root it's not 0 for y
+        // it returns y position + status bar
+
         val anchorAlignmentPoint = alignment.align(
             IntSize.Zero,
             anchorBounds.size,
@@ -358,7 +365,7 @@ class AlignmentPopupPositionProvider(
                     "popupContentSize: $popupContentSize"
         )
 
-        val statusBarHeight = popupState.statusBarHeight
+        val statusBarHeight = popupState.statusBarHeight.toInt()
         var verticalBias = (alignment as BiasAlignment).verticalBias
 
         if (alignment.topAlignment) {
@@ -381,8 +388,9 @@ class AlignmentPopupPositionProvider(
         } else if (alignment.bottomAlignment) {
             var popupTop = anchorBounds.bottom + resolvedUserOffset.y
 
-            if (popupTop > windowSize.height - popupContentSize.height - resolvedUserOffset.y) {
-                popupTop = anchorBounds.top - resolvedUserOffset.y - popupContentSize.height
+            if (popupTop - statusBarHeight > windowSize.height - popupContentSize.height) {
+                popupTop =
+                    anchorBounds.top - resolvedUserOffset.y - popupContentSize.height
                 verticalBias = -1f
             } else {
                 verticalBias = 1f
@@ -441,6 +449,5 @@ class PopupState(
     var contentRect by mutableStateOf(IntRect.Zero)
     var windowSize by mutableStateOf(IntSize.Zero)
 
-    // TODO Get statusBarHeight from Window insets
-    var statusBarHeight: Int = 150
+    var statusBarHeight: Float = 0f
 }
