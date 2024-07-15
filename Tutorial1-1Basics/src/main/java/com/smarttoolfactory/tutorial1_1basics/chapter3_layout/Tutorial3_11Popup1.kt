@@ -134,7 +134,6 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                 offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
                 popupState = popupState
             ),
-            popupState = popupState,
 //                        popupPositionProvider = rememberPlainTooltipPositionProvider(
 //                            spacingBetweenTooltipAndAnchor = 16.dp
 //                        ),
@@ -142,6 +141,7 @@ private fun PopupSample(modifier: Modifier = Modifier) {
 //                            alignment = Alignment.TopStart,
 //                            offset = IntOffset(0, yOffset)
 //                        ),
+            popupState = popupState,
             anchor = {
                 AnchorContent(
                     modifier = Modifier
