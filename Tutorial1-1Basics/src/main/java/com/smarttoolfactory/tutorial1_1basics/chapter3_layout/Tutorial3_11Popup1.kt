@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -109,10 +110,7 @@ private fun PopUpSample1() {
 @Composable
 private fun PopupSample(modifier: Modifier = Modifier) {
     Box(modifier) {
-
-
         val density = LocalDensity.current
-
 
         val popupState = remember {
             PopupState(
@@ -198,32 +196,40 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                                         tooltipHeight
                                     }
 
+                                    val position = Offset(caretX, caretY)
+
                                     path.apply {
-                                        println("DRAW with CACHE anchor rect: $rect, popupContentRect: $tooltipRect caretX: $caretX")
+                                        println(
+                                            "DRAW with CACHE anchor " +
+                                                    "rect: $rect, " +
+                                                    "popupContentRect:" +
+                                                    " $tooltipRect " +
+                                                    "position: $position"
+                                        )
 
                                         if (popupAlignment.bottomAlignment) {
                                             moveTo(
-                                                caretX,
-                                                caretY
+                                                position.x,
+                                                position.y
                                             )
                                             lineTo(
-                                                caretX + caretHalfWidth,
+                                                position.x + caretHalfWidth,
                                                 -caretHeight
                                             )
                                             lineTo(
-                                                caretX + caretWidth,
-                                                caretY
+                                                position.x + caretWidth,
+                                                position.y
                                             )
                                         } else if (popupAlignment.topAlignment) {
-                                            moveTo(caretX, caretY)
+                                            moveTo(position.x, position.y)
                                             lineTo(
-                                                caretX + caretHalfWidth,
-                                                caretY + caretHeight
+                                                position.x + caretHalfWidth,
+                                                position.y + caretHeight
                                             )
 
                                             lineTo(
-                                                caretX + caretWidth,
-                                                caretY
+                                                position.x + caretWidth,
+                                                position.y
                                             )
                                         }
                                         close()
