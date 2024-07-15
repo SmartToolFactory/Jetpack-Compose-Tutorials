@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,16 +17,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.CaretProperties
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.Slider
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults.rememberPlainTooltipPositionProvider
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +59,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import kotlinx.coroutines.launch
 
 
 @Preview
@@ -92,7 +104,7 @@ private fun PopupTest() {
                     }
                 }
             ) {
-                // This is content
+                // This is anchor
                 IconButton(
                     modifier = Modifier.border(1.dp, Color.Green),
                     onClick = {
@@ -232,18 +244,11 @@ fun ToolTip(
         (toolTipHalfWidth + (anchorCenterX - tooltipCenterX)).toDp() - 12.dp
     }
 
-//    println(
-//        "🥹 anchorCenterX: $anchorCenterX, " +
-//                "tooltipCenterX: $tooltipCenterX, " +
-//                "toolTipHalfWidth: $toolTipHalfWidth, " +
-//                "arrowTipOffset: $arrowTipOffset"
-//    )
 
     Box(
         modifier = Modifier
             .onPlaced {
                 anchorRect = it.boundsInWindow()
-//                println("1️⃣ anchor rect: $anchorRect, size: ${anchorRect.size}")
             }
     ) {
         anchor()
@@ -253,15 +258,10 @@ fun ToolTip(
                 modifier = modifier
                     .onGloballyPositioned {
                         toolTipContentRect = it.boundsInWindow()
-                        println("👻 toolTipContentRect rect: $toolTipContentRect, size: ${toolTipContentRect.size}")
-
                     }
-
-//                    .border(2.dp, Color.Blue)
-//                    .padding(horizontal = 16.dp)
                     .drawBubble(
                         arrowWidth = 24.dp,
-                        arrowHeight = 16.dp,
+                        arrowHeight = 24.dp,
                         arrowOffset = arrowTipOffset,
                         arrowDirection = ArrowDirection.Top,
                         elevation = 4.dp,
@@ -283,75 +283,6 @@ fun ToolTip(
 }
 
 @Composable
-fun ToolTip2(
-    showToolTip: Boolean,
-    modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit,
-    toolTipContent: @Composable () -> Unit,
-    anchor: @Composable () -> Unit,
-) {
-
-    var anchorRect by remember {
-        mutableStateOf(Rect.Zero)
-    }
-
-    var toolTipContentRect: Rect? by remember {
-        mutableStateOf(Rect.Zero)
-    }
-
-    SideEffect {
-        println("🔥anchorRect $anchorRect, toolTipContentRect: $toolTipContentRect")
-    }
-
-    Box(
-        modifier = Modifier.onPlaced {
-            anchorRect = it.boundsInWindow()
-        }
-    ) {
-        anchor()
-
-        val toolTipBox = @Composable {
-            Box(
-                modifier = modifier
-                    .onGloballyPositioned {
-                        toolTipContentRect = it.boundsInWindow()
-
-                    }
-                    .border(2.dp, Color.Blue)
-//                    .padding(horizontal = 16.dp)
-                    .drawBubble(
-                        arrowWidth = 24.dp,
-                        arrowHeight = 16.dp,
-                        arrowOffset = 10.dp,
-                        arrowDirection = ArrowDirection.Top,
-                        elevation = 2.dp,
-                        color = Color.Red
-                    )
-            ) {
-                toolTipContent()
-            }
-        }
-
-
-        ToolTipSubcomposeLayout(
-            mainContent = {
-                toolTipBox()
-            }
-        ) { contentSize: IntSize ->
-            if (showToolTip) {
-                println("INSIDE contentSize: $contentSize")
-                ToolTipPopUp(
-                    onDismissRequest = onDismissRequest,
-//                    rect = rect,
-                    toolTipContent = toolTipBox,
-                )
-            }
-        }
-    }
-}
-
-
-@Composable
 private fun ToolTipPopUp(
     rect: Rect = Rect.Zero,
     toolTipContent: @Composable () -> Unit,
@@ -361,9 +292,11 @@ private fun ToolTipPopUp(
     val offset = IntOffset(0, rect.height.toInt())
 
     Popup(
-//        popupPositionProvider = ToolTipPositionProvider(),
-//        offset = offset,
-//        alignment = Alignment.BottomCenter,
+        popupPositionProvider = ToolTipPositionProvider(
+            alignment = Alignment.BottomCenter,
+            offset = offset
+        ),
+
         onDismissRequest = onDismissRequest
     ) {
         Box(
@@ -430,47 +363,6 @@ class ToolTipPositionProvider(
     }
 }
 
-private fun calculatePopUpPosition(
-    alignment: Alignment,
-    offset: IntOffset,
-    anchorBounds: IntRect,
-    layoutDirection: LayoutDirection,
-    popupContentSize: IntSize
-): IntOffset {
-    var popupPosition = IntOffset(0, 0)
-
-    // Get the aligned point inside the parent
-    val parentAlignmentPoint = alignment.align(
-        IntSize.Zero,
-        IntSize(anchorBounds.width, anchorBounds.height),
-        layoutDirection
-    )
-    // Get the aligned point inside the child
-    val relativePopupPos = alignment.align(
-        IntSize.Zero,
-        IntSize(popupContentSize.width, popupContentSize.height),
-        layoutDirection
-    )
-
-    // Add the position of the parent
-    popupPosition += IntOffset(anchorBounds.left, anchorBounds.top)
-
-    // Add the distance between the parent's top left corner and the alignment point
-    popupPosition += parentAlignmentPoint
-
-    // Subtract the distance between the children's top left corner and the alignment point
-    popupPosition -= IntOffset(relativePopupPos.x, relativePopupPos.y)
-
-    // Add the user offset
-    val resolvedOffset = IntOffset(
-        offset.x * (if (layoutDirection == LayoutDirection.Ltr) 1 else -1),
-        offset.y
-    )
-    popupPosition += resolvedOffset
-
-    return popupPosition
-}
-
 @Composable
 private fun ToolTipSubcomposeLayout(
     modifier: Modifier = Modifier,
@@ -513,5 +405,87 @@ private fun ToolTipSubcomposeLayout(
                 it.placeRelative(0, 0)
             }
         }
+    }
+}
+
+// TODO There is a bug with Popup that clips content that exceed 16dp height
+// out of bounds. Increasing caret height causes it to be clipped
+@Preview
+@Composable
+fun TooltipBoxSample() {
+    var caretSize by remember {
+        mutableStateOf(16f)
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().border(2.dp, Color.Blue)
+    ) {
+
+
+        val state = rememberTooltipState(
+            isPersistent = true
+        )
+        val coroutineScope = rememberCoroutineScope()
+
+        Spacer(modifier = Modifier.height(120.dp))
+
+        Row(
+            modifier = Modifier.weight(1f)
+        ) {
+            Spacer(modifier = Modifier.width(100.dp))
+
+            TooltipBox(
+                positionProvider = rememberPlainTooltipPositionProvider(
+                    spacingBetweenTooltipAndAnchor = caretSize.dp
+                ),
+                state = state,
+                tooltip = {
+
+                    PlainTooltip(
+                        caretProperties = CaretProperties(
+                            caretWidth = caretSize.dp,
+                            caretHeight = caretSize.dp
+                        ),
+//                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = Color.Red
+                    ) {
+                        Text(
+                            text = "Tooltip Content for testing...",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+
+                },
+                content = {
+                    Icon(
+                        modifier = Modifier
+                            .clickable {
+                                if (state.isVisible) {
+                                    state.dismiss()
+                                } else {
+                                    coroutineScope.launch {
+                                        state.show()
+                                    }
+                                }
+                            },
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                }
+            )
+        }
+
+
+        Text("Caret width: ${caretSize}dp", fontSize = 18.sp)
+
+        Slider(
+            value = caretSize,
+            onValueChange = {
+                caretSize = it
+            },
+            valueRange = 0f..100f
+        )
+
     }
 }
