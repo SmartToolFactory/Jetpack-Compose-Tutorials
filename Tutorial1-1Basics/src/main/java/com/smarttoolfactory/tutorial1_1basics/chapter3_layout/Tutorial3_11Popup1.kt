@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -136,31 +135,29 @@ private fun PopUpSample() {
                             Box(
                                 modifier = Modifier
                                     .drawWithCache {
+                                        val caretWidth = 24.dp.toPx()
+                                        val caretHeight = 16.dp.toPx()
 
                                         val path = Path()
 
-                                        var caretX = 0f
                                         anchorLayoutCoordinates?.boundsInWindow()
                                             ?.let { rect: Rect ->
 
-                                                val popupContentRect = popupState.contentRect
                                                 val screenWidth = popupState.windowSize.width
 
+                                                val tooltipRect = popupState.contentRect
                                                 val tooltipWidth = size.width
                                                 val tooltipHeight = size.height
-                                                val tooltipLeft = popupContentRect.left
-                                                val tooltipRight = popupContentRect.right
-                                                val tooltipCenterX = popupContentRect.center.x
+                                                val tooltipLeft = tooltipRect.left
+                                                val tooltipRight = tooltipRect.right
+                                                val tooltipCenterX = tooltipRect.center.x
 
                                                 val anchorMid = rect.center.x
 
-                                                val caretWidth = 24.dp.toPx()
-                                                val caretHeight = 16.dp.toPx()
-
                                                 val caretHalfWidth = caretWidth / 2
-                                                val caretAlignment = popupState.caretAlignment
+                                                val popupAlignment = popupState.popupAlignment
 
-                                                caretX =
+                                                val caretX =
                                                         // Popup is positioned left but might overflow from left
                                                         // if clip is enabled
                                                     if (tooltipLeft <= 0) {
@@ -178,13 +175,19 @@ private fun PopUpSample() {
                                                         anchorMid - tooltipLeft + diff + -caretHalfWidth
                                                     }
 
-                                                path.apply {
-                                                    println("DRAW with CACHE anchor rect: $rect, popupContentRect: $popupContentRect caretX: $caretX")
+                                                val caretY = if (popupAlignment.bottomAlignment) {
+                                                    0f
+                                                } else {
+                                                    tooltipHeight
+                                                }
 
-                                                    if (caretAlignment.topAlignment()) {
+                                                path.apply {
+                                                    println("DRAW with CACHE anchor rect: $rect, popupContentRect: $tooltipRect caretX: $caretX")
+
+                                                    if (popupAlignment.bottomAlignment) {
                                                         moveTo(
                                                             caretX,
-                                                            0f
+                                                            caretY
                                                         )
                                                         lineTo(
                                                             caretX + caretHalfWidth,
@@ -192,18 +195,18 @@ private fun PopUpSample() {
                                                         )
                                                         lineTo(
                                                             caretX + caretWidth,
-                                                            0f
+                                                            caretY
                                                         )
-                                                    } else if (caretAlignment.bottomAlignment()) {
-                                                        moveTo(caretX, tooltipHeight)
+                                                    } else if (popupAlignment.topAlignment) {
+                                                        moveTo(caretX, caretY)
                                                         lineTo(
                                                             caretX + caretHalfWidth,
-                                                            tooltipHeight + caretHeight
+                                                            caretY + caretHeight
                                                         )
 
                                                         lineTo(
                                                             caretX + caretWidth,
-                                                            tooltipHeight
+                                                            caretY
                                                         )
                                                     }
                                                     close()
@@ -219,11 +222,6 @@ private fun PopUpSample() {
                                                 )
                                             }
 
-                                            drawCircle(
-                                                color = Color.Red,
-                                                radius = 10f,
-                                                center = Offset(caretX, 0f)
-                                            )
                                         }
                                     }
                                     .padding(horizontal = 16.dp)
@@ -360,37 +358,42 @@ class AlignmentPopupPositionProvider(
                     "popupContentSize: $popupContentSize"
         )
 
-        // TODO Get statusBarHeight from Window insets
-        val statusBarHeight = 150
+        val statusBarHeight = popupState.statusBarHeight
         var verticalBias = (alignment as BiasAlignment).verticalBias
 
-        if (alignment.topAlignment()) {
+        if (alignment.topAlignment) {
+
             var popupTop = anchorBounds.top - popupContentSize.height - resolvedUserOffset.y
 
+            // Popup is set on top but Popup collides with statusBar or doesn't have
+            // enough space on top
             if (popupTop < statusBarHeight) {
+                // new position is below anchor point after caret position
                 popupTop = anchorBounds.bottom + resolvedUserOffset.y
-                verticalBias = -1f
-            } else {
+                // Caret alignment to bottom because Popup is below anchor
                 verticalBias = 1f
+            } else {
+                // Caret alignment to top because Popup is above anchor
+                verticalBias = -1f
             }
             calculatedOffset = IntOffset(calculatedOffset.x, popupTop)
 
-        } else if (alignment.bottomAlignment()) {
+        } else if (alignment.bottomAlignment) {
             var popupTop = anchorBounds.bottom + resolvedUserOffset.y
 
             if (popupTop > windowSize.height - popupContentSize.height - resolvedUserOffset.y) {
                 popupTop = anchorBounds.top - resolvedUserOffset.y - popupContentSize.height
-                verticalBias = 1f
-            } else {
                 verticalBias = -1f
+            } else {
+                verticalBias = 1f
             }
 
             calculatedOffset = IntOffset(calculatedOffset.x, popupTop)
         }
 
-        val popupAlignment = popupState.caretAlignment
+        val popupAlignment = popupState.popupAlignment
         (popupAlignment as? BiasAlignment)?.let {
-            popupState.caretAlignment = BiasAlignment(
+            popupState.popupAlignment = BiasAlignment(
                 horizontalBias = popupAlignment.horizontalBias,
                 verticalBias = verticalBias
             )
@@ -412,15 +415,18 @@ class AlignmentPopupPositionProvider(
     }
 }
 
-fun Alignment.topAlignment() = this ==
-        Alignment.TopStart ||
-        this == Alignment.TopCenter ||
-        this == Alignment.TopEnd
+val Alignment.topAlignment: Boolean
+    get() = this ==
+            Alignment.TopStart ||
+            this == Alignment.TopCenter ||
+            this == Alignment.TopEnd
 
-fun Alignment.bottomAlignment() = this ==
-        Alignment.BottomStart ||
-        this == Alignment.BottomCenter ||
-        this == Alignment.BottomEnd
+
+val Alignment.bottomAlignment: Boolean
+    get() = this ==
+            Alignment.BottomStart ||
+            this == Alignment.BottomCenter ||
+            this == Alignment.BottomEnd
 
 
 @Stable
@@ -428,10 +434,13 @@ class PopupState(
     val alignment: Alignment,
     offset: IntOffset
 ) {
-    var caretAlignment by mutableStateOf(alignment)
+    var popupAlignment by mutableStateOf(alignment)
         internal set
 
     var offset by mutableStateOf(offset)
     var contentRect by mutableStateOf(IntRect.Zero)
     var windowSize by mutableStateOf(IntSize.Zero)
+
+    // TODO Get statusBarHeight from Window insets
+    var statusBarHeight: Int = 150
 }
