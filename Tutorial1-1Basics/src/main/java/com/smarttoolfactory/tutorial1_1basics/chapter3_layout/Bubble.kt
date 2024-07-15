@@ -4,15 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
@@ -97,6 +94,7 @@ fun Modifier.drawBubble(
         .background(color, shape)
         .layout { measurable, constraints ->
 
+
             val isHorizontalArrow =
                 arrowDirection == ArrowDirection.Left || arrowDirection == ArrowDirection.Right
 
@@ -137,6 +135,12 @@ fun Modifier.drawBubble(
                 ArrowDirection.Top -> arrowHeightPx.toInt()
                 else -> 0
             }
+
+            println(
+                "BUBBLE constraints: $constraints, " +
+                        "width: ${placeable.width}, " +
+                        "height: ${placeable.height}, arrowOffset: $arrowOffset"
+            )
 
             layout(width, height) {
                 placeable.placeRelative(posX, posY)
