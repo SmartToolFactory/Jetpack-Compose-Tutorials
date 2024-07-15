@@ -110,9 +110,6 @@ private fun PopUpSample1() {
 private fun PopupSample(modifier: Modifier = Modifier) {
     Box(modifier) {
 
-        var showPopup by remember {
-            mutableStateOf(false)
-        }
 
         val density = LocalDensity.current
 
@@ -126,9 +123,8 @@ private fun PopupSample(modifier: Modifier = Modifier) {
 
         PopUpBox(
             onDismissRequest = {
-                showPopup = false
+
             },
-            isVisible = showPopup,
             popupPositionProvider = AlignmentPopupPositionProvider(
 //                            alignment = Alignment.TopStart,
                 offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
@@ -147,8 +143,8 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .border(2.dp, Color.Blue)
                         .clickable {
-                            showPopup = showPopup.not()
-                            println("CLICKED showPopup: $showPopup")
+                            popupState.show()
+
                         }
                 )
             },
@@ -264,13 +260,11 @@ private fun PopupSample(modifier: Modifier = Modifier) {
 
 @Composable
 private fun PopUpBox(
-    isVisible: Boolean,
     popupState: PopupState,
     popupPositionProvider: PopupPositionProvider,
-    onDismissRequest: () -> Unit,
+    onDismissRequest: () -> Unit = {},
     content: @Composable (LayoutCoordinates?) -> Unit,
     anchor: @Composable () -> Unit
-
 ) {
     var anchorBounds: LayoutCoordinates? by remember { mutableStateOf(null) }
 
@@ -288,11 +282,17 @@ private fun PopUpBox(
     }
 
     Box {
-        if (isVisible) {
+        if (popupState.visible) {
             Popup(
-                properties = PopupProperties(clippingEnabled = true),
+                properties = PopupProperties(
+                    // This makes sure other composables don't receive gestures
+                    focusable = true
+                ),
                 popupPositionProvider = popupPositionProvider,
-                onDismissRequest = onDismissRequest
+                onDismissRequest = {
+                    popupState.dismiss()
+                    onDismissRequest.invoke()
+                }
             ) {
                 content(anchorBounds)
             }
@@ -440,8 +440,13 @@ val Alignment.bottomAlignment: Boolean
 @Stable
 class PopupState(
     val alignment: Alignment,
-    offset: IntOffset
+    offset: IntOffset,
+    initialIsVisible: Boolean = false,
 ) {
+
+    var visible by mutableStateOf(initialIsVisible)
+        private set
+
     var popupAlignment by mutableStateOf(alignment)
         internal set
 
@@ -450,4 +455,12 @@ class PopupState(
     var windowSize by mutableStateOf(IntSize.Zero)
 
     var statusBarHeight: Float = 0f
+
+    fun show() {
+        visible = true
+    }
+
+    fun dismiss() {
+        visible = false
+    }
 }
