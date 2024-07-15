@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -37,6 +39,7 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -128,13 +131,6 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                 offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
                 popupState = popupState
             ),
-//                        popupPositionProvider = rememberPlainTooltipPositionProvider(
-//                            spacingBetweenTooltipAndAnchor = 16.dp
-//                        ),
-//                        popupPositionProvider = ToolTipPositionProvider(
-//                            alignment = Alignment.TopStart,
-//                            offset = IntOffset(0, yOffset)
-//                        ),
             popupState = popupState,
             anchor = {
                 AnchorContent(
@@ -147,112 +143,24 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                 )
             },
             content = { anchorLayoutCoordinates: LayoutCoordinates? ->
-                Box(
+                PlainPopupContent(
                     modifier = Modifier
-                        .drawWithCache {
-                            val caretWidth = 24.dp.toPx()
-                            val caretHeight = 16.dp.toPx()
-
-                            val path = Path()
-
-                            anchorLayoutCoordinates?.boundsInWindow()
-                                ?.let { rect: Rect ->
-
-                                    val screenWidth = popupState.windowSize.width
-
-                                    val tooltipRect = popupState.contentRect
-                                    val tooltipWidth = size.width
-                                    val tooltipHeight = size.height
-                                    val tooltipLeft = tooltipRect.left
-                                    val tooltipRight = tooltipRect.right
-                                    val tooltipCenterX = tooltipRect.center.x
-
-                                    val anchorMid = rect.center.x
-
-                                    val caretHalfWidth = caretWidth / 2
-                                    val popupAlignment = popupState.popupAlignment
-
-                                    val caretX =
-                                    // Popup is positioned left but might overflow from left
-                                        // if clip is enabled
-                                        if (tooltipLeft <= 0) {
-                                            anchorMid - caretHalfWidth
-
-                                            // pop is center of the screen neither touches right or left
-                                            // side of the screen
-                                        } else if (tooltipRight <= screenWidth) {
-                                            tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
-
-                                            // Popup is positioned right but might overflow from right
-                                            // if clip is enabled
-                                        } else {
-                                            val diff = tooltipRight - screenWidth
-                                            anchorMid - tooltipLeft + diff + -caretHalfWidth
-                                        }
-
-                                    val caretY = if (popupAlignment.bottomAlignment) {
-                                        0f
-                                    } else {
-                                        tooltipHeight
-                                    }
-
-                                    val position = Offset(caretX, caretY)
-
-                                    path.apply {
-                                        println(
-                                            "DRAW with CACHE anchor " +
-                                                    "rect: $rect, " +
-                                                    "popupContentRect:" +
-                                                    " $tooltipRect " +
-                                                    "position: $position"
-                                        )
-
-                                        if (popupAlignment.bottomAlignment) {
-                                            moveTo(
-                                                position.x,
-                                                position.y
-                                            )
-                                            lineTo(
-                                                position.x + caretHalfWidth,
-                                                -caretHeight
-                                            )
-                                            lineTo(
-                                                position.x + caretWidth,
-                                                position.y
-                                            )
-                                        } else if (popupAlignment.topAlignment) {
-                                            moveTo(position.x, position.y)
-                                            lineTo(
-                                                position.x + caretHalfWidth,
-                                                position.y + caretHeight
-                                            )
-
-                                            lineTo(
-                                                position.x + caretWidth,
-                                                position.y
-                                            )
-                                        }
-                                        close()
-                                    }
-                                }
-
-                            onDrawWithContent {
-                                drawContent()
-                                if (path.isEmpty.not()) {
-                                    drawPath(
-                                        path = path,
-                                        color = Color.Cyan
-                                    )
-                                }
-
-                            }
-                        }
                         .padding(horizontal = 16.dp)
-//                                    .fillMaxWidth()
+                        .fillMaxWidth()
                         .border(2.dp, Color.Cyan)
                         .background(Color.White, RoundedCornerShape(16.dp))
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    anchorLayoutCoordinates = anchorLayoutCoordinates,
+                    popupState = popupState,
+                    caretProperties = CaretProperties(
+                        caretWidth = 24.dp,
+                        caretHeight = 16.dp
+                    ),
                 ) {
+
+                    SideEffect {
+                        println("😵‍💫CONTENT RECOMPOSING...")
+                    }
                     Text(
                         modifier = Modifier,
                         text = "This is PopUp Content",
@@ -261,6 +169,116 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun PlainPopupContent(
+    modifier: Modifier = Modifier,
+    popupState: PopupState,
+    caretProperties: CaretProperties,
+    anchorLayoutCoordinates: LayoutCoordinates?,
+    content: @Composable () -> Unit
+) {
+    Box(
+        Modifier.drawWithCache {
+            val caretWidthPx = caretProperties.caretWidth.toPx()
+            val caretHeightPx = caretProperties.caretHeight.toPx()
+
+            val path = Path()
+
+            anchorLayoutCoordinates?.boundsInWindow()
+                ?.let { rect: Rect ->
+
+                    val screenWidth = popupState.windowSize.width
+                    val popupAlignment = popupState.popupAlignment
+                    val tooltipRect = popupState.contentRect
+
+                    val tooltipWidth = size.width
+                    val tooltipHeight = size.height
+                    val tooltipLeft = tooltipRect.left
+                    val tooltipRight = tooltipRect.right
+                    val tooltipCenterX = tooltipRect.center.x
+
+                    val anchorMid = rect.center.x
+
+                    val caretHalfWidth = caretWidthPx / 2
+
+                    val caretX =
+                    // Popup is positioned left but might overflow from left
+                        // if clip is enabled
+                        if (tooltipLeft <= 0) {
+                            anchorMid - caretHalfWidth
+
+                            // pop is center of the screen neither touches right or left
+                            // side of the screen
+                        } else if (tooltipRight <= screenWidth) {
+                            tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
+
+                            // Popup is positioned right but might overflow from right
+                            // if clip is enabled
+                        } else {
+                            val diff = tooltipRight - screenWidth
+                            anchorMid - tooltipLeft + diff + -caretHalfWidth
+                        }
+
+                    val caretY = if (popupAlignment.bottomAlignment) {
+                        0f
+                    } else {
+                        tooltipHeight
+                    }
+
+                    val position = Offset(caretX, caretY)
+
+                    path.apply {
+                        println(
+                            "DRAW with CACHE anchor " +
+                                    "rect: $rect, " +
+                                    "popupContentRect:$tooltipRect, " +
+                                    "carePosition: $position"
+                        )
+
+                        if (popupAlignment.bottomAlignment) {
+                            moveTo(
+                                position.x,
+                                position.y
+                            )
+                            lineTo(
+                                position.x + caretHalfWidth,
+                                -caretHeightPx
+                            )
+                            lineTo(
+                                position.x + caretWidthPx,
+                                position.y
+                            )
+                        } else if (popupAlignment.topAlignment) {
+                            moveTo(position.x, position.y)
+                            lineTo(
+                                position.x + caretHalfWidth,
+                                position.y + caretHeightPx
+                            )
+
+                            lineTo(
+                                position.x + caretWidthPx,
+                                position.y
+                            )
+                        }
+                        close()
+                    }
+                }
+
+            onDrawWithContent {
+                drawContent()
+                if (path.isEmpty.not()) {
+                    drawPath(
+                        path = path,
+                        color = Color.Cyan
+                    )
+                }
+            }
+        }.then(modifier)
+    ) {
+        content()
     }
 }
 
@@ -309,6 +327,12 @@ private fun PopUpBox(
         }
     }
 }
+
+@Stable
+data class CaretProperties(
+    val caretHeight: Dp,
+    val caretWidth: Dp
+)
 
 @Composable
 private fun AnchorContent(
@@ -423,7 +447,9 @@ class AlignmentPopupPositionProvider(
         println(
             "FINAL Calculated offset: $calculatedOffset, " +
                     "popupContentSize: $popupContentSize, " +
-                    "windowSize: $windowSize"
+                    "windowSize: $windowSize, " +
+                    "topAlignment: ${popupState.popupAlignment.topAlignment}, " +
+                    "bottomAlignment: ${popupState.popupAlignment.bottomAlignment}"
         )
         return calculatedOffset
     }
