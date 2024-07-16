@@ -137,7 +137,7 @@ fun Modifier.drawBubble(
             }
 
             println(
-                "BUBBLE constraints: $constraints, " +
+                "🔥BUBBLE constraints: $constraints, " +
                         "width: ${placeable.width}, " +
                         "height: ${placeable.height}, arrowOffset: $arrowOffset"
             )

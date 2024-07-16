@@ -34,14 +34,17 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 
+// TODO Create a sample with SeekableTransitionState too
 
 @Preview
 @Composable
 fun AnimatedVisibilityTransitionSample() {
     val visibleState = remember { MutableTransitionState(false) }
+    val transition = rememberTransition(visibleState)
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -51,33 +54,35 @@ fun AnimatedVisibilityTransitionSample() {
                 visibleState.targetState = visibleState.targetState.not()
             }
         ) {
-
-            Text(
-                "State currentState: ${visibleState.currentState}\n" +
-                        "targetState: ${visibleState.targetState}\n" +
-                        "isIdle:  ${visibleState.isIdle}"
-            )
+            Text("Update Target State")
         }
 
-        if (visibleState.targetState || visibleState.currentState) {
+        Text(
+            "State currentState: ${visibleState.currentState}\n" +
+                    "targetState: ${visibleState.targetState}\n" +
+                    "isIdle:  ${visibleState.isIdle}",
+            fontSize = 16.sp
+        )
+
+        if (transition.targetState || transition.currentState) {
             Popup(
                 properties = PopupProperties(focusable = true),
-                offset = IntOffset(200, 1000),
+                offset = IntOffset(200, 400),
                 onDismissRequest = {
                     visibleState.targetState = false
                 }
             ) {
-                AnimatedVisibility(
-                    visibleState = visibleState,
+                transition.AnimatedVisibility(
+                    visible = { targetSelected -> targetSelected },
                     enter = fadeIn(
-                        animationSpec = tween(2000)
+                        animationSpec = tween(600)
                     ),
                     exit = fadeOut(
-                        animationSpec = tween(2000)
+                        animationSpec = tween(600)
                     )
                 ) {
                     Box(modifier = Modifier.background(Color.Red).padding(16.dp)) {
-                        Text("Test Composable...")
+                        Text("Popup Content...")
                     }
                 }
             }
