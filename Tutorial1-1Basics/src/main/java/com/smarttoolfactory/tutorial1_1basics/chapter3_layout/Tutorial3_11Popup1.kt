@@ -114,8 +114,7 @@ private fun PopupSample(modifier: Modifier = Modifier) {
 
         val popupState = remember {
             PopupState(
-                alignment = Alignment.TopCenter,
-                offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
+                alignment = Alignment.TopCenter
             )
         }
 
@@ -354,8 +353,8 @@ private fun AnchorContent(
 }
 
 class AlignmentPopupPositionProvider(
-    val offset: IntOffset,
     val popupState: PopupState,
+    val offset: IntOffset = IntOffset.Zero,
 ) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
@@ -479,7 +478,6 @@ val Alignment.bottomAlignment: Boolean
 @Stable
 class PopupState(
     val alignment: Alignment,
-    offset: IntOffset,
     initialIsVisible: Boolean = false,
 ) {
 
@@ -489,7 +487,6 @@ class PopupState(
     var popupAlignment by mutableStateOf(alignment)
         internal set
 
-    var offset by mutableStateOf(offset)
     var contentRect by mutableStateOf(IntRect.Zero)
     var windowSize by mutableStateOf(IntSize.Zero)
 
