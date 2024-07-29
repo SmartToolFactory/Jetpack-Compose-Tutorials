@@ -210,6 +210,9 @@ private fun Modifier.drawCaret(
                     val tooltipCenterX = tooltipRect.center.x
 
                     val anchorMid = rect.center.x
+                    val anchorLeft = rect.left
+                    val anchorRight = rect.right
+                    val anchorWidth = anchorRight - anchorLeft
 
                     val caretHalfWidth = caretWidthPx / 2
 
@@ -237,14 +240,30 @@ private fun Modifier.drawCaret(
                         tooltipHeight
                     }
 
+
                     val position = Offset(caretX, caretY)
+
+                    val positionFromDefaultCalculation =
+                        if (anchorMid + tooltipWidth / 2 > screenWidth) {
+                            val anchorMidFromRightScreenEdge =
+                                screenWidth - anchorMid
+                            val caretX = tooltipWidth - anchorMidFromRightScreenEdge
+                            Offset(caretX - caretHalfWidth, caretY)
+                        } else {
+                            val tooltipLeft =
+                                anchorLeft - (this.size.width / 2 - anchorWidth / 2)
+                            val caretX = anchorMid - maxOf(tooltipLeft, 0f)
+                            Offset(caretX - caretHalfWidth, caretY)
+                        }
+
 
                     path.apply {
                         println(
                             "DRAW with CACHE anchor " +
                                     "rect: $rect, " +
                                     "popupContentRect:$tooltipRect, " +
-                                    "carePosition: $position"
+                                    "carePosition: $position, " +
+                                    "🔥 positionFromDefaultCalculation: $positionFromDefaultCalculation"
                         )
 
                         if (popupAlignment.bottomAlignment) {
