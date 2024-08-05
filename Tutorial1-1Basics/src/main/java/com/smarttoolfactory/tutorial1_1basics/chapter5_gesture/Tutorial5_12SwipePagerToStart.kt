@@ -6,15 +6,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,8 +80,6 @@ private fun PagerScrollSample() {
     var shouldScrollToFirstPage by remember {
         mutableStateOf(false)
     }
-
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(shouldScrollToFirstPage) {
         if (shouldScrollToFirstPage) {
@@ -284,6 +286,198 @@ private fun InfinitePagerSample() {
                     text = "Page ${items[it % 3]}",
                     fontSize = 28.sp
                 )
+            }
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun PagerScrollCancelBackwardScroll() {
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val pagerState = rememberPagerState {
+            25
+        }
+
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = "Current page: ${pagerState.currentPage}\n" +
+                    "settled Page: ${pagerState.settledPage}\n" +
+                    "target Page: ${pagerState.targetPage}\n" +
+                    "currentPageOffsetFraction: ${pagerState.currentPageOffsetFraction}\n" +
+                    "isScrollInProgress: ${pagerState.isScrollInProgress}\n" +
+                    "canScrollForward: ${pagerState.canScrollForward}\n" +
+                    "canScrollBackward: ${pagerState.canScrollBackward}\n" +
+                    "lastScrolledForward: ${pagerState.lastScrolledForward}\n" +
+                    "lastScrolledBackward: ${pagerState.lastScrolledBackward}\n",
+            fontSize = 18.sp
+        )
+
+        val scrollEnabled by remember {
+            derivedStateOf {
+                pagerState.currentPageOffsetFraction >= 0
+            }
+        }
+
+        HorizontalPager(
+            userScrollEnabled = scrollEnabled,
+            state = pagerState,
+            pageSpacing = 16.dp,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(Color.LightGray, RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Page $it",
+                    fontSize = 28.sp
+                )
+            }
+        }
+    }
+}
+
+
+// Cancel scroll in backwards
+@Preview
+@Composable
+fun PagerScrollCancelBackwardNoScrollEffect() {
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val pagerState = rememberPagerState {
+            20
+        }
+
+        HorizontalPager(
+            modifier = Modifier
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        awaitFirstDown(pass = PointerEventPass.Initial)
+
+                        do {
+                            val event: PointerEvent = awaitPointerEvent(
+                                pass = PointerEventPass.Initial
+                            )
+
+                            event.changes.forEach {
+                                val diffX = it.position.x - it.previousPosition.x
+
+                                if (diffX > 0) {
+                                    it.consume()
+                                }
+                            }
+
+                        } while (event.changes.any { it.pressed })
+                    }
+                },
+            state = pagerState,
+            pageSpacing = 16.dp,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.LightGray, RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Page $it",
+                    fontSize = 28.sp
+                )
+            }
+        }
+    }
+}
+
+// Cancel scroll in backwards
+@Preview
+@Composable
+fun PagerScrollCancelBackwardScrollableContent() {
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val pagerState = rememberPagerState {
+            20
+        }
+
+        var userScrollEnabled by remember {
+            mutableStateOf(true)
+        }
+
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = "Current page: ${pagerState.currentPage}\n" +
+                    "settled Page: ${pagerState.settledPage}\n" +
+                    "target Page: ${pagerState.targetPage}\n" +
+                    "userScrollEnabled: ${userScrollEnabled}\n" +
+                    "currentPageOffsetFraction: ${pagerState.currentPageOffsetFraction}\n" +
+                    "isScrollInProgress: ${pagerState.isScrollInProgress}\n" +
+                    "canScrollForward: ${pagerState.canScrollForward}\n" +
+                    "canScrollBackward: ${pagerState.canScrollBackward}\n" +
+                    "lastScrolledForward: ${pagerState.lastScrolledForward}\n" +
+                    "lastScrolledBackward: ${pagerState.lastScrolledBackward}\n",
+            fontSize = 18.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        HorizontalPager(
+            userScrollEnabled = false,
+            modifier = Modifier
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        val down = awaitFirstDown(pass = PointerEventPass.Initial)
+
+                        do {
+                            val event: PointerEvent = awaitPointerEvent(
+                                pass = PointerEventPass.Initial
+                            )
+
+                            event.changes.forEach {
+
+                                val diffX = it.previousPosition.x - it.position.x
+                                val downPos = down.position.x
+
+                                println("Current: ${it.position.x}, Previous: ${it.previousPosition.x}, downPos: $downPos, diffX: $diffX")
+
+                                pagerState.dispatchRawDelta(diffX.coerceAtLeast(0f))
+
+                                val currentPageOffsetFraction = pagerState.currentPageOffsetFraction
+                                userScrollEnabled = !(diffX > 0 || currentPageOffsetFraction < 0)
+                            }
+
+                        } while (event.changes.any { it.pressed })
+                    }
+                },
+            state = pagerState,
+            pageSpacing = 16.dp,
+        ) { page ->
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(30)
+                {
+                    Text(
+                        modifier = Modifier
+                            .background(Color.Black)
+                            .fillMaxWidth().padding(16.dp),
+                        text = "Page $page, item: $it",
+                        fontSize = 28.sp,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
