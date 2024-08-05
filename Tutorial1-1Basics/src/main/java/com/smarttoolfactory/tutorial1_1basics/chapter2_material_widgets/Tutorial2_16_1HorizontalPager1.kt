@@ -20,7 +20,11 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,31 +52,34 @@ private fun TutorialContent() {
         TutorialHeader(text = "HorizontalPager")
 
         val pagerState = rememberPagerState {
-            5
+            10
         }
 
         // Check swipe event alternative 1
+        var userScrolled by remember {
+            mutableStateOf(false)
+        }
+        LaunchedEffect(pagerState.isScrollInProgress) {
+            if (pagerState.isScrollInProgress) {
+                userScrolled = true
+            }
+        }
+
         LaunchedEffect(pagerState) {
-            snapshotFlow { pagerState.currentPage }.collect {
-                if (pagerState.currentPage != pagerState.settledPage) {
-                    println("Swiped to ${pagerState.settledPage}")
+            snapshotFlow { pagerState.settledPage }.collect {
+                if (pagerState.targetPage == pagerState.settledPage && userScrolled) {
+                    println("Swiped to ${pagerState.currentPage}")
                 }
             }
         }
 
+
         // Check swipe event alternative 2
-//        var userScrolled by remember {
-//            mutableStateOf(false)
-//        }
-//        LaunchedEffect(pagerState.isScrollInProgress) {
-//            if (pagerState.isScrollInProgress) {
-//                userScrolled = true
-//            }
-//        }
-//
+        // This one considers swiping more than half of the screen as a swipe
+        // even before movement is completed or even when swiped back
 //        LaunchedEffect(pagerState) {
-//            snapshotFlow { pagerState.settledPage }.collect {
-//                if (pagerState.targetPage == pagerState.settledPage && userScrolled) {
+//            snapshotFlow { pagerState.currentPage }.collect {
+//                if (pagerState.currentPage != pagerState.settledPage) {
 //                    println("Swiped to ${pagerState.currentPage}")
 //                }
 //            }
@@ -102,7 +109,7 @@ private fun TutorialContent() {
             onClick = {
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(
-                        page = 4,
+                        page = 9,
                         animationSpec = tween(3000)
                     )
                 }
