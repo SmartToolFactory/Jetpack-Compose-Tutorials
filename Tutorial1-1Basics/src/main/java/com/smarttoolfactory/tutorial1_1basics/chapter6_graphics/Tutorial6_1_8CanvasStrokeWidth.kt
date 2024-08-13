@@ -38,7 +38,7 @@ import kotlin.math.sin
 
 @Preview
 @Composable
-fun Tutorial6_1Screen7() {
+fun Tutorial6_1Screen8() {
     TutorialContent()
 }
 
@@ -61,9 +61,7 @@ private fun TutorialContent() {
         Spacer(modifier = Modifier.height(30.dp))
         TutorialText2(text = "Stroke Outwards")
         CanvasStrokeOutside()
-
     }
-
 }
 
 @Composable

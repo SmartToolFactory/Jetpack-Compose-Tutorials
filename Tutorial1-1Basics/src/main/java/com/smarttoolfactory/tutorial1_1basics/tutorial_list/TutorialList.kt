@@ -140,6 +140,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Scree
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen5
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen6
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen7
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_1Screen8
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_20Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_21Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Screen
@@ -2405,10 +2406,27 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial6_1_7 = TutorialSectionModel(
-        title = "6-1-7 Canvas Stroke Change",
-        description = "Draw stroke between edges of Canvas, drawing inwards and outwards direction.",
+        title = "6-1-7 Canvas PathMeasure",
+        description = "Use PathMeasure to track create path segments, " +
+                "track positions and angle on a Path",
         action = {
             Tutorial6_1Screen7()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_DRAW_SCOPE,
+            TAG_PATH,
+            TAG_PATH_MEASURE
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_1_8 = TutorialSectionModel(
+        title = "6-1-8 Canvas Stroke Change",
+        description = "Draw stroke between edges of Canvas, drawing inwards and outwards direction.",
+        action = {
+            Tutorial6_1Screen8()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -2940,6 +2958,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_1_5,
         tutorial6_1_6,
         tutorial6_1_7,
+        tutorial6_1_8,
         tutorial6_2_1,
         tutorial6_2_2,
         tutorial6_2_3,
