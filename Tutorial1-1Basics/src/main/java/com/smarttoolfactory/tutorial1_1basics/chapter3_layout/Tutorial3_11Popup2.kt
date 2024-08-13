@@ -8,14 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -112,22 +111,29 @@ private fun PopUpSample() {
 @Composable
 private fun PopupSample(modifier: Modifier = Modifier) {
     Box(modifier) {
-        val density = LocalDensity.current
 
         val popupState = remember {
-            CustomPopupState(
-                alignment = Alignment.TopCenter,
-                offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
-            )
+            CustomPopupState(alignment = Alignment.TopCenter)
+        }
+
+        val density = LocalDensity.current
+
+        val paddingStart = with(density) {
+            240f.toDp()
+        }
+
+        val paddingEnd = with(density) {
+            60.toDp()
+        }
+
+        val contentWidth = with(density) {
+            700.toDp()
         }
 
         PopUpBox(
-            onDismissRequest = {
-
-            },
             popupPositionProvider = PopupPositionProvider(
-                offset = IntOffset(0, with(density) { 16.dp.roundToPx() }),
-                popupState = popupState
+                popupState = popupState,
+                offset = IntOffset(0, with(density) { 16.dp.roundToPx() })
             ),
             popupState = popupState,
             anchor = {
@@ -136,18 +142,16 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                         .border(2.dp, Color.Blue)
                         .clickable {
                             popupState.show()
-
                         }
                 )
             },
             content = { anchorLayoutCoordinates: LayoutCoordinates? ->
                 PlainPopupContent(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .border(2.dp, Color.Cyan)
-                        .background(Color.White, RoundedCornerShape(16.dp))
-                        .padding(16.dp),
+                        .border(2.dp, Color.Red)
+//                        .padding(start = paddingStart, end = paddingEnd)
+                        .width(contentWidth)
+                        .fillMaxWidth(),
                     anchorLayoutCoordinates = anchorLayoutCoordinates,
                     popupState = popupState,
                     caretProperties = CaretProperties(
@@ -155,12 +159,8 @@ private fun PopupSample(modifier: Modifier = Modifier) {
                         caretHeight = 16.dp
                     ),
                 ) {
-
-                    SideEffect {
-                        println("😵‍💫CONTENT RECOMPOSING...")
-                    }
                     Text(
-                        modifier = Modifier,
+                        modifier = Modifier.padding(16.dp),
                         text = "This is PopUp Content",
                         fontSize = 16.sp
                     )
@@ -180,8 +180,20 @@ private fun PlainPopupContent(
 ) {
     Box(
         Modifier
-            .drawCaret(caretProperties, anchorLayoutCoordinates, popupState)
+            .onGloballyPositioned {
+                val boundsBefore = it.boundsInWindow()
+                println("Bounds before: $boundsBefore")
+            }
             .then(modifier)
+            .onGloballyPositioned {
+                val boundsAfter = it.boundsInWindow()
+                println("Bounds after: $boundsAfter")
+            }
+            .drawCaret(caretProperties, anchorLayoutCoordinates, popupState)
+
+            .border(2.dp, Color.Blue)
+//            .then(modifier)
+
     ) {
         content()
     }
@@ -245,8 +257,8 @@ private fun AnchorContent(
 }
 
 class PopupPositionProvider(
-    val offset: IntOffset,
     val popupState: CustomPopupState,
+    val offset: IntOffset = IntOffset.Zero,
 ) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
@@ -367,7 +379,6 @@ class PopupPositionProvider(
 @Stable
 class CustomPopupState(
     val alignment: Alignment,
-    offset: IntOffset,
     initialIsVisible: Boolean = false,
 ) {
 
@@ -377,9 +388,8 @@ class CustomPopupState(
     var popupAlignment by mutableStateOf(alignment)
         internal set
 
-    var offset by mutableStateOf(offset)
     var contentRect by mutableStateOf(IntRect.Zero)
-    var caretTopLeft by mutableStateOf(IntOffset.Zero)
+    var caretBottomCenter by mutableStateOf(IntOffset.Zero)
     var windowSize by mutableStateOf(IntSize.Zero)
 
     var statusBarHeight: Float = 0f
@@ -430,7 +440,7 @@ class CustomPopupState(
 
         println("PopupState calculateCaretRect() $position")
 
-        caretTopLeft = position
+        caretBottomCenter = position
     }
 
     fun show() {
@@ -459,10 +469,19 @@ private fun Modifier.drawCaret(
 
                     val screenWidth = popupState.windowSize.width
                     val popupAlignment = popupState.popupAlignment
+
+                    val contentWidth = size.width
+                    val contentHeight = size.height
+
                     val tooltipRect = popupState.contentRect
 
-                    val tooltipWidth = size.width
-                    val tooltipHeight = size.height
+                    // 🔥 When there is a padding modifier before this Modifier
+                    // for instance with fillMaxWidth()
+                    //  dimension calculation from PositionProvider and
+                    //  size returned from DrawScope might not be equal
+                    val tooltipWidth = tooltipRect.width
+                    val tooltipHeight = tooltipRect.height.toFloat()
+
                     val tooltipLeft = tooltipRect.left
                     val tooltipRight = tooltipRect.right
                     val tooltipCenterX = tooltipRect.center.x
@@ -475,58 +494,62 @@ private fun Modifier.drawCaret(
                     // Popup is positioned left but might overflow from left
                         // if clip is enabled
                         if (tooltipLeft <= 0) {
-                            anchorMid - caretHalfWidth
+                            anchorMid
 
                             // pop is center of the screen neither touches right or left
                             // side of the screen
                         } else if (tooltipRight <= screenWidth) {
-                            tooltipWidth / 2 + anchorMid - tooltipCenterX - caretHalfWidth
+                            contentWidth / 2 + anchorMid - tooltipCenterX
 
                             // Popup is positioned right but might overflow from right
                             // if clip is enabled
                         } else {
                             val diff = tooltipRight - screenWidth
-                            anchorMid - tooltipLeft + diff + -caretHalfWidth
+                            anchorMid - tooltipLeft + diff
                         }
 
                     val caretY = if (popupAlignment.bottomAlignment) {
                         0f
                     } else {
-                        tooltipHeight
+                        contentHeight
                     }
 
                     val position = Offset(caretX, caretY)
 
                     path.apply {
                         println(
-                            "DRAW with CACHE anchor " +
-                                    "rect: $rect, " +
+                            "😈DRAW with CACHE anchor " +
+                                    "anchor rect: $rect, " +
+                                    "draw width: $contentWidth, " +
+                                    "tooltipRect width: ${tooltipRect.width}\n" +
                                     "popupContentRect:$tooltipRect, " +
-                                    "carePosition: $position"
+                                    "position: $position, " +
+                                    "caretBottomCenter: ${popupState.caretBottomCenter}, " +
+                                    "diff between caretX: ${position.x - popupState.caretBottomCenter.x}"
                         )
 
                         if (popupAlignment.bottomAlignment) {
                             moveTo(
-                                position.x,
+                                position.x - caretHalfWidth,
                                 position.y
                             )
                             lineTo(
-                                position.x + caretHalfWidth,
+                                position.x,
                                 -caretHeightPx
                             )
                             lineTo(
-                                position.x + caretWidthPx,
+                                position.x + caretHalfWidth,
                                 position.y
                             )
                         } else if (popupAlignment.topAlignment) {
-                            moveTo(position.x, position.y)
+                            moveTo(position.x - caretHalfWidth, position.y)
                             lineTo(
-                                position.x + caretHalfWidth,
+                                position.x,
                                 position.y + caretHeightPx
                             )
 
                             lineTo(
-                                position.x + caretWidthPx,
+                                position.x + caretHalfWidth,
                                 position.y
                             )
                         }
@@ -547,13 +570,16 @@ private fun Modifier.drawCaret(
                     color = Color.Green,
                     topLeft = popupState.contentRect.topLeft.toOffset(),
                     size = popupState.contentRect.size.toSize(),
-                    style = Stroke(2.dp.toPx())
+                    style = Stroke(4.dp.toPx())
                 )
 
                 drawCircle(
                     color = Color.Red,
                     radius = 10f,
-                    center = popupState.caretTopLeft.toOffset()
+                    center = Offset(
+                        x = popupState.caretBottomCenter.x.toFloat(),
+                        y = popupState.caretBottomCenter.y.toFloat()
+                    )
                 )
             }
         }

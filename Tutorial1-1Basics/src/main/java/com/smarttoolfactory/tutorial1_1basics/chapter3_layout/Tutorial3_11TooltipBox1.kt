@@ -7,8 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Purple400
@@ -85,6 +86,21 @@ fun TooltipBoxTest() {
 private fun TooltipBoxSample(
     modifier: Modifier = Modifier
 ) {
+
+    val density = LocalDensity.current
+
+    val paddingStart = with(density) {
+        240f.toDp()
+    }
+
+    val paddingEnd = with(density) {
+        60.toDp()
+    }
+
+    val contentWidth = with(density) {
+        700.toDp()
+    }
+
     Box(
         modifier = modifier
     ) {
@@ -104,8 +120,11 @@ private fun TooltipBoxSample(
 
                 PlainTooltip(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
+                        .border(2.dp, Color.Red)
+                        .padding(start = paddingStart, end = paddingEnd)
+                        .width(contentWidth)
+//                        .fillMaxWidth()
+                    ,
                     caretProperties = CaretProperties(
                         caretWidth = 24.dp,
                         caretHeight = 16.dp
