@@ -509,7 +509,6 @@ private fun PathTrackingSample() {
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDragStart = {
-
                             isTouched = false
 
                             val currentPosition = it
@@ -520,7 +519,6 @@ private fun PathTrackingSample() {
                                 val currentDistance =
                                     pathSegmentInfo.position.minus(currentPosition)
                                         .getDistanceSquared()
-
 
                                 if (currentDistance < nearestTouchDistance * nearestTouchDistance &&
                                     currentDistance < distance
@@ -551,11 +549,9 @@ private fun PathTrackingSample() {
                         onDrag = { change: PointerInputChange, _ ->
 
                             if (isTouched) {
-
                                 val currentPosition = change.position
                                 var distance = Float.MAX_VALUE
                                 var tempIndex = -1
-                                userPath.lineTo(currentPosition.x, currentPosition.y)
 
                                 segmentInfoList.forEachIndexed { index, pathSegmentInfo ->
                                     val currentDistance =
@@ -568,19 +564,20 @@ private fun PathTrackingSample() {
                                     }
                                 }
 
+                                text = "tempIndex: $tempIndex, currentIndex: $currentIndex, " +
+                                        "completedIndex: $completedIndex"
+
                                 val dragMinDistance =
                                     (nearestTouchDistance * .65f * nearestTouchDistance * .65)
 
-                                if (completedIndex in segmentInfoList.lastIndex - 2..segmentInfoList.lastIndex ||
-                                    tempIndex == 0
-                                ) {
+                                // At last item reset
+                                if (completedIndex == segmentInfoList.lastIndex) {
                                     trackPath.reset()
                                     currentIndex = tempIndex
                                 } else if (distance > dragMinDistance) {
                                     text = "on drag You moved out of path"
                                     isTouched = false
-                                } else if (tempIndex < completedIndex
-                                ) {
+                                } else if (tempIndex < completedIndex) {
                                     text =
                                         "on drag You moved back" +
                                                 "\ntempIndex: $tempIndex, completedIndex: $completedIndex"
@@ -588,6 +585,8 @@ private fun PathTrackingSample() {
                                 } else {
                                     currentIndex = tempIndex
                                 }
+
+                                userPath.lineTo(currentPosition.x, currentPosition.y)
                             }
                         }
                     )
