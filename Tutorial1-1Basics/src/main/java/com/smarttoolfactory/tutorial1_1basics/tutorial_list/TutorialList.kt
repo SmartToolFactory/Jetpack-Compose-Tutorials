@@ -2407,7 +2407,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
 
     val tutorial6_1_7 = TutorialSectionModel(
         title = "6-1-7 Canvas PathMeasure",
-        description = "Use PathMeasure to track create path segments, " +
+        description = "Use PathMeasure to create path segments, and" +
                 "track positions and angle on a Path",
         action = {
             Tutorial6_1Screen7()
