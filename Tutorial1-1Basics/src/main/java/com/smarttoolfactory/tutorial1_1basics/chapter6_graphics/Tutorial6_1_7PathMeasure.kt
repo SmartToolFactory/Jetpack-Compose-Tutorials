@@ -483,10 +483,6 @@ private fun PathTrackingSample() {
         PathMeasure()
     }
 
-    val pathSegmentList = remember {
-        mutableStateListOf<Path>()
-    }
-
     val segmentInfoList = remember {
         mutableStateListOf<PathSegmentInfo>()
     }
@@ -634,7 +630,6 @@ private fun PathTrackingSample() {
                             tangent = tan
                         )
                     )
-                    pathSegmentList.add(destination)
                 }
             }
 
