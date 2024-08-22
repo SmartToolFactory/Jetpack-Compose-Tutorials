@@ -36,7 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -477,6 +481,86 @@ fun PagerScrollCancelBackwardScrollableContent() {
                         fontSize = 28.sp,
                         color = Color.White
                     )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PagerScrollCancelBackwardScrollNestedScrollConnection() {
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val pagerState = rememberPagerState {
+            20
+        }
+
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = "Current page: ${pagerState.currentPage}\n" +
+                    "settled Page: ${pagerState.settledPage}\n" +
+                    "target Page: ${pagerState.targetPage}\n" +
+                    "currentPageOffsetFraction: ${pagerState.currentPageOffsetFraction}\n" +
+                    "isScrollInProgress: ${pagerState.isScrollInProgress}\n" +
+                    "canScrollForward: ${pagerState.canScrollForward}\n" +
+                    "canScrollBackward: ${pagerState.canScrollBackward}\n" +
+                    "lastScrolledForward: ${pagerState.lastScrolledForward}\n" +
+                    "lastScrolledBackward: ${pagerState.lastScrolledBackward}\n",
+            fontSize = 18.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val coroutineScope = rememberCoroutineScope()
+
+        val nestedScrollConnection = remember {
+            object : NestedScrollConnection {
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    println("onPreScroll available: $available")
+
+                    val availableX = available.x
+
+                    val consumed = if (availableX > 0) availableX else 0f
+                    return Offset(consumed, 0f)
+                }
+
+                override fun onPostScroll(
+                    consumed: Offset,
+                    available: Offset,
+                    source: NestedScrollSource
+                ): Offset {
+
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(pagerState.settledPage)
+                    }
+                    return super.onPostScroll(consumed, available, source)
+                }
+            }
+        }
+
+        Box(modifier = Modifier.fillMaxSize().nestedScroll(nestedScrollConnection)) {
+            HorizontalPager(
+                state = pagerState,
+                pageSpacing = 16.dp,
+            ) { page ->
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(30)
+                    {
+                        Text(
+                            modifier = Modifier
+                                .background(Color.Black)
+                                .fillMaxWidth().padding(16.dp),
+                            text = "Page $page, item: $it",
+                            fontSize = 28.sp,
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
