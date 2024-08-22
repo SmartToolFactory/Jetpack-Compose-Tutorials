@@ -125,7 +125,7 @@ private fun DraggableWithNestedScroll() {
                 // want to pre consume (it's a nested scroll contract)
                 val parentsConsumed = nestedScrollDispatcher.dispatchPreScroll(
                     available = Offset(x = 0f, y = delta),
-                    source = NestedScrollSource.Drag
+                    source = NestedScrollSource.UserInput
                 )
 
                 // adjust what's available to us since might have consumed smth
@@ -139,7 +139,7 @@ private fun DraggableWithNestedScroll() {
                 nestedScrollDispatcher.dispatchPostScroll(
                     consumed = totalConsumed,
                     available = Offset(x = 0f, y = left),
-                    source = NestedScrollSource.Drag
+                    source = NestedScrollSource.UserInput
                 )
 
                 // we won't dispatch pre/post fling events as we have no flinging here, but the
