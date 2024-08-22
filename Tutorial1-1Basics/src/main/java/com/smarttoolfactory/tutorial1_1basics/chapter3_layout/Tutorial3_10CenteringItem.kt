@@ -36,12 +36,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onPlaced
@@ -123,27 +119,7 @@ private fun TutorialContent() {
                 }
 
                 HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .nestedScroll(
-                            remember {
-                                object : NestedScrollConnection {
-                                    override fun onPreScroll(
-                                        available: Offset,
-                                        source: NestedScrollSource,
-                                    ): Offset {
-                                        return if (available.y > 0) {
-                                            Offset.Zero
-                                        } else {
-                                            Offset(
-                                                x = 0f,
-                                                y = -scrollState.dispatchRawDelta(-available.y),
-                                            )
-                                        }
-                                    }
-                                }
-                            },
-                        ),
+                    modifier = Modifier.fillMaxWidth(),
                     state = pagerState,
                     pageSpacing = 0.dp,
                     userScrollEnabled = true,
