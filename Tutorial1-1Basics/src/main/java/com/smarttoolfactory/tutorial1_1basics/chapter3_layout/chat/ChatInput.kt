@@ -25,7 +25,7 @@ import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Mood
-import androidx.compose.material.ripple
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -113,7 +113,7 @@ private fun ChatTextField(
                 IndicatingIconButton(
                     onClick = { /*TODO*/ },
                     modifier = Modifier.then(Modifier.size(circleButtonSize)),
-                    indication = ripple(bounded = false, radius = circleButtonSize / 2)
+                    indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
                 ) {
                     Icon(imageVector = Icons.Default.Mood, contentDescription = "emoji")
                 }
@@ -148,7 +148,7 @@ private fun ChatTextField(
                 IndicatingIconButton(
                     onClick = { /*TODO*/ },
                     modifier = Modifier.then(Modifier.size(circleButtonSize)),
-                    indication = ripple(bounded = false, radius = circleButtonSize / 2)
+                    indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
                 ) {
                     Icon(
                         modifier = Modifier.rotate(-45f),
@@ -160,7 +160,7 @@ private fun ChatTextField(
                     IndicatingIconButton(
                         onClick = { /*TODO*/ },
                         modifier = Modifier.then(Modifier.size(circleButtonSize)),
-                        indication = ripple(bounded = false, radius = circleButtonSize / 2)
+                        indication = rememberRipple(bounded = false, radius = circleButtonSize / 2)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.CameraAlt,

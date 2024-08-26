@@ -29,7 +29,7 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.ripple
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -163,7 +163,7 @@ private fun DiscreteInteractionSourceExample() {
     val context = LocalContext.current
 
     // 🔥 This interaction source is set by outer composable to trigger ripple on inner one
-    val interactionSource = MutableInteractionSource()
+    val interactionSource = remember { MutableInteractionSource() }
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -210,7 +210,7 @@ private fun DiscreteInteractionSourceExample() {
                     .background(color = Blue400)
                     .clickable(
                         interactionSource = interactionSource,
-                        indication = ripple(),
+                        indication = rememberRipple(),
                         onClick = {
                             Toast
                                 .makeText(context, "🔥 Inner one is clicked", Toast.LENGTH_SHORT)
@@ -231,8 +231,8 @@ private fun DiscreteInteractionSourceFLowExample() {
 
     // 🔥 This interaction source is for the row we will collect interactions on this one
     // and send it to quote to mimic whatsapp message click that highlight also quote
-    val interactionSourceSentRow = MutableInteractionSource()
-    val interactionSourceSentQuote = MutableInteractionSource()
+    val interactionSourceSentRow = remember { MutableInteractionSource() }
+    val interactionSourceSentQuote = remember { MutableInteractionSource() }
 
     LaunchedEffect(key1 = Unit,
         block = {
@@ -260,7 +260,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                 .background(SentMessageColor)
                 .clickable(
                     interactionSource = interactionSourceSentRow,
-                    indication = ripple(),
+                    indication = rememberRipple(),
                     onClick = {}
                 ),
 
@@ -275,7 +275,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable(
                             interactionSource = interactionSourceSentQuote,
-                            indication = ripple(),
+                            indication = rememberRipple(),
                             onClick = {}
                         ),
                     quotedMessage = "quotedMessage",
@@ -303,8 +303,8 @@ private fun DiscreteInteractionSourceFLowExample() {
 
     // 🔥 This interaction source is for the row we will collect interactions on this one
     // and send it to quote to mimic whatsapp message click that highlight also quote
-    val interactionSourceReceivedRow = MutableInteractionSource()
-    val interactionSourceReceivedQuote = MutableInteractionSource()
+    val interactionSourceReceivedRow = remember { MutableInteractionSource() }
+    val interactionSourceReceivedQuote = remember { MutableInteractionSource() }
 
     LaunchedEffect(key1 = Unit,
         block = {
@@ -332,7 +332,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                 .background(Color.White)
                 .clickable(
                     interactionSource = interactionSourceReceivedRow,
-                    indication = ripple(),
+                    indication = rememberRipple(),
                     onClick = {}
                 ),
             content = {
@@ -352,7 +352,7 @@ private fun DiscreteInteractionSourceFLowExample() {
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable(
                             interactionSource = interactionSourceReceivedQuote,
-                            indication = ripple(),
+                            indication = rememberRipple(),
                             onClick = {}
                         ),
                     quotedMessage = "quotedMessage",

@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.ripple
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -71,7 +71,7 @@ private fun TapGesturesIndicationSample() {
         .fillMaxWidth()
         .height(150.dp)
         .background(Color(0xffBDBDBD))
-        .indication(interactionSource, ripple())
+        .indication(interactionSource, rememberRipple())
         .pointerInput(Unit) {
             detectTapGestures(
                 onPress = { offset: Offset ->
@@ -117,7 +117,7 @@ private fun AwaitPointerEventScopeIndicationSample() {
         .fillMaxWidth()
         .height(150.dp)
         .background(Color(0xffBDBDBD))
-        .indication(interactionSource, ripple())
+        .indication(interactionSource, rememberRipple())
         .pointerInput(Unit) {
             awaitEachGesture {
                 val down = awaitFirstDown()

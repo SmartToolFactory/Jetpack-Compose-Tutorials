@@ -11,9 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LocalUseFallbackRippleImplementation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -24,11 +22,10 @@ import androidx.compose.ui.unit.dp
 @Preview
 @Composable
 fun Tutorial5_1Screen1() {
-    CompositionLocalProvider(LocalUseFallbackRippleImplementation provides true) {
-        TutorialContent()
-    }
+    TutorialContent()
 }
 
+// TODO Implement new Riplle api samples
 @Composable
 private fun TutorialContent() {
     Column(

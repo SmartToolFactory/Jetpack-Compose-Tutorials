@@ -29,7 +29,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.ripple
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -125,7 +125,7 @@ private fun InteractionFlowExample() {
             .padding(8.dp)
     ) {
 
-        val interactionSource = MutableInteractionSource()
+        val interactionSource = remember { MutableInteractionSource() }
         val context = LocalContext.current
 
         LaunchedEffect(interactionSource) {
@@ -144,7 +144,7 @@ private fun InteractionFlowExample() {
             modifierWithClip
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = ripple(),
+                    indication = rememberRipple(),
                     onClick = {}
                 ),
             contentAlignment = Alignment.Center) {
@@ -204,7 +204,7 @@ private fun CollectInteractionsExample() {
             .fillMaxWidth()
             .border(2.dp, Blue400)
             .clickable(
-                interactionSource, ripple()
+                interactionSource, rememberRipple()
             ) {}
 
             .padding(8.dp)

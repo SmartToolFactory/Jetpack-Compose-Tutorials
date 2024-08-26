@@ -79,6 +79,7 @@ private fun TutorialContentPreview(
     TutorialContent(initialBottomDrawerValue)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 private class BottomDrawerValueProvider : PreviewParameterProvider<BottomDrawerValue> {
     override val values: Sequence<BottomDrawerValue>
         get() = sequenceOf(

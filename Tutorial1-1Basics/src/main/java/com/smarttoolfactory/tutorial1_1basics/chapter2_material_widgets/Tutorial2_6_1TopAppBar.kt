@@ -39,7 +39,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Videocam
-import androidx.compose.material.ripple
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
@@ -473,7 +473,7 @@ private fun ChatAppbarActions(
     ) {
         IndicatingIconButton(
             onClick = { /* doSomething() */ },
-            indication = ripple(bounded = false, radius = 22.dp),
+            indication = rememberRipple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
         ) {
             Icon(
@@ -485,7 +485,7 @@ private fun ChatAppbarActions(
 
         IndicatingIconButton(
             onClick = { /* doSomething() */ },
-            indication = ripple(bounded = false, radius = 22.dp),
+            indication = rememberRipple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
         ) {
             Icon(
@@ -497,7 +497,7 @@ private fun ChatAppbarActions(
 
         IndicatingIconButton(
             onClick = { /* doSomething() */ },
-            indication = ripple(bounded = false, radius = 22.dp),
+            indication = rememberRipple(bounded = false, radius = 22.dp),
             modifier = Modifier.then(Modifier.size(44.dp))
         ) {
             Icon(

@@ -31,7 +31,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.ripple
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -161,20 +161,28 @@ private fun TutorialContent() {
                             showCustomDialog = !showCustomDialog
                             if (!isInPreview) {
                                 Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
-                                .show()
+                                    .show()
                             }
                         },
                         onNegativeClick = {
                             showCustomDialog = !showCustomDialog
                             if (!isInPreview) {
-                                Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    context,
+                                    "Negative Button Clicked!",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
                         },
                         onPositiveClick = {
                             showCustomDialog = !showCustomDialog
                             if (!isInPreview) {
-                                Toast.makeText(context, "Positive Button Clicked!", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    context,
+                                    "Positive Button Clicked!",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
                         }
@@ -206,14 +214,22 @@ private fun TutorialContent() {
                         onNegativeClick = {
                             showCustomDialogWithResult = !showCustomDialogWithResult
                             if (!isInPreview) {
-                                Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    context,
+                                    "Negative Button Clicked!",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
                         },
                         onPositiveClick = { color ->
                             showCustomDialogWithResult = !showCustomDialogWithResult
                             if (!isInPreview) {
-                                Toast.makeText(context, "Selected color: $color", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    context,
+                                    "Selected color: $color",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
                         }
@@ -378,8 +394,8 @@ private fun CustomDialogExample(
                             text = "NOT NOW", color = color,
                             modifier = Modifier
                                 .clickable(
-                                    interactionSource = MutableInteractionSource(),
-                                    indication = ripple(color = Color.DarkGray),
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(color = Color.DarkGray),
                                     onClick = onNegativeClick
                                 )
                                 .padding(8.dp)
@@ -390,8 +406,8 @@ private fun CustomDialogExample(
                             text = "CONTINUE", color = color,
                             modifier = Modifier
                                 .clickable(
-                                    interactionSource = MutableInteractionSource(),
-                                    indication = ripple(color = Color.DarkGray),
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(color = Color.DarkGray),
                                     onClick = onPositiveClick
                                 )
                                 .padding(8.dp)
@@ -602,5 +618,9 @@ fun CustomDialogExamplePreview() {
 @Preview
 @Composable
 fun CustomDialogWithResultExamplePreview() {
-    CustomDialogWithResultExample(initialColor = Color.Red, onDismiss = {}, onNegativeClick = {}, onPositiveClick = {})
+    CustomDialogWithResultExample(
+        initialColor = Color.Red,
+        onDismiss = {},
+        onNegativeClick = {},
+        onPositiveClick = {})
 }
