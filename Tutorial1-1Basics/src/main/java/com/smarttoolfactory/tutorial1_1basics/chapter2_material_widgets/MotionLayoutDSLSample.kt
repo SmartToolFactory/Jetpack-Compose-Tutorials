@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMotionApi::class)
+
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -6,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import androidx.constraintlayout.compose.OnSwipe

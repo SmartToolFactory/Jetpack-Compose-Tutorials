@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMotionApi::class)
+
 package com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets
 
 import androidx.compose.animation.animateContentSize
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.DebugFlags
+import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import com.smarttoolfactory.tutorial1_1basics.R
