@@ -34,6 +34,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.positionChangeIgnoreConsumed
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -165,8 +166,10 @@ private fun DragExample() {
                         offsetY.value = newValue.y
 
                         gestureColor = Blue400
-                        text = "drag()  down.id: ${down.id} change.id: ${change.id}" +
-                                "\nnewValue: $newValue"
+                        text = "drag()  down.id: ${down.id}\n" +
+                                "change.id: ${change.id}\n" +
+                                "positionChange(): ${it.positionChangeIgnoreConsumed()}\n" +
+                                "newValue: $newValue"
                     }
                 }
 

@@ -32,8 +32,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.changedToDown
+import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.positionChangeIgnoreConsumed
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -166,8 +169,13 @@ private fun AwaitPointerEventExample() {
                             // vertical scroll or other events interfere with current event
                             pointerInputChange.consume()
 
-                            eventChanges += "Index: $index, id: ${pointerInputChange.id}, " +
-                                    "pos: ${pointerInputChange.position}\n"
+                            eventChanges += "id: ${pointerInputChange.id}\n" +
+                                    "pos: ${pointerInputChange.position}, " +
+                                    "previousPos: ${pointerInputChange.previousPosition}\n" +
+                                    "positionChange(): ${pointerInputChange.positionChange()}\n" +
+                                    "positionChangeIgnoreConsumed(): ${pointerInputChange.positionChangeIgnoreConsumed()}\n" +
+                                    "uptimeMillis: ${pointerInputChange.uptimeMillis}\n" +
+                                    "previousPressed: ${pointerInputChange.previousPressed}"
                         }
 
                     touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
@@ -182,7 +190,7 @@ private fun AwaitPointerEventExample() {
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 12.dp)
             .fillMaxWidth()
-            .height(120.dp)
+            .height(200.dp)
             .background(gestureColor),
         contentAlignment = Alignment.Center
     ) {
@@ -210,8 +218,10 @@ private fun AwaitPointerEventExample2() {
 
             awaitEachGesture {
 
-                awaitFirstDown()
+                val down = awaitFirstDown()
                 gestureColor = Orange400
+
+                println("Down id: ${down.id}, changedToDown: ${down.changedToDown()}")
 
                 // This is preferred way in default Compose gesture codes
                 // to loop gesture events and use consume or position changes to
@@ -219,30 +229,39 @@ private fun AwaitPointerEventExample2() {
                 while (true) {
                     // 🔥🔥 This PointerEvent contains details including events,
                     // id, position and more
-                        // Other events such as drag are structured with consume events
-                        // using awaitPointerEvent in a while loop
-                        val event: PointerEvent = awaitPointerEvent()
+                    // Other events such as drag are structured with consume events
+                    // using awaitPointerEvent in a while loop
+                    val event: PointerEvent = awaitPointerEvent()
 
-                        val anyPressed = event.changes.any { it.pressed }
+                    val anyPressed = event.changes.any { it.pressed }
 
-                        // All of the pointers are up
-                        if (!anyPressed) {
-                            gestureColor = Green400
-                            break
-                        } else {
-                            gestureColor = Blue400
-                            var eventChanges = ""
+                    // All of the pointers are up
+                    if (!anyPressed) {
+                        gestureColor = Green400
+                        break
+                    } else {
+                        gestureColor = Blue400
+                        var eventChanges = ""
 
-                            event.changes
-                                .map { pointerInputChange: PointerInputChange ->
-                                    pointerInputChange.consume()
-                                    eventChanges += "id: ${pointerInputChange.id}, " +
-                                            "pos: ${pointerInputChange.position}\n"
-                                }
+                        event.changes
+                            .map { pointerInputChange: PointerInputChange ->
 
-                            touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
-                        }
+                                // Consuming returns consumed true and returns Offset.Zero for positionChange
+                                pointerInputChange.consume()
+
+                                pointerInputChange.changedToUp()
+                                eventChanges += "id: ${pointerInputChange.id}\n" +
+                                        "pos: ${pointerInputChange.position}, " +
+                                        "previousPos: ${pointerInputChange.previousPosition}\n" +
+                                        "positionChange(): ${pointerInputChange.positionChange()}\n" +
+                                        "positionChangeIgnoreConsumed(): ${pointerInputChange.positionChangeIgnoreConsumed()}\n" +
+                                        "uptimeMillis: ${pointerInputChange.uptimeMillis}\n" +
+                                        "previousPressed: ${pointerInputChange.previousPressed}"
+                            }
+
+                        touchText = "EVENT changes size ${event.changes.size}\n" + eventChanges
                     }
+                }
             }
         }
 
@@ -250,7 +269,7 @@ private fun AwaitPointerEventExample2() {
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 12.dp)
             .fillMaxWidth()
-            .height(120.dp)
+            .height(200.dp)
             .background(gestureColor),
         contentAlignment = Alignment.Center
     ) {

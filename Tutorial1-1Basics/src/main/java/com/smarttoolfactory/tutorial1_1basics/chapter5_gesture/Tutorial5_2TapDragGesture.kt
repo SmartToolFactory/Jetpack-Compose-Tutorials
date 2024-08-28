@@ -35,8 +35,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.changedToDown
-import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
@@ -207,6 +205,7 @@ private fun PointerIteropFilterExample() {
                         .show()
                     gestureColor = Orange400
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     gestureText =
                         "ACTION_MOVE\n" +
@@ -217,6 +216,7 @@ private fun PointerIteropFilterExample() {
 
 
                 }
+
                 MotionEvent.ACTION_UP -> {
                     gestureText =
                         "ACTION_UP\n" +
@@ -224,6 +224,7 @@ private fun PointerIteropFilterExample() {
                                 "x: ${event.x.toInt()}, y: ${event.y.toInt()}"
                     gestureColor = Green400
                 }
+
                 else -> false
             }
             true
@@ -258,10 +259,12 @@ private fun DetectDragGesturesCycleExample() {
                     gestureColor = Blue400
 
                     gestureDetailText = """
-                       id: ${change.id}, type: ${change.type}, position: ${change.position}, previousPosition: ${change.previousPosition}  
-                       consumed downChange: ${change.consumed.downChange}, previousPressed: ${change.previousPressed}
-                       previousUptimeMillis: ${change.previousUptimeMillis}, ${change.position}
-                       changedToDOwn: ${change.changedToDown()}, changedToUp: ${change.changedToUp()}
+                       id: ${change.id}
+                       type: ${change.type}
+                       uptimeMillis: ${change.uptimeMillis}
+                       previousUptimeMillis: ${change.previousUptimeMillis}
+                       position: ${change.position},
+                       previousPosition: ${change.previousPosition} 
                     """.trimIndent()
                 },
                 onDragEnd = {
