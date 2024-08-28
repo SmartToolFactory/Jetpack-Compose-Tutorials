@@ -65,8 +65,8 @@ private fun TutorialContent() {
                 Tab(
                     selected = pagerState.currentPage == it,
                     content = {
-                        val text = if (it == 0) "Bottom Blur" else
-                            "Top blur"
+                        val text = if (it == 0) "Bottom Fade" else
+                            "Top Fade"
                         Text(text)
                     },
                     onClick = {
@@ -82,10 +82,10 @@ private fun TutorialContent() {
         ) { index ->
             val scrollState = rememberScrollState()
 
-            val blurPosition = if (index == 0) {
-                BlurPosition.Bottom
+            val fadeEdge = if (index == 0) {
+                FadeEdge.Bottom
             } else {
-                BlurPosition.Top
+                FadeEdge.Top
             }
 
             Column(
@@ -93,12 +93,12 @@ private fun TutorialContent() {
                     .fillMaxSize()
                     .background(Color.White)
                     .padding(horizontal = 8.dp)
-                    .drawBlur(
+                    .drawFadeEffect(
                         scrollState = scrollState,
-                        blurDimension = 80.dp,
+                        fadeSize = 80.dp,
                         startAlpha = .7f,
                         endAlpha = 0f,
-                        blurPosition = blurPosition
+                        fadeEdge = fadeEdge
                     )
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -114,38 +114,38 @@ private fun TutorialContent() {
     }
 }
 
-fun Modifier.drawBlur(
+fun Modifier.drawFadeEffect(
     scrollState: ScrollState,
-    blurDimension: Dp,
+    fadeSize: Dp,
     startAlpha: Float = 1f,
     endAlpha: Float = 0f,
-    blurPosition: BlurPosition = BlurPosition.Bottom
+    fadeEdge: FadeEdge = FadeEdge.Bottom
 ) = this.then(
     Modifier.graphicsLayer {
         compositingStrategy = CompositingStrategy.Offscreen
     }
         .drawWithCache {
 
-            val blurDimensionPx = blurDimension.toPx()
+            val fadeDimensionPx = fadeSize.toPx()
             val scrollPos = scrollState.value
             val max = scrollState.maxValue
 
-            val ratio = if (blurPosition == BlurPosition.Bottom) {
+            val ratio = if (fadeEdge == FadeEdge.Bottom) {
                 (
-                        if (max - scrollPos > blurDimensionPx) {
+                        if (max - scrollPos > fadeDimensionPx) {
                             0f
                         } else {
-                            scrollPos - max + blurDimensionPx
+                            scrollPos - max + fadeDimensionPx
                         }
-                        ) / blurDimensionPx
+                        ) / fadeDimensionPx
             } else {
                 (
-                        if (scrollPos > blurDimensionPx) {
+                        if (scrollPos > fadeDimensionPx) {
                             0f
                         } else {
-                            (blurDimensionPx - scrollPos).coerceIn(0f, blurDimensionPx)
+                            (fadeDimensionPx - scrollPos).coerceIn(0f, fadeDimensionPx)
                         }
-                        ) / blurDimensionPx
+                        ) / fadeDimensionPx
             }
 
             val alphaStart = scale(0f, 1f, ratio, startAlpha, 1f)
@@ -153,35 +153,35 @@ fun Modifier.drawBlur(
 
             println("scrollPos: $scrollPos, ratio: $ratio, alphaStart: $alphaStart, alphaEnd: $alphaEnd")
 
-            val blurColor = Color.Transparent
+            val fadeColor = Color.Transparent
 
-            val startY = if (blurPosition == BlurPosition.Bottom) {
-                size.height - blurDimensionPx
+            val startY = if (fadeEdge == FadeEdge.Bottom) {
+                size.height - fadeDimensionPx
             } else {
                 0f
             }
-            val endY = if (blurPosition == BlurPosition.Bottom) {
+            val endY = if (fadeEdge == FadeEdge.Bottom) {
                 size.height
             } else {
-                blurDimensionPx
+                fadeDimensionPx
             }
 
-            val start = if (blurPosition == BlurPosition.Bottom) alphaStart else alphaEnd
-            val end = if (blurPosition == BlurPosition.Bottom) alphaEnd else alphaStart
+            val start = if (fadeEdge == FadeEdge.Bottom) alphaStart else alphaEnd
+            val end = if (fadeEdge == FadeEdge.Bottom) alphaEnd else alphaStart
 
             val brush = Brush.verticalGradient(
                 startY = startY,
                 endY = endY,
                 colors = listOf(
-                    blurColor.copy(alpha = start),
-                    blurColor.copy(alpha = end)
+                    fadeColor.copy(alpha = start),
+                    fadeColor.copy(alpha = end)
                 )
 
                 // Also can use stops for better pixel erase look
 //                colorStops = arrayOf(
-//                    Pair(.0f, blurColor.copy(alpha = start)),
-//                    Pair(.1f, blurColor.copy(alpha = (start + end) / 2)),
-//                    Pair(1f, blurColor.copy(alpha = end)),
+//                    Pair(.0f, fadeColor.copy(alpha = start)),
+//                    Pair(.1f, fadeColor.copy(alpha = (start + end) / 2)),
+//                    Pair(1f, fadeColor.copy(alpha = end)),
 //                )
             )
 
@@ -190,8 +190,8 @@ fun Modifier.drawBlur(
                 drawContent()
 
                 // Source
-                val topLeftY = if (blurPosition == BlurPosition.Bottom) {
-                    size.height - blurDimensionPx
+                val topLeftY = if (fadeEdge == FadeEdge.Bottom) {
+                    size.height - fadeDimensionPx
                 } else {
                     0f
                 }
@@ -199,7 +199,7 @@ fun Modifier.drawBlur(
                 drawRect(
                     brush = brush,
                     topLeft = Offset(0f, topLeftY),
-                    size = Size(size.width, blurDimensionPx),
+                    size = Size(size.width, fadeDimensionPx),
                     blendMode = BlendMode.DstIn
                 )
 
@@ -207,7 +207,7 @@ fun Modifier.drawBlur(
 //                drawRect(
 //                    color = Color.Red,
 //                    topLeft = Offset(0f, topLeftY),
-//                    size = Size(size.width, blurDimensionPx),
+//                    size = Size(size.width, fadeDimensionPx),
 //                    style = Stroke(2.dp.toPx())
 //                )
 
@@ -216,12 +216,12 @@ fun Modifier.drawBlur(
 )
 
 // TODO
-fun Modifier.drawBlur(
+fun Modifier.drawFadeEffect(
     scrollState: LazyListState,
-    blurDimension: Dp,
+    fadeDimension: Dp,
     startAlpha: Float = 1f,
     endAlpha: Float = 0f,
-    blurPosition: BlurPosition = BlurPosition.Bottom
+    fadeEdge: FadeEdge = FadeEdge.Bottom
 ) = composed {
 
     val itemPos: Int by remember {
@@ -229,7 +229,7 @@ fun Modifier.drawBlur(
             val totalItems = scrollState.layoutInfo.totalItemsCount
             val visibleItemsInfo: List<LazyListItemInfo> = scrollState.layoutInfo.visibleItemsInfo
 
-            if (blurPosition == BlurPosition.Bottom) {
+            if (fadeEdge == FadeEdge.Bottom) {
                 val lastItemVisible: LazyListItemInfo? = visibleItemsInfo.firstOrNull {
                     it.index == totalItems - 1
                 }
@@ -263,13 +263,13 @@ fun Modifier.drawBlur(
             compositingStrategy = CompositingStrategy.Offscreen
         }
         .drawWithCache {
-            val blurDimensionPx = blurDimension.toPx()
+            val fadeDimensionPx = fadeDimension.toPx()
 
             val ratio = (
-                    if (blurPosition == BlurPosition.Bottom) {
-                        itemPos / blurDimensionPx
+                    if (fadeEdge == FadeEdge.Bottom) {
+                        itemPos / fadeDimensionPx
                     } else {
-                        itemPos / blurDimensionPx
+                        itemPos / fadeDimensionPx
                     }
                     ).coerceIn(0f, 1f)
 
@@ -277,28 +277,28 @@ fun Modifier.drawBlur(
             val alphaEnd = scale(0f, 1f, ratio, endAlpha, 1f)
 
 
-            val blurColor = Color.Transparent
+            val fadeColor = Color.Transparent
 
-            val startY = if (blurPosition == BlurPosition.Bottom) {
-                size.height - blurDimensionPx
+            val startY = if (fadeEdge == FadeEdge.Bottom) {
+                size.height - fadeDimensionPx
             } else {
                 0f
             }
-            val endY = if (blurPosition == BlurPosition.Bottom) {
+            val endY = if (fadeEdge == FadeEdge.Bottom) {
                 size.height
             } else {
-                blurDimensionPx
+                fadeDimensionPx
             }
 
-            val start = if (blurPosition == BlurPosition.Bottom) alphaStart else alphaEnd
-            val end = if (blurPosition == BlurPosition.Bottom) alphaEnd else alphaStart
+            val start = if (fadeEdge == FadeEdge.Bottom) alphaStart else alphaEnd
+            val end = if (fadeEdge == FadeEdge.Bottom) alphaEnd else alphaStart
 
             val brush = Brush.verticalGradient(
                 startY = startY,
                 endY = endY,
                 colors = listOf(
-                    blurColor.copy(alpha = start),
-                    blurColor.copy(alpha = end)
+                    fadeColor.copy(alpha = start),
+                    fadeColor.copy(alpha = end)
                 )
             )
 
@@ -307,8 +307,8 @@ fun Modifier.drawBlur(
                 drawContent()
 
                 // Source
-                val topLeftY = if (blurPosition == BlurPosition.Bottom) {
-                    size.height - blurDimensionPx
+                val topLeftY = if (fadeEdge == FadeEdge.Bottom) {
+                    size.height - fadeDimensionPx
                 } else {
                     0f
                 }
@@ -316,14 +316,14 @@ fun Modifier.drawBlur(
                 drawRect(
                     brush = brush,
                     topLeft = Offset(0f, topLeftY),
-                    size = Size(size.width, blurDimensionPx),
+                    size = Size(size.width, fadeDimensionPx),
                     blendMode = BlendMode.DstIn
                 )
             }
         }
 }
 
-enum class BlurPosition {
+enum class FadeEdge {
     Top, Bottom
 }
 
