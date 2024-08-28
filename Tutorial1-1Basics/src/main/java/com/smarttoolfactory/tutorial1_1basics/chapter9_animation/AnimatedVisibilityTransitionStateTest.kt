@@ -1,4 +1,4 @@
-package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
+package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -142,9 +142,8 @@ fun PoppingInCardPreview() {
 @Preview
 @Composable
 fun MutableTransitionStatePreview() {
-    val visibleState = remember { MutableTransitionState(false) }
-    val transition = rememberTransition(visibleState)
-
+    val visibleState: MutableTransitionState<Boolean> = remember { MutableTransitionState(false) }
+    val transition: Transition<Boolean> = rememberTransition(visibleState)
 
     val size by transition.animateDp(
         label = "",
