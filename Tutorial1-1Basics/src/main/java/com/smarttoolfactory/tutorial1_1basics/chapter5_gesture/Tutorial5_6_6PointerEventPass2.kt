@@ -64,19 +64,19 @@ private fun TutorialContent() {
 
     var passTop by remember {
         mutableStateOf(
-            PointerEventPass.Main
+            Main
         )
     }
 
     var passMiddle by remember {
         mutableStateOf(
-            PointerEventPass.Main
+            Main
         )
     }
 
     var passBottom by remember {
         mutableStateOf(
-            PointerEventPass.Main
+            Main
         )
     }
 
@@ -135,51 +135,52 @@ private fun TutorialContent() {
             bullets = false
         )
 
-        ExposedSelectionMenu(title = "Outer PointerEventPass",
+        ExposedSelectionMenu(
+            title = "Top PointerEventPass",
             index = when (passTop) {
-                PointerEventPass.Initial -> 0
-                PointerEventPass.Main -> 1
+                Initial -> 0
+                Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
                 passTop = when (it) {
-                    0 -> PointerEventPass.Initial
-                    1 -> PointerEventPass.Main
-                    else -> PointerEventPass.Final
+                    0 -> Initial
+                    1 -> Main
+                    else -> Final
                 }
             }
         )
 
         ExposedSelectionMenu(title = "Middle PointerEventPass",
             index = when (passMiddle) {
-                PointerEventPass.Initial -> 0
-                PointerEventPass.Main -> 1
+                Initial -> 0
+                Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
                 passMiddle = when (it) {
-                    0 -> PointerEventPass.Initial
-                    1 -> PointerEventPass.Main
-                    else -> PointerEventPass.Final
+                    0 -> Initial
+                    1 -> Main
+                    else -> Final
                 }
             }
         )
 
         ExposedSelectionMenu(
-            title = "Inner PointerEventPass",
+            title = "Bottom PointerEventPass",
             index = when (passBottom) {
-                PointerEventPass.Initial -> 0
-                PointerEventPass.Main -> 1
+                Initial -> 0
+                Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
                 passBottom = when (it) {
-                    0 -> PointerEventPass.Initial
-                    1 -> PointerEventPass.Main
-                    else -> PointerEventPass.Final
+                    0 -> Initial
+                    1 -> Main
+                    else -> Final
                 }
             }
         )
