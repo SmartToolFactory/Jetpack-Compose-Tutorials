@@ -12,6 +12,8 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +21,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -43,8 +50,8 @@ import androidx.compose.ui.window.PopupProperties
 @Preview
 @Composable
 fun AnimatedVisibilityTransitionSample() {
-    val visibleState = remember { MutableTransitionState(false) }
-    val transition = rememberTransition(visibleState)
+    val visibleState: MutableTransitionState<Boolean> = remember { MutableTransitionState(false) }
+    val transition: Transition<Boolean> = rememberTransition(visibleState)
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -128,17 +135,6 @@ fun AnimatedVisibilityCloseTest() {
 
 }
 
-
-@Preview
-@Composable
-fun PoppingInCardPreview() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        PoppingInCard()
-    }
-}
-
 @Preview
 @Composable
 fun MutableTransitionStatePreview() {
@@ -173,6 +169,15 @@ fun MutableTransitionStatePreview() {
     }
 }
 
+@Preview
+@Composable
+fun PoppingInCardPreview() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        PoppingInCard()
+    }
+}
 
 // This composable enters the composition with a custom enter transition. This is achieved by
 // defining a different initialState than the first target state using `MutableTransitionState`
@@ -180,9 +185,12 @@ fun MutableTransitionStatePreview() {
 fun PoppingInCard() {
     // Creates a transition state with an initial state where visible = false
     val visibleState = remember { MutableTransitionState(false) }
-    // Sets the target state of the transition state to true. As it's different than the initial
-    // state, a transition from not visible to visible will be triggered.
-    visibleState.targetState = true
+
+    LaunchedEffect(Unit) {
+        // Sets the target state of the transition state to true. As it's different than the initial
+        // state, a transition from not visible to visible will be triggered.
+        visibleState.targetState = true
+    }
 
     // Creates a transition with the transition state created above.
     val transition: Transition<Boolean> = rememberTransition(visibleState)
@@ -220,6 +228,15 @@ fun PoppingInCard() {
             )
         }
     }
+
+    Button(
+        onClick = {
+            val currentState = visibleState.targetState
+            visibleState.targetState = currentState.not()
+        }
+    ) {
+        Text("VisibleState ${visibleState.targetState}")
+    }
     Card(
         Modifier
             .graphicsLayer(scaleX = scale, scaleY = scale)
@@ -227,4 +244,59 @@ fun PoppingInCard() {
             .fillMaxWidth(),
         elevation = elevation
     ) {}
+}
+
+@Preview
+@Composable
+fun AnimateEnterExitSample() {
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Button(
+            onClick = {
+                visible = visible.not()
+            }
+        ) {
+            Text("Visible $visible")
+        }
+
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn(
+                tween(5000)
+            ),
+            exit = fadeOut(
+                tween(5000)
+            )
+        ) {
+            // Fade in/out the background and the foreground.
+            Box(Modifier.fillMaxSize().background(Color.DarkGray)) {
+                Box(
+                    Modifier
+                        .align(Alignment.Center)
+                        .animateEnterExit(
+                            // Slide in/out the inner box.
+                            enter = slideInVertically(
+                                initialOffsetY = { fullHeight: Int ->
+                                    -fullHeight * 2
+                                }
+                            ),
+                            exit = slideOutVertically(
+                                targetOffsetY = { fullHeight: Int ->
+                                    -fullHeight * 2
+                                }
+                            )
+                        )
+                        .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
+                        .background(Color.Red)
+                ) {
+                    // Content of the notification…
+                }
+            }
+        }
+    }
 }

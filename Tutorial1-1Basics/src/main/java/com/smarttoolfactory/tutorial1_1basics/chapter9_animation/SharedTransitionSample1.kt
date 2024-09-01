@@ -77,11 +77,17 @@ fun ListToDetailsDemo() {
                                         .size(100.dp)
                                         .then(
                                             if (item % 3 < 2) {
+                                                // 🔥🔥 The order of where this modifier
+                                                // is placed in the modifier chain is important.
+                                                // Put anything you don't want to be shared before
+                                                // the sharedElement() in the modifier chain.
                                                 Modifier.sharedElement(
+                                                    // 🔥 key should match for
+                                                    // shared element transitions
                                                     rememberSharedContentState(
                                                         key = "item-image$item"
                                                     ),
-                                                    this@AnimatedContent,
+                                                    animatedVisibilityScope = this@AnimatedContent,
                                                 )
                                             } else Modifier
                                         ),
@@ -113,8 +119,10 @@ fun ListToDetailsDemo() {
                                 .then(
                                     if (item % 3 < 2) {
                                         Modifier.sharedElement(
-                                            rememberSharedContentState(key = "item-image$item"),
-                                            this@AnimatedContent,
+                                            // 🔥 key should match for
+                                            // shared element transitions
+                                            state = rememberSharedContentState(key = "item-image$item"),
+                                            animatedVisibilityScope = this@AnimatedContent,
                                         )
                                     } else Modifier
                                 )
