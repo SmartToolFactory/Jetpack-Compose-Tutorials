@@ -147,7 +147,6 @@ private val ZoomableSnacks = listOf(
         imageUrl = "https://source.unsplash.com/-LojFX9NfPY",
     ),
     ZoomableSnack(
-
         imageUrl = "https://source.unsplash.com/AHF_ZktTL6Q",
     ),
     ZoomableSnack(
@@ -160,53 +159,26 @@ private val ZoomableSnacks = listOf(
         imageUrl = "https://source.unsplash.com/33fWPnyN6tU",
     ),
     ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/aX_ljOOyWJY",
+        imageUrl = "https://source.unsplash.com/pGM4sjt_BdQ",
     ),
     ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/UsSdMZ78Q3E",
+        imageUrl = "https://source.unsplash.com/Yc5sL-ejk6U",
     ),
     ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/7meCnGCJ5Ms",
-    ),
-    ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/m741tj4Cz7M",
+        imageUrl = "https://source.unsplash.com/-LojFX9NfPY",
     ),
     ZoomableSnack(
 
-        imageUrl = "https://source.unsplash.com/iuwMdNq0-s4",
+        imageUrl = "https://source.unsplash.com/AHF_ZktTL6Q",
     ),
     ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/qgWWQU1SzqM",
+        imageUrl = "https://source.unsplash.com/rqFm0IgMVYY",
     ),
     ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/9MzCd76xLGk",
+        imageUrl = "https://source.unsplash.com/qRE_OpbVPR8",
     ),
     ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/1d9xXWMtQzQ",
-    ),
-    ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/wZxpOw84QTU",
-    ),
-    ZoomableSnack(
-
-        imageUrl = "https://source.unsplash.com/okzeRxm_GPo",
-    ),
-    ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/l7imGdupuhU",
-    ),
-    ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/bkXzABDt08Q",
-    ),
-    ZoomableSnack(
-
-        imageUrl = "https://source.unsplash.com/y2MeW00BdBo",
-    ),
-    ZoomableSnack(
-        imageUrl = "https://source.unsplash.com/1oMGgHn-M8k",
-    ),
-    ZoomableSnack(
-
-        imageUrl = "https://source.unsplash.com/TIGDsyy0TK4",
+        imageUrl = "https://source.unsplash.com/33fWPnyN6tU",
     )
 )
 
