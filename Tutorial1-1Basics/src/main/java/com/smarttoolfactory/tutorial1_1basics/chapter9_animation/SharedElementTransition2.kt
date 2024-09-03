@@ -37,8 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
-import com.smarttoolfactory.tutorial1_1basics.ui.Purple400
 
 
 /*
@@ -117,7 +117,7 @@ private fun MainContent(
                 )
                 // [START_EXCLUDE]
                 .border(1.dp, Color.Gray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                .background(Purple400.copy(alpha = .5f), RoundedCornerShape(8.dp))
+                .background(Blue400.copy(alpha = .5f), RoundedCornerShape(8.dp))
                 .clickable {
                     onShowDetails()
                 }
