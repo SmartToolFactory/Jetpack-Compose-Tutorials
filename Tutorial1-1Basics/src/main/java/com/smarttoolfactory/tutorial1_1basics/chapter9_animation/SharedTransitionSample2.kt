@@ -22,6 +22,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
-import com.smarttoolfactory.tutorial1_1basics.ui.Red400
+import com.smarttoolfactory.tutorial1_1basics.ui.Purple400
 
 
 /*
@@ -115,7 +117,7 @@ private fun MainContent(
                 )
                 // [START_EXCLUDE]
                 .border(1.dp, Color.Gray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                .background(Red400, RoundedCornerShape(8.dp))
+                .background(Purple400.copy(alpha = .5f), RoundedCornerShape(8.dp))
                 .clickable {
                     onShowDetails()
                 }
@@ -167,7 +169,7 @@ private fun DetailsContent(
                 )
                 // [START_EXCLUDE]
                 .border(1.dp, Color.Gray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                .background(Pink400, RoundedCornerShape(8.dp))
+                .background(Pink400.copy(alpha = .5f), RoundedCornerShape(8.dp))
                 .clickable {
                     onBack()
                 }
@@ -203,6 +205,56 @@ private fun DetailsContent(
                         "hendrerit massa quis ultricies. Curabitur congue ullamcorper leo, at maximus"
             )
             // [END_EXCLUDE]
+        }
+    }
+}
+
+val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
+
+@Preview
+@Composable
+private fun SharedElementScope_CompositionLocal() {
+
+    // An example of how to use composition locals to pass around the shared transition scope, far down your UI tree.
+    // [START_EXCLUDE]
+    var state by remember {
+        mutableStateOf(false)
+    }
+    // [END_EXCLUDE]
+    SharedTransitionLayout {
+        CompositionLocalProvider(
+            LocalSharedTransitionScope provides this
+        ) {
+            // This could also be your top-level NavHost as this provides an AnimatedContentScope
+            AnimatedContent(state, label = "Top level AnimatedContent") { targetState ->
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+                    // Now we can access the scopes in any nested composables as follows:
+                    val sharedTransitionScope = LocalSharedTransitionScope.current
+                        ?: throw IllegalStateException("No SharedElementScope found")
+                    val animatedVisibilityScope = LocalNavAnimatedVisibilityScope.current
+                        ?: throw IllegalStateException("No AnimatedVisibility found")
+
+                    if (targetState.not()) {
+                        MainContent(
+                            onShowDetails = {
+                                state = true
+                            },
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            sharedTransitionScope = sharedTransitionScope
+                        )
+                    } else {
+                        DetailsContent(
+                            onBack = {
+                                state = false
+                            },
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            sharedTransitionScope = sharedTransitionScope
+                        )
+                    }
+                }
+
+            }
         }
     }
 }
