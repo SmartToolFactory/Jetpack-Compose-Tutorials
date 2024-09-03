@@ -99,11 +99,13 @@ private fun ColumnScope.NestedScrollExample() {
         in order to continue the propagation of the velocity that is left to ancestors above.
      */
 
-    val nestedScrollConnection = remember {
+    val parentNestedConnection = remember {
         object : NestedScrollConnection {
 
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                text = "onPreScroll()\n" +
+                println("🔥Parent onPreScroll() available: $available")
+
+                text = "Parent onPreScroll()\n" +
                         "available: $available\n" +
                         "source: $source\n\n"
                 return super.onPreScroll(available, source)
@@ -114,7 +116,9 @@ private fun ColumnScope.NestedScrollExample() {
                 available: Offset,
                 source: NestedScrollSource
             ): Offset {
-                text += "onPostScroll()\n" +
+                println("🔥🔥Parent onPostScroll() available: $available, consumed: $consumed")
+
+                text += "Parent onPostScroll()\n" +
                         "consumed: $consumed\n" +
                         "available: $available\n" +
                         "source: $source\n\n"
@@ -122,13 +126,13 @@ private fun ColumnScope.NestedScrollExample() {
             }
 
             override suspend fun onPreFling(available: Velocity): Velocity {
-                text += "onPreFling()\n" +
+                text += "Parent onPreFling()\n" +
                         " available: $available\n\n"
                 return super.onPreFling(available)
             }
 
             override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-                text += "onPostFling()\n" +
+                text += "Parent onPostFling()\n" +
                         "consumed: $consumed\n" +
                         "available: $available\n\n"
                 return super.onPostFling(consumed, available)
@@ -136,12 +140,44 @@ private fun ColumnScope.NestedScrollExample() {
         }
     }
 
+    val childNestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                println("Child onPreScroll() available: $available")
+                return super.onPreScroll(available, source)
+            }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                println("Child onPostScroll() available: $available, consumed: $consumed")
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
+    }
+
+    /*
+        Prints something such as
+        I  🔥Parent onPreScroll() available: Offset(0.0, -12.6)
+        I  Child onPreScroll() available: Offset(0.0, -12.6)
+        I  Child onPostScroll() available: Offset(0.0, 0.0), consumed: Offset(0.0, -12.6)
+        I  🔥🔥Parent onPostScroll() available: Offset(0.0, 0.0), consumed: Offset(0.0, -12.6)
+     */
+
     Box(
         Modifier
             .weight(1f)
-            .nestedScroll(nestedScrollConnection)
+            .nestedScroll(parentNestedConnection)
     ) {
         LazyColumn(
+            modifier = Modifier.nestedScroll(
+                connection = childNestedScrollConnection
+            ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(100) {
