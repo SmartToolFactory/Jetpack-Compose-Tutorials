@@ -8,12 +8,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +25,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -72,17 +77,7 @@ data class ImgAnnotation(
 @Preview
 @Composable
 fun ContentScaleTest() {
-    val imageBitmap = ImageBitmap.imageResource(R.drawable.landscape11)
-
-
-    var rect by remember {
-        mutableStateOf(Rect.Zero)
-    }
-
-
-    var scaleFactor by remember {
-        mutableStateOf(ScaleFactor(1f, 1f))
-    }
+    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape3)
 
     val imgAnnotationList = remember {
         mutableStateListOf<ImgAnnotation>()
@@ -124,85 +119,142 @@ fun ContentScaleTest() {
 
     val context = LocalContext.current
 
-
-    var contentScale by remember {
-        mutableStateOf(ContentScale.Fit)
-    }
-
-
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
 
-        Text("Rect: $rect")
-
-        Box(
-            modifier = Modifier.padding(16.dp)
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(1f),
+            contentScale = ContentScale.Fit,
+            imgAnnotationList = imgAnnotationList,
+            imageBitmap = imageBitmap
         ) {
-            Image(
-                modifier = Modifier
-                    .border(2.dp, Color.Red)
-                    .fillMaxWidth()
-                    .aspectRatio(3 / 4f)
-                    .drawWithContent {
-                        drawContent()
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} at " +
+                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
-                        // This is for displaying area that bitmap is drawn in Image Composable
-                        drawRect(
-                            color = Color.Green,
-                            topLeft = rect.topLeft,
-                            size = rect.size,
-                            style = Stroke(
-                                4.dp.toPx(),
-                            )
+        Spacer(modifier = Modifier.height(16.dp))
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(4 / 3f),
+            contentScale = ContentScale.FillBounds,
+            imgAnnotationList = imgAnnotationList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} " +
+                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(5 / 3f),
+            contentScale = ContentScale.Fit,
+            imgAnnotationList = imgAnnotationList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} at " +
+                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+}
+
+@Composable
+private fun ImageWithMarkers(
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale,
+    imgAnnotationList: SnapshotStateList<ImgAnnotation>,
+    imageBitmap: ImageBitmap,
+    onClick: (ImgAnnotation) -> Unit
+) {
+
+    var rect by remember {
+        mutableStateOf(Rect.Zero)
+    }
+
+    var scaleFactor by remember {
+        mutableStateOf(ScaleFactor(1f, 1f))
+    }
+
+    Box(
+        modifier = Modifier.padding(vertical = 16.dp)
+    ) {
+
+        Image(
+            modifier = modifier
+                .drawWithContent {
+                    drawContent()
+
+                    // This is for displaying area that bitmap is drawn in Image Composable
+                    drawRect(
+                        color = Color.Green,
+                        topLeft = rect.topLeft,
+                        size = rect.size,
+                        style = Stroke(
+                            4.dp.toPx(),
                         )
-                    }
-                    .pointerInput(Unit) {
-                        detectTapGestures { offset: Offset ->
-                            val isTouchInImage = rect.contains(offset)
-                            if (isTouchInImage) {
-                                val xOnImage = (offset.x - rect.left) * scaleFactor.scaleX
-                                val yOnImage = (offset.y - rect.top) * scaleFactor.scaleY
-                                imgAnnotationList.add(
-                                    ImgAnnotation(UUID.randomUUID().toString(), xOnImage, yOnImage)
-                                )
-                            }
+                    )
+                }
+                .pointerInput(contentScale) {
+                    detectTapGestures { offset: Offset ->
+                        val isTouchInImage = rect.contains(offset)
+                        if (isTouchInImage) {
+                            // Calculate touch position scaled into Bitmap
+                            val xOnImage = (offset.x - rect.left) / scaleFactor.scaleX
+                            val yOnImage = (offset.y - rect.top) / scaleFactor.scaleY
+                            imgAnnotationList.add(
+                                ImgAnnotation(UUID.randomUUID().toString(), xOnImage, yOnImage)
+                            )
                         }
                     }
-                    .onSizeChanged {
-                        val imageSize = it
-                        val dstSize: Size = imageSize.toSize()
-                        val srcSize =
-                            Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
+                }
+                .onSizeChanged {
+                    val imageSize = it
+                    val dstSize: Size = imageSize.toSize()
+                    val srcSize =
+                        Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
 
-                        rect = calculateRect(srcSize, dstSize, contentScale)
+                    rect = calculateRect(srcSize, dstSize, contentScale)
 
-                        val rectWidth = rect.width
-                        val rectHeight = rect.height
-                        val ratioX = rectWidth / imageSize.width
-                        val ratioY = rectHeight / imageSize.height
+                    val rectWidth = rect.width
+                    val rectHeight = rect.height
+                    val ratioX = rectWidth / srcSize.width
+                    val ratioY = rectHeight / srcSize.height
+                    scaleFactor = ScaleFactor(ratioX, ratioY)
+                },
+            bitmap = imageBitmap,
+            contentScale = contentScale,
+            contentDescription = null
+        )
 
-                        scaleFactor = ScaleFactor(ratioX, ratioY)
-
-                    },
-                bitmap = imageBitmap,
-                contentScale = contentScale,
-                contentDescription = null
-            )
-
-            ShapesOnImage(
-                list = imgAnnotationList,
-                rect = rect,
-                scaleFactor = scaleFactor
-            ) {
-                Toast.makeText(
-                    context,
-                    "Clicked: ${it.uid.substring(startIndex = 0, endIndex = 3)} " +
-                            "at: ${it.coordinateX}, y: ${it.coordinateY}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        ShapesOnImage(
+            list = imgAnnotationList,
+            rect = rect,
+            scaleFactor = scaleFactor,
+            onClick = onClick
+        )
     }
 }
 
@@ -213,47 +265,40 @@ fun ShapesOnImage(
     scaleFactor: ScaleFactor,
     onClick: (ImgAnnotation) -> Unit
 ) {
+    if (rect != Rect.Zero) {
+        list.forEachIndexed { index, imgAnnotation ->
 
-    list.forEachIndexed { index, imgAnnotation ->
-        val coordinateX = imgAnnotation.coordinateX
-        val coordinateY = imgAnnotation.coordinateY
+            val coordinateX = imgAnnotation.coordinateX
+            val coordinateY = imgAnnotation.coordinateY
 
-        val adjustedCoordinatedX = coordinateX / scaleFactor.scaleX
-        val adjustedCoordinatedY = coordinateY / scaleFactor.scaleY
+            val xOnScreen = rect.left + coordinateX * scaleFactor.scaleX
+            val yOnScreen = rect.top + coordinateY * scaleFactor.scaleY
 
-        val xOnScreen = rect.left + adjustedCoordinatedX
-        val yOnScreen = rect.top + adjustedCoordinatedY
+            Box(
+                modifier = Modifier
+                    .layout { measurable, constraints ->
+                        val placeable = measurable.measure(constraints)
 
-        println(
-            "adjustedCoordinatedX: $adjustedCoordinatedX, " +
-                    "adjustedCoordinatedY: $adjustedCoordinatedY, " +
-                    "xOnScreen: $xOnScreen, yOnScreen: $yOnScreen"
-        )
+                        val width = placeable.width
+                        val height = placeable.height
 
-        Box(
-            modifier = Modifier
-                .layout { measurable, constraints ->
-                    val placeable = measurable.measure(constraints)
+                        val xPos = (xOnScreen - width / 2).toInt()
+                        val yPos = (yOnScreen - height / 2).toInt()
 
-                    val width = placeable.width
-                    val height = placeable.height
-
-                    val xPos = (xOnScreen - width / 2).toInt()
-                    val yPos = (yOnScreen - height / 2).toInt()
-
-                    layout(placeable.width, placeable.height) {
-                        placeable.placeRelative(xPos, yPos)
+                        layout(placeable.width, placeable.height) {
+                            placeable.placeRelative(xPos, yPos)
+                        }
                     }
-                }
-                .size(30.dp)
-                .background(Color.Red, CircleShape)
-                .clickable {
-                    onClick(imgAnnotation)
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Text("${index + 1}", color = Color.White)
-        }
+                    .size(30.dp)
+                    .background(Color.Red, CircleShape)
+                    .clickable {
+                        onClick(imgAnnotation)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text("${index + 1}", color = Color.White)
+            }
 
+        }
     }
 }
