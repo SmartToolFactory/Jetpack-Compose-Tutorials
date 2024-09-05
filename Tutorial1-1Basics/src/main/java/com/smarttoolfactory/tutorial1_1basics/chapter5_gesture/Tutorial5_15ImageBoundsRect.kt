@@ -76,7 +76,7 @@ data class ImgAnnotation(
 
 @Preview
 @Composable
-fun ContentScaleTest() {
+fun ImageWithMarkersSample() {
     val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape3)
 
     val imgAnnotationList = remember {
