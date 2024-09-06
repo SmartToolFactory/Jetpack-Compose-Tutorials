@@ -42,7 +42,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -155,7 +154,7 @@ fun ImageWithMarkersSample() {
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(8.dp)
     ) {
 
         Text("ContentScale: ContentScale.Fit, alignment: TopCenter")
@@ -225,7 +224,7 @@ fun ImageWithMarkersSample() {
                 .border(2.dp, Color.Red)
                 .background(Color.LightGray)
                 .fillMaxWidth()
-                .aspectRatio(4 / 3f),
+                .aspectRatio(3 / 4f),
             contentScale = ContentScale.Crop,
             imgAnnotationList = imgAnnotationList,
             imageBitmap = imageBitmap
@@ -238,7 +237,26 @@ fun ImageWithMarkersSample() {
             ).show()
         }
 
-
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("ContentScale: ContentScale.Crop, alignment: TopStart")
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(3 / 4f),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.TopStart,
+            imgAnnotationList = imgAnnotationList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} " +
+                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
 
@@ -298,10 +316,6 @@ private fun ImageWithMarkers(
         mutableStateOf(ImageProperties.Zero)
     }
 
-    var scaleFactor by remember {
-        mutableStateOf(ScaleFactor(1f, 1f))
-    }
-
     Box(
         modifier = Modifier.padding(vertical = 16.dp)
     ) {
@@ -327,13 +341,22 @@ private fun ImageWithMarkers(
 
                         val drawAreaRect = imageProperties.drawAreaRect
                         val isTouchInImage = drawAreaRect.contains(offset)
+
                         if (isTouchInImage) {
                             val bitmapRect = imageProperties.bitmapRect
+
                             // Calculate touch position scaled into Bitmap
+                            // using scale between area on screen / bitmap on screen
+                            // Bitmap on screen might change based on crop or other
+                            // ContentScales that clip image
+                            val ratioX = drawAreaRect.width / bitmapRect.width
+                            val ratioY = drawAreaRect.height / bitmapRect.height
+
                             val xOnImage =
-                                bitmapRect.left + (offset.x - drawAreaRect.left) / scaleFactor.scaleX
+                                bitmapRect.left + (offset.x - drawAreaRect.left) / ratioX
                             val yOnImage =
-                                bitmapRect.top + (offset.y - drawAreaRect.top) / scaleFactor.scaleY
+                                bitmapRect.top + (offset.y - drawAreaRect.top) / ratioY
+
                             imgAnnotationList.add(
                                 ImgAnnotation(UUID.randomUUID().toString(), xOnImage, yOnImage)
                             )
@@ -352,16 +375,6 @@ private fun ImageWithMarkers(
                         contentScale = contentScale,
                         alignment = alignment
                     )
-
-
-                    val bitmapRect = imageProperties.bitmapRect
-
-                    val drawAreaRect = imageProperties.drawAreaRect
-                    val rectWidth = drawAreaRect.width
-                    val rectHeight = drawAreaRect.height
-                    val ratioX = rectWidth / srcSize.width
-                    val ratioY = rectHeight / srcSize.height
-                    scaleFactor = ScaleFactor(ratioX, ratioY)
                 },
             bitmap = imageBitmap,
             contentScale = contentScale,
@@ -372,7 +385,6 @@ private fun ImageWithMarkers(
         ShapesOnImage(
             list = imgAnnotationList,
             imageProperties = imageProperties,
-            scaleFactor = scaleFactor,
             onClick = onClick
         )
     }
@@ -382,7 +394,6 @@ private fun ImageWithMarkers(
 fun ShapesOnImage(
     list: List<ImgAnnotation>,
     imageProperties: ImageProperties,
-    scaleFactor: ScaleFactor,
     onClick: (ImgAnnotation) -> Unit
 ) {
     if (imageProperties != ImageProperties.Zero) {
@@ -393,8 +404,12 @@ fun ShapesOnImage(
 
             val drawAreaRect = imageProperties.drawAreaRect
             val bitmapRect = imageProperties.bitmapRect
-            val xOnScreen = drawAreaRect.left + (coordinateX - bitmapRect.left) * scaleFactor.scaleX
-            val yOnScreen = drawAreaRect.top + (coordinateY - bitmapRect.top) * scaleFactor.scaleY
+
+            val ratioX = drawAreaRect.width / bitmapRect.width
+            val ratioY = drawAreaRect.height / bitmapRect.height
+
+            val xOnScreen = drawAreaRect.left + (coordinateX - bitmapRect.left) * ratioX
+            val yOnScreen = drawAreaRect.top + (coordinateY - bitmapRect.top) * ratioY
 
             Box(
                 modifier = Modifier
@@ -411,7 +426,7 @@ fun ShapesOnImage(
                             placeable.placeRelative(xPos, yPos)
                         }
                     }
-                    .size(30.dp)
+                    .size(20.dp)
                     .background(Color.Red, CircleShape)
                     .clickable {
                         onClick(imgAnnotation)
