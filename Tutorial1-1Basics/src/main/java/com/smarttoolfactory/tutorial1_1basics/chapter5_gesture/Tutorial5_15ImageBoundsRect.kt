@@ -54,7 +54,398 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import java.util.UUID
 
 
-private fun getDrawAreaRect(
+@Preview
+@Composable
+fun ImageWithMarkersSample() {
+    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape1)
+
+    val markerList = rememberMarkerList()
+
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(8.dp)
+    ) {
+
+        Text("ContentScale: ContentScale.Fit, alignment: TopCenter")
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(4 / 3f),
+            contentScale = ContentScale.Fit,
+            markerList = markerList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} at " +
+                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("ContentScale: ContentScale.FillBounds, alignment: TopCenter")
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(3 / 2f),
+            contentScale = ContentScale.FillBounds,
+            markerList = markerList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} " +
+                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("ContentScale: ContentScale.Fit, alignment: BottomEnd")
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(5 / 3f),
+            contentScale = ContentScale.Fit,
+            alignment = Alignment.BottomEnd,
+            markerList = markerList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} at " +
+                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("ContentScale: ContentScale.Crop, alignment: TopCenter")
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(3 / 4f),
+            contentScale = ContentScale.Crop,
+            markerList = markerList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} " +
+                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("ContentScale: ContentScale.Crop, alignment: TopStart")
+        ImageWithMarkers(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(3 / 4f),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.TopStart,
+            markerList = markerList,
+            imageBitmap = imageBitmap
+        ) {
+            Toast.makeText(
+                context,
+                "Clicked ${it.uid.substring(0, 4)} " +
+                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+}
+
+@Composable
+private fun rememberMarkerList(): SnapshotStateList<Marker> {
+    val markerList = remember {
+        mutableStateListOf<Marker>()
+            .apply {
+                add(
+                    Marker(
+                        uid = "45224",
+                        coordinateX = 10f,
+                        coordinateY = 10f,
+                        note = "Sample text 1"
+                    )
+                )
+                add(
+                    Marker(
+                        uid = "6454",
+                        coordinateX = 50f,
+                        coordinateY = 50f,
+                        note = "Sample text 2"
+                    )
+                )
+                add(
+                    Marker(
+                        uid = "211111",
+                        coordinateX = 200f,
+                        coordinateY = 90f,
+                        note = "Sample text 3"
+                    )
+                )
+                add(
+                    Marker(
+                        uid = "21555",
+                        coordinateX = 32f,
+                        coordinateY = 93f,
+                        note = "Sample text 4"
+                    )
+                )
+            }
+    }
+    return markerList
+}
+
+@Composable
+private fun ImageWithMarkers(
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale,
+    alignment: Alignment = Alignment.Center,
+    markerList: SnapshotStateList<Marker>,
+    imageBitmap: ImageBitmap,
+    onClick: (Marker) -> Unit
+) {
+
+    var imageProperties by remember {
+        mutableStateOf(ImageProperties.Zero)
+    }
+
+    Box(
+        modifier = Modifier.padding(vertical = 16.dp)
+    ) {
+
+        Image(
+            modifier = modifier
+                .drawWithContent {
+                    drawContent()
+                    val drawAreaRect = imageProperties.drawAreaRect
+
+                    // This is for displaying area that bitmap is drawn in Image Composable
+                    drawRect(
+                        color = Color.Green,
+                        topLeft = drawAreaRect.topLeft,
+                        size = drawAreaRect.size,
+                        style = Stroke(
+                            4.dp.toPx(),
+                        )
+                    )
+                }
+                .pointerInput(contentScale) {
+                    detectTapGestures { offset: Offset ->
+
+                        val drawAreaRect = imageProperties.drawAreaRect
+                        val isTouchInImage = drawAreaRect.contains(offset)
+
+                        if (isTouchInImage) {
+                            val bitmapRect = imageProperties.bitmapRect
+
+                            // Calculate touch position scaled into Bitmap
+                            // using scale between area on screen / bitmap on screen
+                            // Bitmap on screen might change based on crop or other
+                            // ContentScales that clip image
+                            val ratioX = drawAreaRect.width / bitmapRect.width
+                            val ratioY = drawAreaRect.height / bitmapRect.height
+
+                            val xOnImage =
+                                bitmapRect.left + (offset.x - drawAreaRect.left) / ratioX
+                            val yOnImage =
+                                bitmapRect.top + (offset.y - drawAreaRect.top) / ratioY
+
+                            markerList.add(
+                                Marker(UUID.randomUUID().toString(), xOnImage, yOnImage)
+                            )
+                        }
+                    }
+                }
+                .onSizeChanged {
+                    val imageSize = it
+                    val dstSize: Size = imageSize.toSize()
+                    val srcSize =
+                        Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
+
+                    imageProperties = calculateImageDrawProperties(
+                        srcSize = srcSize,
+                        dstSize = dstSize,
+                        contentScale = contentScale,
+                        alignment = alignment
+                    )
+                },
+            bitmap = imageBitmap,
+            contentScale = contentScale,
+            alignment = alignment,
+            contentDescription = null
+        )
+
+        ShapesOnImage(
+            list = markerList,
+            imageProperties = imageProperties,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
+fun ShapesOnImage(
+    list: List<Marker>,
+    imageProperties: ImageProperties,
+    onClick: (Marker) -> Unit
+) {
+    if (imageProperties != ImageProperties.Zero) {
+        list.forEachIndexed { index, marker ->
+
+            val offsetOnScreen = scaleFromBitmapToScreenPosition(
+                Offset(
+                    marker.coordinateX,
+                    marker.coordinateY
+                ), imageProperties
+            )
+
+            Box(
+                modifier = Modifier
+                    .layout { measurable, constraints ->
+                        val placeable = measurable.measure(constraints)
+
+                        val width = placeable.width
+                        val height = placeable.height
+                        val xOnScreen = offsetOnScreen.x
+                        val yOnScreen = offsetOnScreen.y
+
+                        val xPos = (xOnScreen - width / 2).toInt()
+                        val yPos = (yOnScreen - height / 2).toInt()
+
+                        layout(placeable.width, placeable.height) {
+                            placeable.placeRelative(xPos, yPos)
+                        }
+                    }
+                    .size(20.dp)
+                    .background(Color.Red, CircleShape)
+                    .clickable {
+                        onClick(marker)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text("${index + 1}", color = Color.White)
+            }
+
+        }
+    }
+}
+
+
+data class Marker(
+    val uid: String,
+    val coordinateX: Float,
+    val coordinateY: Float,
+    val note: String = ""
+)
+
+data class ImageProperties(
+    val drawAreaRect: Rect,
+    val bitmapRect: Rect
+) {
+    companion object {
+
+        @Stable
+        val Zero: ImageProperties = ImageProperties(
+            drawAreaRect = Rect.Zero,
+            bitmapRect = Rect.Zero
+        )
+    }
+}
+
+/**
+ * Get position on screen from position on A Bitmap
+ * [offsetBitmap] is the position on a Bitmap
+ *
+ * @return position on screen
+ */
+internal fun scaleFromBitmapToScreenPosition(
+    offsetBitmap: Offset,
+    imageProperties: ImageProperties
+): Offset {
+    val coordinateX = offsetBitmap.x
+    val coordinateY = offsetBitmap.y
+
+    val drawAreaRect = imageProperties.drawAreaRect
+    val bitmapRect = imageProperties.bitmapRect
+
+    val ratioX = drawAreaRect.width / bitmapRect.width
+    val ratioY = drawAreaRect.height / bitmapRect.height
+
+    val xOnScreen = drawAreaRect.left + (coordinateX - bitmapRect.left) * ratioX
+    val yOnScreen = drawAreaRect.top + (coordinateY - bitmapRect.top) * ratioY
+    return Offset(xOnScreen, yOnScreen)
+}
+
+internal fun calculateImageDrawProperties(
+    srcSize: Size,
+    dstSize: Size,
+    contentScale: ContentScale,
+    alignment: Alignment
+): ImageProperties {
+    val scaleFactor = contentScale.computeScaleFactor(srcSize, dstSize)
+
+    // Bitmap scaled size that might be drawn,  this size can be bigger or smaller than
+    // draw area. If Bitmap is bigger than container it's cropped only to show
+    // which will be on screen
+    //
+    val scaledSrcSize = Size(
+        srcSize.width * scaleFactor.scaleX,
+        srcSize.height * scaleFactor.scaleY
+    )
+
+    val biasAlignment: BiasAlignment = alignment as BiasAlignment
+
+    // - Left, 0 Center, 1 Right
+    val horizontalBias: Float = biasAlignment.horizontalBias
+    // -1 Top, 0 Center, 1 Bottom
+    val verticalBias: Float = biasAlignment.verticalBias
+
+    // DrawAreaRect returns the area that bitmap is drawn in Container
+    // This rectangle is useful for getting are after gaps on any side based on
+    // alignment and ContentScale
+    val drawAreaRect = getDrawAreaRect(
+        dstSize,
+        scaledSrcSize,
+        horizontalBias,
+        verticalBias
+    )
+
+    // BitmapRect returns that Rectangle to show which section of Bitmap is visible on screen
+    val bitmapRect = getScaledBitmapRect(
+        horizontalBias = horizontalBias,
+        verticalBias = verticalBias,
+        containerWidth = dstSize.width.toInt(),
+        containerHeight = dstSize.height.toInt(),
+        scaledImageWidth = scaledSrcSize.width,
+        scaledImageHeight = scaledSrcSize.height,
+        bitmapWidth = srcSize.width.toInt(),
+        bitmapHeight = srcSize.height.toInt()
+    )
+
+    return ImageProperties(
+        drawAreaRect = drawAreaRect,
+        bitmapRect = bitmapRect
+    )
+}
+
+internal fun getDrawAreaRect(
     dstSize: Size,
     scaledSrcSize: Size,
     horizontalBias: Float,
@@ -142,373 +533,4 @@ internal fun getScaledBitmapRect(
     )
 
     return Rect(offset = topLeft, size = size)
-}
-
-@Preview
-@Composable
-fun ImageWithMarkersSample() {
-    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape1)
-
-    val imgAnnotationList = imgAnnotations()
-
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(8.dp)
-    ) {
-
-        Text("ContentScale: ContentScale.Fit, alignment: TopCenter")
-        ImageWithMarkers(
-            modifier = Modifier
-                .border(2.dp, Color.Red)
-                .background(Color.LightGray)
-                .fillMaxWidth()
-                .aspectRatio(4 / 3f),
-            contentScale = ContentScale.Fit,
-            imgAnnotationList = imgAnnotationList,
-            imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} at " +
-                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("ContentScale: ContentScale.FillBounds, alignment: TopCenter")
-        ImageWithMarkers(
-            modifier = Modifier
-                .border(2.dp, Color.Red)
-                .background(Color.LightGray)
-                .fillMaxWidth()
-                .aspectRatio(3 / 2f),
-            contentScale = ContentScale.FillBounds,
-            imgAnnotationList = imgAnnotationList,
-            imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} " +
-                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("ContentScale: ContentScale.Fit, alignment: BottomEnd")
-        ImageWithMarkers(
-            modifier = Modifier
-                .border(2.dp, Color.Red)
-                .background(Color.LightGray)
-                .fillMaxWidth()
-                .aspectRatio(5 / 3f),
-            contentScale = ContentScale.Fit,
-            alignment = Alignment.BottomEnd,
-            imgAnnotationList = imgAnnotationList,
-            imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} at " +
-                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("ContentScale: ContentScale.Crop, alignment: TopCenter")
-        ImageWithMarkers(
-            modifier = Modifier
-                .border(2.dp, Color.Red)
-                .background(Color.LightGray)
-                .fillMaxWidth()
-                .aspectRatio(3 / 4f),
-            contentScale = ContentScale.Crop,
-            imgAnnotationList = imgAnnotationList,
-            imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} " +
-                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("ContentScale: ContentScale.Crop, alignment: TopStart")
-        ImageWithMarkers(
-            modifier = Modifier
-                .border(2.dp, Color.Red)
-                .background(Color.LightGray)
-                .fillMaxWidth()
-                .aspectRatio(3 / 4f),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.TopStart,
-            imgAnnotationList = imgAnnotationList,
-            imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} " +
-                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-}
-
-@Composable
-private fun imgAnnotations(): SnapshotStateList<ImgAnnotation> {
-    val imgAnnotationList = remember {
-        mutableStateListOf<ImgAnnotation>()
-            .apply {
-                add(
-                    ImgAnnotation(
-                        uid = "45224",
-                        coordinateX = 10f,
-                        coordinateY = 10f,
-                        note = "Sample text 1"
-                    )
-                )
-                add(
-                    ImgAnnotation(
-                        uid = "6454",
-                        coordinateX = 50f,
-                        coordinateY = 50f,
-                        note = "Sample text 2"
-                    )
-                )
-                add(
-                    ImgAnnotation(
-                        uid = "211111",
-                        coordinateX = 200f,
-                        coordinateY = 90f,
-                        note = "Sample text 3"
-                    )
-                )
-                add(
-                    ImgAnnotation(
-                        uid = "21555",
-                        coordinateX = 32f,
-                        coordinateY = 93f,
-                        note = "Sample text 4"
-                    )
-                )
-            }
-    }
-    return imgAnnotationList
-}
-
-@Composable
-private fun ImageWithMarkers(
-    modifier: Modifier = Modifier,
-    contentScale: ContentScale,
-    alignment: Alignment = Alignment.Center,
-    imgAnnotationList: SnapshotStateList<ImgAnnotation>,
-    imageBitmap: ImageBitmap,
-    onClick: (ImgAnnotation) -> Unit
-) {
-
-    var imageProperties by remember {
-        mutableStateOf(ImageProperties.Zero)
-    }
-
-    Box(
-        modifier = Modifier.padding(vertical = 16.dp)
-    ) {
-
-        Image(
-            modifier = modifier
-                .drawWithContent {
-                    drawContent()
-                    val drawAreaRect = imageProperties.drawAreaRect
-
-                    // This is for displaying area that bitmap is drawn in Image Composable
-                    drawRect(
-                        color = Color.Green,
-                        topLeft = drawAreaRect.topLeft,
-                        size = drawAreaRect.size,
-                        style = Stroke(
-                            4.dp.toPx(),
-                        )
-                    )
-                }
-                .pointerInput(contentScale) {
-                    detectTapGestures { offset: Offset ->
-
-                        val drawAreaRect = imageProperties.drawAreaRect
-                        val isTouchInImage = drawAreaRect.contains(offset)
-
-                        if (isTouchInImage) {
-                            val bitmapRect = imageProperties.bitmapRect
-
-                            // Calculate touch position scaled into Bitmap
-                            // using scale between area on screen / bitmap on screen
-                            // Bitmap on screen might change based on crop or other
-                            // ContentScales that clip image
-                            val ratioX = drawAreaRect.width / bitmapRect.width
-                            val ratioY = drawAreaRect.height / bitmapRect.height
-
-                            val xOnImage =
-                                bitmapRect.left + (offset.x - drawAreaRect.left) / ratioX
-                            val yOnImage =
-                                bitmapRect.top + (offset.y - drawAreaRect.top) / ratioY
-
-                            imgAnnotationList.add(
-                                ImgAnnotation(UUID.randomUUID().toString(), xOnImage, yOnImage)
-                            )
-                        }
-                    }
-                }
-                .onSizeChanged {
-                    val imageSize = it
-                    val dstSize: Size = imageSize.toSize()
-                    val srcSize =
-                        Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
-
-                    imageProperties = calculateImageDrawProperties(
-                        srcSize = srcSize,
-                        dstSize = dstSize,
-                        contentScale = contentScale,
-                        alignment = alignment
-                    )
-                },
-            bitmap = imageBitmap,
-            contentScale = contentScale,
-            alignment = alignment,
-            contentDescription = null
-        )
-
-        ShapesOnImage(
-            list = imgAnnotationList,
-            imageProperties = imageProperties,
-            onClick = onClick
-        )
-    }
-}
-
-@Composable
-fun ShapesOnImage(
-    list: List<ImgAnnotation>,
-    imageProperties: ImageProperties,
-    onClick: (ImgAnnotation) -> Unit
-) {
-    if (imageProperties != ImageProperties.Zero) {
-        list.forEachIndexed { index, imgAnnotation ->
-
-            val coordinateX = imgAnnotation.coordinateX
-            val coordinateY = imgAnnotation.coordinateY
-
-            val drawAreaRect = imageProperties.drawAreaRect
-            val bitmapRect = imageProperties.bitmapRect
-
-            val ratioX = drawAreaRect.width / bitmapRect.width
-            val ratioY = drawAreaRect.height / bitmapRect.height
-
-            val xOnScreen = drawAreaRect.left + (coordinateX - bitmapRect.left) * ratioX
-            val yOnScreen = drawAreaRect.top + (coordinateY - bitmapRect.top) * ratioY
-
-            Box(
-                modifier = Modifier
-                    .layout { measurable, constraints ->
-                        val placeable = measurable.measure(constraints)
-
-                        val width = placeable.width
-                        val height = placeable.height
-
-                        val xPos = (xOnScreen - width / 2).toInt()
-                        val yPos = (yOnScreen - height / 2).toInt()
-
-                        layout(placeable.width, placeable.height) {
-                            placeable.placeRelative(xPos, yPos)
-                        }
-                    }
-                    .size(20.dp)
-                    .background(Color.Red, CircleShape)
-                    .clickable {
-                        onClick(imgAnnotation)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text("${index + 1}", color = Color.White)
-            }
-
-        }
-    }
-}
-
-data class ImgAnnotation(
-    val uid: String,
-    val coordinateX: Float,
-    val coordinateY: Float,
-    val note: String = ""
-)
-
-data class ImageProperties(
-    val drawAreaRect: Rect,
-    val bitmapRect: Rect
-) {
-    companion object {
-
-        @Stable
-        val Zero: ImageProperties = ImageProperties(
-            drawAreaRect = Rect.Zero,
-            bitmapRect = Rect.Zero
-        )
-    }
-}
-
-private fun calculateImageDrawProperties(
-    srcSize: Size,
-    dstSize: Size,
-    contentScale: ContentScale,
-    alignment: Alignment
-): ImageProperties {
-    val scaleFactor = contentScale.computeScaleFactor(srcSize, dstSize)
-
-    // Bitmap scaled size that might be drawn,  this size can be bigger or smaller than
-    // draw area. If Bitmap is bigger than container it's cropped only to show
-    // which will be on screen
-    //
-    val scaledSrcSize = Size(
-        srcSize.width * scaleFactor.scaleX,
-        srcSize.height * scaleFactor.scaleY
-    )
-
-    val biasAlignment: BiasAlignment = alignment as BiasAlignment
-
-    // - Left, 0 Center, 1 Right
-    val horizontalBias: Float = biasAlignment.horizontalBias
-    // -1 Top, 0 Center, 1 Bottom
-    val verticalBias: Float = biasAlignment.verticalBias
-
-    // DrawAreaRect returns the area that bitmap is drawn in Container
-    // This rectangle is useful for getting are after gaps on any side based on
-    // alignment and ContentScale
-    val drawAreaRect = getDrawAreaRect(
-        dstSize,
-        scaledSrcSize,
-        horizontalBias,
-        verticalBias
-    )
-
-    // BitmapRect returns that Rectangle to show which section of Bitmap is visible on screen
-    val bitmapRect = getScaledBitmapRect(
-        horizontalBias = horizontalBias,
-        verticalBias = verticalBias,
-        containerWidth = dstSize.width.toInt(),
-        containerHeight = dstSize.height.toInt(),
-        scaledImageWidth = scaledSrcSize.width,
-        scaledImageHeight = scaledSrcSize.height,
-        bitmapWidth = srcSize.width.toInt(),
-        bitmapHeight = srcSize.height.toInt()
-    )
-
-    return ImageProperties(
-        drawAreaRect = drawAreaRect,
-        bitmapRect = bitmapRect
-    )
 }
