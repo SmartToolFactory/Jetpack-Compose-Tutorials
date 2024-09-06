@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
@@ -49,15 +50,41 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import java.util.UUID
 
 
-private fun calculateRect(srcSize: Size, dstSize: Size, contentScale: ContentScale): Rect {
+private fun calculateRect(
+    srcSize: Size,
+    dstSize: Size,
+    contentScale: ContentScale,
+    alignment: Alignment
+): Rect {
     val scaleFactor = contentScale.computeScaleFactor(srcSize, dstSize)
 
     val scaledSrcSize = Size(
         srcSize.width * scaleFactor.scaleX,
         srcSize.height * scaleFactor.scaleY
     )
-    val left = ((dstSize.width - scaledSrcSize.width) / 2).coerceAtLeast(0f)
-    val top = ((dstSize.height - scaledSrcSize.height) / 2).coerceAtLeast(0f)
+
+    val biasAlignment: BiasAlignment = alignment as BiasAlignment
+
+    // - Left, 0 Center, 1 Right
+    val horizontalBias: Float = biasAlignment.horizontalBias
+    // -1 Top, 0 Center, 1 Bottom
+    val verticalBias: Float = biasAlignment.verticalBias
+
+
+    val horizontalGap = ((dstSize.width - scaledSrcSize.width) / 2).coerceAtLeast(0f)
+    val verticalGap = ((dstSize.height - scaledSrcSize.height) / 2).coerceAtLeast(0f)
+
+    val left = when (horizontalBias) {
+        -1f -> 0f
+        0f -> horizontalGap
+        else -> horizontalGap * 2
+    }
+
+    val top = when (verticalBias) {
+        -1f -> 0f
+        0f -> verticalGap
+        else -> verticalGap * 2
+    }
 
     val right = (left + scaledSrcSize.width).coerceAtMost(dstSize.width)
     val bottom = (top + scaledSrcSize.height).coerceAtMost(dstSize.height)
@@ -77,7 +104,7 @@ data class ImgAnnotation(
 @Preview
 @Composable
 fun ImageWithMarkersSample() {
-    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape3)
+    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape11)
 
     val imgAnnotationList = remember {
         mutableStateListOf<ImgAnnotation>()
@@ -168,6 +195,7 @@ fun ImageWithMarkersSample() {
                 .fillMaxWidth()
                 .aspectRatio(5 / 3f),
             contentScale = ContentScale.Fit,
+            alignment = Alignment.BottomEnd,
             imgAnnotationList = imgAnnotationList,
             imageBitmap = imageBitmap
         ) {
@@ -185,6 +213,7 @@ fun ImageWithMarkersSample() {
 private fun ImageWithMarkers(
     modifier: Modifier = Modifier,
     contentScale: ContentScale,
+    alignment: Alignment = Alignment.Center,
     imgAnnotationList: SnapshotStateList<ImgAnnotation>,
     imageBitmap: ImageBitmap,
     onClick: (ImgAnnotation) -> Unit
@@ -236,7 +265,7 @@ private fun ImageWithMarkers(
                     val srcSize =
                         Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
 
-                    rect = calculateRect(srcSize, dstSize, contentScale)
+                    rect = calculateRect(srcSize, dstSize, contentScale, alignment)
 
                     val rectWidth = rect.width
                     val rectHeight = rect.height
@@ -246,6 +275,7 @@ private fun ImageWithMarkers(
                 },
             bitmap = imageBitmap,
             contentScale = contentScale,
+            alignment = alignment,
             contentDescription = null
         )
 
