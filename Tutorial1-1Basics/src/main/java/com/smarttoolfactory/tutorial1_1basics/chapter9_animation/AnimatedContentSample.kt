@@ -252,7 +252,7 @@ fun TransitionExtensionAnimatedContentSample() {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
-            Image(painter = painterResource(R.drawable.avatar_2_raster), contentDescription = null)
+            Image(painter = painterResource(R.drawable.avatar_1_raster), contentDescription = null)
             Spacer(Modifier.width(8.dp))
             Column {
                 Text(text = "Title", fontSize = 26.sp)

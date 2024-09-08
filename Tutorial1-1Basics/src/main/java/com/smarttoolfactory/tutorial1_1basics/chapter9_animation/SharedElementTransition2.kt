@@ -126,7 +126,7 @@ private fun MainContent(
         ) {
             // [START_EXCLUDE]
             Image(
-                painter = painterResource(id = R.drawable.avatar_1_raster),
+                painter = painterResource(id = R.drawable.cupcake),
                 contentDescription = "Cupcake",
                 modifier = Modifier
                     .sharedElement(
@@ -179,7 +179,7 @@ private fun DetailsContent(
         ) {
             // [START_EXCLUDE]
             Image(
-                painter = painterResource(id = R.drawable.avatar_1_raster),
+                painter = painterResource(id = R.drawable.cupcake),
                 contentDescription = "Cupcake",
                 modifier = Modifier
                     .sharedElement(
