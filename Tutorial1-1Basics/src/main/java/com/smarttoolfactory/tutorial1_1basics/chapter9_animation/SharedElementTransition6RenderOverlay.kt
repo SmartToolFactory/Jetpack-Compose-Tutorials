@@ -59,11 +59,14 @@ fun SharedElementRenderInSharedTransitionScopeOverlay() {
 
     val listScrollState = rememberLazyListState()
 
-    val images = listOf(
-        R.drawable.avatar_1_raster,
-        R.drawable.avatar_2_raster,
-        R.drawable.avatar_3_raster
-    )
+    val images = remember {
+        listOf(
+            R.drawable.avatar_1_raster,
+            R.drawable.avatar_2_raster,
+            R.drawable.avatar_3_raster
+        )
+    }
+
     SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
         AnimatedContent(
             targetState = state,

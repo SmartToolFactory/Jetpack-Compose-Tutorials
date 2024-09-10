@@ -37,8 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 
-
-private val shapeForShared = RoundedCornerShape(16.dp)
+val shapeForShared = RoundedCornerShape(16.dp)
 
 @Preview
 @Composable

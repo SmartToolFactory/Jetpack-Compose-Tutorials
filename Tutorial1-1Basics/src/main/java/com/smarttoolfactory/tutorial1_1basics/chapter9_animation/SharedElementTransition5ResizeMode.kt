@@ -90,7 +90,6 @@ fun SharedElementApp_ResizeModeExample() {
         )
     }
 
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
