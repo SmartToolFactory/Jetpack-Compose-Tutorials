@@ -58,7 +58,7 @@ private fun TutorialContent() {
 class UnstableUiState(
     // 🔥 List is unstable, passing it as a param
     // makes this type Unstable
-    var list: List<Int> = listOf(1, 2, 3)
+    var list: List<Int> = listOf(1, 2, 3),
 ) {
     var count by mutableIntStateOf(0)
     var text by mutableStateOf("UnstableUiState")
@@ -68,7 +68,7 @@ class UnstableUiState(
 class StableUiState(
     // 🔥 List is unstable but adding @Stable annotation
     // makes this type Stable
-    var list: List<Int> = listOf(1, 2, 3)
+    var list: List<Int> = listOf(1, 2, 3),
 ) {
     var count by mutableIntStateOf(0)
     var text by mutableStateOf("StableUiState")
@@ -101,11 +101,6 @@ private fun StableAnnotationSample() {
             .fillMaxWidth()
             .padding(4.dp)
     ) {
-
-        SideEffect {
-            println("Column recomposing...")
-        }
-
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { counter++ }) {
@@ -170,6 +165,10 @@ private fun StableAnnotationSample() {
             Text(text = "Update State text param")
         }
 
+        SideEffect {
+            println("Column recomposing...")
+        }
+
         // This scope gets recomposed because counter is read here
         Text(text = "Counter: $counter")
         Text(text = "UnstableComposable")
@@ -224,6 +223,11 @@ private fun StableComposable(stableUiState: StableUiState) {
 
 @Composable
 private fun ValueComposable(count: Int) {
+
+    SideEffect {
+        println("ValueComposable()")
+    }
+
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -238,8 +242,12 @@ private fun ValueComposable(count: Int) {
 
 @Composable
 private fun ListComposable(
-    list: List<Int>
+    list: List<Int>,
 ) {
+
+    SideEffect {
+        println("ListComposable()")
+    }
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -268,5 +276,89 @@ private fun TextComposable(text: String) {
             .padding(4.dp)
     ) {
         Text(text = "TextComposable() text: $text")
+    }
+}
+
+//@Stable
+class MyTestState {
+    var list: List<Int> = listOf()
+    var text by mutableStateOf("")
+}
+
+@Preview
+@Composable
+fun StableTest() {
+    val myTestState = remember {
+        MyTestState()
+    }
+
+    var counter by remember {
+        mutableStateOf(0)
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Button(
+            onClick = {
+                myTestState.text = "text + ${Random.nextInt(1000)}"
+            }
+        ) {
+            Text("update text")
+        }
+
+        Button(
+            onClick = {
+                myTestState.list = List(5) {
+                    Random.nextInt()
+                }
+            }
+        ) {
+            Text("update list")
+        }
+
+        Button(
+            onClick = {
+                counter++
+            }
+        ) {
+            Text("Counter: $counter")
+        }
+
+        SideEffect {
+            println("StableTest recomposing...")
+        }
+
+        Text("Counter: $counter")
+        MyComponent(myTestState = myTestState)
+    }
+}
+
+@Composable
+fun MyComponent(myTestState: MyTestState) {
+
+    SideEffect {
+        println("MyComponent recomposing...")
+    }
+    MyText(myTestState.text)
+    MyList(myTestState.list)
+}
+
+@Composable
+fun MyText(text: String) {
+    SideEffect {
+        println("MyText recomposing...")
+    }
+    Text(text)
+
+}
+
+@Composable
+fun MyList(list: List<Int>) {
+    SideEffect {
+        println("MyList recomposing...")
+    }
+    list.forEach {
+        Text("Item: $it")
     }
 }

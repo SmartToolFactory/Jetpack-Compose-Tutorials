@@ -53,8 +53,12 @@ android {
 }
 
 composeCompiler {
+    // 🔥When you check stability, and state examples check
+    // with and without strong skipping. unstable class are skipped when
+    //  enableStrongSkippingMode = true
+
     // Configure compose compiler options if required
-    enableStrongSkippingMode = true
+//    enableStrongSkippingMode = true
 }
 
 dependencies {
