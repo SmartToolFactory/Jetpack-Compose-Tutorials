@@ -2,6 +2,7 @@
 
 package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.EnterTransition
@@ -51,7 +52,11 @@ val listSnacks = listOf(
     SnackItem("Honeycomb", "", R.drawable.honeycomb),
 )
 
-data class SnackItem(val id: String, val name: String, val resource: Int)
+data class SnackItem(
+    val name: String,
+    val description: String,
+    @DrawableRes val image: Int,
+)
 
 @Preview
 @Composable
@@ -122,7 +127,7 @@ fun SharedElement_PlaceholderSize() {
 
                                     ) {
                                         Image(
-                                            painter = painterResource(item.resource),
+                                            painter = painterResource(item.image),
                                             modifier = Modifier
                                                 .sharedElement(
                                                     rememberSharedContentState(
@@ -169,7 +174,7 @@ fun SharedElement_PlaceholderSize() {
                             }) {
 
                             Image(
-                                painter = painterResource(listSnacks[index].resource),
+                                painter = painterResource(listSnacks[index].image),
                                 modifier = Modifier
                                     .sharedElement(
                                         state = rememberSharedContentState(key = "item-image$index"),
