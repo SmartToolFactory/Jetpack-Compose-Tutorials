@@ -7,9 +7,12 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,19 +31,23 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,11 +70,12 @@ fun SharedElement_Pager() {
 
             composable("home") {
                 HomeScreen(
-                    navController = navController,
                     scrollState = scrollState,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedContentScope = this@composable,
-                )
+                ) {
+                    navController.navigate(it)
+                }
             }
 
             composable(
@@ -77,12 +85,12 @@ fun SharedElement_Pager() {
                 val id = backStackEntry.arguments?.getInt("item")
                 val snack = listSnacks[id!!]
                 DetailsScreen(
-                    navController,
-                    id,
                     snack,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedContentScope = this@composable
-                )
+                ) {
+                    navController.navigate(it)
+                }
             }
         }
     }
@@ -90,22 +98,20 @@ fun SharedElement_Pager() {
 
 @Composable
 private fun DetailsScreen(
-    navController: NavHostController,
-    id: Int,
     snack: SnackItem,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
+    onClick: (String) -> Unit,
 ) {
 
     var selectedIndex by remember {
-        mutableStateOf(id)
+        mutableStateOf(listSnacks.indexOf(snack).coerceAtLeast(0))
     }
     with(sharedTransitionScope) {
 
-        val index = listSnacks.indexOf(snack).coerceAtLeast(0)
 
         val pagerState = rememberPagerState(
-            initialPage = index,
+            initialPage = selectedIndex,
             pageCount = {
                 listSnacks.size
             }
@@ -128,7 +134,7 @@ private fun DetailsScreen(
                         },
                         indication = null
                     ) {
-                        navController.navigate("home")
+                        onClick("home")
                     }
             ) {
                 Image(
@@ -159,10 +165,11 @@ private fun DetailsScreen(
 
 @Composable
 private fun HomeScreen(
-    navController: NavHostController,
+
     scrollState: LazyListState,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
+    onClick: (String) -> Unit,
 ) {
 
     var isDetailSelected by remember {
@@ -197,7 +204,7 @@ private fun HomeScreen(
                             indication = null
                         ) {
                             isDetailSelected = true
-                            navController.navigate("details/$index")
+                            onClick("details/$index")
                         }
                     ) {
                         Spacer(modifier = Modifier.width(8.dp))
@@ -228,4 +235,58 @@ private fun HomeScreen(
         }
     }
 
+}
+
+
+@Preview
+@Composable
+fun Test() {
+    val count = remember { mutableIntStateOf(0) }
+    val incrementCounter = { count.intValue++ }
+
+    SideEffect {
+        println("Recomposed with ${count.value}")
+    }
+    Box(
+        Modifier
+            .size(300.dp)
+            .background(Color.Red)
+    ) {
+        // Box1
+        Box(Modifier
+            .clipToBounds()
+            .size(300.dp)
+            .drawWithCache {
+                onDrawBehind {
+                    println("DrawBehind")
+                }
+            }
+            .pointerInput(1, 2) {
+                detectTapGestures { offset ->
+                    incrementCounter()
+                }
+            }) {}
+
+
+        MyBox {
+            // Box2
+            Box(
+                Modifier
+                    .size(300.dp)
+            ) {
+                repeat(count.intValue) {
+                    Text("$it")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MyBox(
+    content: @Composable () -> Unit,
+) {
+    Box {
+        content()
+    }
 }
