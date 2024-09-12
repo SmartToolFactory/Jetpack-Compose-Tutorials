@@ -81,7 +81,7 @@ fun SharedElement_Pager() {
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedContentScope = this@composable
                 ) {
-                    navController.navigate(it)
+                    navController.navigate("home")
                 }
             }
         }
@@ -93,7 +93,7 @@ private fun DetailsScreen(
     snack: SnackItem,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
-    onClick: (String) -> Unit,
+    onClick: () -> Unit,
 ) {
 
     var selectedIndex by remember {
@@ -125,7 +125,7 @@ private fun DetailsScreen(
                         },
                         indication = null
                     ) {
-                        onClick("home")
+                        onClick()
                     }
             ) {
                 Image(
@@ -134,7 +134,7 @@ private fun DetailsScreen(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .sharedElement(
-                            sharedTransitionScope.rememberSharedContentState(key = "image-$selectedIndex"),
+                            rememberSharedContentState(key = "image-$selectedIndex"),
                             animatedVisibilityScope = animatedContentScope
                         )
                         .aspectRatio(1f)
@@ -145,7 +145,7 @@ private fun DetailsScreen(
                     modifier =
                     Modifier
                         .sharedBounds(
-                            sharedTransitionScope.rememberSharedContentState(key = "text-$selectedIndex"),
+                            rememberSharedContentState(key = "text-$selectedIndex"),
                             animatedVisibilityScope = animatedContentScope,
                         )
                 )
@@ -205,7 +205,7 @@ private fun HomeScreen(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .sharedElement(
-                                    sharedTransitionScope.rememberSharedContentState(key = "image-$index"),
+                                    rememberSharedContentState(key = "image-$index"),
                                     animatedVisibilityScope = animatedContentScope
                                 )
                                 .size(120.dp)
@@ -216,7 +216,7 @@ private fun HomeScreen(
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .sharedBounds(
-                                    sharedTransitionScope.rememberSharedContentState(key = "text-$index"),
+                                    rememberSharedContentState(key = "text-$index"),
                                     animatedVisibilityScope = animatedContentScope
                                 )
                         )
