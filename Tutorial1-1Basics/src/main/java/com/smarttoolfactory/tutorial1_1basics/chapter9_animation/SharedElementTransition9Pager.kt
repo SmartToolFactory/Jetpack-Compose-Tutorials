@@ -7,12 +7,9 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -31,18 +28,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -108,7 +100,6 @@ private fun DetailsScreen(
         mutableStateOf(listSnacks.indexOf(snack).coerceAtLeast(0))
     }
     with(sharedTransitionScope) {
-
 
         val pagerState = rememberPagerState(
             initialPage = selectedIndex,
@@ -233,59 +224,5 @@ private fun HomeScreen(
                 }
             }
         }
-    }
-}
-
-
-@Preview
-@Composable
-fun Test() {
-    val count = remember { mutableIntStateOf(0) }
-    val incrementCounter = { count.intValue++ }
-
-    SideEffect {
-        println("Recomposed with ${count.value}")
-    }
-    Box(
-        Modifier
-            .size(300.dp)
-            .background(Color.Red)
-    ) {
-        // Box1
-        Box(Modifier
-            .clipToBounds()
-            .size(300.dp)
-            .drawWithCache {
-                onDrawBehind {
-                    println("DrawBehind")
-                }
-            }
-            .pointerInput(1, 2) {
-                detectTapGestures { offset ->
-                    incrementCounter()
-                }
-            }) {}
-
-
-        MyBox {
-            // Box2
-            Box(
-                Modifier
-                    .size(300.dp)
-            ) {
-                repeat(count.intValue) {
-                    Text("$it")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun MyBox(
-    content: @Composable () -> Unit,
-) {
-    Box {
-        content()
     }
 }
