@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.awaitDragOrCancellation
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
+import androidx.compose.foundation.gestures.drag
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
@@ -473,3 +476,136 @@ private fun AwaitDragOrCancellationExample() {
     }
 }
 
+
+/**
+ * This ist the original drag source code with small change.
+ *
+ * It uses [drag] for checking if user is dragging while original
+ * code used an internal function that returns [PointerInputChange] to
+ * check for up or cancel
+ */
+suspend fun PointerInputScope.detectDragGestures(
+    onDragStart: (change: PointerInputChange, initialDelta: Offset) -> Unit = { _, _ -> },
+    onDragEnd: (change: PointerInputChange) -> Unit = {},
+    onDragCancel: () -> Unit = {},
+    shouldAwaitTouchSlop: () -> Boolean = { true },
+    onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit,
+) {
+    awaitEachGesture {
+        val initialDown =
+            awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        val awaitTouchSlop = shouldAwaitTouchSlop()
+
+        if (!awaitTouchSlop) {
+            initialDown.consume()
+        }
+        val down = awaitFirstDown(requireUnconsumed = false)
+        println("Down: ${down.id}, initialDown: ${initialDown.id}, down==initial down ${down == initialDown}")
+        var drag: PointerInputChange?
+        var overSlop = Offset.Zero
+        var initialDelta = Offset.Zero
+
+        if (awaitTouchSlop) {
+            do {
+                drag = awaitTouchSlopOrCancellation(
+                    down.id,
+                ) { change, over ->
+                    change.consume()
+                    overSlop = over
+                }
+            } while (drag != null && !drag.isConsumed)
+            initialDelta = overSlop
+        } else {
+            drag = initialDown
+        }
+
+        println("drag: $drag")
+
+        if (drag != null) {
+            onDragStart.invoke(drag, initialDelta)
+            onDrag(drag, overSlop)
+            val upEvent = drag(
+                pointerId = drag.id,
+                onDrag = {
+                    onDrag(it, it.positionChange())
+                    // This is drag's default behavior and calling consume has no
+                    // effect if it's already consumed here
+//                    it.consume()
+                }
+            )
+
+            println("upEvent: $upEvent")
+
+            if (upEvent) {
+                drag.let(onDragEnd)
+            } else {
+                onDragCancel()
+            }
+        }
+    }
+}
+
+/*
+ORIGINAL SOURCE CODE of detectDragGestures
+
+internal suspend fun PointerInputScope.detectDragGestures(
+    onDragStart: (change: PointerInputChange, initialDelta: Offset) -> Unit,
+    onDragEnd: (change: PointerInputChange) -> Unit,
+    onDragCancel: () -> Unit,
+    shouldAwaitTouchSlop: () -> Boolean,
+    orientationLock: Orientation?,
+    onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit
+) {
+    awaitEachGesture {
+        val initialDown =
+            awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        val awaitTouchSlop = shouldAwaitTouchSlop()
+
+        if (!awaitTouchSlop) {
+            initialDown.consume()
+        }
+        val down = awaitFirstDown(requireUnconsumed = false)
+        var drag: PointerInputChange?
+        var overSlop = Offset.Zero
+        var initialDelta = Offset.Zero
+
+        if (awaitTouchSlop) {
+            do {
+                drag = awaitPointerSlopOrCancellation(
+                    down.id,
+                    down.type,
+                    orientation = orientationLock
+                ) { change, over ->
+                    change.consume()
+                    overSlop = over
+                }
+            } while (drag != null && !drag.isConsumed)
+            initialDelta = overSlop
+        } else {
+            drag = initialDown
+        }
+
+        if (drag != null) {
+            onDragStart.invoke(drag, initialDelta)
+            onDrag(drag, overSlop)
+            val upEvent = drag(
+                pointerId = drag.id,
+                onDrag = {
+                    onDrag(it, it.positionChange())
+                    it.consume()
+                },
+                orientation = orientationLock,
+                motionConsumed = {
+                    it.isConsumed
+                })
+            if (upEvent == null) {
+                onDragCancel()
+            } else {
+                onDragEnd(upEvent)
+            }
+        }
+    }
+}
+
+
+ */
