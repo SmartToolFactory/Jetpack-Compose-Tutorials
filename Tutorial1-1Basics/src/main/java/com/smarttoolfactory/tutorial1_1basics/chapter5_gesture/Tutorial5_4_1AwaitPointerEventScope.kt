@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
@@ -478,9 +479,9 @@ private fun AwaitDragOrCancellationExample() {
 
 
 /**
- * This ist the original drag source code with small change.
+ * This ist the original drag source code with small changes.
  *
- * It uses [drag] for checking if user is dragging while original
+ * It uses [AwaitPointerEventScope.drag] for checking if user is dragging while original
  * code used an internal function that returns [PointerInputChange] to
  * check for up or cancel
  */
@@ -606,6 +607,4 @@ internal suspend fun PointerInputScope.detectDragGestures(
         }
     }
 }
-
-
  */
