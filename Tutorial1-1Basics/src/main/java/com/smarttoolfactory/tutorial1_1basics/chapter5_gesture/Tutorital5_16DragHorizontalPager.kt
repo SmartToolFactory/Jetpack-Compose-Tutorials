@@ -4,6 +4,8 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,7 +39,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -367,7 +371,7 @@ fun DragPagerTest() {
                             text = "onDragStart..."
                         },
                         onDrag = { change, dragAmount ->
-                            text = "onDrag...$dragAmount"
+//                            text = "onDrag...$dragAmount"
                             println("onDrag $dragAmount")
                             change.consume()
                         },
@@ -519,3 +523,182 @@ fun DragTest() {
         }
     }
 }
+
+@Preview
+@Composable
+fun PagerConsumeTest() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val pagerState = rememberPagerState { 5 }
+
+        var text by remember {
+            mutableStateOf("")
+        }
+
+        var consumeDown by remember {
+            mutableStateOf(false)
+        }
+
+        var consumeMove by remember {
+            mutableStateOf(false)
+        }
+        Text(text, fontSize = 20.sp, modifier = Modifier.height(90.dp))
+
+        CheckBoxWithTextRippleFullRow(
+            label = "consumeDown",
+            state = consumeDown,
+            onStateChange = {
+                consumeDown = it
+            }
+        )
+
+        CheckBoxWithTextRippleFullRow(
+            label = "consumeMove",
+            state = consumeMove,
+            onStateChange = {
+                consumeMove = it
+            }
+        )
+
+        HorizontalPager(
+            modifier = Modifier
+                .border(2.dp, Color.Red)
+                .customTouch(
+                    onDown = { pointer ->
+                        text = " onDown() id: ${pointer.id}\n" +
+                                "consumed: ${pointer.isConsumed}\n" +
+                                "position: ${pointer.position}\n"
+
+                        if (consumeDown) {
+                            pointer.consume()
+                        }
+                    },
+                    onMove = { changes ->
+                        changes.firstOrNull()?.let {
+                            text = " onMove() id: ${it.id}\n" +
+                                    "consumed: ${it.isConsumed}\n" +
+                                    "position: ${it.position}\n"
+                        }
+
+                        if (consumeMove) {
+                            changes.forEach { it.consume() }
+                        }
+                    },
+                    onUp = {
+                        text = "top onUp()"
+                    }
+                ),
+            state = pagerState
+        ) { page ->
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+                Text("Page: $page", fontSize = 36.sp)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun DragPropagationTest() {
+
+    var textTop by remember {
+        mutableStateOf("")
+    }
+
+    var textDrag by remember {
+        mutableStateOf("")
+    }
+
+    var textBottom by remember {
+        mutableStateOf("")
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .customTouch(
+                onDown = {
+                    textTop = "top onDown() id: ${it.id}, " +
+                            "consumed: ${it.isConsumed}, " +
+                            "position: ${it.position}\n"
+                },
+                onMove = { changes ->
+                    changes.firstOrNull()?.let {
+                        textTop = "top onMove() id: ${it.id}, " +
+                                "consumed: ${it.isConsumed}, " +
+                                "position: ${it.position}\n"
+                    }
+                },
+                onUp = {
+                    textTop = "top onUp()"
+                }
+            )
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = {
+                        textDrag = "onDragStart() $it"
+                    },
+                    onDrag = { change: PointerInputChange, dragAmount: Offset ->
+                        textDrag =
+                            "onDrag() id: ${change.id}, " +
+                                    "consumed: ${change.isConsumed}, " +
+                                    "position: ${change.position}\n"
+                    },
+                    onDragEnd = {
+                        textDrag = "onDragEnd()"
+                    }
+                )
+            }
+
+            .customTouch(
+                onDown = {
+
+                    it.consume()
+
+                    textBottom = "bottom onDown() id: ${it.id}, " +
+                            "consumed${it.isConsumed}, " +
+                            "position: ${it.position}\n"
+
+                },
+                onMove = { changes ->
+                    changes.firstOrNull()?.let {
+                        textBottom = "bottom onMove() id: ${it.id}, " +
+                                "consumed: ${it.isConsumed}, " +
+                                "position: ${it.position}\n"
+                    }
+                },
+                onUp = {
+                    textBottom = "bottom onUp()"
+                }
+            )
+
+    ) {
+        Text(textTop, fontSize = 18.sp)
+        Text(textDrag, fontSize = 18.sp)
+        Text(textBottom, fontSize = 18.sp)
+    }
+}
+
+private fun Modifier.customTouch(
+    pass: PointerEventPass = PointerEventPass.Main,
+    onDown: (pointer: PointerInputChange) -> Unit,
+    onMove: (changes: List<PointerInputChange>) -> Unit,
+    onUp: () -> Unit,
+) = this.then(
+    Modifier.pointerInput(pass) {
+        awaitEachGesture {
+            val down = awaitFirstDown(pass = pass)
+            onDown(down)
+            do {
+                val event: PointerEvent = awaitPointerEvent(
+                    pass = pass
+                )
+
+                onMove(event.changes)
+
+            } while (event.changes.any { it.pressed })
+            onUp()
+        }
+    }
+)
