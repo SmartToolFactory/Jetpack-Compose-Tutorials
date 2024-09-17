@@ -57,6 +57,7 @@ internal suspend fun PointerInputScope.detectDragGesture(
                 drag = awaitTouchSlopOrCancellation(
                     pointerId = down.id,
                     requireUnconsumed = requireUnconsumed,
+                    pass = pass
                 ) { change, over ->
                     change.consume()
                     overSlop = over

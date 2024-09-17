@@ -293,10 +293,17 @@ fun DragPagerTest() {
         5
     }
 
+    var consumeNestedScroll by remember {
+        mutableStateOf(false)
+    }
+
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 println("onPreScroll() available: $available")
+                if (consumeNestedScroll) {
+                    return available
+                }
                 return super.onPreScroll(available, source)
             }
         }
@@ -371,8 +378,7 @@ fun DragPagerTest() {
                             text = "onDragStart..."
                         },
                         onDrag = { change, dragAmount ->
-//                            text = "onDrag...$dragAmount"
-                            println("onDrag $dragAmount")
+                            text = "onDrag...$dragAmount"
                             change.consume()
                         },
                         onDragCancel = {
@@ -411,6 +417,14 @@ fun DragPagerTest() {
         }
 
         Spacer(Modifier.height(16.dp))
+
+        CheckBoxWithTextRippleFullRow(
+            label = "consumeNestedScroll",
+            state = consumeNestedScroll,
+            onStateChange = {
+                consumeNestedScroll = it
+            }
+        )
 
         CheckBoxWithTextRippleFullRow(
             label = "shouldAwaitPointerEventScope",
