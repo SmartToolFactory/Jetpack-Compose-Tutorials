@@ -131,7 +131,8 @@ fun DragPagerAndSwipeTest() {
                         detectDragGesture(
                             requireUnconsumed = true,
                             shouldAwaitTouchSlop = false,
-                            pass = PointerEventPass.Initial,
+                            passForSlopDetection = PointerEventPass.Main,
+                            passForDrag = PointerEventPass.Initial,
                             onDragStart = { change, offset ->
                                 text = "onDragStart..."
                                 isDraggable =
@@ -306,6 +307,15 @@ fun DragPagerTest() {
                 }
                 return super.onPreScroll(available, source)
             }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                println("onPostScroll() available: $available, consumed: $consumed")
+                return super.onPostScroll(consumed, available, source)
+            }
         }
     }
 
@@ -330,7 +340,13 @@ fun DragPagerTest() {
             mutableStateOf(true)
         }
 
-        var pass by remember {
+        var passForSlopDetection by remember {
+            mutableStateOf(
+                PointerEventPass.Main
+            )
+        }
+
+        var passForDrag by remember {
             mutableStateOf(
                 PointerEventPass.Main
             )
@@ -361,7 +377,12 @@ fun DragPagerTest() {
 //                }
 
                 .pointerInput(
-                    keys = arrayOf(shouldAwaitPointerEventScope, requireUnconsumed, pass)
+                    keys = arrayOf(
+                        shouldAwaitPointerEventScope,
+                        requireUnconsumed,
+                        passForSlopDetection,
+                        passForDrag
+                    )
                 ) {
                     // This one takes shouldAwaitTouchSlop param to not wait slope, or threshold
                     // has requireUnconsumed param to invoke awaitTouchSlope or drag even
@@ -373,13 +394,15 @@ fun DragPagerTest() {
                     detectDragGesture(
                         requireUnconsumed = requireUnconsumed,
                         shouldAwaitTouchSlop = shouldAwaitPointerEventScope,
-                        pass = pass,
+                        passForSlopDetection = passForSlopDetection,
+                        passForDrag = passForDrag,
                         onDragStart = { _, _ ->
                             text = "onDragStart..."
                         },
                         onDrag = { change, dragAmount ->
                             text = "onDrag...$dragAmount"
-                            change.consume()
+                            println("onDrag() callback")
+//                            change.consume()
                         },
                         onDragCancel = {
                             text = "onDragCancel"
@@ -442,15 +465,32 @@ fun DragPagerTest() {
             }
         )
 
-        ExposedSelectionMenu(title = "PointerEventPass",
-            index = when (pass) {
+        ExposedSelectionMenu(
+            title = "PointerEventPass for slop",
+            index = when (passForSlopDetection) {
                 PointerEventPass.Initial -> 0
                 PointerEventPass.Main -> 1
                 else -> 2
             },
             options = listOf("Initial", "Main", "Final"),
             onSelected = {
-                pass = when (it) {
+                passForSlopDetection = when (it) {
+                    0 -> PointerEventPass.Initial
+                    1 -> PointerEventPass.Main
+                    else -> PointerEventPass.Final
+                }
+            }
+        )
+
+        ExposedSelectionMenu(title = "PointerEventPass for drag",
+            index = when (passForDrag) {
+                PointerEventPass.Initial -> 0
+                PointerEventPass.Main -> 1
+                else -> 2
+            },
+            options = listOf("Initial", "Main", "Final"),
+            onSelected = {
+                passForDrag = when (it) {
                     0 -> PointerEventPass.Initial
                     1 -> PointerEventPass.Main
                     else -> PointerEventPass.Final
@@ -517,7 +557,7 @@ fun DragTest() {
                 // or in parent to be invoked first
                 detectDragGesture(
                     requireUnconsumed = false,
-                    pass = PointerEventPass.Initial,
+                    passForSlopDetection = PointerEventPass.Initial,
                     onDragStart = { _, _ ->
                         textCustomDrag = "onDragStart()"
                     },
@@ -615,6 +655,200 @@ fun PagerConsumeTest() {
 
 @Preview
 @Composable
+fun DragCustomPropagationTest() {
+
+    var textTop by remember {
+        mutableStateOf("")
+    }
+
+    var textDrag by remember {
+        mutableStateOf("")
+    }
+
+    var textBottom by remember {
+        mutableStateOf("")
+    }
+
+    var shouldAwaitPointerEventScope by remember {
+        mutableStateOf(true)
+    }
+
+    var requireUnconsumed by remember {
+        mutableStateOf(false)
+    }
+
+    var passForSlopDetection by remember {
+        mutableStateOf(
+            PointerEventPass.Main
+        )
+    }
+
+    var passForDrag by remember {
+        mutableStateOf(
+            PointerEventPass.Main
+        )
+    }
+
+    Column {
+        CheckBoxWithTextRippleFullRow(
+            label = "shouldAwaitPointerEventScope",
+            state = shouldAwaitPointerEventScope,
+            onStateChange = {
+                shouldAwaitPointerEventScope = it
+            }
+        )
+
+        CheckBoxWithTextRippleFullRow(
+            label = "RequireUnconsumed",
+            state = requireUnconsumed,
+            onStateChange = {
+                requireUnconsumed = it
+            }
+        )
+
+        ExposedSelectionMenu(title = "PointerEventPass for slop",
+            index = when (passForSlopDetection) {
+                PointerEventPass.Initial -> 0
+                PointerEventPass.Main -> 1
+                else -> 2
+            },
+            options = listOf("Initial", "Main", "Final"),
+            onSelected = {
+                passForSlopDetection = when (it) {
+                    0 -> PointerEventPass.Initial
+                    1 -> PointerEventPass.Main
+                    else -> PointerEventPass.Final
+                }
+            }
+        )
+
+        ExposedSelectionMenu(title = "PointerEventPass for drag",
+            index = when (passForDrag) {
+                PointerEventPass.Initial -> 0
+                PointerEventPass.Main -> 1
+                else -> 2
+            },
+            options = listOf("Initial", "Main", "Final"),
+            onSelected = {
+                passForDrag = when (it) {
+                    0 -> PointerEventPass.Initial
+                    1 -> PointerEventPass.Main
+                    else -> PointerEventPass.Final
+                }
+            }
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(2.dp, Color.Red)
+                .customTouch(
+                    onDown = {
+                        textTop = "top onDown() id: ${it.hashCode()}, " +
+                                "consumed: ${it.isConsumed}, " +
+                                "position: ${it.position}\n"
+                        println(
+                            "top onDown() id: ${it.hashCode()}, " +
+                                    "consumed: ${it.isConsumed}, " +
+                                    "position: ${it.position}\n"
+                        )
+                    },
+                    onMove = { changes ->
+                        changes.firstOrNull()?.let {
+                            textTop = "top onMove() id: ${it.hashCode()}, " +
+                                    "consumed: ${it.isConsumed}, " +
+                                    "position: ${it.position}\n"
+
+                            println(
+                                "top onMove() id: ${it.hashCode()}, " +
+                                        "consumed: ${it.isConsumed}, " +
+                                        "position: ${it.position}\n"
+                            )
+                        }
+
+                        changes.forEach {
+                            it.consume()
+                        }
+                    },
+                    onUp = {
+                        textTop = "top onUp()"
+                    }
+                )
+                .pointerInput(
+                    keys = arrayOf(
+                        shouldAwaitPointerEventScope,
+                        requireUnconsumed,
+                        passForSlopDetection,
+                        passForDrag
+                    )
+                ) {
+
+                    detectDragGesture(
+                        shouldAwaitTouchSlop = shouldAwaitPointerEventScope,
+                        requireUnconsumed = requireUnconsumed,
+                        passForSlopDetection = passForSlopDetection,
+                        passForDrag = passForDrag,
+                        onDragStart = { _, it ->
+                            textDrag = "onDragStart() $it"
+                        },
+                        onDrag = { change: PointerInputChange, dragAmount: Offset ->
+                            textDrag =
+                                "onDrag() id: ${change.id}, " +
+                                        "consumed: ${change.isConsumed}, " +
+                                        "position: ${change.position}\n"
+                        },
+                        onDragEnd = {
+                            textDrag = "onDragEnd()"
+                        },
+                        onDragCancel = {
+                            textDrag = "onDragCancel()"
+                        }
+                    )
+                }
+
+                .customTouch(
+                    onDown = {
+
+                        println(
+                            "bottom onDown() id: ${it.hashCode()}, " +
+                                    "consumed${it.isConsumed}, " +
+                                    "position: ${it.position}\n"
+                        )
+
+                        textBottom = "bottom onDown() id: ${it.hashCode()}, " +
+                                "consumed${it.isConsumed}, " +
+                                "position: ${it.position}\n"
+                    },
+                    onMove = { changes ->
+                        changes.firstOrNull()?.let {
+                            println(
+                                "bottom onMove() id: ${it.hashCode()}, " +
+                                        "consumed: ${it.isConsumed}, " +
+                                        "position: ${it.position}\n"
+                            )
+                            textBottom = "bottom onMove() id: ${it.hashCode()}, " +
+                                    "consumed: ${it.isConsumed}, " +
+                                    "position: ${it.position}\n"
+                        }
+
+                    },
+                    onUp = {
+                        textBottom = "bottom onUp()"
+                    }
+                )
+
+        ) {
+            Text(textTop, fontSize = 18.sp)
+            Text(textDrag, fontSize = 18.sp)
+            Text(textBottom, fontSize = 18.sp)
+        }
+
+    }
+
+}
+
+@Preview
+@Composable
 fun DragPropagationTest() {
 
     var textTop by remember {
@@ -702,7 +936,7 @@ private fun Modifier.customTouch(
 ) = this.then(
     Modifier.pointerInput(pass) {
         awaitEachGesture {
-            val down = awaitFirstDown(pass = pass)
+            val down = awaitFirstDown(pass = pass, requireUnconsumed = false)
             onDown(down)
             do {
                 val event: PointerEvent = awaitPointerEvent(

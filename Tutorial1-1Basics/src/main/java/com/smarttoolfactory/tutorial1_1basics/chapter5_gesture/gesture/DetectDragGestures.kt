@@ -30,6 +30,28 @@ internal suspend fun PointerInputScope.detectDragGesture(
     onDragCancel: () -> Unit = {},
     onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit,
 ) {
+    detectDragGesture(
+        shouldAwaitTouchSlop = shouldAwaitTouchSlop,
+        requireUnconsumed = requireUnconsumed,
+        passForSlopDetection = pass,
+        passForDrag = pass,
+        onDragStart = onDragStart,
+        onDragEnd = onDragEnd,
+        onDragCancel = onDragCancel,
+        onDrag = onDrag
+    )
+}
+
+internal suspend fun PointerInputScope.detectDragGesture(
+    shouldAwaitTouchSlop: Boolean = true,
+    requireUnconsumed: Boolean = true,
+    passForSlopDetection: PointerEventPass = PointerEventPass.Main,
+    passForDrag: PointerEventPass = PointerEventPass.Main,
+    onDragStart: (change: PointerInputChange, initialDelta: Offset) -> Unit = { _, _ -> },
+    onDragEnd: (change: PointerInputChange) -> Unit = {},
+    onDragCancel: () -> Unit = {},
+    onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit,
+) {
     awaitEachGesture {
         val initialDown =
             awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
@@ -40,11 +62,11 @@ internal suspend fun PointerInputScope.detectDragGesture(
         val down = awaitFirstDown(requireUnconsumed = false)
 
         println(
-            "🔥 Down: ${down.hashCode()}, id:${down.id}," +
+            "🔥 Down: ${down.hashCode()}, id:${down.id}, " +
                     " consumed: ${down.isConsumed}, " +
                     "initialDown: ${initialDown.hashCode()}\n" +
                     "currentEvent: ${currentEvent.changes.firstOrNull().hashCode()}, " +
-                    "consumed: ${currentEvent.changes.firstOrNull()?.isConsumed}" +
+                    "consumed: ${currentEvent.changes.firstOrNull()?.isConsumed}, " +
                     "down==initialDown ${down == initialDown}"
         )
 
@@ -57,7 +79,7 @@ internal suspend fun PointerInputScope.detectDragGesture(
                 drag = awaitTouchSlopOrCancellation(
                     pointerId = down.id,
                     requireUnconsumed = requireUnconsumed,
-                    pass = pass
+                    pass = passForSlopDetection
                 ) { change, over ->
                     change.consume()
                     overSlop = over
@@ -71,12 +93,8 @@ internal suspend fun PointerInputScope.detectDragGesture(
         }
 
         println(
-            "😹drag: ${drag.hashCode()}, id: ${drag?.id}, " +
-                    "currentEvent: ${
-                        currentEvent.changes.firstOrNull().hashCode()
-                    }, id: ${currentEvent.changes.firstOrNull()?.id}, " +
-                    "consumed: ${drag?.isConsumed}, " +
-                    "down==drag ${drag == down}"
+            "Passed slop detection drag: ${drag.hashCode()}, " +
+                    "consumed: ${drag?.isConsumed}"
         )
 
         if (drag != null) {
@@ -85,11 +103,25 @@ internal suspend fun PointerInputScope.detectDragGesture(
 
             val upEvent = drag(
                 pointerId = drag.id,
-                pass = pass,
+                pass = passForDrag,
                 onDrag = {
                     val dragAmount = if (requireUnconsumed)
                         it.positionChange() else
                         it.positionChangeIgnoreConsumed()
+
+                    val currentEvent = currentEvent.changes.firstOrNull()
+                    println(
+                        "😹drag: ${drag.hashCode()}," +
+                                " id: ${drag.id}, " +
+                                "consumed: ${drag.isConsumed}, " +
+                                "position: ${drag.position}\n" +
+                                "currentEvent: ${currentEvent.hashCode()}, " +
+                                "id: ${currentEvent?.id}, " +
+                                "consumed: ${currentEvent?.isConsumed}\n" +
+                                "it==currentEvent ${it == currentEvent}, " +
+                                "position: ${currentEvent?.position}"
+                    )
+
                     onDrag(it, dragAmount)
                 },
                 orientation = null,
@@ -140,7 +172,14 @@ private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation
         val event = awaitPointerEvent(pass = pass)
         val dragEvent = event.changes.fastFirstOrNull { it.id == pointer } ?: return null
 
+        println(
+            "😂 awaitPointerSlopOrCancellation() " +
+                    "dragEvent: ${dragEvent.hashCode()}, " +
+                    "consumed: ${dragEvent.isConsumed}, " +
+                    "position: ${dragEvent.position}"
+        )
         if (dragEvent.isConsumed && requireUnconsumed) {
+            println("😂😂 awaitPointerSlopOrCancellation() consumed...")
             return null
         } else if (dragEvent.changedToUpIgnoreConsumed()) {
             val otherDown = event.changes.fastFirstOrNull { it.pressed }
@@ -158,6 +197,7 @@ private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation
                     postSlopOffset
                 )
                 if (dragEvent.isConsumed) {
+                    println("awaitPointerSlopOrCancellation() consumed and returning DRAG pass: $pass")
                     return dragEvent
                 } else {
                     touchSlopDetector.reset()
@@ -166,7 +206,6 @@ private suspend inline fun AwaitPointerEventScope.awaitPointerSlopOrCancellation
                 // verify that nothing else consumed the drag event
                 awaitPointerEvent(PointerEventPass.Final)
                 if (dragEvent.isConsumed && requireUnconsumed) {
-                    println("awaitPointerSlopOrCancellation() Consumed in FINAL pass in")
                     return null
                 }
             }
