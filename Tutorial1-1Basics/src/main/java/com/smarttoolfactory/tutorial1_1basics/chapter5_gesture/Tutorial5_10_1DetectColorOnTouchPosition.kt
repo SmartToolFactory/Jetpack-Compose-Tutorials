@@ -2,14 +2,17 @@ package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -26,6 +30,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.isUnspecified
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -35,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.detectMotionEvents
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 
 @Preview
@@ -75,99 +81,170 @@ private fun TouchOnImageExample() {
         mutableStateOf(ImageProperties.Zero)
     }
 
+    var touchPosition by remember {
+        mutableStateOf(Offset.Unspecified)
+    }
+
     val contentScale = ContentScale.Fit
     val alignment = Alignment.Center
 
-    Image(
-        modifier = Modifier
-            .fillMaxWidth().aspectRatio(16 / 9f)
-            .background(Color.LightGray)
-            .drawWithContent {
-                drawContent()
-                val drawAreaRect = imageProperties.drawAreaRect
-
-                // This is for displaying area that bitmap is drawn in Image Composable
-                drawRect(
-                    color = Color.Green,
-                    topLeft = drawAreaRect.topLeft,
-                    size = drawAreaRect.size,
-                    style = Stroke(
-                        4.dp.toPx(),
-                    )
-                )
-            }
-            .pointerInput(Unit) {
-                detectTapGestures { offset: Offset ->
-
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Image(
+            modifier = Modifier
+                .fillMaxWidth().aspectRatio(1f)
+                .background(Color.LightGray)
+                .drawWithContent {
+                    drawContent()
                     val drawAreaRect = imageProperties.drawAreaRect
-                    val isTouchInImage = drawAreaRect.contains(offset)
 
-                    if (isTouchInImage) {
-                        val bitmapRect = imageProperties.bitmapRect
+                    // This is for displaying area that bitmap is drawn in Image Composable
+                    drawRect(
+                        color = Color.Green,
+                        topLeft = drawAreaRect.topLeft,
+                        size = drawAreaRect.size,
+                        style = Stroke(
+                            4.dp.toPx(),
+                        )
+                    )
 
-                        // Calculate touch position scaled into Bitmap
-                        // using scale between area on screen / bitmap on screen
-                        // Bitmap on screen might change based on crop or other
-                        // ContentScales that clip image
-                        val ratioX = drawAreaRect.width / bitmapRect.width
-                        val ratioY = drawAreaRect.height / bitmapRect.height
+                    if (touchPosition != Offset.Unspecified) {
 
-                        val xOnImage =
-                            bitmapRect.left + (offset.x - drawAreaRect.left) / ratioX
-                        val yOnImage =
-                            bitmapRect.top + (offset.y - drawAreaRect.top) / ratioY
-
-
-                        try {
-                            val pixel: Int =
-                                imageBitmap
-                                    .asAndroidBitmap()
-                                    .getPixel(xOnImage.toInt(), yOnImage.toInt())
-
-
-                            val red = android.graphics.Color.red(pixel)
-                            val green = android.graphics.Color.green(pixel)
-                            val blue = android.graphics.Color.blue(pixel)
-
-                            text = "Bitmap width: ${bitmapWidth}, height: $bitmapHeight\n" +
-                                    "scaledX: $yOnImage, scaledY: $yOnImage\n" +
-                                    "red: $red, green: $green, blue: $blue\n"
-
-                            colorAtTouchPosition = Color(red, green, blue)
-                        } catch (e: Exception) {
-                            println("Exception e: ${e.message}")
-                        }
+                        drawCircle(
+                            color = Color.Red,
+                            center = touchPosition,
+                            radius = 15f,
+                            style = Stroke(2.dp.toPx())
+                        )
                     }
                 }
-            }
-            .onSizeChanged {
-                val imageSize = it
-                val dstSize: Size = imageSize.toSize()
-                val srcSize =
-                    Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
+                .pointerInput(Unit) {
+                    detectMotionEvents(
+                        onDown = { pointerInputChange: PointerInputChange ->
+                            val offset = pointerInputChange.position
+                            touchPosition = offset
 
-                imageProperties = calculateImageDrawProperties(
-                    srcSize = srcSize,
-                    dstSize = dstSize,
-                    contentScale = contentScale,
-                    alignment = alignment
-                )
-            },
-        bitmap = imageBitmap,
-        contentDescription = null,
-        contentScale = contentScale,
-        alignment = alignment
-    )
-    Text(text = text)
-    Box(
-        modifier = Modifier
-            .then(
-                if (colorAtTouchPosition.isUnspecified) {
-                    Modifier
-                } else {
-                    Modifier.background(colorAtTouchPosition)
+                            val result = detectColorOnTouchPosition(
+                                imageProperties,
+                                offset,
+                                imageBitmap,
+                                bitmapWidth,
+                                bitmapHeight,
+                            )
+
+                            result?.let {
+                                text = it.first
+                                colorAtTouchPosition = it.second
+                            }
+                        },
+                        onMove = { pointerInputChange: PointerInputChange ->
+                            val offset = pointerInputChange.position
+                            touchPosition = offset
+
+                            val result = detectColorOnTouchPosition(
+                                imageProperties,
+                                offset,
+                                imageBitmap,
+                                bitmapWidth,
+                                bitmapHeight,
+                            )
+
+                            result?.let {
+                                text = it.first
+                                colorAtTouchPosition = it.second
+                            }
+                        }
+                    )
                 }
+
+                .onSizeChanged {
+                    val imageSize = it
+                    val dstSize: Size = imageSize.toSize()
+                    val srcSize =
+                        Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
+
+                    imageProperties = calculateImageDrawProperties(
+                        srcSize = srcSize,
+                        dstSize = dstSize,
+                        contentScale = contentScale,
+                        alignment = alignment
+                    )
+                },
+            bitmap = imageBitmap,
+            contentDescription = null,
+            contentScale = contentScale,
+            alignment = alignment
+        )
+
+        Row(
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .shadow(2.dp, RoundedCornerShape(16.dp))
+                    .then(
+                        if (colorAtTouchPosition.isUnspecified) {
+                            Modifier.background(Color.White)
+                        } else {
+                            Modifier.background(colorAtTouchPosition)
+                        }
+                    )
+                    .size(100.dp)
             )
-            .size(100.dp)
-    )
+            Spacer(Modifier.width(16.dp))
+            Text(text = text)
+        }
+    }
+}
+
+private fun detectColorOnTouchPosition(
+    imageProperties: ImageProperties,
+    offset: Offset,
+    imageBitmap: ImageBitmap,
+    bitmapWidth: Int,
+    bitmapHeight: Int,
+): Pair<String, Color>? {
+    val drawAreaRect = imageProperties.drawAreaRect
+    val isTouchInImage = drawAreaRect.contains(offset)
+
+    if (isTouchInImage) {
+        val bitmapRect = imageProperties.bitmapRect
+
+        // Calculate touch position scaled into Bitmap
+        // using scale between area on screen / bitmap on screen
+        // Bitmap on screen might change based on crop or other
+        // ContentScales that clip image
+        val ratioX = drawAreaRect.width / bitmapRect.width
+        val ratioY = drawAreaRect.height / bitmapRect.height
+
+        val xOnImage =
+            bitmapRect.left + (offset.x - drawAreaRect.left) / ratioX
+        val yOnImage =
+            bitmapRect.top + (offset.y - drawAreaRect.top) / ratioY
+
+
+        try {
+            val pixel: Int =
+                imageBitmap
+                    .asAndroidBitmap()
+                    .getPixel(xOnImage.toInt(), yOnImage.toInt())
+
+
+            val red = android.graphics.Color.red(pixel)
+            val green = android.graphics.Color.green(pixel)
+            val blue = android.graphics.Color.blue(pixel)
+
+            val text = "Bitmap width: ${bitmapWidth}, height: $bitmapHeight\n" +
+                    "scaledX: $yOnImage, scaledY: $yOnImage\n" +
+                    "red: $red, green: $green, blue: $blue\n"
+
+            return Pair(text, Color(red, green, blue))
+        } catch (e: Exception) {
+            println("Exception e: ${e.message}")
+        }
+    }
+
+    return null
 }

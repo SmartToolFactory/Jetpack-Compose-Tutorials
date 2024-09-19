@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import android.widget.Toast
@@ -19,14 +21,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material3.CaretProperties
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults.rememberPlainTooltipPositionProvider
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -51,6 +61,7 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.R
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 
@@ -70,7 +81,6 @@ fun ImageWithMarkersSample() {
         Text("ContentScale: ContentScale.Fit, alignment: TopCenter")
         ImageWithMarkers(
             modifier = Modifier
-                .border(2.dp, Color.Red)
                 .background(Color.LightGray)
                 .fillMaxWidth()
                 .aspectRatio(4 / 3f),
@@ -219,7 +229,7 @@ private fun ImageWithMarkers(
     alignment: Alignment = Alignment.Center,
     markerList: SnapshotStateList<Marker>,
     imageBitmap: ImageBitmap,
-    onClick: (Marker) -> Unit
+    onClick: (Marker) -> Unit,
 ) {
 
     var imageProperties by remember {
@@ -304,16 +314,26 @@ private fun ImageWithMarkers(
 fun ShapesOnImage(
     list: List<Marker>,
     imageProperties: ImageProperties,
-    onClick: (Marker) -> Unit
+    onClick: (Marker) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     if (imageProperties != ImageProperties.Zero) {
         list.forEachIndexed { index, marker ->
 
+            val tooltipState = rememberTooltipState(isPersistent = true)
+
+            val provider = rememberPlainTooltipPositionProvider(
+                spacingBetweenTooltipAndAnchor = 10.dp
+            )
+
             val offsetOnScreen = scaleFromBitmapToScreenPosition(
-                Offset(
+                offsetBitmap = Offset(
                     marker.coordinateX,
                     marker.coordinateY
-                ), imageProperties
+                ),
+                drawAreaRect = imageProperties.drawAreaRect,
+                bitmapRect = imageProperties.bitmapRect
             )
 
             Box(
@@ -332,32 +352,69 @@ fun ShapesOnImage(
                         layout(placeable.width, placeable.height) {
                             placeable.placeRelative(xPos, yPos)
                         }
-                    }
-                    .size(20.dp)
-                    .background(Color.Red, CircleShape)
-                    .clickable {
-                        onClick(marker)
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Text("${index + 1}", color = Color.White)
-            }
 
+                TooltipBox(
+                    state = tooltipState,
+                    positionProvider = provider,
+                    tooltip = {
+                        PlainTooltip(
+                            caretProperties = CaretProperties(
+                                caretWidth = 8.dp,
+                                caretHeight = 8.dp
+                            ),
+                            shape = RoundedCornerShape(16.dp),
+                            containerColor = Color.Red
+                        ) {
+                            Text(
+                                text = " Marker on bitmap at " +
+                                        "x: ${marker.coordinateX.toInt()}, " +
+                                        "y: ${marker.coordinateY.toInt()}",
+                                color = Color.White,
+                                modifier = Modifier.padding(4.dp)
+                            )
+                        }
+                    },
+                    content = {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.size(20.dp)
+                                .background(Color.Red, CircleShape)
+                                .clickable {
+                                    coroutineScope.launch {
+                                        val isVisible = tooltipState.isVisible
+                                        if (isVisible) {
+                                            tooltipState.dismiss()
+                                        } else {
+                                            tooltipState.show()
+                                        }
+                                    }
+
+                                    onClick(marker)
+                                }
+                        ) {
+                            Text("${index + 1}", color = Color.White)
+                        }
+                    }
+                )
+
+            }
         }
     }
 }
-
 
 data class Marker(
     val uid: String,
     val coordinateX: Float,
     val coordinateY: Float,
-    val note: String = ""
+    val note: String = "",
 )
 
 data class ImageProperties(
     val drawAreaRect: Rect,
-    val bitmapRect: Rect
+    val bitmapRect: Rect,
 ) {
     companion object {
 
@@ -370,20 +427,18 @@ data class ImageProperties(
 }
 
 /**
- * Get position on screen from position on A Bitmap
+ * Get position on screen from position on a Bitmap
  * [offsetBitmap] is the position on a Bitmap
  *
  * @return position on screen
  */
 internal fun scaleFromBitmapToScreenPosition(
     offsetBitmap: Offset,
-    imageProperties: ImageProperties
+    drawAreaRect: Rect,
+    bitmapRect: Rect,
 ): Offset {
     val coordinateX = offsetBitmap.x
     val coordinateY = offsetBitmap.y
-
-    val drawAreaRect = imageProperties.drawAreaRect
-    val bitmapRect = imageProperties.bitmapRect
 
     val ratioX = drawAreaRect.width / bitmapRect.width
     val ratioY = drawAreaRect.height / bitmapRect.height
@@ -393,11 +448,27 @@ internal fun scaleFromBitmapToScreenPosition(
     return Offset(xOnScreen, yOnScreen)
 }
 
+internal fun scaleFromScreenToBitmapPosition(
+    offsetScreen: Offset,
+    drawAreaRect: Rect,
+    bitmapRect: Rect,
+): Offset {
+    val coordinateX = offsetScreen.x
+    val coordinateY = offsetScreen.y
+
+    val ratioX = drawAreaRect.width / bitmapRect.width
+    val ratioY = drawAreaRect.height / bitmapRect.height
+
+    val xOnBitmap = bitmapRect.left + (coordinateX - drawAreaRect.left) / ratioX
+    val yOnBitmap = bitmapRect.top + (coordinateY - drawAreaRect.top) / ratioY
+    return Offset(xOnBitmap, yOnBitmap)
+}
+
 internal fun calculateImageDrawProperties(
     srcSize: Size,
     dstSize: Size,
     contentScale: ContentScale,
-    alignment: Alignment
+    alignment: Alignment,
 ): ImageProperties {
     val scaleFactor = contentScale.computeScaleFactor(srcSize, dstSize)
 
@@ -449,7 +520,7 @@ internal fun getDrawAreaRect(
     dstSize: Size,
     scaledSrcSize: Size,
     horizontalBias: Float,
-    verticalBias: Float
+    verticalBias: Float,
 ): Rect {
     val horizontalGap = ((dstSize.width - scaledSrcSize.width) / 2).coerceAtLeast(0f)
     val verticalGap = ((dstSize.height - scaledSrcSize.height) / 2).coerceAtLeast(0f)
@@ -497,7 +568,7 @@ internal fun getScaledBitmapRect(
     scaledImageWidth: Float,
     scaledImageHeight: Float,
     bitmapWidth: Int,
-    bitmapHeight: Int
+    bitmapHeight: Int,
 ): Rect {
     // Get scale of box to width of the image
     // We need a rect that contains Bitmap bounds to pass if any child requires it
@@ -523,7 +594,6 @@ internal fun getScaledBitmapRect(
         0f -> verticalGap
         else -> verticalGap * 2
     }
-
 
     val topLeft = Offset(x = left, y = top)
 
