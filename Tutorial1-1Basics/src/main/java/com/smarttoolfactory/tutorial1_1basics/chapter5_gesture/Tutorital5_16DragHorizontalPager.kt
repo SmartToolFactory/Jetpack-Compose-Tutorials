@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
@@ -46,7 +48,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -54,6 +55,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBox
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.detectDragGesture
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.ExposedSelectionMenu
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Green400
+import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import kotlinx.coroutines.launch
 
@@ -99,13 +102,11 @@ fun DragPagerAndSwipeTest() {
             .padding(16.dp)
     ) {
 
-        var text by remember {
-            mutableStateOf("")
-        }
-
         var isDraggable by remember {
             mutableStateOf(false)
         }
+
+        val angleThreshold = 18f
 
         Box {
             items.forEachIndexed { index, _ ->
@@ -115,61 +116,72 @@ fun DragPagerAndSwipeTest() {
                     currentList.size
                 }
 
-                val animatable = remember {
+                val angleAnimatable = remember {
                     Animatable(0f)
                 }
 
-                val offset = remember {
+                val offsetAnimatable = remember {
                     Animatable(0f)
+                }
+
+                var text by remember {
+                    mutableStateOf(
+                        "drag from left to right on first page or right left on last page" +
+                                "\nto swipe item off the list when threshold angle is passed"
+                    )
                 }
 
                 val dragModifier = Modifier
                     .pointerInput(Unit) {
                         val width = size.width.toFloat()
-                        val centerX = size.center.x.toFloat()
 
                         detectDragGesture(
-                            requireUnconsumed = true,
-                            shouldAwaitTouchSlop = false,
+                            requireUnconsumed = false,
+                            shouldAwaitTouchSlop = true,
                             passForSlopDetection = PointerEventPass.Main,
                             passForDrag = PointerEventPass.Initial,
-                            onDragStart = { change, offset ->
-                                text = "onDragStart..."
-                                isDraggable =
-                                    change.position.x <= centerX &&
-                                            pagerState.currentPage == 0 &&
-                                            offset.x <= 0f
-                                println("onDragStart offset: ${offset.x}")
+                            onDragStart = { _, offset ->
+                                text = "onDragStart...offset: $offset"
+
+                                val firstPageDraggable = pagerState.currentPage == 0 && offset.x > 0
+                                val lastPageDraggable =
+                                    pagerState.currentPage == pagerState.pageCount - 1 && offset.x < 0
+
+                                isDraggable = firstPageDraggable || lastPageDraggable
                             },
                             onDrag = { change, dragAmount ->
 
+                                var currentOffset = offsetAnimatable.value
+
                                 if (isDraggable) {
                                     change.consume()
-                                    val posX = change.position.x.coerceIn(0f, width)
-                                    val tempPos = (posX - centerX).coerceAtMost(0f)
-
-                                    if (tempPos == 0f) {
-                                        isDraggable = false
-                                    } else {
-                                        var currentOffset = offset.value
-                                        currentOffset += dragAmount.x * 1.25f
+                                    currentOffset -= dragAmount.x * 2f
+                                    var angle = 0f
+                                    if (pagerState.currentPage == 0) {
                                         currentOffset = currentOffset.coerceAtMost(0f)
-                                        var angle = 60f * (currentOffset) / centerX
+                                        angle = 80f * (currentOffset) / width
                                         angle = angle.coerceAtMost(0f)
+                                    }
 
-                                        coroutineScope.launch {
-                                            animatable.animateTo(angle)
-                                        }
+                                    if (pagerState.currentPage == pagerState.pageCount - 1) {
+                                        currentOffset = currentOffset.coerceAtLeast(0f)
+                                        angle = 60f * (currentOffset) / width
+                                        angle = angle.coerceAtLeast(0f)
+                                    }
 
-                                        coroutineScope.launch {
-                                            offset.animateTo(currentOffset)
-                                        }
+                                    coroutineScope.launch {
+                                        angleAnimatable.animateTo(angle)
+                                    }
+
+                                    coroutineScope.launch {
+                                        offsetAnimatable.animateTo(currentOffset)
                                     }
                                 }
 
                                 text = "onDrag...$dragAmount\n" +
-                                        "offset: ${offset.value}, " +
-                                        "angle: ${animatable.value}"
+                                        "offset: ${offsetAnimatable.value}, " +
+                                        "angle: ${angleAnimatable.value}"
+
 
                             },
                             onDragCancel = {
@@ -178,21 +190,27 @@ fun DragPagerAndSwipeTest() {
                             },
                             onDragEnd = {
 
-                                val angle = animatable.value
-                                if (angle < -20f) {
+                                val angle = angleAnimatable.value
+                                if (angle < -angleThreshold || angle > angleThreshold) {
                                     coroutineScope.launch {
-                                        animatable.animateTo(-70f)
+                                        angleAnimatable.animateTo(
+                                            targetValue = angle * 2f,
+                                            animationSpec = tween(250)
+                                        )
                                         items.remove(items.lastIndex)
                                     }
                                     coroutineScope.launch {
-                                        offset.animateTo(offset.value * 3f)
+                                        offsetAnimatable.animateTo(
+                                            targetValue = offsetAnimatable.value * 2f,
+                                            animationSpec = tween(250)
+                                        )
                                     }
                                 } else {
                                     coroutineScope.launch {
-                                        animatable.animateTo(0f)
+                                        angleAnimatable.animateTo(0f)
                                     }
                                     coroutineScope.launch {
-                                        offset.animateTo(0f)
+                                        offsetAnimatable.animateTo(0f)
                                     }
                                 }
                                 isDraggable = false
@@ -202,8 +220,8 @@ fun DragPagerAndSwipeTest() {
                         )
                     }
                     .graphicsLayer {
-                        val angle = animatable.value
-                        val pos = offset.value
+                        val angle = angleAnimatable.value
+                        val pos = offsetAnimatable.value
                         translationX = pos
                         translationY = -pos * .25f
                         rotationZ = angle
@@ -216,11 +234,21 @@ fun DragPagerAndSwipeTest() {
 
                 ) {
 
+                    val shape = RoundedCornerShape(16.dp)
+                    val angle = angleAnimatable.value
+
+                    val borderColor = if (angle < -angleThreshold) {
+                        Red400
+                    } else if (angle > angleThreshold) {
+                        Green400
+                    } else {
+                        Color.LightGray
+                    }
                     Column(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
-                            .background(Color.White, RoundedCornerShape(16.dp))
+                            .shadow(elevation = 0.1.dp, shape = shape)
+                            .border(width = 2.dp, borderColor, shape = shape)
+                            .background(Color.White, shape)
                     ) {
                         HorizontalPager(
                             modifier = Modifier,
