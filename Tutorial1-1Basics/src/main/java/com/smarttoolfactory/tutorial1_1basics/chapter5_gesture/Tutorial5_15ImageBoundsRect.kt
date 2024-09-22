@@ -2,7 +2,6 @@
 
 package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
-import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -54,7 +53,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntRect
@@ -64,15 +62,12 @@ import com.smarttoolfactory.tutorial1_1basics.R
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-
 @Preview
 @Composable
 fun ImageWithMarkersSample() {
     val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.landscape1)
 
     val markerList = rememberMarkerList()
-
-    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(8.dp)
@@ -87,14 +82,7 @@ fun ImageWithMarkersSample() {
             contentScale = ContentScale.Fit,
             markerList = markerList,
             imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} at " +
-                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        ) {}
 
         Spacer(modifier = Modifier.height(16.dp))
         Text("ContentScale: ContentScale.FillBounds, alignment: TopCenter")
@@ -107,14 +95,7 @@ fun ImageWithMarkersSample() {
             contentScale = ContentScale.FillBounds,
             markerList = markerList,
             imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} " +
-                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        ) {}
 
         Spacer(modifier = Modifier.height(16.dp))
         Text("ContentScale: ContentScale.Fit, alignment: BottomEnd")
@@ -128,14 +109,7 @@ fun ImageWithMarkersSample() {
             alignment = Alignment.BottomEnd,
             markerList = markerList,
             imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} at " +
-                        "x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        ) {}
 
         Spacer(modifier = Modifier.height(16.dp))
         Text("ContentScale: ContentScale.Crop, alignment: TopCenter")
@@ -148,14 +122,7 @@ fun ImageWithMarkersSample() {
             contentScale = ContentScale.Crop,
             markerList = markerList,
             imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} " +
-                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        ) {}
 
         Spacer(modifier = Modifier.height(16.dp))
         Text("ContentScale: ContentScale.Crop, alignment: TopStart")
@@ -169,14 +136,7 @@ fun ImageWithMarkersSample() {
             alignment = Alignment.TopStart,
             markerList = markerList,
             imageBitmap = imageBitmap
-        ) {
-            Toast.makeText(
-                context,
-                "Clicked ${it.uid.substring(0, 4)} " +
-                        "at x: ${it.coordinateX}, y: ${it.coordinateY}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        ) {}
     }
 }
 
