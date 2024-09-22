@@ -9,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -225,20 +224,18 @@ private fun ImageWithMarkers(
                         if (isTouchInImage) {
                             val bitmapRect = imageProperties.bitmapRect
 
-                            // Calculate touch position scaled into Bitmap
-                            // using scale between area on screen / bitmap on screen
-                            // Bitmap on screen might change based on crop or other
-                            // ContentScales that clip image
-                            val ratioX = drawAreaRect.width / bitmapRect.width
-                            val ratioY = drawAreaRect.height / bitmapRect.height
-
-                            val xOnImage =
-                                bitmapRect.left + (offset.x - drawAreaRect.left) / ratioX
-                            val yOnImage =
-                                bitmapRect.top + (offset.y - drawAreaRect.top) / ratioY
+                            val offsetOnBitmap = scaleFromScreenToBitmapPosition(
+                                offsetScreen = offset,
+                                bitmapRect = bitmapRect,
+                                drawAreaRect = drawAreaRect
+                            )
 
                             markerList.add(
-                                Marker(UUID.randomUUID().toString(), xOnImage, yOnImage)
+                                Marker(
+                                    UUID.randomUUID().toString(),
+                                    offsetOnBitmap.x,
+                                    offsetOnBitmap.y
+                                )
                             )
                         }
                     }
@@ -387,10 +384,14 @@ data class ImageProperties(
 }
 
 /**
- * Get position on screen from position on a Bitmap
- * [offsetBitmap] is the position on a Bitmap
+ * Get position on Composable from position on a Bitmap.
  *
- * @return position on screen
+ * @param offsetBitmap is the position on a Bitmap
+ * @param drawAreaRect bounds of Composable draw area. This is the bounds that Bitmap is drawn
+ * @param bitmapRect bounds of Bitmap that is drawn into Composable. This is which section
+ * of Bitmap is drawn
+ *
+ * @return position on Composable
  */
 internal fun scaleFromBitmapToScreenPosition(
     offsetBitmap: Offset,
@@ -408,6 +409,16 @@ internal fun scaleFromBitmapToScreenPosition(
     return Offset(xOnScreen, yOnScreen)
 }
 
+/**
+ * Get position on Bitmap from position on a Composable.
+ *
+ * @param offsetScreen is the position on Composable.
+ * @param drawAreaRect bounds of Composable draw area. This is the bounds that Bitmap is drawn.
+ * @param bitmapRect bounds of Bitmap that is drawn into Composable. This is which section
+ * of Bitmap is drawn.
+ *
+ * @return position on Bitmap
+ */
 internal fun scaleFromScreenToBitmapPosition(
     offsetScreen: Offset,
     drawAreaRect: Rect,
@@ -508,8 +519,8 @@ internal fun getDrawAreaRect(
 
 /**
  * Get Rectangle of [ImageBitmap] with [bitmapWidth] and [bitmapHeight] that is drawn inside
- * Canvas with [scaledImageWidth] and [scaledImageHeight]. [containerWidth] and [containerHeight] belong
- * to [BoxWithConstraints] that contains Canvas.
+ * Canvas with [scaledImageWidth] and [scaledImageHeight]. [containerWidth] and [containerHeight]
+ * belong to Composable that will draw the Bitmap.
  *  @param containerWidth width of the parent container
  *  @param containerHeight height of the parent container
  *  @param scaledImageWidth width of the [Canvas] that draws [ImageBitmap]
