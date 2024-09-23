@@ -63,7 +63,10 @@ fun ImageWithMarkersSample() {
     val markerList = rememberMarkerList()
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(8.dp)
     ) {
 
         Text("ContentScale: ContentScale.Fit, alignment: TopCenter")
@@ -364,3 +367,4 @@ data class Marker(
     val coordinateY: Float,
     val note: String = "",
 )
+
