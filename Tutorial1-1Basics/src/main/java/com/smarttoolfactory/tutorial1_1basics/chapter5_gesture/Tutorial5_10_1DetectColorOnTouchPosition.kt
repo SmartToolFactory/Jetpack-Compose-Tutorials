@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter5_gesture
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,15 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.isUnspecified
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.detectMotionEvents
@@ -62,7 +63,7 @@ private fun TutorialContent() {
 }
 
 @Composable
-private fun TouchOnImageExample() {
+internal fun TouchOnImageExample() {
 
     val imageBitmap: ImageBitmap = ImageBitmap.imageResource(
         LocalContext.current.resources,
@@ -150,6 +151,8 @@ private fun TouchOnImageExample() {
                                 bitmapHeight,
                             )
 
+                            pointerInputChange.consume()
+
                             result?.let {
                                 text = it.first
                                 colorAtTouchPosition = it.second
@@ -178,23 +181,20 @@ private fun TouchOnImageExample() {
         )
 
         Row(
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = 16.dp, start = 8.dp)
         ) {
 
-            Box(
-                modifier = Modifier
-                    .shadow(2.dp, RoundedCornerShape(16.dp))
-                    .then(
-                        if (colorAtTouchPosition.isUnspecified) {
-                            Modifier.background(Color.White)
-                        } else {
-                            Modifier.background(colorAtTouchPosition)
-                        }
-                    )
-                    .size(100.dp)
-            )
+            if (colorAtTouchPosition != Color.Unspecified) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(2.dp, Color.LightGray, RoundedCornerShape(16.dp))
+                        .background(colorAtTouchPosition)
+                        .size(100.dp)
+                )
+            }
             Spacer(Modifier.width(16.dp))
-            Text(text = text)
+            Text(text = text, fontSize = 16.sp)
         }
     }
 }
@@ -237,7 +237,7 @@ private fun detectColorOnTouchPosition(
             val blue = android.graphics.Color.blue(pixel)
 
             val text = "Bitmap width: ${bitmapWidth}, height: $bitmapHeight\n" +
-                    "scaledX: $yOnImage, scaledY: $yOnImage\n" +
+                    "scaledX: ${yOnImage.toInt()}, scaledY: ${yOnImage.toInt()}\n" +
                     "red: $red, green: $green, blue: $blue\n"
 
             return Pair(text, Color(red, green, blue))

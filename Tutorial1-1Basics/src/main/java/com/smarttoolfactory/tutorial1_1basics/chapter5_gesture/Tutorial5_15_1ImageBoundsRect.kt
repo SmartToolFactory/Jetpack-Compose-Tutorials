@@ -16,10 +16,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material3.CaretProperties
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +60,62 @@ import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.R
 import kotlinx.coroutines.launch
 import java.util.UUID
+
+@Preview
+@Composable
+fun ImageBoundSamples() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        val tabList = remember {
+            listOf(
+                "Markers",
+                "Draw Lines",
+                "Detect Color"
+            )
+        }
+        val pagerState: PagerState = rememberPagerState {
+            tabList.size
+        }
+
+        val coroutineScope = rememberCoroutineScope()
+
+        TabRow(
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.onSurface,
+            // Our selected tab is our current page
+            selectedTabIndex = pagerState.currentPage
+            // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+        ) {
+            // Add tabs for all of our pages
+            tabList.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(title) },
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        HorizontalPager(
+            state = pagerState
+        ) { page: Int ->
+
+            when (page) {
+                0 -> ImageWithMarkersSample()
+                1 -> ImageBoundsDrawSample()
+                else -> TouchOnImageExample()
+            }
+        }
+    }
+}
 
 @Preview
 @Composable
@@ -325,7 +387,7 @@ fun ShapesOnImage(
                             containerColor = Color.Red
                         ) {
                             Text(
-                                text = " Marker on bitmap at " +
+                                text = " On bitmap at " +
                                         "x: ${marker.coordinateX.toInt()}, " +
                                         "y: ${marker.coordinateY.toInt()}",
                                 color = Color.White,
