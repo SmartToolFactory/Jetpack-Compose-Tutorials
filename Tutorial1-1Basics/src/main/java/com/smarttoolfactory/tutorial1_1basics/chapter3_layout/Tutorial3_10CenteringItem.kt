@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -60,7 +59,6 @@ fun Tutorial3_10Screen() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(showBackground = true)
 @Composable
 private fun TutorialContent() {
