@@ -51,10 +51,13 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.smarttoolfactory.tutorial1_1basics.R
@@ -430,3 +433,50 @@ data class Marker(
     val note: String = "",
 )
 
+@Preview
+@Composable
+fun ContentScaleComputeFactorTest() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val painter = painterResource(R.drawable.landscape6)
+
+
+        val contentScale = ContentScale.Fit
+
+        var dstSize by remember {
+            mutableStateOf(IntSize.Zero)
+        }
+
+        var text by remember {
+            mutableStateOf("")
+        }
+
+        var scaleFactor by remember {
+            mutableStateOf(ScaleFactor(1f, 1f))
+        }
+        Text(text = text)
+
+        Image(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .onSizeChanged {
+                    dstSize = it
+                    scaleFactor = contentScale.computeScaleFactor(
+                        srcSize = painter.intrinsicSize,
+                        dstSize = dstSize.toSize()
+                    )
+
+                    text = "Src size: ${painter.intrinsicSize}\n" +
+                            "dstSize: $dstSize\n" +
+                            "scaleFactor: $scaleFactor"
+
+                },
+            painter = painter,
+            contentScale = contentScale,
+            contentDescription = null
+        )
+    }
+}

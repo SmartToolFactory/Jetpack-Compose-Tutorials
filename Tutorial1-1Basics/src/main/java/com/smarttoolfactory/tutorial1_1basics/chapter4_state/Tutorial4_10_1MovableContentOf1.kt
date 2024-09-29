@@ -159,8 +159,6 @@ internal fun CustomCheckBox() {
 
 @Composable
 internal fun Counter() {
-    // 🔥🔥 There is a bug with counter text, it doesn't recompose text while
-    // everything else does unless counter is increased or decreased until 10 🤯
 
     var counter by remember {
         mutableIntStateOf(0)

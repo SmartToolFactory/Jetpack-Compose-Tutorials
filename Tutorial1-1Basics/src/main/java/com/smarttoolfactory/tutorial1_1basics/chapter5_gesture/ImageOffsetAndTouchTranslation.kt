@@ -49,7 +49,6 @@ internal fun scaleFromBitmapToScreenPosition(
     val coordinateX = offsetBitmap.x
     val coordinateY = offsetBitmap.y
 
-
     val ratioX = scaleFactor.scaleX
     val ratioY = scaleFactor.scaleY
 
@@ -94,7 +93,7 @@ internal fun calculateImageDrawProperties(
 ): ImageProperties {
     val scaleFactor = contentScale.computeScaleFactor(srcSize, dstSize)
 
-    // Bitmap scaled size that might be drawn,  this size can be bigger or smaller than
+    // Bitmap scaled size that might be drawn, this size can be bigger or smaller than
     // draw area. If Bitmap is bigger than container it's cropped only to show
     // which will be on screen
     //
@@ -232,8 +231,8 @@ internal fun getScaledBitmapRect(
     val topLeft = Offset(x = left, y = top)
 
     val size = Size(
-        width = (bitmapWidth * scaledBitmapX).coerceAtMost(bitmapWidth.toFloat()),
-        height = (bitmapHeight * scaledBitmapY).coerceAtMost(bitmapHeight.toFloat())
+        width = scaledBitmapWidth,
+        height = scaledBitmapHeight
     )
 
     return Rect(offset = topLeft, size = size)
