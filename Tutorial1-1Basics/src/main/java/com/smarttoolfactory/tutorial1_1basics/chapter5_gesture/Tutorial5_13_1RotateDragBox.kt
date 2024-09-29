@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,12 +17,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.Red400
 import kotlin.math.atan2
 
 @Preview
@@ -51,7 +54,7 @@ fun DragRotateBox() {
                     translationX = position.x,
                     translationY = position.y
                 )
-                .background(Color.Blue)
+                .background(Blue400, RoundedCornerShape(16.dp))
                 .size(boxSize)
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, _, _ ->
@@ -64,7 +67,7 @@ fun DragRotateBox() {
             Box(
                 modifier = Modifier
                     .size(handleSize)
-                    .background(Color.Red)
+                    .background(Red400, CircleShape)
                     .align(Alignment.TopCenter)
                     .pointerInput(Unit) {
                         detectDragGestures(

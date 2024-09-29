@@ -53,7 +53,6 @@ private fun RotateZoomDragBox() {
             this.scaleX = zoom
             this.scaleY = zoom
             this.rotationZ = rotation
-//            TransformOrigin(0f, 0f)
         }
         .pointerInput(Unit) {
             detectTransformGestures(

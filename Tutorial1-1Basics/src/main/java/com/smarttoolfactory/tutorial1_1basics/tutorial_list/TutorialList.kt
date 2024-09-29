@@ -95,6 +95,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_10_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_11Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_12Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen3
@@ -2255,7 +2256,41 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
+    val tutorial5_12 = TutorialSectionModel(
+        title = "5-12 Pager Swipe Start",
+        description = "Swipe HorizontalPager to start when last item is swiped.",
+        action = {
+            Tutorial5_12Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
+            TAG_POINTER_EVENT_PASS,
+            TAG_HORIZONTAL_PAGER,
+            TAG_ENDLESS_HORIZONTAL_PAGER
+        ),
+        tagColor = GestureListColor
+    )
 
+    val tutorial5_13 = TutorialSectionModel(
+        title = "5-13 Rotate Drag Box",
+        description = "Rotate and/or translate a Box from its current transformation.",
+        action = {
+
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
+            TAG_POINTER_EVENT_PASS,
+            TAG_HORIZONTAL_PAGER,
+            TAG_ENDLESS_HORIZONTAL_PAGER
+        ),
+        tagColor = GestureListColor
+    )
 
     return listOf(
         tutorial5_1_1,
@@ -2287,7 +2322,8 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_9_6,
         tutorial5_9_7,
         tutorial5_10_1,
-        tutorial5_11
+        tutorial5_11,
+        tutorial5_12,
     )
 }
 

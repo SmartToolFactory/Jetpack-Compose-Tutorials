@@ -106,6 +106,8 @@ const val TAG_SLIDER = "Slider"
 const val TAG_SWIPE_TO_DISMISS = "SwipeToDismiss"
 
 const val TAG_LAZY_COLUMN_CHECKBOX = "LazyColumnCheckbox"
+const val TAG_HORIZONTAL_PAGER = "HorizontalPager"
+const val TAG_ENDLESS_HORIZONTAL_PAGER = "Endless HorizontalPager"
 
 // Navigation
 const val TAG_COMPOSE_NAVIGATION = "Compose Navigation"
