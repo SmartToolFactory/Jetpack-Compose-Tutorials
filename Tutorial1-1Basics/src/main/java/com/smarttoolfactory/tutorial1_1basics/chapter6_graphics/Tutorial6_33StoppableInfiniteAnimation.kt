@@ -100,12 +100,14 @@ private fun StoppableInfiniteAnimationSample() {
 
         Spacer(Modifier.height(16.dp))
         Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = "Angle: ${rotateAnimationState.angle.toInt()}\n" +
                     "status: ${rotateAnimationState.rotationStatus}",
-            fontSize = 16.sp
+            fontSize = 24.sp
         )
 
         Button(
+            modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
             onClick = {
                 rotateAnimationState.start()
             }
@@ -114,6 +116,7 @@ private fun StoppableInfiniteAnimationSample() {
         }
 
         Button(
+            modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
             onClick = {
                 rotateAnimationState.stop()
             }
@@ -125,7 +128,7 @@ private fun StoppableInfiniteAnimationSample() {
 
 class RotateAnimationState(
     val coroutineScope: CoroutineScope,
-    val duration: Int
+    val duration: Int,
 ) {
     val angle: Float
         get() = animatable.value

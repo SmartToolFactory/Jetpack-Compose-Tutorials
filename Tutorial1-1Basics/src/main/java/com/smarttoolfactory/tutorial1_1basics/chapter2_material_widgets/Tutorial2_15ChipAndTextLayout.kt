@@ -69,12 +69,16 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Green400
 import kotlinx.coroutines.delay
 import java.util.UUID
 
-@Immutable
-data class ChipData(
-    val uri: Uri,
-    val text: String,
-    val id: String = UUID.randomUUID().toString()
-)
+@Preview(showBackground = true)
+@Composable
+fun Tutorial2_15Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    ChipSampleAndTextLayoutSample()
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -106,7 +110,7 @@ private fun ChipSampleAndTextLayoutSample() {
 private fun MyChip(
     backgroundColor: Color,
     data: ChipData,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
 ) {
     Chip(
         modifier = Modifier,
@@ -160,7 +164,7 @@ fun ChipAndTextFieldLayout(
     backgroundColor: Color,
     list: List<ChipData> = emptyList(),
     onChipCreated: (ChipData) -> Unit,
-    chip: @Composable (data: ChipData, index: Int) -> Unit
+    chip: @Composable (data: ChipData, index: Int) -> Unit,
 ) {
 
     var text by remember {
@@ -251,3 +255,10 @@ fun ChipAndTextFieldLayout(
         }
     }
 }
+
+@Immutable
+data class ChipData(
+    val uri: Uri,
+    val text: String,
+    val id: String = UUID.randomUUID().toString(),
+)

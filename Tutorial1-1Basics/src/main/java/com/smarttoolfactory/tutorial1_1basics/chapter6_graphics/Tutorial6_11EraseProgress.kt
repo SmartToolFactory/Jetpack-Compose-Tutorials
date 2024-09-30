@@ -174,7 +174,6 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
             val canvasWidth = nativeCanvas.width.toFloat()
             val canvasHeight = nativeCanvas.height.toFloat()
 
-
             when (motionEvent) {
 
                 MotionEvent.Down -> {
@@ -184,12 +183,11 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
                 }
                 MotionEvent.Move -> {
 
-                    erasePath.quadraticBezierTo(
+                    erasePath.quadraticTo(
                         previousPosition.x,
                         previousPosition.y,
                         (previousPosition.x + currentPosition.x) / 2,
                         (previousPosition.y + currentPosition.y) / 2
-
                     )
                     previousPosition = currentPosition
                 }
@@ -205,8 +203,6 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
 
             with(canvas.nativeCanvas) {
                 drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-
-
 
                 drawImageRect(
                     image = drawImageBitmap,

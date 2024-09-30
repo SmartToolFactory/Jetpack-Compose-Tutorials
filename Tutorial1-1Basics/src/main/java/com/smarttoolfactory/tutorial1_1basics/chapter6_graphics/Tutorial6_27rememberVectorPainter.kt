@@ -52,6 +52,7 @@ private fun TutorialContent() {
 
     }
 }
+
 @Preview
 @Composable
 private fun CustomVectorDrawableSample() {
@@ -66,7 +67,7 @@ private fun CustomVectorDrawableSample() {
                 .background(Blue400)
                 .fillMaxWidth()
                 .aspectRatio(1f),
-            index.toInt()
+            selectedIndex = index.toInt()
         )
 
         Slider(
@@ -116,42 +117,24 @@ fun Netherlands(modifier: Modifier = Modifier, selectedIndex: Int) {
 
             val center = pathForSize.getBounds().center
 
-            if (selectedIndex == index) {
-                selectedProvince = province
+            Group(
+                name = province,
+                scaleX = 1.0f,
+                scaleY = 1.0f,
+                pivotX = center.x,
+                pivotY = center.y
+            ) {
+                for (path in paths) {
+                    androidx.compose.ui.graphics.vector.Path(
+                        stroke = SolidColor(Blue400),
+                        pathData = path,
+                        fill = SolidColor(Color.Black)
+                    )
+                }
             }
 
-            if (selectedIndex != index) {
-                Group(
-                    name = province,
-                    scaleX = 1.0f,
-                    scaleY = 1.0f,
-                    pivotX = center.x,
-                    pivotY = center.y
-                ) {
-                    for (path in paths) {
-                        androidx.compose.ui.graphics.vector.Path(
-                            stroke = SolidColor(Blue400),
-                            pathData = path,
-                            fill = SolidColor(Color.Black),
-                        )
-                    }
-                }
-            } else {
-                Group(
-                    name = province,
-                    scaleX = 1.0f,
-                    scaleY = 1.0f,
-                    pivotX = center.x,
-                    pivotY = center.y
-                ) {
-                    for (path in paths) {
-                        androidx.compose.ui.graphics.vector.Path(
-                            stroke = SolidColor(Blue400),
-                            pathData = path,
-                            fill = SolidColor(Blue400),
-                        )
-                    }
-                }
+            if (selectedIndex == index) {
+                selectedProvince = province
             }
 
             index++

@@ -20,6 +20,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_12Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_13Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_14Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_15Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_2Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.Tutorial2_3Screen
@@ -642,6 +643,21 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         )
     )
 
+    val tutorial2_15 = TutorialSectionModel(
+        title = stringResource(R.string.title2_15),
+        description = "Add chips after text is entered and image is selected.",
+        action = {
+            Tutorial2_15Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CHIP,
+            TAG_TEXT_FIELD,
+            TAG_IMAGE,
+            TAG_SNAPSHOT_STATE_LIST
+        )
+    )
+
     return listOf(
         tutorial1_1,
         tutorial1_2,
@@ -672,7 +688,8 @@ fun createComponentTutorialList(onBack: () -> Unit): List<TutorialSectionModel> 
         tutorial2_11,
         tutorial2_12,
         tutorial2_13,
-        tutorial2_14
+        tutorial2_14,
+        tutorial2_15
     )
 }
 
