@@ -158,6 +158,8 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Scree
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_30Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_31Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_32Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_33Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen2
@@ -3087,6 +3089,40 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_32 = TutorialSectionModel(
+        title = "6-32 Edge Fade Effect",
+        description = "Add fade effect to scrolling text with BlendMode and linear interpolation " +
+                "between current scroll position relative to bottom",
+        action = {
+            Tutorial6_32Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_BLEND_MODE,
+            TAG_LERP,
+            TAG_DRAW_SCOPE,
+            TAG_BRUSH,
+            TAG_HORIZONTAL_PAGER
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_33 = TutorialSectionModel(
+        title = "6-33 Stoppable Infinite Animation",
+        description = "Create an infinite animation with Animatable that can stop at desired " +
+                "angle smoothly.",
+        action = {
+            Tutorial6_33Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ANIMATABLE,
+            TAG_CANVAS,
+            TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER
+        ),
+        tagColor = GraphicsListColor
+    )
+
     return listOf(
         tutorial6_1_1,
         tutorial6_1_2,
@@ -3127,5 +3163,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_29,
         tutorial6_30,
         tutorial6_31,
+        tutorial6_32,
+        tutorial6_33
     )
 }

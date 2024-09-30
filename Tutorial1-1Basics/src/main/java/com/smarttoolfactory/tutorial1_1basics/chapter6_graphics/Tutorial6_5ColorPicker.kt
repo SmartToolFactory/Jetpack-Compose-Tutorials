@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.ColorSlider
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.colorpicker.ColorPickerWheel
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.colorpicker.ColorfulSlider
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.colorpicker.SaturationRhombus
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 
 @Preview
 @Composable
@@ -41,7 +41,7 @@ fun Tutorial6_5Screen() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
-            .background(Color(0xff424242))
+            .background(backgroundColor)
             .fillMaxSize()
             .padding(8.dp)
     ) {
@@ -58,7 +58,7 @@ private fun TutorialContent() {
             Text(
                 text = "Color",
                 color = Blue400,
-                fontSize = 18.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 12.dp)
             )
@@ -162,6 +162,6 @@ private fun TutorialContent() {
             )
 
         }
-        ColorfulSlider()
+
     }
 }
