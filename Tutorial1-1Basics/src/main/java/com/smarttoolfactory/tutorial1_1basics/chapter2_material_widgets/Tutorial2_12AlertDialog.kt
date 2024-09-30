@@ -31,7 +31,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -395,7 +395,7 @@ private fun CustomDialogExample(
                             modifier = Modifier
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
-                                    indication = rememberRipple(color = Color.DarkGray),
+                                    indication = ripple(color = Color.DarkGray),
                                     onClick = onNegativeClick
                                 )
                                 .padding(8.dp)
@@ -407,7 +407,7 @@ private fun CustomDialogExample(
                             modifier = Modifier
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
-                                    indication = rememberRipple(color = Color.DarkGray),
+                                    indication = ripple(color = Color.DarkGray),
                                     onClick = onPositiveClick
                                 )
                                 .padding(8.dp)

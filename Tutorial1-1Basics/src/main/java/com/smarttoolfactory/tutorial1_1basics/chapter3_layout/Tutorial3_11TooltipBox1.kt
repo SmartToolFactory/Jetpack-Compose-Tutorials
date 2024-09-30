@@ -14,7 +14,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.CaretProperties
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Slider
@@ -30,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Purple400
 import kotlinx.coroutines.launch
@@ -125,9 +125,9 @@ private fun TooltipBoxSample(
                         .width(contentWidth)
 //                        .fillMaxWidth()
                     ,
-                    caretProperties = CaretProperties(
-                        caretWidth = 24.dp,
-                        caretHeight = 16.dp
+                    caretSize = DpSize(
+                        width = 24.dp,
+                        height = 16.dp
                     ),
                     shape = RoundedCornerShape(16.dp),
                     containerColor = Purple400

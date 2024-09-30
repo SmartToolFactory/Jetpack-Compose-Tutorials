@@ -27,7 +27,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.material3.CaretProperties
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.TooltipBox
@@ -58,6 +57,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
@@ -388,9 +388,9 @@ fun ShapesOnImage(
                     positionProvider = provider,
                     tooltip = {
                         PlainTooltip(
-                            caretProperties = CaretProperties(
-                                caretWidth = 8.dp,
-                                caretHeight = 8.dp
+                            caretSize = DpSize(
+                                width = 8.dp,
+                                height = 8.dp
                             ),
                             shape = RoundedCornerShape(16.dp),
                             containerColor = Color.Red

@@ -5,7 +5,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.MutatorMutex
-import androidx.compose.material3.BasicTooltipState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TooltipState
 import androidx.compose.runtime.Composable

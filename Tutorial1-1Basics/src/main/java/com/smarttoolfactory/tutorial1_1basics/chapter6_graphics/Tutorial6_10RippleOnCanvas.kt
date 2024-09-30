@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +62,7 @@ private fun RippleSample() {
         .background(Color.Cyan)
         .clickable(
             interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = false,
                 radius = 300.dp
             ),

@@ -43,7 +43,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -371,7 +371,7 @@ private fun CustomIconButtonExample(modifier: Modifier) {
     FullWidthRow(modifier.padding(horizontal = 30.dp)) {
         IndicatingIconButton(
             onClick = { /*TODO*/ },
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = false,
                 radius = 40.dp,
                 color = Color(
@@ -390,7 +390,7 @@ private fun CustomIconButtonExample(modifier: Modifier) {
 
         IndicatingIconButton(
             onClick = { /*TODO*/ },
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = false,
                 radius = 30.dp,
                 color = Color(0xffBF360C)
@@ -408,7 +408,7 @@ private fun CustomIconButtonExample(modifier: Modifier) {
         // this one's ripple is bounded
         IndicatingIconButton(
             onClick = { /*TODO*/ },
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = true,
                 radius = 30.dp,
                 color = Color(0xff311B92)
@@ -426,7 +426,7 @@ private fun CustomIconButtonExample(modifier: Modifier) {
 
         IndicatingIconButton(
             onClick = { /*TODO*/ },
-            indication = rememberRipple(
+            indication = ripple(
                 bounded = false,
                 radius = 50.dp,
                 color = Color(0xff43A047)
