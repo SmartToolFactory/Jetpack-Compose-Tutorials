@@ -1,13 +1,15 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import android.graphics.Bitmap
+import android.graphics.PorterDuff
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,21 +26,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.MotionEvent
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMotionEvents
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
-import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import kotlin.math.sqrt
 
 @Preview
@@ -82,6 +94,12 @@ private fun PolygonDrawingApp() {
      */
     var currentPolygon by remember { mutableStateOf(Polygon(), policy = neverEqualPolicy()) }
 
+    val imageBitmap = ImageBitmap.imageResource(R.drawable.landscape4)
+
+    var crop by remember {
+        mutableStateOf(false)
+    }
+
     LaunchedEffect(mode, motionEvent) {
         if (mode == Mode.Touch && motionEvent == MotionEvent.Idle) {
 
@@ -116,6 +134,7 @@ private fun PolygonDrawingApp() {
                     mode = if (mode == Mode.Draw) {
                         Mode.Touch
                     } else Mode.Draw
+                    crop = false
                 }
             ) {
                 Text("Mode: $mode")
@@ -125,16 +144,27 @@ private fun PolygonDrawingApp() {
                 onClick = {
                     currentPolygon = Polygon()
                     mode = Mode.Draw
+                    crop = false
                 }
             ) {
                 Text("Reset")
             }
+
+            Button(
+                onClick = {
+                    crop = true
+                }
+            ) {
+                Text("Crop")
+            }
         }
 
+        val sizeModifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .aspectRatio(4 / 3f)
 
         val drawModifier = Modifier
-            .border(2.dp, getRandomColor())
-            .fillMaxSize()
             .pointerMotionEvents(
                 onDown = { pointerInputChange ->
 
@@ -274,18 +304,87 @@ private fun PolygonDrawingApp() {
                 delayAfterDownInMillis = 20
             )
 
-        Box {
+        BoxWithConstraints(sizeModifier) {
+            val imageWidth = constraints.maxWidth
+            val imageHeight = constraints.maxHeight
+
+            val erasedBitmap: ImageBitmap = remember {
+                Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888)
+                    .asImageBitmap()
+            }
+
+            val canvas: Canvas = remember {
+                Canvas(erasedBitmap)
+            }
+
+            val paint = remember {
+                Paint()
+            }
+
+            val erasePaint = remember {
+                Paint().apply {
+                    blendMode = BlendMode.SrcIn
+                    this.style = PaintingStyle.Fill
+                }
+            }
+
+            canvas.apply {
+
+                val canvasWidth = nativeCanvas.width.toFloat()
+                val canvasHeight = nativeCanvas.height.toFloat()
+
+                with(canvas.nativeCanvas) {
+                    drawColor(android.graphics.Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+
+                    // Destination
+                    drawPath(path = currentPolygon.path, paint)
+
+                    // Source
+                    drawImageRect(
+                        image = imageBitmap,
+                        dstSize = IntSize(canvasWidth.toInt(), canvasHeight.toInt()),
+                        paint = erasePaint
+                    )
+                }
+            }
+
             Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(R.drawable.landscape6),
+                modifier = Modifier.matchParentSize()
+                    .clipToBounds()
+                    .drawWithContent {
+                        val width = this.size.width
+                        val height = this.size.height
+
+                        val checkerWidth = 10.dp.toPx()
+                        val checkerHeight = 10.dp.toPx()
+
+                        val horizontalSteps = (width / checkerWidth).toInt()
+                        val verticalSteps = (height / checkerHeight).toInt()
+
+                        for (y in 0..verticalSteps) {
+                            for (x in 0..horizontalSteps) {
+                                val isGrayTile = ((x + y) % 2 == 1)
+                                drawRect(
+                                    color = if (isGrayTile) Color.LightGray else Color.White,
+                                    topLeft = Offset(x * checkerWidth, y * checkerHeight),
+                                    size = Size(checkerWidth, checkerHeight)
+                                )
+                            }
+                        }
+
+                        drawContent()
+                    }
+                    .matchParentSize(),
+                bitmap = if (crop) erasedBitmap else imageBitmap,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
 
-            Canvas(modifier = drawModifier) {
+
+            Canvas(modifier = drawModifier.matchParentSize()) {
                 when (motionEvent) {
                     MotionEvent.Move -> {
-                        if (mode != Mode.Touch) {
+                        if (mode == Mode.Draw) {
                             drawLine(
                                 color = Color.Black,
                                 start = firstTouchPoint.position,
@@ -328,7 +427,6 @@ private fun PolygonDrawingApp() {
                     )
                 }
 
-
                 val path = currentPolygon.path
 
                 drawPath(
@@ -343,7 +441,7 @@ private fun PolygonDrawingApp() {
 @Immutable
 data class Polygon(
     val path: Path = Path(),
-    val lines: SnapshotStateList<Line> = mutableStateListOf()
+    val lines: SnapshotStateList<Line> = mutableStateListOf(),
 ) {
     val firstPoint: Point? = lines.firstOrNull()?.start
     val lastPoint: Point? = lines.lastOrNull()?.end
@@ -352,7 +450,7 @@ data class Polygon(
 @Immutable
 data class Line(
     val start: Point,
-    val end: Point
+    val end: Point,
 ) {
 
     fun isPointExist(offset: Offset): Boolean {
@@ -365,11 +463,11 @@ data class Line(
 
 class Point(
     var position: Offset,
-    var isTouched: Boolean = false
+    var isTouched: Boolean = false,
 )
 
 private enum class Mode {
-    Draw, Touch
+    Draw, Touch, ERASE
 }
 
 private fun calculateDistanceFromCenter(center: Offset, position: Offset): Float {

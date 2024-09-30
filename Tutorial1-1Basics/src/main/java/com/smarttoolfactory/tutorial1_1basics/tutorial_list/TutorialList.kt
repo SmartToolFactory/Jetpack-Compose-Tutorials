@@ -2321,7 +2321,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial5_13_2 = TutorialSectionModel(
-        title = "5-13-2 Rotate Drag Box",
+        title = "5-13-2 Rotate Drag Zoom Image",
         description = "Rotate, zoom, and/or translate a Box from its current transformation.",
         action = {
             Tutorial5_13Screen2()
