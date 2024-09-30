@@ -135,8 +135,10 @@ const val TAG_INTRINSIC_WIDTH = "IntrinsicWidth"
 const val TAG_INTRINSIC_HEIGHT = "IntrinsicHeight"
 const val TAG_SUBCOMPOSE_LAYOUT = "SubcomposeLayout"
 const val TAG_ON_PLACED_MODIFIER = "onPlaced"
+const val TAG_ON_GLOBALLY_POSITIONED_MODIFIER = "onGloballyPositioned"
 const val TAG_SNAPSHOT_STATE_LIST = "SnapshotStateList"
 const val TAG_MOVABLE_CONTENT_OF = "movableContentOf"
+const val TAG_LERP = "linear Interpolation(lerp)"
 
 /*
     STATE

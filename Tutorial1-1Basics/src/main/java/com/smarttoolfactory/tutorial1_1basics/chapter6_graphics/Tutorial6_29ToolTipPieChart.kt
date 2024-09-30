@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,7 +51,7 @@ import kotlin.math.sqrt
 
 @Preview
 @Composable
-fun Tutorial6_29ToolTipPieChart() {
+fun Tutorial6_29Screen() {
     TutorialContent()
 }
 
@@ -70,7 +69,8 @@ private fun TutorialContent() {
             .fillMaxSize()
             .clickable {
                 dismissToolTip = true
-            }
+            },
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val data = remember {
             listOf(
@@ -86,12 +86,17 @@ private fun TutorialContent() {
         PieChart(
             modifier = Modifier
                 .padding(top = 100.dp)
-                .size(140.dp)
+                .fillMaxWidth(.6f)
+                .aspectRatio(1f)
                 .align(Alignment.CenterHorizontally),
             data = data,
             outerRingPercent = 35,
-            onClick = { chartData, index ->
-                Toast.makeText(context, "Clicked: ${chartData.data}", Toast.LENGTH_SHORT).show()
+            onClick = { chartData, _ ->
+                Toast.makeText(
+                    context,
+                    "Clicked type: ${chartData.type} at ${chartData.expense}",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             },
             dimissToolTip = dismissToolTip
@@ -110,7 +115,7 @@ fun PieChart(
     drawText: Boolean = true,
     onClick: ((data: ChartData, index: Int) -> Unit)? = null,
     dimissToolTip: Boolean,
-    resetDismiss: (Boolean) -> Unit
+    resetDismiss: (Boolean) -> Unit,
 ) {
 
     BoxWithConstraints(
@@ -280,7 +285,7 @@ private fun PieChartImpl(
     rectCornerRadius: Int = 8,
     triangleWidth: Int = 24,
     triangleHeight: Int = 8,
-    dimissToolTip: Boolean
+    dimissToolTip: Boolean,
 ) {
 
     val pointerVector = ImageVector.vectorResource(id = R.drawable.tip)
@@ -434,9 +439,7 @@ internal class AnimatedChartData(
     val expense: String,
     selected: Boolean = false,
     val range: ClosedFloatingPointRange<Float>,
-    val animatable: Animatable<Float, AnimationVector1D> = Animatable(1f)
+    val animatable: Animatable<Float, AnimationVector1D> = Animatable(1f),
 ) {
     var isSelected by mutableStateOf(selected)
 }
-
-

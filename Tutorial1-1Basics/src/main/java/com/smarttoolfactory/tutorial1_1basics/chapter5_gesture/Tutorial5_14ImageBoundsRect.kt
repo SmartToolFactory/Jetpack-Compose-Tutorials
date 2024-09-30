@@ -76,16 +76,6 @@ private fun TutorialContent() {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        ImageBoundSamples()
-    }
-}
-
-@Preview
-@Composable
-private fun ImageBoundSamples() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
 
         val tabList = remember {
             listOf(

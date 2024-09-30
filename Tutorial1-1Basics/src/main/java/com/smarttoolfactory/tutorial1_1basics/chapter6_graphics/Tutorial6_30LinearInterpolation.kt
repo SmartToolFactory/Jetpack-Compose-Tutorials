@@ -85,7 +85,9 @@ fun Tutorial6_30Screen() {
 
 @Composable
 private fun TutorialContent() {
+    // LazyRow sample
 //    LerpAnimationSample()
+    // Vertical Grid sample
     GridLerpAnimationSample()
 }
 

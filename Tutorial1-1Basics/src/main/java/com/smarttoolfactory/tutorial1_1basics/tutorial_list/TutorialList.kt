@@ -152,10 +152,12 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_23Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_24Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_25Screen
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_29ToolTipPieChart
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_29Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen3
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_30Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_31Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen0
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_4Screen2
@@ -3036,7 +3038,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         title = "6-29 Pie Chart with Tool tip",
         description = "Animate Pie Chart with tool tip.",
         action = {
-            Tutorial6_29ToolTipPieChart()
+            Tutorial6_29Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -3044,6 +3046,43 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
             TAG_CANVAS,
             TAG_ANIMATABLE,
             TAG_DETECT_TAP_GESTURES
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_30 = TutorialSectionModel(
+        title = "6-30 Linear Interpolation",
+        description = "Animate Image's position, shape, and other properties using " +
+                "liner interpolation and scaling with single animation source.",
+        action = {
+            Tutorial6_30Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_HORIZONTAL_PAGER,
+            TAG_LAZY_VERTICAL_GRID,
+            TAG_ON_GLOBALLY_POSITIONED_MODIFIER,
+            TAG_LERP
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_31 = TutorialSectionModel(
+        title = "6-31 Add/Edit Polygon Points",
+        description = "Add and edit polygon points in a Path to draw closed path such as" +
+                "free crop",
+        action = {
+            Tutorial6_31Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_PATH,
+            TAG_CANVAS,
+            TAG_POINTER_INPUT,
+            TAG_AWAIT_POINTER_EVENT_SCOPE,
+            TAG_AWAIT_FIRST_DOWN,
+            TAG_AWAIT_POINTER_EVENT,
+            TAG_SNAPSHOT_STATE_LIST
         ),
         tagColor = GraphicsListColor
     )
@@ -3085,6 +3124,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_23,
         tutorial6_24,
         tutorial6_25,
-        tutorial6_29
+        tutorial6_29,
+        tutorial6_30,
+        tutorial6_31,
     )
 }
