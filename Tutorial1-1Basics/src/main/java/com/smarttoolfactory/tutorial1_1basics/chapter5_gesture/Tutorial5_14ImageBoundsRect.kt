@@ -67,7 +67,22 @@ import java.util.UUID
 
 @Preview
 @Composable
-fun ImageBoundSamples() {
+fun Tutorial5_14Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        ImageBoundSamples()
+    }
+}
+
+@Preview
+@Composable
+private fun ImageBoundSamples() {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

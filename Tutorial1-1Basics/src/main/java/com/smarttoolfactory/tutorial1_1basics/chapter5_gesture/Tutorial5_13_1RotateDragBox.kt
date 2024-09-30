@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -24,11 +27,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import com.smarttoolfactory.tutorial1_1basics.ui.Red400
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.math.atan2
 
 @Preview
 @Composable
-fun DragRotateBox() {
+fun Tutorial5_13Screen1() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+    ) {
+        TutorialHeader(text = "Rotate Pan DragBox")
+        StyleableTutorialText(
+            "Rotate box from red circle or pan to change position.",
+            bullets = false
+        )
+        DragRotateBox()
+    }
+}
+
+@Preview
+@Composable
+private fun DragRotateBox() {
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -54,7 +79,8 @@ fun DragRotateBox() {
                     translationX = position.x,
                     translationY = position.y
                 )
-                .background(Blue400, RoundedCornerShape(16.dp))
+                .shadow(2.dp, RoundedCornerShape(16.dp))
+                .background(Blue400)
                 .size(boxSize)
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, _, _ ->

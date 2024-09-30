@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,13 +26,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.tutorial1_1basics.R
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
-fun RotateZoomDragBoxTest() {
+fun Tutorial5_13Screen2() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
+        TutorialHeader(text = "Rotate Pan Zoom DragBox")
+        StyleableTutorialText(
+            "Rotate, move or zoom an image based on current position.",
+            bullets = false
+        )
         RotateZoomDragBox()
     }
 }

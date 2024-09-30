@@ -63,7 +63,23 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun DragPagerAndSwipeTest() {
+fun Tutorial5_15Screen() {
+    TutorialContent()
+}
+
+@Composable
+private fun TutorialContent() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        DragPagerAndSwipeSample()
+    }
+}
+
+
+@Preview
+@Composable
+private fun DragPagerAndSwipeSample() {
 
     val images = remember {
         listOf(
@@ -247,7 +263,7 @@ fun DragPagerAndSwipeTest() {
                     Column(
                         modifier = Modifier
                             .shadow(elevation = 0.1.dp, shape = shape)
-                            .border(width = 2.dp, borderColor, shape = shape)
+                            .border(width = 4.dp, borderColor, shape = shape)
                             .background(Color.White, shape)
                     ) {
                         HorizontalPager(

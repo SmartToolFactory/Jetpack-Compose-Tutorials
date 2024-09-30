@@ -96,6 +96,10 @@ import com.smarttoolfactory.tutorial1_1basics.chapter4_state.Tutorial4_7_3Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_10_1Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_11Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_12Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_13Screen1
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_13Screen2
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_14Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_15Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen2
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.Tutorial5_1Screen3
@@ -2274,11 +2278,65 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tagColor = GestureListColor
     )
 
-    val tutorial5_13 = TutorialSectionModel(
-        title = "5-13 Rotate Drag Box",
+    val tutorial5_13_1 = TutorialSectionModel(
+        title = "5-13-1 Rotate Drag Box",
         description = "Rotate and/or translate a Box from its current transformation.",
         action = {
+            Tutorial5_13Screen1()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_DETECT_DRAG_GESTURES,
+            TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER,
+            TAG_PAN,
+            TAG_ROTATE,
+            TAG_DETECT_TRANSFORM_GESTURES
+        ),
+        tagColor = GestureListColor
+    )
 
+    val tutorial5_13_2 = TutorialSectionModel(
+        title = "5-13-2 Rotate Drag Box",
+        description = "Rotate, zoom, and/or translate a Box from its current transformation.",
+        action = {
+            Tutorial5_13Screen2()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_DETECT_DRAG_GESTURES,
+            TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER,
+            TAG_PAN,
+            TAG_ROTATE,
+            TAG_ZOOM,
+            TAG_DETECT_TRANSFORM_GESTURES
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_14 = TutorialSectionModel(
+        title = "5-14 Image Bounds",
+        description = "Compute Image composable draw area and which section of Bitmap is drawn to " +
+                "translate touch position to Bitmap position.",
+        action = {
+            Tutorial5_14Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_POINTER_INPUT,
+            TAG_DETECT_DRAG_GESTURES,
+            TAG_DETECT_TAP_GESTURES,
+            TAG_BITMAP
+        ),
+        tagColor = GestureListColor
+    )
+
+    val tutorial5_15 = TutorialSectionModel(
+        title = "5-15 Drag HorizontalPager",
+        description = "Use custom detectDragGesture to detect drag on a HorizontalPager.",
+        action = {
+            Tutorial5_15Screen()
         },
         tags = listOf(
             TAG_COMPOSE,
@@ -2287,7 +2345,7 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
             TAG_AWAIT_POINTER_EVENT,
             TAG_POINTER_EVENT_PASS,
             TAG_HORIZONTAL_PAGER,
-            TAG_ENDLESS_HORIZONTAL_PAGER
+            TAG_DETECT_DRAG_GESTURES
         ),
         tagColor = GestureListColor
     )
@@ -2324,6 +2382,10 @@ fun createGestureTutorialList(): List<TutorialSectionModel> {
         tutorial5_10_1,
         tutorial5_11,
         tutorial5_12,
+        tutorial5_13_1,
+        tutorial5_13_2,
+        tutorial5_14,
+        tutorial5_15
     )
 }
 

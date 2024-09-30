@@ -64,7 +64,7 @@ private fun TutorialContent() {
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
-        TutorialHeader(text = "Pager Scroll to start and Endless Pager")
+        TutorialHeader(text = "Scroll to start and Endless Pager")
         StyleableTutorialText("Scroll from last item to start", bullets = false)
         PagerScrollSample()
         Spacer(Modifier.height(16.dp))
@@ -111,8 +111,6 @@ private fun PagerScrollSample() {
 
                             if (pagerState.currentPage == 4 &&
                                 pagerState.currentPage == pagerState.settledPage &&
-                                // current position of pointer
-                                it.position.x < 200f &&
                                 shouldScrollToFirstPage.not()
                             ) {
                                 shouldScrollToFirstPage = true
@@ -531,7 +529,7 @@ fun PagerScrollCancelBackwardScrollNestedScrollConnection() {
                 override fun onPostScroll(
                     consumed: Offset,
                     available: Offset,
-                    source: NestedScrollSource
+                    source: NestedScrollSource,
                 ): Offset {
 
                     coroutineScope.launch {
