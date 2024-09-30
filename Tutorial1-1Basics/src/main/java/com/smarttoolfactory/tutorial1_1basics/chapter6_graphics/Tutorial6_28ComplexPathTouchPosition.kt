@@ -61,7 +61,7 @@ private fun TutorialContent() {
     ) {
         TutorialHeader(text = "Complex Path Touch and Animation")
         AnimatedMapSectionPathTouchSample()
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         PathTouchSample()
     }
 }

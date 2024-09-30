@@ -152,6 +152,9 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_22Scre
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_23Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_24Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_25Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_26Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_27Screen
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_28Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_29Screen
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen1
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.Tutorial6_2Screen2
@@ -3036,6 +3039,61 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tagColor = GraphicsListColor
     )
 
+    val tutorial6_26 = TutorialSectionModel(
+        title = "6-26 Animated Countdown",
+        description = "Create an animated countdown timer that scales and fades with each tick.",
+        action = {
+            Tutorial6_26Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_ANIMATABLE,
+            TAG_COMPOSE_MODIFIER_GRAPHICS_LAYER
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_27 = TutorialSectionModel(
+        title = "6-27 Custom VectorPainter",
+        description = "Create a custom VectorPainter of a map from Path via PathParser.",
+        action = {
+            Tutorial6_27Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_REMEMBER_VECTOR_PAINTER,
+            TAG_PATH,
+            TAG_PATH_PARSER,
+            TAG_PATH_OPERATION,
+            TAG_PATH_MEASURE,
+            TAG_ANIMATABLE
+        ),
+        tagColor = GraphicsListColor
+    )
+
+    val tutorial6_28 = TutorialSectionModel(
+        title = "6-28 Touch Detection on Path",
+        description = "Detect touch on complex map and on custom shaped Paths.",
+        action = {
+            Tutorial6_28Screen()
+        },
+        tags = listOf(
+            TAG_COMPOSE,
+            TAG_CANVAS,
+            TAG_PATH,
+            TAG_PATH_PARSER,
+            TAG_PATH_OPERATION,
+            TAG_PATH_MEASURE,
+            TAG_ANIMATABLE,
+            TAG_LERP,
+            TAG_POINTER_INPUT,
+            TAG_DETECT_TAP_GESTURES,
+            TAG_DETECT_DRAG_GESTURES,
+        ),
+        tagColor = GraphicsListColor
+    )
+
     val tutorial6_29 = TutorialSectionModel(
         title = "6-29 Pie Chart with Tool tip",
         description = "Animate Pie Chart with tool tip.",
@@ -3090,7 +3148,7 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
     )
 
     val tutorial6_32 = TutorialSectionModel(
-        title = "6-32 Edge Fade Effect",
+        title = "6-32 Scroll Edge Fade Effect",
         description = "Add fade effect to scrolling text with BlendMode and linear interpolation " +
                 "between current scroll position relative to bottom",
         action = {
@@ -3099,6 +3157,8 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tags = listOf(
             TAG_COMPOSE,
             TAG_BLEND_MODE,
+            TAG_SCROLLABLE,
+            TAG_REMEMBER_SCROLL_STATE,
             TAG_LERP,
             TAG_DRAW_SCOPE,
             TAG_BRUSH,
@@ -3160,6 +3220,9 @@ fun createGraphicsTutorialList(): List<TutorialSectionModel> {
         tutorial6_23,
         tutorial6_24,
         tutorial6_25,
+        tutorial6_26,
+        tutorial6_27,
+        tutorial6_28,
         tutorial6_29,
         tutorial6_30,
         tutorial6_31,

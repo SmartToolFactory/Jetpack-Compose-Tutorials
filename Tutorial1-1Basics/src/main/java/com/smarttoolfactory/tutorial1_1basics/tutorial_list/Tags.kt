@@ -244,4 +244,6 @@ const val TAG_ANIMATE_OFFSET_AS_STATE = "animateOffsetAsState"
 const val TAG_ANIMATE_VALUE_AS_STATE = "animateValueAsState"
 const val TAG_ANIMATABLE = "Animatable"
 const val TAG_INFINITE_TRANSITION = "InfiniteTransition"
+const val TAG_REMEMBER_VECTOR_PAINTER = "rememberVectorPainter"
+
 

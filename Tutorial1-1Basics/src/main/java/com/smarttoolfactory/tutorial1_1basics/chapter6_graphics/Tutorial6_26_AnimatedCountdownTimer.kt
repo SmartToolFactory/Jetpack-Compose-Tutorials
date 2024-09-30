@@ -42,7 +42,6 @@ private fun TutorialContent() {
     }
 }
 
-
 @Preview
 @Composable
 private fun AnimatedCountdownTimerSample() {
