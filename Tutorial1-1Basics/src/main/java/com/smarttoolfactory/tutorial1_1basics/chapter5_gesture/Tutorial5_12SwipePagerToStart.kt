@@ -99,8 +99,10 @@ private fun PagerScrollSample() {
         modifier = Modifier
             .pointerInput(Unit) {
                 awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    val down = awaitFirstDown(pass = PointerEventPass.Initial)
                     shouldScrollToFirstPage = false
+
+                    val firstTouchX = down.position.x
 
                     do {
                         val event: PointerEvent = awaitPointerEvent(
@@ -109,10 +111,12 @@ private fun PagerScrollSample() {
 
                         event.changes.forEach {
 
-                            if (pagerState.currentPage == 4 &&
-                                pagerState.currentPage == pagerState.settledPage &&
-                                shouldScrollToFirstPage.not()
-                            ) {
+                            val isValid = pagerState.currentPage == 4 &&
+                                    pagerState.currentPage == pagerState.settledPage &&
+                                    shouldScrollToFirstPage.not()
+                            val movedLeft = it.position.x - firstTouchX < -40f
+
+                            if (isValid && movedLeft) {
                                 shouldScrollToFirstPage = true
                             }
                         }
@@ -190,24 +194,21 @@ private fun PagerScrollSample2() {
 
                             event.changes.forEach {
 
-                                val diff = firstTouchX - it.position.x
+                                val diff = it.position.x - firstTouchX
                                 val posX = it.position.x
 
                                 val valid = pagerState.currentPage == 4 &&
                                         pagerState.currentPage == pagerState.settledPage &&
-                                        // Scroll if user scrolled 10% from first touch position
-                                        // or pointer is at the left of 20% of page
-                                        (diff > size.width * .10f ||
-                                                it.position.x < size.width * .2f) &&
                                         shouldScrollToFirstPage.not()
 
                                 println(
                                     "Diff $diff, posX: $posX , " +
                                             "current page: ${pagerState.currentPage}, " +
+                                            "currentPageOffsetFraction: ${pagerState.currentPageOffsetFraction}" +
                                             "valid: $valid"
                                 )
 
-                                if (valid) {
+                                if (valid && diff < -40f) {
                                     coroutineScope.launch {
                                         println("🔥 Scrolling...")
                                         shouldScrollToFirstPage = true
