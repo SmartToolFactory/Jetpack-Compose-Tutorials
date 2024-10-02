@@ -680,13 +680,13 @@ private fun DrawQuad() {
     ) {
         path1.reset()
         path1.moveTo(x0, y0)
-        path1.quadraticBezierTo(x1 = x1, y1 = y1, x2 = x2, y2 = y2)
+        path1.quadraticTo(x1 = x1, y1 = y1, x2 = x2, y2 = y2)
 
         // relativeQuadraticBezierTo draws quadraticBezierTo by adding offset
         // instead of setting absolute position
         path2.reset()
         path2.moveTo(x0, y0)
-        path2.relativeQuadraticBezierTo(dx1 = x1 - x0, dy1 = y1 - y0, dx2 = x2 - x0, dy2 = y2 - y0)
+        path2.relativeQuadraticTo(dx1 = x1 - x0, dy1 = y1 - y0, dx2 = x2 - x0, dy2 = y2 - y0)
 
 
         drawPath(
