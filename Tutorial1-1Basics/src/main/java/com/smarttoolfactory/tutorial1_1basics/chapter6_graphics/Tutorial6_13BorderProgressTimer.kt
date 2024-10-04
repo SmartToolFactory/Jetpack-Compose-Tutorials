@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -13,15 +14,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.Slider
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CarRental
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -35,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Preview
@@ -46,6 +55,11 @@ fun Tutorial6_13Screen() {
 @Composable
 private fun TutorialContent() {
 
+    BorderProgressSample1()
+//    BorderProgressSample2()
+}
+
+private fun BorderProgressSample1() {
     val startDurationInSeconds = 20
     var currentTime by remember {
         mutableStateOf(startDurationInSeconds)
@@ -255,5 +269,92 @@ private fun TutorialContent() {
             color = if (progress == 0f) Color.DarkGray else Color.Red
         )
 
+    }
+}
+
+@Preview
+@Composable
+fun BorderProgressSample2() {
+
+    val pathMeasure by remember { mutableStateOf(PathMeasure()) }
+
+    val path = remember {
+        Path()
+    }
+
+    val pathWithProgress by remember {
+        mutableStateOf(Path())
+    }
+
+    val animatable = remember {
+        Animatable(0f)
+    }
+
+    val isFilled by remember {
+        derivedStateOf { animatable.value == 100f }
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp)
+    ) {
+
+//        Text("Progress: ${animatable.value.toInt()}")
+        Slider(
+            value = animatable.value,
+            onValueChange = {
+                coroutineScope.launch {
+                    animatable.animateTo(it)
+                }
+            },
+            valueRange = 0f..100f
+        )
+
+        Icon(
+            modifier = Modifier.size(128.dp)
+                .drawBehind {
+
+                    if (path.isEmpty) {
+                        path.addRoundRect(
+                            RoundRect(
+                                Rect(offset = Offset.Zero, size),
+                                cornerRadius = CornerRadius(16.dp.toPx(), 16.dp.toPx())
+                            )
+                        )
+
+                        pathMeasure.setPath(path, forceClosed = false)
+                    }
+
+                    pathWithProgress.reset()
+
+                    pathMeasure.setPath(path, forceClosed = false)
+                    pathMeasure.getSegment(
+                        startDistance = 0f,
+                        stopDistance = pathMeasure.length * animatable.value / 100f,
+                        pathWithProgress,
+                        startWithMoveTo = true
+                    )
+
+                    drawPath(
+                        path = path,
+                        style = Stroke(
+                            4.dp.toPx()
+                        ),
+                        color = Color.Black
+                    )
+
+                    drawPath(
+                        path = pathWithProgress,
+                        style = Stroke(
+                            4.dp.toPx()
+                        ),
+                        color = Color.Blue
+                    )
+                },
+            tint = if (isFilled) Color.Blue else Color.Black,
+            imageVector = Icons.Default.CarRental,
+            contentDescription = null
+        )
     }
 }
