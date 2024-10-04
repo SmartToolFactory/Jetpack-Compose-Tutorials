@@ -59,6 +59,7 @@ private fun TutorialContent() {
 //    BorderProgressSample2()
 }
 
+@Composable
 private fun BorderProgressSample1() {
     val startDurationInSeconds = 20
     var currentTime by remember {
