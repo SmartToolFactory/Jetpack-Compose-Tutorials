@@ -17,3 +17,4 @@ rootProject.name = "Compose Tutorials"
 include ':Tutorial1-1Basics'
 include ':Tutorial2-1Unit-Testing'
 include ':Tutorial2-2UI-Testing'
+include ':Tutorial3-1Navigation'
