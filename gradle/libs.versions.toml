@@ -21,6 +21,8 @@ androidx-corektx = "1.13.1"
 androidx-lifecycle-compose = "2.8.6"
 androidx-lifecycle-runtime-compose = "2.8.6"
 androidx-navigation = "2.8.2"
+kotlinxSerializationJson = "1.6.3"
+kotlinxSerialization = "1.9.23"
 androidx-palette = "1.0.0"
 androidx-test = "1.6.1"
 androidx-test-espresso = "3.6.1"
@@ -66,7 +68,7 @@ roborazzi = "1.12.0"
 room = "2.6.1"
 secrets = "2.0.1"
 # @keep
-targetSdk = "33"
+targetSdk = "35"
 truth = "1.1.3"
 version-catalog-update = "0.8.4"
 
@@ -129,6 +131,7 @@ androidx-material3 = { module = "androidx.compose.material3:material3", version.
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-palette = { module = "androidx.palette:palette", version.ref = "androidx-palette" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
@@ -184,3 +187,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerialization" }
