@@ -20,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 
 @Composable
-fun TypeSafeNavigationTutorial() {
+fun Tutorial1Screen() {
 
     val navController = rememberNavController()
     NavHost(

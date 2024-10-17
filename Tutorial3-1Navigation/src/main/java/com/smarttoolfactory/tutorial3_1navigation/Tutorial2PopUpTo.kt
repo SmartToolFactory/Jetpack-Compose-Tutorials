@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,19 +17,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -41,54 +42,49 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun Tutorial2Screen() {
     val navController = rememberNavController()
+    NavHost(
+        modifier = Modifier.fillMaxSize(),
+        navController = navController,
+        startDestination = RouteA,
+        enterTransition = {
+            slideIntoContainer(
+                towards = SlideDirection.Start,
+                animationSpec = tween(700)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = SlideDirection.End,
+                animationSpec = tween(700)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = SlideDirection.Start,
+                animationSpec = tween(700)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = SlideDirection.End,
+                animationSpec = tween(700)
+            )
+        }
+    ) {
+        composable<RouteA> {
+            RouteAScreen(navController)
+        }
 
-    Scaffold { innerPadding: PaddingValues ->
-        NavHost(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            navController = navController,
-            startDestination = RouteA,
-            enterTransition = {
-                slideIntoContainer(
-                    towards = SlideDirection.Start,
-                    animationSpec = tween(700)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    towards = SlideDirection.End,
-                    animationSpec = tween(700)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    towards = SlideDirection.Start,
-                    animationSpec = tween(700)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    towards = SlideDirection.End,
-                    animationSpec = tween(700)
-                )
-            }
-        ) {
-            composable<RouteA> {
-                RouteAScreen(navController)
-            }
+        composable<RouteB> {
+            RouteBScreen(navController)
+        }
 
-            composable<RouteB> {
-                RouteBScreen(navController)
-            }
+        composable<RouteC> {
+            RouteCScreen(navController)
+        }
 
-            composable<RouteC> {
-                RouteCScreen(navController)
-            }
-
-            composable<RouteD> {
-                RouteDScreen(navController)
-            }
+        composable<RouteD> {
+            RouteDScreen(navController)
         }
     }
 }
@@ -137,11 +133,13 @@ private fun RouteScreen(
     navController: NavController,
 ) {
 
-    var popUpToInclusive by remember {
+    var popUpToRoute by remember { mutableStateOf<Any?>(null) }
+
+    var popUpToInclusive by rememberSaveable {
         mutableStateOf(false)
     }
 
-    var isSingleTop by remember {
+    var isSingleTop by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -151,13 +149,11 @@ private fun RouteScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-
-
-        Text(title)
-
-
-        var popUpToRoute by remember { mutableStateOf<Any?>(null) }
-
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
 
         ExposedSelectionMenu(title = "PopUpTo",
             index = when (popUpToRoute) {
@@ -241,8 +237,12 @@ private fun RouteScreen(
         ) {
             backStack.reversed().forEach {
                 Text(
-                    text = it.destination.route ?: it.destination.displayName,
-                    modifier = Modifier.fillMaxWidth()
+                    text = it.destination.route?.replace(
+                        "com.smarttoolfactory.tutorial3_1navigation.",
+                        ""
+                    ) ?: it.destination.displayName,
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 18.sp
                 )
             }
         }
