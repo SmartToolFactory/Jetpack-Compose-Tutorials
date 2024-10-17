@@ -40,7 +40,7 @@ coroutines = "1.8.1"
 espressoCore = "3.6.1"
 google-maps = "19.0.0"
 gradle-versions = "0.51.0"
-hilt = "2.51.1"
+hilt = "2.52"
 # @pin When updating to AGP 7.4.0-alpha10 and up we can update this https://developer.android.com/studio/write/java8-support#library-desugaring-versions
 jdkDesugar = "2.1.2"
 junit = "4.13.2"
@@ -52,7 +52,7 @@ kotlin = "2.0.10"
 kotlinTest = "1.8.22"
 kotlinx_immutable = "1.8.1"
 kotlinxCoroutinesTest = "1.8.1"
-ksp = "2.0.0-1.0.21"
+ksp = "2.0.20-1.0.25"
 lifecycleRuntimeCompose = "2.8.6"
 lifecycleRuntimeKtx = "2.8.6"
 maps-compose = "3.1.1"
@@ -110,9 +110,7 @@ androidx-compose-ui-text = { module = "androidx.compose.ui:ui-text" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
-androidx-compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout" }
-androidx-constraintlayout-compose-v110alpha14 = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-corektx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
@@ -151,6 +149,8 @@ androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
 androidx-window-core = { module = "androidx.window:window-core", version.ref = "androidx-window" }
 coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterEngine" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }

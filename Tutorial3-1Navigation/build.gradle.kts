@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
 }
 
@@ -53,7 +55,11 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
     implementation(libs.kotlinx.serialization.json)
+
+    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v121)
