@@ -48,7 +48,6 @@ fun Tutorial1Screen() {
                         "arguments: ${navBackStackEntry.arguments}"
             )
 
-
             println(
                 "Destination: route:${destination.route}, " +
                         "navigatorName: ${destination.navigatorName}, " +

@@ -3,6 +3,8 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -43,11 +46,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 
 @Preview
 @Composable
@@ -58,12 +64,44 @@ fun Tutorial3_2Screen() {
         modifier = Modifier.fillMaxSize(),
         navController = navController,
         startDestination = BottomNavigationRoute.DashboardRoute,
+        enterTransition = {
+            slideIntoContainer(
+                towards = SlideDirection.Start,
+                animationSpec = tween(700)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = SlideDirection.End,
+                animationSpec = tween(700)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = SlideDirection.Start,
+                animationSpec = tween(700)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = SlideDirection.End,
+                animationSpec = tween(700)
+            )
+        }
     ) {
 
         composable<BottomNavigationRoute.DashboardRoute> {
-            MainContainer { route: BottomNavigationRoute, navBackStackEntry: NavBackStackEntry ->
-
+            MainContainer { route: Any, navBackStackEntry: NavBackStackEntry ->
+                // Navigate only when life cycle is resumed for current screen
+                if (navBackStackEntry.lifecycleIsResumed()) {
+                    navController.navigate(route = route)
+                }
             }
+        }
+
+        composable<Profile> { navBackStackEntry: NavBackStackEntry ->
+            val profile: Profile = navBackStackEntry.toRoute<Profile>()
+            Screen(profile.toString(), navController)
         }
     }
 }
@@ -71,11 +109,10 @@ fun Tutorial3_2Screen() {
 @Composable
 private fun MainContainer(
     onScreenClick: (
-        route: BottomNavigationRoute,
+        route: Any,
         navBackStackEntry: NavBackStackEntry,
     ) -> Unit,
 ) {
-
     val items = remember {
         bottomRouteDataList()
     }
@@ -161,83 +198,103 @@ private fun MainContainer(
             navController = nestedNavController,
             startDestination = BottomNavigationRoute.HomeRoute
         ) {
-
-            navigation<BottomNavigationRoute.HomeRoute>(
-                startDestination = BottomNavigationRoute.HomeRoute1
-            ) {
-                composable<BottomNavigationRoute.HomeRoute1> { from: NavBackStackEntry ->
-                    Screen(
-                        text = "Home Screen1",
-                        navController = nestedNavController,
-                        onClick = {
-                            nestedNavController.navigate(BottomNavigationRoute.HomeRoute2)
-                        }
-                    )
-                }
-
-                composable<BottomNavigationRoute.HomeRoute2> { from: NavBackStackEntry ->
-                    Screen(
-                        text = "Home Screen2",
-                        navController = nestedNavController,
-                        onClick = {
-                            nestedNavController.navigate(BottomNavigationRoute.HomeRoute3)
-                        }
-                    )
-                }
-
-                composable<BottomNavigationRoute.HomeRoute3> { from: NavBackStackEntry ->
-                    Screen(
-                        text = "Home Screen3",
-                        navController = nestedNavController
-                    )
-                }
-            }
-
-            navigation<BottomNavigationRoute.SettingsRoute>(
-                startDestination = BottomNavigationRoute.SettingsRoute1
-            ) {
-                composable<BottomNavigationRoute.SettingsRoute1> { from: NavBackStackEntry ->
-                    Screen(
-                        text = "Settings Screen",
-                        navController = nestedNavController,
-                        onClick = {
-                            nestedNavController.navigate(BottomNavigationRoute.SettingsRoute2)
-                        }
-                    )
-                }
-
-                composable<BottomNavigationRoute.SettingsRoute2> { from: NavBackStackEntry ->
-                    Screen(
-                        text = "Settings Screen2",
-                        navController = nestedNavController,
-                        onClick = {
-                            nestedNavController.navigate(BottomNavigationRoute.SettingsRoute3)
-                        }
-                    )
-                }
-
-                composable<BottomNavigationRoute.SettingsRoute3> { from: NavBackStackEntry ->
-                    Screen(
-                        text = "Settings Screen3",
-                        navController = nestedNavController
-                    )
-                }
-            }
-
-            composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
-                Screen(
-                    text = "Favorites Screen",
-                    navController = nestedNavController
-                )
-            }
-
-            composable<BottomNavigationRoute.NotificationRoute> { from: NavBackStackEntry ->
-                Screen(
-                    text = "Notifications Screen",
-                    navController = nestedNavController
-                )
+            addBottomNavigationGraph(nestedNavController) { route, navBackStackEntry ->
+                onScreenClick(route, navBackStackEntry)
             }
         }
+    }
+}
+
+private fun NavGraphBuilder.addBottomNavigationGraph(
+    nestedNavController: NavHostController,
+    onScreenClick: (route: Any, navBackStackEntry: NavBackStackEntry) -> Unit,
+) {
+    navigation<BottomNavigationRoute.HomeRoute>(
+        startDestination = BottomNavigationRoute.HomeRoute1
+    ) {
+        composable<BottomNavigationRoute.HomeRoute1> { from: NavBackStackEntry ->
+            Screen(
+                text = "Home Screen1",
+                navController = nestedNavController,
+                onClick = {
+                    nestedNavController.navigate(BottomNavigationRoute.HomeRoute2)
+                }
+            )
+        }
+
+        composable<BottomNavigationRoute.HomeRoute2> { from: NavBackStackEntry ->
+            Screen(
+                text = "Home Screen2",
+                navController = nestedNavController,
+                onClick = {
+                    nestedNavController.navigate(BottomNavigationRoute.HomeRoute3)
+                }
+            )
+        }
+
+        composable<BottomNavigationRoute.HomeRoute3> { from: NavBackStackEntry ->
+            Screen(
+                text = "Home Screen3",
+                navController = nestedNavController
+            )
+        }
+    }
+
+    navigation<BottomNavigationRoute.SettingsRoute>(
+        startDestination = BottomNavigationRoute.SettingsRoute1
+    ) {
+        composable<BottomNavigationRoute.SettingsRoute1> { from: NavBackStackEntry ->
+            Screen(
+                text = "Settings Screen",
+                navController = nestedNavController,
+                onClick = {
+                    nestedNavController.navigate(BottomNavigationRoute.SettingsRoute2)
+                }
+            )
+        }
+
+        composable<BottomNavigationRoute.SettingsRoute2> { from: NavBackStackEntry ->
+            Screen(
+                text = "Settings Screen2",
+                navController = nestedNavController,
+                onClick = {
+                    nestedNavController.navigate(BottomNavigationRoute.SettingsRoute3)
+                }
+            )
+        }
+
+        composable<BottomNavigationRoute.SettingsRoute3> { from: NavBackStackEntry ->
+            Screen(
+                text = "Settings Screen3",
+                navController = nestedNavController
+            )
+        }
+    }
+
+    composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
+        Screen(
+            text = "Favorites Screen",
+            navController = nestedNavController,
+            onClick = {
+                onScreenClick(
+                    Profile("Favorites"),
+                    from
+                )
+            }
+        )
+    }
+
+    composable<BottomNavigationRoute.NotificationRoute> { from: NavBackStackEntry ->
+        Screen(
+            text = "Notifications Screen",
+            navController = nestedNavController,
+            onClick = {
+                onScreenClick(
+                    Profile("Notifications"),
+                    from
+                )
+            }
+        )
     }
 }
 
@@ -256,7 +313,10 @@ private fun Screen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
@@ -283,11 +343,9 @@ private fun Screen(
             ) {
                 Text("Navigate next screen")
             }
-
         }
 
         val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
-
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -297,10 +355,12 @@ private fun Screen(
             // Don't do looped operations in actual code, it's for demonstration
             items(items = currentBackStack.reversed()) {
                 Text(
-                    text = it.destination.route?.replace(
-                        "$packageName.BottomNavigationRoute.",
-                        ""
-                    ) ?: it.destination.displayName,
+                    text = it.destination.route
+                        ?.replace("$packageName.", "")
+                        ?.replace(
+                            "BottomNavigationRoute.",
+                            ""
+                        ) ?: it.destination.displayName,
                     modifier = Modifier
                         .shadow(4.dp, RoundedCornerShape(8.dp))
                         .background(Color.White)

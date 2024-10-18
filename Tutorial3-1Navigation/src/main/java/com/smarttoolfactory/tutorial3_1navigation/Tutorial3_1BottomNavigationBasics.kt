@@ -14,11 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,8 +62,8 @@ private fun MainContainer() {
         bottomRouteDataList()
     }
 
-    val nestedNavController = rememberNavController()
-    val navBackStackEntry: NavBackStackEntry? by nestedNavController.currentBackStackEntryAsState()
+    val navController = rememberNavController()
+    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     Scaffold(
@@ -110,7 +104,7 @@ private fun MainContainer() {
                             // This is for not opening same screen if current destination
                             // is equal to target destination
                             if (selected.not()) {
-                                nestedNavController.navigate(
+                                navController.navigate(
                                     route = item.route
                                 ) {
                                     launchSingleTop = true
@@ -119,7 +113,7 @@ private fun MainContainer() {
                                     // Pop up backstack to the first destination and save state.
                                     // This makes going back
                                     // to the start destination when pressing back in any other bottom tab.
-                                    popUpTo(findStartDestination(nestedNavController.graph).id) {
+                                    popUpTo(findStartDestination(navController.graph).id) {
                                         saveState = true
                                     }
                                 }
@@ -137,10 +131,10 @@ private fun MainContainer() {
     ) { paddingValues: PaddingValues ->
         NavHost(
             modifier = Modifier.padding(paddingValues),
-            navController = nestedNavController,
+            navController = navController,
             startDestination = BottomNavigationRoute.HomeRoute
         ) {
-            addHomeGraph(nestedNavController)
+            addHomeGraph(navController)
         }
     }
 }
@@ -235,32 +229,3 @@ private fun Screen(
         }
     }
 }
-
-internal fun bottomRouteDataList() = listOf(
-    BottomRouteData(
-        title = "Home",
-        icon = Icons.Default.Home,
-        route = BottomNavigationRoute.HomeRoute
-    ),
-    BottomRouteData(
-        title = "Settings",
-        icon = Icons.Default.Settings,
-        route = BottomNavigationRoute.SettingsRoute
-    ),
-    BottomRouteData(
-        title = "Favorites",
-        icon = Icons.Default.Favorite,
-        route = BottomNavigationRoute.FavoritesRoute
-    ),
-    BottomRouteData(
-        title = "Notifications",
-        icon = Icons.Default.Notifications,
-        route = BottomNavigationRoute.NotificationRoute
-    )
-)
-
-data class BottomRouteData(
-    val title: String,
-    val icon: ImageVector,
-    val route: BottomNavigationRoute,
-)
