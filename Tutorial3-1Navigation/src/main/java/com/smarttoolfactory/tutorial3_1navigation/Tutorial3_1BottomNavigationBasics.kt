@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,10 +19,10 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -105,7 +106,10 @@ private fun MainContainer(
         },
         bottomBar = {
 
-            BottomAppBar {
+            NavigationBar(
+                modifier = Modifier.height(56.dp),
+                tonalElevation = 4.dp
+            ) {
                 items.forEachIndexed { index: Int, item: BottomRouteData ->
 
                     // Checks destination's route with type safety
@@ -113,7 +117,6 @@ private fun MainContainer(
                         navBackStackEntry?.destination?.hasRoute(item.route::class) ?: false
 
                     NavigationBarItem(
-                        modifier = Modifier.fillMaxWidth(),
                         selected = selected,
                         icon = {
                             Icon(
