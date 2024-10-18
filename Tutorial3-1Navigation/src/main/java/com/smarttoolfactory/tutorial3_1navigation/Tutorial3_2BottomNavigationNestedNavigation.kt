@@ -14,11 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,26 +43,45 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 
 @Preview
 @Composable
-fun Tutorial3_1Screen() {
-    MainContainer()
+fun Tutorial3_2Screen() {
+    val navController = rememberNavController()
+
+    NavHost(
+        modifier = Modifier.fillMaxSize(),
+        navController = navController,
+        startDestination = BottomNavigationRoute.DashboardRoute,
+    ) {
+
+        composable<BottomNavigationRoute.DashboardRoute> {
+            MainContainer { route: BottomNavigationRoute, navBackStackEntry: NavBackStackEntry ->
+
+            }
+        }
+    }
 }
 
 @Composable
-private fun MainContainer() {
+private fun MainContainer(
+    onScreenClick: (
+        route: BottomNavigationRoute,
+        navBackStackEntry: NavBackStackEntry,
+    ) -> Unit,
+) {
 
     val items = remember {
         bottomRouteDataList()
     }
 
     val nestedNavController = rememberNavController()
+
     val navBackStackEntry: NavBackStackEntry? by nestedNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -90,8 +103,6 @@ private fun MainContainer() {
                 modifier = Modifier.height(56.dp),
                 tonalElevation = 4.dp
             ) {
-
-
                 items.forEach { item: BottomRouteData ->
 
                     // Checks destination's route with type safety
@@ -107,12 +118,17 @@ private fun MainContainer() {
                             )
                         },
                         onClick = {
+
                             // This is for not opening same screen if current destination
                             // is equal to target destination
                             if (selected.not()) {
-                                nestedNavController.navigate(
-                                    route = item.route
-                                ) {
+
+                                // Returns current destinations by parent-child relationship
+                                currentDestination?.hierarchy?.forEach { destination: NavDestination ->
+                                    println("HIERARCHY: destination: $destination")
+                                }
+
+                                nestedNavController.navigate(route = item.route) {
                                     launchSingleTop = true
                                     restoreState = true
 
@@ -122,11 +138,16 @@ private fun MainContainer() {
                                     popUpTo(findStartDestination(nestedNavController.graph).id) {
                                         saveState = true
                                     }
-                                }
 
-                                // Returns current destinations by parent-child relationship
-                                currentDestination?.hierarchy?.forEach { destination: NavDestination ->
-                                    println("destination: $destination")
+                                    val startDestinationRoute =
+                                        nestedNavController.graph.startDestinationRoute
+                                    val startDestinationRecursive =
+                                        findStartDestination(nestedNavController.graph).route
+                                    println(
+                                        "🔥 startDestinationRoute: $startDestinationRoute, " +
+                                                "startDestinationRecursive: $startDestinationRecursive\n" +
+                                                "navigating target route: ${item.route}"
+                                    )
                                 }
                             }
                         }
@@ -140,40 +161,83 @@ private fun MainContainer() {
             navController = nestedNavController,
             startDestination = BottomNavigationRoute.HomeRoute
         ) {
-            addHomeGraph(nestedNavController)
+
+            navigation<BottomNavigationRoute.HomeRoute>(
+                startDestination = BottomNavigationRoute.HomeRoute1
+            ) {
+                composable<BottomNavigationRoute.HomeRoute1> { from: NavBackStackEntry ->
+                    Screen(
+                        text = "Home Screen1",
+                        navController = nestedNavController,
+                        onClick = {
+                            nestedNavController.navigate(BottomNavigationRoute.HomeRoute2)
+                        }
+                    )
+                }
+
+                composable<BottomNavigationRoute.HomeRoute2> { from: NavBackStackEntry ->
+                    Screen(
+                        text = "Home Screen2",
+                        navController = nestedNavController,
+                        onClick = {
+                            nestedNavController.navigate(BottomNavigationRoute.HomeRoute3)
+                        }
+                    )
+                }
+
+                composable<BottomNavigationRoute.HomeRoute3> { from: NavBackStackEntry ->
+                    Screen(
+                        text = "Home Screen3",
+                        navController = nestedNavController
+                    )
+                }
+            }
+
+            navigation<BottomNavigationRoute.SettingsRoute>(
+                startDestination = BottomNavigationRoute.SettingsRoute1
+            ) {
+                composable<BottomNavigationRoute.SettingsRoute1> { from: NavBackStackEntry ->
+                    Screen(
+                        text = "Settings Screen",
+                        navController = nestedNavController,
+                        onClick = {
+                            nestedNavController.navigate(BottomNavigationRoute.SettingsRoute2)
+                        }
+                    )
+                }
+
+                composable<BottomNavigationRoute.SettingsRoute2> { from: NavBackStackEntry ->
+                    Screen(
+                        text = "Settings Screen2",
+                        navController = nestedNavController,
+                        onClick = {
+                            nestedNavController.navigate(BottomNavigationRoute.SettingsRoute3)
+                        }
+                    )
+                }
+
+                composable<BottomNavigationRoute.SettingsRoute3> { from: NavBackStackEntry ->
+                    Screen(
+                        text = "Settings Screen3",
+                        navController = nestedNavController
+                    )
+                }
+            }
+
+            composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
+                Screen(
+                    text = "Favorites Screen",
+                    navController = nestedNavController
+                )
+            }
+
+            composable<BottomNavigationRoute.NotificationRoute> { from: NavBackStackEntry ->
+                Screen(
+                    text = "Notifications Screen",
+                    navController = nestedNavController
+                )
+            }
         }
-    }
-}
-
-// 🔥 navController is passed to display back stack in each Composable for demonstration
-// It's not recommended and only demonstration purposes
-private fun NavGraphBuilder.addHomeGraph(navController: NavController) {
-    composable<BottomNavigationRoute.HomeRoute> { from: NavBackStackEntry ->
-        Screen(
-            text = "Home Screen",
-            navController = navController
-        )
-    }
-
-    composable<BottomNavigationRoute.SettingsRoute> { from: NavBackStackEntry ->
-        Screen(
-            text = "Settings Screen",
-            navController = navController
-        )
-    }
-
-    composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
-        Screen(
-            text = "Favorites Screen",
-            navController = navController
-        )
-    }
-
-    composable<BottomNavigationRoute.NotificationRoute> { from: NavBackStackEntry ->
-        Screen(
-            text = "Notification Screen",
-            navController = navController
-        )
     }
 }
 
@@ -182,6 +246,7 @@ private fun NavGraphBuilder.addHomeGraph(navController: NavController) {
 private fun Screen(
     text: String,
     navController: NavController,
+    onClick: (() -> Unit)? = null,
 ) {
 
     val packageName = LocalContext.current.packageName
@@ -207,6 +272,18 @@ private fun Screen(
             }
         ) {
             Text("Counter: $counter")
+        }
+
+        onClick?.let {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    onClick()
+                }
+            ) {
+                Text("Navigate next screen")
+            }
+
         }
 
         val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
@@ -235,32 +312,3 @@ private fun Screen(
         }
     }
 }
-
-internal fun bottomRouteDataList() = listOf(
-    BottomRouteData(
-        title = "Home",
-        icon = Icons.Default.Home,
-        route = BottomNavigationRoute.HomeRoute
-    ),
-    BottomRouteData(
-        title = "Settings",
-        icon = Icons.Default.Settings,
-        route = BottomNavigationRoute.SettingsRoute
-    ),
-    BottomRouteData(
-        title = "Favorites",
-        icon = Icons.Default.Favorite,
-        route = BottomNavigationRoute.FavoritesRoute
-    ),
-    BottomRouteData(
-        title = "Notifications",
-        icon = Icons.Default.Notifications,
-        route = BottomNavigationRoute.NotificationRoute
-    )
-)
-
-data class BottomRouteData(
-    val title: String,
-    val icon: ImageVector,
-    val route: BottomNavigationRoute,
-)

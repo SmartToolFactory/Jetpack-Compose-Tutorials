@@ -33,23 +33,29 @@ sealed class BottomNavigationRoute {
     data object HomeRoute : BottomNavigationRoute()
 
     @Serializable
+    data object HomeRoute1 : BottomNavigationRoute()
+
+    @Serializable
     data object HomeRoute2 : BottomNavigationRoute()
+
+    @Serializable
+    data object HomeRoute3 : BottomNavigationRoute()
 
     @Serializable
     data object SettingsRoute : BottomNavigationRoute()
 
     @Serializable
+    data object SettingsRoute1 : BottomNavigationRoute()
+
+    @Serializable
     data object SettingsRoute2 : BottomNavigationRoute()
+
+    @Serializable
+    data object SettingsRoute3 : BottomNavigationRoute()
 
     @Serializable
     data object FavoritesRoute : BottomNavigationRoute()
 
     @Serializable
-    data object FavoritesRout2 : BottomNavigationRoute()
-
-    @Serializable
     data object NotificationRoute : BottomNavigationRoute()
-
-    @Serializable
-    data object Notification2 : BottomNavigationRoute()
 }
