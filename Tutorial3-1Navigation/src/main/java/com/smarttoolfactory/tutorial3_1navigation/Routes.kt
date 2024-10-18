@@ -22,3 +22,34 @@ object RouteC
 
 @Serializable
 object RouteD
+
+@Serializable
+sealed class BottomNavigationRoute {
+
+    @Serializable
+    data object DashboardRoute : BottomNavigationRoute()
+
+    @Serializable
+    data object HomeRoute : BottomNavigationRoute()
+
+    @Serializable
+    data object HomeRoute2 : BottomNavigationRoute()
+
+    @Serializable
+    data object SettingsRoute : BottomNavigationRoute()
+
+    @Serializable
+    data object SettingsRoute2 : BottomNavigationRoute()
+
+    @Serializable
+    data object FavoritesRoute : BottomNavigationRoute()
+
+    @Serializable
+    data object FavoritesRout2 : BottomNavigationRoute()
+
+    @Serializable
+    data object NotificationRoute : BottomNavigationRoute()
+
+    @Serializable
+    data object Notification2 : BottomNavigationRoute()
+}

@@ -230,17 +230,14 @@ private fun RouteScreen(
             singleTop = isSingleTop
         )
 
-        val backStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
+        val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
 
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            backStack.reversed().forEach {
+            currentBackStack.reversed().forEach {
                 Text(
-                    text = it.destination.route?.replace(
-                        "com.smarttoolfactory.tutorial3_1navigation.",
-                        ""
-                    ) ?: it.destination.displayName,
+                    text = it.destination.route ?: it.destination.displayName,
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 18.sp
                 )

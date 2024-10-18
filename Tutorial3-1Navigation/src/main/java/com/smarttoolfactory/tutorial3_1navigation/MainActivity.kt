@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -20,10 +21,13 @@ class MainActivity : ComponentActivity() {
             ComposeTutorialsTheme {
                 Scaffold { innerPadding ->
                     Surface(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .consumeWindowInsets(innerPadding)
                     ) {
 //                        Tutorial1Screen()
-                        Tutorial2Screen()
+//                        Tutorial2Screen()
+                        Tutorial3Screen()
                     }
                 }
             }
