@@ -155,18 +155,20 @@ private fun MainContainer(
                             )
                         },
                         onClick = {
+                            // Returns current destinations by parent-child relationship
+                            currentDestination?.hierarchy?.forEach { destination: NavDestination ->
+                                println("HIERARCHY: destination: $destination")
+                            }
 
                             // This is for not opening same screen if current destination
                             // is equal to target destination
                             if (selected.not()) {
 
-                                // Returns current destinations by parent-child relationship
-                                currentDestination?.hierarchy?.forEach { destination: NavDestination ->
-                                    println("HIERARCHY: destination: $destination")
-                                }
-
                                 nestedNavController.navigate(route = item.route) {
                                     launchSingleTop = true
+
+                                    // 🔥 If restoreState = true and saveState = true are commented
+                                    // routes other than Home1 are not saved
                                     restoreState = true
 
                                     // Pop up backstack to the first destination and save state.

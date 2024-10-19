@@ -101,6 +101,12 @@ private fun MainContainer() {
                             )
                         },
                         onClick = {
+
+                            // Returns current destinations by parent-child relationship
+                            currentDestination?.hierarchy?.forEach { destination: NavDestination ->
+                                println("destination: $destination")
+                            }
+
                             // This is for not opening same screen if current destination
                             // is equal to target destination
                             if (selected.not()) {
@@ -108,6 +114,8 @@ private fun MainContainer() {
                                     route = item.route
                                 ) {
                                     launchSingleTop = true
+                                    // 🔥 If restoreState = true and saveState = true are commented
+                                    // routes other than Home are not saved
                                     restoreState = true
 
                                     // Pop up backstack to the first destination and save state.
@@ -118,10 +126,7 @@ private fun MainContainer() {
                                     }
                                 }
 
-                                // Returns current destinations by parent-child relationship
-                                currentDestination?.hierarchy?.forEach { destination: NavDestination ->
-                                    println("destination: $destination")
-                                }
+
                             }
                         }
                     )
