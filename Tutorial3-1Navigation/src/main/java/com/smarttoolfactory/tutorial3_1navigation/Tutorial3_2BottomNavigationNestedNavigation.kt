@@ -3,9 +3,13 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
+import android.os.Bundle
+import androidx.activity.compose.BackHandler
+import androidx.collection.forEach
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,9 +33,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -46,6 +55,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -53,8 +64,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.get
 import androidx.navigation.toRoute
 
+@SuppressLint("RestrictedApi")
 @Preview
 @Composable
 fun Tutorial3_2Screen() {
@@ -106,12 +119,13 @@ fun Tutorial3_2Screen() {
     }
 }
 
+@SuppressLint("RestrictedApi")
 @Composable
 private fun MainContainer(
-    onScreenClick: (
+    onGoToProfileScreen: (
         route: Any,
         navBackStackEntry: NavBackStackEntry,
-    ) -> Unit,
+    ) -> Unit
 ) {
     val items = remember {
         bottomRouteDataList()
@@ -141,11 +155,9 @@ private fun MainContainer(
                 tonalElevation = 4.dp
             ) {
                 items.forEach { item: BottomRouteData ->
-
                     // Checks destination's route with type safety
                     val selected =
                         currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
-
                     NavigationBarItem(
                         selected = selected,
                         icon = {
@@ -155,38 +167,19 @@ private fun MainContainer(
                             )
                         },
                         onClick = {
-                            // Returns current destinations by parent-child relationship
-                            currentDestination?.hierarchy?.forEach { destination: NavDestination ->
-                                println("HIERARCHY: destination: $destination")
-                            }
+                            nestedNavController.navigate(route = item.route) {
+                                launchSingleTop = true
 
-                            // This is for not opening same screen if current destination
-                            // is equal to target destination
-                            if (selected.not()) {
+                                // 🔥 If restoreState = true and saveState = true are commented
+                                // routes other than Home1 are not saved
+                                restoreState = true
 
-                                nestedNavController.navigate(route = item.route) {
-                                    launchSingleTop = true
 
-                                    // 🔥 If restoreState = true and saveState = true are commented
-                                    // routes other than Home1 are not saved
-                                    restoreState = true
-
-                                    // Pop up backstack to the first destination and save state.
-                                    // This makes going back
-                                    // to the start destination when pressing back in any other bottom tab.
-                                    popUpTo(findStartDestination(nestedNavController.graph).id) {
-                                        saveState = true
-                                    }
-
-                                    val startDestinationRoute =
-                                        nestedNavController.graph.startDestinationRoute
-                                    val startDestinationRecursive =
-                                        findStartDestination(nestedNavController.graph).route
-                                    println(
-                                        "🔥 startDestinationRoute: $startDestinationRoute, " +
-                                                "startDestinationRecursive: $startDestinationRecursive\n" +
-                                                "navigating target route: ${item.route}"
-                                    )
+                                // Pop up backstack to the first destination and save state.
+                                // This makes going back
+                                // to the start destination when pressing back in any other bottom tab.
+                                popUpTo(findStartDestination(nestedNavController.graph).id) {
+                                    saveState = true
                                 }
                             }
                         }
@@ -198,20 +191,31 @@ private fun MainContainer(
         NavHost(
             modifier = Modifier.padding(paddingValues),
             navController = nestedNavController,
-            startDestination = BottomNavigationRoute.HomeRoute
+            startDestination = BottomNavigationRoute.HomeGraph
         ) {
-            addBottomNavigationGraph(nestedNavController) { route, navBackStackEntry ->
-                onScreenClick(route, navBackStackEntry)
-            }
+            addBottomNavigationGraph(
+                nestedNavController = nestedNavController,
+                onGoToProfileScreen = { route, navBackStackEntry ->
+                    onGoToProfileScreen(route, navBackStackEntry)
+                },
+                onBottomScreenClick = { route, navBackStackEntry ->
+                    nestedNavController.navigate(route)
+                }
+            )
         }
     }
 }
 
+/**
+ * @param onGoToProfileScreen lambda for navigating Profile screen from current screen with top NavHostController
+ * @param onBottomScreenClick lambda for navigating with [nestedNavController] in BottomNavigation
+ */
 private fun NavGraphBuilder.addBottomNavigationGraph(
     nestedNavController: NavHostController,
-    onScreenClick: (route: Any, navBackStackEntry: NavBackStackEntry) -> Unit,
+    onGoToProfileScreen: (route: Any, navBackStackEntry: NavBackStackEntry) -> Unit,
+    onBottomScreenClick: (route: Any, navBackStackEntry: NavBackStackEntry) -> Unit,
 ) {
-    navigation<BottomNavigationRoute.HomeRoute>(
+    navigation<BottomNavigationRoute.HomeGraph>(
         startDestination = BottomNavigationRoute.HomeRoute1
     ) {
         composable<BottomNavigationRoute.HomeRoute1> { from: NavBackStackEntry ->
@@ -219,7 +223,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
                 text = "Home Screen1",
                 navController = nestedNavController,
                 onClick = {
-                    nestedNavController.navigate(BottomNavigationRoute.HomeRoute2)
+                    onBottomScreenClick(BottomNavigationRoute.HomeRoute2, from)
                 }
             )
         }
@@ -229,7 +233,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
                 text = "Home Screen2",
                 navController = nestedNavController,
                 onClick = {
-                    nestedNavController.navigate(BottomNavigationRoute.HomeRoute3)
+                    onBottomScreenClick(BottomNavigationRoute.HomeRoute3, from)
                 }
             )
         }
@@ -242,7 +246,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
         }
     }
 
-    navigation<BottomNavigationRoute.SettingsRoute>(
+    navigation<BottomNavigationRoute.SettingsGraph>(
         startDestination = BottomNavigationRoute.SettingsRoute1
     ) {
         composable<BottomNavigationRoute.SettingsRoute1> { from: NavBackStackEntry ->
@@ -250,7 +254,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
                 text = "Settings Screen",
                 navController = nestedNavController,
                 onClick = {
-                    nestedNavController.navigate(BottomNavigationRoute.SettingsRoute2)
+                    onBottomScreenClick(BottomNavigationRoute.SettingsRoute2, from)
                 }
             )
         }
@@ -260,7 +264,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
                 text = "Settings Screen2",
                 navController = nestedNavController,
                 onClick = {
-                    nestedNavController.navigate(BottomNavigationRoute.SettingsRoute3)
+                    onBottomScreenClick(BottomNavigationRoute.SettingsRoute3, from)
                 }
             )
         }
@@ -278,7 +282,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
             text = "Favorites Screen",
             navController = nestedNavController,
             onClick = {
-                onScreenClick(
+                onGoToProfileScreen(
                     Profile("Favorites"),
                     from
                 )
@@ -291,7 +295,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
             text = "Notifications Screen",
             navController = nestedNavController,
             onClick = {
-                onScreenClick(
+                onGoToProfileScreen(
                     Profile("Notifications"),
                     from
                 )
@@ -302,7 +306,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
 
 @SuppressLint("RestrictedApi")
 @Composable
-private fun Screen(
+fun Screen(
     text: String,
     navController: NavController,
     onClick: (() -> Unit)? = null,
@@ -349,28 +353,83 @@ private fun Screen(
 
         val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        val pagerState = rememberPagerState {
+            2
+        }
+        HorizontalPager(state = pagerState) { page ->
 
-            // Don't do looped operations in actual code, it's for demonstration
-            items(items = currentBackStack.reversed()) {
+            val headerText = if (page == 0) "Current Back stack(reversed)" else "Current hierarchy"
+            Column {
                 Text(
-                    text = it.destination.route
-                        ?.replace("$packageName.", "")
-                        ?.replace(
-                            "BottomNavigationRoute.",
-                            ""
-                        ) ?: it.destination.displayName,
                     modifier = Modifier
-                        .shadow(4.dp, RoundedCornerShape(8.dp))
-                        .background(Color.White)
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    fontSize = 18.sp
+                        .padding(bottom = 8.dp),
+                    text = headerText,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
                 )
+
+                val destinations = if (page == 0) {
+                    currentBackStack.reversed().map { it.destination }
+                } else {
+                    navController.currentDestination?.hierarchy?.toList() ?: listOf()
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+
+                    items(items = destinations) { destination: NavDestination ->
+
+                        if (destination is NavGraph) {
+                            MainText(destination, packageName)
+                            destination.nodes.forEach { _, value ->
+                                SubItemText(value, packageName)
+                            }
+
+                        } else {
+                            MainText(destination, packageName)
+                        }
+                    }
+                }
+
             }
         }
     }
+}
+
+@SuppressLint("RestrictedApi")
+@Composable
+private fun SubItemText(value: NavDestination, packageName: String?) {
+    Text(
+        text = value.route
+            ?.replace("$packageName.", "")
+            ?.replace("BottomNavigationRoute.", "")
+            ?: value.displayName,
+        modifier = Modifier
+            .padding(start = 8.dp, bottom = 2.dp)
+            .shadow(2.dp, RoundedCornerShape(8.dp))
+            .background(Color.White)
+            .fillMaxWidth()
+            .padding(8.dp),
+        fontSize = 12.sp
+    )
+}
+
+@SuppressLint("RestrictedApi")
+@Composable
+private fun MainText(destination: NavDestination, packageName: String?) {
+    Text(
+        text = destination.route
+            ?.replace("$packageName.", "")
+            ?.replace("BottomNavigationRoute.", "")
+            ?: destination.displayName,
+        modifier = Modifier
+            .shadow(4.dp, RoundedCornerShape(8.dp))
+            .background(Color.White)
+            .fillMaxWidth()
+            .padding(16.dp),
+        fontSize = 18.sp
+    )
 }
