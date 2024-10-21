@@ -9,6 +9,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
 
+@Serializable
+object Splash
+
 // Define a home route that doesn't take any arguments
 @Serializable
 object Home
@@ -16,6 +19,8 @@ object Home
 // Define a profile route that takes an ID
 @Serializable
 data class Profile(val id: String)
+
+const val uri = "https://www.example.com"
 
 @Serializable
 object RouteA
@@ -36,7 +41,7 @@ sealed class BottomNavigationRoute {
     data object DashboardRoute : BottomNavigationRoute()
 
     @Serializable
-    data object HomeRoute : BottomNavigationRoute()
+    data object HomeGraph : BottomNavigationRoute()
 
     @Serializable
     data object HomeRoute1 : BottomNavigationRoute()
@@ -48,7 +53,7 @@ sealed class BottomNavigationRoute {
     data object HomeRoute3 : BottomNavigationRoute()
 
     @Serializable
-    data object SettingsRoute : BottomNavigationRoute()
+    data object SettingsGraph : BottomNavigationRoute()
 
     @Serializable
     data object SettingsRoute1 : BottomNavigationRoute()
@@ -70,12 +75,12 @@ internal fun bottomRouteDataList() = listOf(
     BottomRouteData(
         title = "Home",
         icon = Icons.Default.Home,
-        route = BottomNavigationRoute.HomeRoute
+        route = BottomNavigationRoute.HomeRoute1
     ),
     BottomRouteData(
         title = "Settings",
         icon = Icons.Default.Settings,
-        route = BottomNavigationRoute.SettingsRoute
+        route = BottomNavigationRoute.SettingsRoute1
     ),
     BottomRouteData(
         title = "Favorites",
