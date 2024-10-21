@@ -125,8 +125,6 @@ private fun MainContainer() {
                                         saveState = true
                                     }
                                 }
-
-
                             }
                         }
                     )
@@ -137,24 +135,24 @@ private fun MainContainer() {
         NavHost(
             modifier = Modifier.padding(paddingValues),
             navController = navController,
-            startDestination = BottomNavigationRoute.HomeRoute
+            startDestination = BottomNavigationRoute.HomeRoute1
         ) {
-            addHomeGraph(navController)
+            addBottomNavigationGraph(navController)
         }
     }
 }
 
 // 🔥 navController is passed to display back stack in each Composable for demonstration
 // It's not recommended and only demonstration purposes
-private fun NavGraphBuilder.addHomeGraph(navController: NavController) {
-    composable<BottomNavigationRoute.HomeRoute> { from: NavBackStackEntry ->
+private fun NavGraphBuilder.addBottomNavigationGraph(navController: NavController) {
+    composable<BottomNavigationRoute.HomeRoute1> { from: NavBackStackEntry ->
         Screen(
             text = "Home Screen",
             navController = navController
         )
     }
 
-    composable<BottomNavigationRoute.SettingsRoute> { from: NavBackStackEntry ->
+    composable<BottomNavigationRoute.SettingsRoute1> { from: NavBackStackEntry ->
         Screen(
             text = "Settings Screen",
             navController = navController
@@ -190,7 +188,9 @@ private fun Screen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
