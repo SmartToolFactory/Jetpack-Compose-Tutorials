@@ -61,7 +61,7 @@ import androidx.navigation.toRoute
             navDeepLink<Profile>(basePath = "$uri/profile")
         )
     3- Test with adb by calling snipped below in terminal
-    adb shell am start -W -a android.intent.action.VIEW -d "https://www.example.com/profile/2"
+    adb shell am start -W -a android.intent.action.VIEW -d "test://www.example.com/profile/2"
  */
 
 @Preview
@@ -106,7 +106,7 @@ private fun MainContainer() {
         composable<Splash> { navBackStackEntry: NavBackStackEntry ->
             SplashScreen {
                 navController.navigate(Home) {
-                    popUpTo<Splash>() {
+                    popUpTo<Splash> {
                         inclusive = true
                     }
                 }
@@ -117,10 +117,8 @@ private fun MainContainer() {
             HomeScreen { profile: Profile ->
                 if (hasNotificationPermission) {
                     showNotification(context)
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         }
@@ -138,7 +136,7 @@ private fun MainContainer() {
 
 @Composable
 fun SplashScreen(
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),

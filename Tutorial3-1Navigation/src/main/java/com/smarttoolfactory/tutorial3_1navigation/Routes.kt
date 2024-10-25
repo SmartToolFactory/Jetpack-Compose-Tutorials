@@ -20,7 +20,7 @@ object Home
 @Serializable
 data class Profile(val id: String)
 
-const val uri = "https://www.example.com"
+const val uri = "test://www.example.com"
 
 @Serializable
 object RouteA
