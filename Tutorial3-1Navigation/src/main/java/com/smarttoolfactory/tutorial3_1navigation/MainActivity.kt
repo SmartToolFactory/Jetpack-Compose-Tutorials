@@ -18,6 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             ComposeTutorialsTheme {
                 Scaffold { innerPadding ->
                     Surface(
@@ -27,7 +28,9 @@ class MainActivity : ComponentActivity() {
                     ) {
 //                        Tutorial1Screen()
 //                        Tutorial2Screen()
-                        Tutorial3_1Screen()
+//                        Tutorial3_1Screen()
+//                        Tutorial3_2Screen()
+                        Tutorial4_1Screen()
                     }
                 }
             }

@@ -3,16 +3,14 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.collection.forEach
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,15 +31,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -56,7 +52,6 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -64,7 +59,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.get
 import androidx.navigation.toRoute
 
 @SuppressLint("RestrictedApi")
@@ -399,37 +393,77 @@ fun Screen(
     }
 }
 
-@SuppressLint("RestrictedApi")
 @Composable
-private fun SubItemText(value: NavDestination, packageName: String?) {
-    Text(
-        text = value.route
-            ?.replace("$packageName.", "")
-            ?.replace("BottomNavigationRoute.", "")
-            ?: value.displayName,
+private fun SubItemText(destination: NavDestination, packageName: String?) {
+    Row(
         modifier = Modifier
             .padding(start = 8.dp, bottom = 2.dp)
             .shadow(2.dp, RoundedCornerShape(8.dp))
             .background(Color.White)
             .fillMaxWidth()
             .padding(8.dp),
-        fontSize = 12.sp
-    )
+        verticalAlignment = Alignment.Bottom
+    ) {
+
+        Text(
+            text = getDestinationFormattedText(
+                destination,
+                packageName
+            ),
+            fontSize = 12.sp
+        )
+
+//        destination.parent?.let {
+//            Text(
+//                text = ", parent: " + getGraphFormattedText(it, packageName),
+//                fontSize = 10.sp
+//            )
+//        }
+    }
 }
 
-@SuppressLint("RestrictedApi")
 @Composable
 private fun MainText(destination: NavDestination, packageName: String?) {
-    Text(
-        text = destination.route
-            ?.replace("$packageName.", "")
-            ?.replace("BottomNavigationRoute.", "")
-            ?: destination.displayName,
+
+
+    Row(
         modifier = Modifier
             .shadow(4.dp, RoundedCornerShape(8.dp))
             .background(Color.White)
             .fillMaxWidth()
             .padding(16.dp),
-        fontSize = 18.sp
-    )
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Text(
+            text = getDestinationFormattedText(
+                destination,
+                packageName
+            ),
+            fontSize = 18.sp
+        )
+//        destination.parent?.let {
+//            Text(
+//                text = ", parent: " + getGraphFormattedText(it, packageName),
+//                fontSize = 14.sp
+//            )
+//        }
+    }
 }
+
+@SuppressLint("RestrictedApi")
+private fun getDestinationFormattedText(
+    destination: NavDestination,
+    packageName: String?,
+) = (destination.route
+    ?.replace("$packageName.", "")
+    ?.replace("BottomNavigationRoute.", "")
+    ?: (destination.displayName))
+
+@SuppressLint("RestrictedApi")
+private fun getGraphFormattedText(
+    destination: NavGraph,
+    packageName: String?,
+) = (destination.route
+    ?.replace("$packageName.", "")
+    ?.replace("BottomNavigationRoute.", "")
+    ?: (destination.displayName))
