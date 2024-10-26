@@ -16,6 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +26,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +54,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
@@ -102,7 +109,6 @@ private fun MainContainer() {
         navController = navController,
         startDestination = Splash
     ) {
-
         composable<Splash> { navBackStackEntry: NavBackStackEntry ->
             SplashScreen {
                 navController.navigate(Home) {
@@ -113,23 +119,31 @@ private fun MainContainer() {
             }
         }
 
-        composable<Home> { navBackStackEntry: NavBackStackEntry ->
-            HomeScreen { profile: Profile ->
-                if (hasNotificationPermission) {
-                    showNotification(context)
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+        navigation<HomeGraph>(
+            startDestination = Home
+        ) {
+            composable<Home> { navBackStackEntry: NavBackStackEntry ->
+                HomeScreen(
+                    onClick = { profile: Profile ->
+                        navController.navigate(profile)
+                    }
+                ) { _: Profile ->
+                    if (hasNotificationPermission) {
+                        showNotification(context)
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
                 }
             }
-        }
 
-        composable<Profile>(
-            deepLinks = listOf(
-                navDeepLink<Profile>(basePath = "$uri/profile")
-            )
-        ) { navBackStackEntry: NavBackStackEntry ->
-            val profile: Profile = navBackStackEntry.toRoute<Profile>()
-            Screen(profile.toString(), navController)
+            composable<Profile>(
+                deepLinks = listOf(
+                    navDeepLink<Profile>(basePath = "$uri/profile")
+                )
+            ) { navBackStackEntry: NavBackStackEntry ->
+                val profile: Profile = navBackStackEntry.toRoute<Profile>()
+                Screen(profile.toString(), navController)
+            }
         }
     }
 }
@@ -196,6 +210,7 @@ private fun showNotification(context: Context) {
 @Composable
 private fun HomeScreen(
     onClick: (Profile) -> Unit,
+    onOpenDeeplink: (Profile) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -208,25 +223,40 @@ private fun HomeScreen(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(16.dp)
         ) {
             items(list) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .shadow(4.dp, RoundedCornerShape(8.dp))
+                        .background(Color.White)
+                        .fillMaxWidth()
+                        .padding(start = 16.dp)
                         .clickable {
                             onClick(it)
-                        }
+                        },
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "Profile ${it.id}",
-                        modifier = Modifier
-                            .shadow(4.dp, RoundedCornerShape(8.dp))
-                            .background(Color.White)
-                            .fillMaxWidth()
-                            .padding(16.dp),
                         fontSize = 18.sp
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    IconButton(
+                        onClick = {
+                            onOpenDeeplink(it)
+                        }
+                    ) {
+                        Icon(
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }

@@ -12,9 +12,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 object Splash
 
+@Serializable
+object SplashGraph
+
 // Define a home route that doesn't take any arguments
 @Serializable
 object Home
+
+@Serializable
+object HomeGraph
+
+@Serializable
+object ProfileGraph
 
 // Define a profile route that takes an ID
 @Serializable
