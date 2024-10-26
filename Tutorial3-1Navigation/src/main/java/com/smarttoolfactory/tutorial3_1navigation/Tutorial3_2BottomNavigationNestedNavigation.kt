@@ -119,16 +119,32 @@ private fun MainContainer(
     onGoToProfileScreen: (
         route: Any,
         navBackStackEntry: NavBackStackEntry,
-    ) -> Unit
+    ) -> Unit,
 ) {
     val items = remember {
         bottomRouteDataList()
     }
 
     val nestedNavController = rememberNavController()
-
     val navBackStackEntry: NavBackStackEntry? by nestedNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
+    var selectedIndex by remember {
+        mutableIntStateOf(0)
+    }
+
+    currentDestination?.let {
+        selectedIndex =
+            if (currentDestination.hasRoute(BottomNavigationRoute.NotificationRoute::class)) {
+                3
+            } else if (currentDestination.hasRoute(BottomNavigationRoute.FavoritesRoute::class)) {
+                2
+            } else if (currentDestination.hierarchy.any { it.hasRoute(BottomNavigationRoute.SettingsGraph::class) }) {
+                1
+            } else {
+                0
+            }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -148,10 +164,15 @@ private fun MainContainer(
                 modifier = Modifier.height(56.dp),
                 tonalElevation = 4.dp
             ) {
-                items.forEach { item: BottomRouteData ->
-                    // Checks destination's route with type safety
-                    val selected =
-                        currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
+                items.forEachIndexed { index, item: BottomRouteData ->
+
+                    // This doesn't work when Home2, Home3 selected because item.route
+                    // checks Home1, Home2, Settings1, Setting2
+//                    val selected =
+//                        currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
+
+                    val selected = selectedIndex == index
+
                     NavigationBarItem(
                         selected = selected,
                         icon = {
@@ -167,7 +188,6 @@ private fun MainContainer(
                                 // 🔥 If restoreState = true and saveState = true are commented
                                 // routes other than Home1 are not saved
                                 restoreState = true
-
 
                                 // Pop up backstack to the first destination and save state.
                                 // This makes going back
