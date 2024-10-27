@@ -9,7 +9,9 @@ import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -52,6 +54,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -104,46 +108,63 @@ private fun MainContainer() {
             }
         }
 
+    val deeplink: Uri? = (LocalContext.current as? MainActivity)?.intent?.data
+    val isDeeplink = deeplink != null
+
+    println("Deeplink: $deeplink")
+
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = Splash
+        // 🔥 Change start destination based on if deeplink is available
+        startDestination = if (isDeeplink) HomeGraph else Splash
     ) {
-        composable<Splash> { navBackStackEntry: NavBackStackEntry ->
-            SplashScreen {
-                navController.navigate(Home) {
-                    popUpTo<Splash> {
-                        inclusive = true
-                    }
+        addNavGraph(navController, hasNotificationPermission, context, permissionRequest)
+    }
+}
+
+private fun NavGraphBuilder.addNavGraph(
+    navController: NavHostController,
+    hasNotificationPermission: Boolean,
+    context: Context,
+    permissionRequest: ManagedActivityResultLauncher<String, Boolean>,
+) {
+    composable<Splash> { navBackStackEntry: NavBackStackEntry ->
+
+        SplashScreen {
+            navController.navigate(Home) {
+                popUpTo<Splash> {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
+    navigation<HomeGraph>(
+        startDestination = Home
+    ) {
+        composable<Home> { navBackStackEntry: NavBackStackEntry ->
+            HomeScreen(
+                onClick = { profile: Profile ->
+                    navController.navigate(profile)
+                }
+            ) { _: Profile ->
+                if (hasNotificationPermission) {
+                    showNotification(context)
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         }
 
-        navigation<HomeGraph>(
-            startDestination = Home
-        ) {
-            composable<Home> { navBackStackEntry: NavBackStackEntry ->
-                HomeScreen(
-                    onClick = { profile: Profile ->
-                        navController.navigate(profile)
-                    }
-                ) { _: Profile ->
-                    if (hasNotificationPermission) {
-                        showNotification(context)
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                }
-            }
+        composable<Profile>(
+            deepLinks = listOf(
+                navDeepLink<Profile>(basePath = "$uri/profile")
+            )
+        ) { navBackStackEntry: NavBackStackEntry ->
 
-            composable<Profile>(
-                deepLinks = listOf(
-                    navDeepLink<Profile>(basePath = "$uri/profile")
-                )
-            ) { navBackStackEntry: NavBackStackEntry ->
-                val profile: Profile = navBackStackEntry.toRoute<Profile>()
-                Screen(profile.toString(), navController)
-            }
+            val profile: Profile = navBackStackEntry.toRoute<Profile>()
+            Screen(profile.toString(), navController)
         }
     }
 }
