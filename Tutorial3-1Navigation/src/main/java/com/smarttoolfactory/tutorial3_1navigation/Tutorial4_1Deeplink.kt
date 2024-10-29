@@ -162,7 +162,6 @@ private fun NavGraphBuilder.addNavGraph(
                 navDeepLink<Profile>(basePath = "$uri/profile")
             )
         ) { navBackStackEntry: NavBackStackEntry ->
-
             val profile: Profile = navBackStackEntry.toRoute<Profile>()
             Screen(profile.toString(), navController)
         }
@@ -170,7 +169,7 @@ private fun NavGraphBuilder.addNavGraph(
 }
 
 @Composable
-fun SplashScreen(
+private fun SplashScreen(
     onClick: () -> Unit,
 ) {
     Column(
