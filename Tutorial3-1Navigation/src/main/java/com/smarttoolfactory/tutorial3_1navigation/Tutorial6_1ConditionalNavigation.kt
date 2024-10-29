@@ -2,7 +2,13 @@
 
 package com.smarttoolfactory.tutorial3_1navigation
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -10,6 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +25,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
@@ -39,10 +50,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,6 +70,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -73,12 +87,52 @@ import kotlin.random.Random
 @Preview
 @Composable
 fun Tutorial6_1Screen() {
+
+    // In this example RegisterViewModel is shared by
+    // RegisterGraph and BottomNavigationRoute.DashboardRoute
+    // with HomeGraph NavBackEntry
+    // When user is not logged in RegisterScreen is shown by navigating from
+    // BottomNavigationRoute.DashboardRoute
+
+    // Also if user enters app via deeplink from terminal
+    // or Notification startDestination is changed from Splash to ProfileGraph
+    // to have conditional startDestination too.
+
+
     val navController = rememberNavController()
+
+    val context = LocalContext.current
+
+    var hasNotificationPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else true
+        )
+    }
+
+    val permissionRequest =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+            hasNotificationPermission = result
+
+            if (hasNotificationPermission) {
+                showNotification(context)
+            }
+        }
+
+    val deeplink: Uri? = (LocalContext.current as? MainActivity)?.intent?.data
+    val isDeeplink = deeplink != null
+
+    println("Deeplink: $deeplink")
 
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = Splash,
+        startDestination = if (isDeeplink) ProfileGraph else Splash,
         enterTransition = {
             slideIntoContainer(
                 towards = SlideDirection.Start,
@@ -120,6 +174,8 @@ fun Tutorial6_1Screen() {
         ) {
 
             navigation<RegisterGraph>(
+                // 🔥🔥 Start destination should be class
+                // or throws error for Serialized for Companion
                 startDestination = SessionModel("", "")
             ) {
                 composable<SessionModel> { navBackStackEntry: NavBackStackEntry ->
@@ -161,7 +217,15 @@ fun Tutorial6_1Screen() {
 
                 // If registered open Home Screen
                 if (registerViewModel.loggedIn) {
-                    MainContainer { route: Any, navBackStackEntry: NavBackStackEntry ->
+                    MainContainer(
+                        onShowDeeplinkNotification = {
+                            if (hasNotificationPermission) {
+                                showNotification(context)
+                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
+                        }
+                    ) { route: Any, navBackStackEntry: NavBackStackEntry ->
                         // Navigate only when life cycle is resumed for current screen
                         if (navBackStackEntry.lifecycleIsResumed()) {
                             navController.navigate(route = route)
@@ -169,8 +233,16 @@ fun Tutorial6_1Screen() {
                     }
                 }
             }
+        }
 
-            composable<Profile> { navBackStackEntry: NavBackStackEntry ->
+        navigation<ProfileGraph>(
+            startDestination = Profile("")
+        ) {
+            composable<Profile>(
+                deepLinks = listOf(
+                    navDeepLink<Profile>(basePath = "$uri/profile")
+                )
+            ) { navBackStackEntry: NavBackStackEntry ->
                 val profile: Profile = navBackStackEntry.toRoute<Profile>()
                 Screen(profile.toString(), navController)
             }
@@ -181,6 +253,7 @@ fun Tutorial6_1Screen() {
 @SuppressLint("RestrictedApi")
 @Composable
 private fun MainContainer(
+    onShowDeeplinkNotification: () -> Unit,
     onGoToProfileScreen: (
         route: Any,
         navBackStackEntry: NavBackStackEntry,
@@ -254,6 +327,7 @@ private fun MainContainer(
         ) {
             addBottomNavigationGraph(
                 nestedNavController = nestedNavController,
+                onShowDeeplinkNotification = onShowDeeplinkNotification,
                 onGoToProfileScreen = { route, navBackStackEntry ->
                     onGoToProfileScreen(route, navBackStackEntry)
                 },
@@ -271,6 +345,7 @@ private fun MainContainer(
  */
 private fun NavGraphBuilder.addBottomNavigationGraph(
     nestedNavController: NavHostController,
+    onShowDeeplinkNotification: () -> Unit,
     onGoToProfileScreen: (route: Any, navBackStackEntry: NavBackStackEntry) -> Unit,
     onBottomScreenClick: (route: Any, navBackStackEntry: NavBackStackEntry) -> Unit,
 ) {
@@ -339,6 +414,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
     composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
         UsersScreen(
             homeViewModel = hiltViewModel(),
+            onShowDeeplinkNotification = onShowDeeplinkNotification,
             onProfileClick = { userProfile ->
                 onGoToProfileScreen(
                     Profile("Name: ${userProfile.name}"),
@@ -386,6 +462,7 @@ private fun SplashScreen(
 private fun UsersScreen(
     homeViewModel: UsersVieModel,
     onProfileClick: (UserProfile) -> Unit,
+    onShowDeeplinkNotification: () -> Unit,
 ) {
 
     val userList by homeViewModel.profileFlow.collectAsStateWithLifecycle()
@@ -397,17 +474,40 @@ private fun UsersScreen(
     ) {
 
         items(items = userList) {
-            Text(
+
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(2.dp, RoundedCornerShape(16.dp))
+                    .shadow(4.dp, RoundedCornerShape(8.dp))
                     .background(Color.White)
+                    .fillMaxWidth()
+                    .padding(start = 16.dp)
                     .clickable {
                         onProfileClick(it)
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Profile ${it.id}",
+                    fontSize = 18.sp
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(
+                    onClick = {
+                        onShowDeeplinkNotification()
                     }
-                    .padding(16.dp),
-                text = "name: ${it.name}, id: ${it.id}"
-            )
+                ) {
+                    Icon(
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = null
+                    )
+                }
+            }
+
+
         }
     }
 }

@@ -1,13 +1,7 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -49,10 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
-import androidx.core.net.toUri
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -185,52 +176,10 @@ private fun SplashScreen(
     }
 }
 
-private fun showNotification(context: Context) {
-    val id = "exampleId"
-
-    val deepLinkIntent = Intent(
-        Intent.ACTION_VIEW,
-        "$uri/profile/$id".toUri(),
-        context,
-        MainActivity::class.java
-    )
-
-    val deepLinkPendingIntent: PendingIntent? = TaskStackBuilder
-        .create(context).run {
-            addNextIntentWithParentStack(deepLinkIntent)
-            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
-        }
-
-
-    val notification: Notification = NotificationCompat.Builder(
-        context,
-        "channelId"
-    )
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .setContentTitle("Go to app")
-        .setContentText("Click to open Profile")
-        .setPriority(NotificationCompat.PRIORITY_MAX)
-        .setAutoCancel(true)
-        .setContentIntent(deepLinkPendingIntent)
-        .build()
-
-    val notificationManager = context.getSystemService() as NotificationManager?
-
-    notificationManager?.run {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.createNotificationChannel(
-                NotificationChannel("channelId", "name", NotificationManager.IMPORTANCE_DEFAULT)
-            )
-        }
-        this.notify(1, notification)
-    }
-
-}
-
 @Composable
 private fun HomeScreen(
     onClick: (Profile) -> Unit,
-    onOpenDeeplink: (Profile) -> Unit,
+    onShowDeeplinkNotification: (Profile) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -268,7 +217,7 @@ private fun HomeScreen(
 
                     IconButton(
                         onClick = {
-                            onOpenDeeplink(it)
+                            onShowDeeplinkNotification(it)
                         }
                     ) {
                         Icon(
