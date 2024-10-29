@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
@@ -13,7 +14,7 @@ import kotlinx.serialization.Serializable
 object Splash
 
 @Serializable
-object SplashGraph
+object RegisterGraph
 
 // Define a home route that doesn't take any arguments
 @Serializable
@@ -94,6 +95,52 @@ internal fun bottomRouteDataList() = listOf(
     BottomRouteData(
         title = "Favorites",
         icon = Icons.Default.Favorite,
+        route = BottomNavigationRoute.FavoritesRoute
+    ),
+    BottomRouteData(
+        title = "Notifications",
+        icon = Icons.Default.Notifications,
+        route = BottomNavigationRoute.NotificationRoute
+    )
+)
+
+internal fun bottomNestedRouteDataList() = listOf(
+    BottomRouteData(
+        title = "Home",
+        icon = Icons.Default.Home,
+        route = BottomNavigationRoute.HomeGraph
+    ),
+    BottomRouteData(
+        title = "Settings",
+        icon = Icons.Default.Settings,
+        route = BottomNavigationRoute.SettingsGraph
+    ),
+    BottomRouteData(
+        title = "Favorites",
+        icon = Icons.Default.Favorite,
+        route = BottomNavigationRoute.FavoritesRoute
+    ),
+    BottomRouteData(
+        title = "Notifications",
+        icon = Icons.Default.Notifications,
+        route = BottomNavigationRoute.NotificationRoute
+    )
+)
+
+internal fun bottomNestedRouteDataList2() = listOf(
+    BottomRouteData(
+        title = "Home",
+        icon = Icons.Default.Home,
+        route = BottomNavigationRoute.HomeGraph
+    ),
+    BottomRouteData(
+        title = "Settings",
+        icon = Icons.Default.Settings,
+        route = BottomNavigationRoute.SettingsGraph
+    ),
+    BottomRouteData(
+        title = "Accounts",
+        icon = Icons.Default.AccountCircle,
         route = BottomNavigationRoute.FavoritesRoute
     ),
     BottomRouteData(

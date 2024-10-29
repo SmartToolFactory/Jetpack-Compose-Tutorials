@@ -3,55 +3,53 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
-import androidx.collection.forEach
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -60,17 +58,27 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import javax.inject.Inject
+import kotlin.random.Random
 
-@SuppressLint("RestrictedApi")
 @Preview
 @Composable
-fun Tutorial3_2Screen() {
+fun Tutorial6_1Screen() {
     val navController = rememberNavController()
 
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = BottomNavigationRoute.DashboardRoute,
+        startDestination = Splash,
         enterTransition = {
             slideIntoContainer(
                 towards = SlideDirection.Start,
@@ -97,18 +105,75 @@ fun Tutorial3_2Screen() {
         }
     ) {
 
-        composable<BottomNavigationRoute.DashboardRoute> {
-            MainContainer { route: Any, navBackStackEntry: NavBackStackEntry ->
-                // Navigate only when life cycle is resumed for current screen
-                if (navBackStackEntry.lifecycleIsResumed()) {
-                    navController.navigate(route = route)
+        composable<Splash> { navBackStackEntry: NavBackStackEntry ->
+            SplashScreen {
+                navController.navigate(HomeGraph) {
+                    popUpTo<Splash> {
+                        inclusive = true
+                    }
                 }
             }
         }
 
-        composable<Profile> { navBackStackEntry: NavBackStackEntry ->
-            val profile: Profile = navBackStackEntry.toRoute<Profile>()
-            Screen(profile.toString(), navController)
+        navigation<HomeGraph>(
+            startDestination = BottomNavigationRoute.DashboardRoute
+        ) {
+
+            navigation<RegisterGraph>(
+                startDestination = SessionModel("", "")
+            ) {
+                composable<SessionModel> { navBackStackEntry: NavBackStackEntry ->
+                    val parentBackStackEntry: NavBackStackEntry =
+                        remember(navBackStackEntry) {
+                            navController.getBackStackEntry(HomeGraph)
+                        }
+
+                    // 🔥This ViewModel is shared between HomeGraph and SessionModel
+                    val registerViewModel = hiltViewModel<RegisterViewModel>(parentBackStackEntry)
+
+                    RegisterScreen(
+                        registerViewModel = registerViewModel
+                    ) {
+                        navController.navigate(BottomNavigationRoute.DashboardRoute) {
+                            popUpTo<HomeGraph>()
+                        }
+                    }
+                }
+            }
+
+            composable<BottomNavigationRoute.DashboardRoute> { navBackStackEntry: NavBackStackEntry ->
+
+                val parentBackStackEntry: NavBackStackEntry =
+                    remember(navBackStackEntry) {
+                        navController.getBackStackEntry(HomeGraph)
+                    }
+
+                // 🔥This ViewModel is shared between HomeGraph and RegisterGraph
+                val registerViewModel = hiltViewModel<RegisterViewModel>(parentBackStackEntry)
+
+                LaunchedEffect(registerViewModel.loggedIn) {
+                    if (registerViewModel.loggedIn.not()) {
+                        navController.navigate(RegisterGraph) {
+                            popUpTo<HomeGraph>()
+                        }
+                    }
+                }
+
+                // If registered open Home Screen
+                if (registerViewModel.loggedIn) {
+                    MainContainer { route: Any, navBackStackEntry: NavBackStackEntry ->
+                        // Navigate only when life cycle is resumed for current screen
+                        if (navBackStackEntry.lifecycleIsResumed()) {
+                            navController.navigate(route = route)
+                        }
+                    }
+                }
+            }
+
+            composable<Profile> { navBackStackEntry: NavBackStackEntry ->
+                val profile: Profile = navBackStackEntry.toRoute<Profile>()
+                Screen(profile.toString(), navController)
+            }
         }
     }
 }
@@ -122,30 +187,13 @@ private fun MainContainer(
     ) -> Unit,
 ) {
     val items = remember {
-        bottomNestedRouteDataList()
+        bottomNestedRouteDataList2()
     }
 
     val nestedNavController = rememberNavController()
     val navBackStackEntry: NavBackStackEntry? by nestedNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // Other way to set selected bottom navigation item
-//    var selectedIndex by remember {
-//        mutableIntStateOf(0)
-//    }
-//
-//    currentDestination?.let {
-//        selectedIndex =
-//            if (currentDestination.hasRoute(BottomNavigationRoute.NotificationRoute::class)) {
-//                3
-//            } else if (currentDestination.hasRoute(BottomNavigationRoute.FavoritesRoute::class)) {
-//                2
-//            } else if (currentDestination.hierarchy.any { it.hasRoute(BottomNavigationRoute.SettingsGraph::class) }) {
-//                1
-//            } else {
-//                0
-//            }
-//    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -160,10 +208,6 @@ private fun MainContainer(
             )
         },
         bottomBar = {
-
-            var lastSaveId by remember {
-                mutableIntStateOf(0)
-            }
 
             NavigationBar(
                 modifier = Modifier.height(56.dp),
@@ -293,12 +337,11 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
     }
 
     composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
-        Screen(
-            text = "Favorites Screen",
-            navController = nestedNavController,
-            onClick = {
+        UsersScreen(
+            homeViewModel = hiltViewModel(),
+            onProfileClick = { userProfile ->
                 onGoToProfileScreen(
-                    Profile("Favorites"),
+                    Profile("Name: ${userProfile.name}"),
                     from
                 )
             }
@@ -319,172 +362,157 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
     }
 }
 
-@SuppressLint("RestrictedApi")
 @Composable
-fun Screen(
-    text: String,
-    navController: NavController,
-    onClick: (() -> Unit)? = null,
+private fun SplashScreen(
+    onNavigateHome: () -> Unit,
 ) {
+    val updatedLambda = rememberUpdatedState(onNavigateHome)
 
-    val packageName = LocalContext.current.packageName
-
-    var counter by rememberSaveable {
-        mutableIntStateOf(0)
+    LaunchedEffect(Unit) {
+        delay(500)
+        updatedLambda.value.invoke()
     }
 
     Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = text,
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold
+        Text(text = "Splash Screen", fontSize = 34.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+private fun UsersScreen(
+    homeViewModel: UsersVieModel,
+    onProfileClick: (UserProfile) -> Unit,
+) {
+
+    val userList by homeViewModel.profileFlow.collectAsStateWithLifecycle()
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+
+        items(items = userList) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(2.dp, RoundedCornerShape(16.dp))
+                    .background(Color.White)
+                    .clickable {
+                        onProfileClick(it)
+                    }
+                    .padding(16.dp),
+                text = "name: ${it.name}, id: ${it.id}"
+            )
+        }
+    }
+}
+
+@HiltViewModel
+class UsersVieModel @Inject constructor() : ViewModel() {
+
+    private val _profileFlow = MutableStateFlow<List<UserProfile>>(listOf())
+    val profileFlow = _profileFlow.asStateFlow()
+
+    init {
+        _profileFlow.value = List(Random.nextInt(15, 50)) {
+            UserProfile(id = "$it", name = "User $it")
+        }
+    }
+}
+
+@Composable
+private fun RegisterScreen(
+    registerViewModel: RegisterViewModel,
+    goToHomeScreen: () -> Unit,
+) {
+
+    var email by remember {
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(registerViewModel.loggedIn) {
+        if (registerViewModel.loggedIn) {
+            goToHomeScreen()
+        }
+    }
+
+    var password by remember {
+        mutableStateOf("")
+    }
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp)
+    ) {
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = email,
+            onValueChange = { email = it },
+            label = {
+                Text("Email")
+            }
         )
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = password,
+            onValueChange = { password = it },
+            label = {
+                Text("Password")
+            }
+        )
+
+        Spacer(Modifier.weight(1f))
 
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                counter++
+                registerViewModel.login(email, password)
             }
         ) {
-            Text("Counter: $counter")
+            Text("Sign in")
         }
+    }
+}
 
-        onClick?.let {
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    onClick()
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val sessionManager: SessionManager,
+) : ViewModel() {
+
+    var loggedIn: Boolean by mutableStateOf(false)
+        private set
+
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            sessionManager
+                .login(email, password)
+                .collect { user: SessionModel? ->
+                    loggedIn = user != null
                 }
-            ) {
-                Text("Navigate next screen")
+        }
+    }
+}
+
+class SessionManager @Inject constructor() {
+
+    var loggedIn: Boolean = false
+
+    fun login(email: String, password: String): Flow<SessionModel?> {
+        return flow<SessionModel?> {
+            delay(200)
+            emit(SessionModel(email, password))
+        }
+            .map {
+                loggedIn = it != null
+                it
             }
-        }
-
-        val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
-
-        val pagerState = rememberPagerState {
-            2
-        }
-        HorizontalPager(state = pagerState) { page ->
-
-            val headerText = if (page == 0) "Current Back stack(reversed)" else "Current hierarchy"
-            Column {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    text = headerText,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                val destinations = if (page == 0) {
-                    currentBackStack.reversed().map { it.destination }
-                } else {
-                    navController.currentDestination?.hierarchy?.toList() ?: listOf()
-                }
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-
-                    items(items = destinations) { destination: NavDestination ->
-
-                        if (destination is NavGraph) {
-                            MainText(destination, packageName)
-                            destination.nodes.forEach { _, value ->
-                                SubItemText(value, packageName)
-                            }
-
-                        } else {
-                            MainText(destination, packageName)
-                        }
-                    }
-                }
-
-            }
-        }
     }
 }
 
-@Composable
-private fun SubItemText(destination: NavDestination, packageName: String?) {
-    Row(
-        modifier = Modifier
-            .padding(start = 8.dp, bottom = 2.dp)
-            .shadow(2.dp, RoundedCornerShape(8.dp))
-            .background(Color.White)
-            .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.Bottom
-    ) {
-
-        Text(
-            text = getDestinationFormattedText(
-                destination,
-                packageName
-            ),
-            fontSize = 12.sp
-        )
-
-//        destination.parent?.let {
-//            Text(
-//                text = ", parent: " + getGraphFormattedText(it, packageName),
-//                fontSize = 10.sp
-//            )
-//        }
-    }
-}
-
-@Composable
-private fun MainText(destination: NavDestination, packageName: String?) {
-
-
-    Row(
-        modifier = Modifier
-            .shadow(4.dp, RoundedCornerShape(8.dp))
-            .background(Color.White)
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Text(
-            text = getDestinationFormattedText(
-                destination,
-                packageName
-            ),
-            fontSize = 18.sp
-        )
-//        destination.parent?.let {
-//            Text(
-//                text = ", parent: " + getGraphFormattedText(it, packageName),
-//                fontSize = 14.sp
-//            )
-//        }
-    }
-}
-
-@SuppressLint("RestrictedApi")
-private fun getDestinationFormattedText(
-    destination: NavDestination,
-    packageName: String?,
-) = (destination.route
-    ?.replace("$packageName.", "")
-    ?.replace("BottomNavigationRoute.", "")
-    ?: (destination.displayName))
-
-@SuppressLint("RestrictedApi")
-private fun getGraphFormattedText(
-    destination: NavGraph,
-    packageName: String?,
-) = (destination.route
-    ?.replace("$packageName.", "")
-    ?.replace("BottomNavigationRoute.", "")
-    ?: (destination.displayName))
+@Serializable
+data class SessionModel(val email: String, val password: String)
