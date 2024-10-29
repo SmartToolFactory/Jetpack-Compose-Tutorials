@@ -60,37 +60,36 @@ composeCompiler {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v284)
-    implementation(libs.androidx.activity.compose.v191)
-    implementation(platform(libs.androidx.compose.bom.v20240800))
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.compose.material3.material3)
 
     // lifecycle
-    implementation(libs.androidx.lifecycle.runtime.ktx.v284)
-    implementation(libs.androidx.lifecycle.runtime.compose.v284)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     // AndroidX Test - JVM testing
     testImplementation(libs.androidx.core.testing)
     //noinspection UseTomlInstead
     testImplementation("androidx.test:core-ktx:1.6.1")
-    testImplementation(libs.androidx.junit.v121)
+    testImplementation(libs.androidx.test.ext.junit)
 
     // JUnit 5
     testImplementation(libs.junit.vintage.engine)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
 
-    testImplementation(libs.kotlinx.coroutines.test.v181)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.mockk.android)
     testImplementation(libs.truth)
 
-    androidTestImplementation(libs.androidx.junit.v121)
-    androidTestImplementation(libs.androidx.espresso.core.v361)
-    androidTestImplementation(platform(libs.androidx.compose.bom.v20240800))
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

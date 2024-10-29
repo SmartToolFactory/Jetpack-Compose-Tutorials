@@ -70,7 +70,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.appcompat)
-    implementation(libs.material.v1120)
+    implementation(libs.androidx.compose.material)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
