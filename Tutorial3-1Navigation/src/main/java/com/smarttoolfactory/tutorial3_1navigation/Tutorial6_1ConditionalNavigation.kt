@@ -98,7 +98,6 @@ fun Tutorial6_1Screen() {
     // or Notification startDestination is changed from Splash to ProfileGraph
     // to have conditional startDestination too.
 
-
     val navController = rememberNavController()
 
     val context = LocalContext.current
@@ -506,8 +505,6 @@ private fun UsersScreen(
                     )
                 }
             }
-
-
         }
     }
 }

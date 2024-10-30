@@ -48,6 +48,10 @@ import kotlin.random.Random
 
 @Composable
 fun Tutorial5_1Screen() {
+    /*
+        In this example added ViewModel's scoped to NavBackStackEntry via
+        hiltViewModel()
+     */
     MainContainer()
 }
 
@@ -65,7 +69,6 @@ private fun MainContainer() {
         addNavGraph(navController)
     }
 }
-
 
 private fun NavGraphBuilder.addNavGraph(
     navController: NavHostController,

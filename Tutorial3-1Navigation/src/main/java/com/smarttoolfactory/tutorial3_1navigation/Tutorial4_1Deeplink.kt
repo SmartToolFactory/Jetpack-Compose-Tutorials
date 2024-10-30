@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial3_1navigation
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -99,10 +101,23 @@ private fun MainContainer() {
             }
         }
 
-    val deeplink: Uri? = (LocalContext.current as? MainActivity)?.intent?.data
+    val intent: Intent? = (LocalContext.current as? MainActivity)?.intent
+    val deeplink: Uri? = intent?.data
     val isDeeplink = deeplink != null
 
     println("Deeplink: $deeplink")
+
+    deeplink?.let {
+        val deeplinkRequest: NavDeepLinkRequest = NavDeepLinkRequest.Builder
+            .fromUri(it)
+            .build()
+
+        println(
+            "uri ${deeplinkRequest.uri}, " +
+                    "action: ${deeplinkRequest.action}, " +
+                    "mimeType: ${deeplinkRequest.mimeType}"
+        )
+    }
 
     NavHost(
         modifier = Modifier.fillMaxSize(),
