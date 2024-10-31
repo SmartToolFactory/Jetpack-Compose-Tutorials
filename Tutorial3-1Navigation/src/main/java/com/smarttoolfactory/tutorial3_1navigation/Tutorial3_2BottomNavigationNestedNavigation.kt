@@ -3,6 +3,7 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.collection.forEach
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
@@ -52,6 +53,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -160,11 +162,6 @@ private fun MainContainer(
             )
         },
         bottomBar = {
-
-            var lastSaveId by remember {
-                mutableIntStateOf(0)
-            }
-
             NavigationBar(
                 modifier = Modifier.height(56.dp),
                 tonalElevation = 4.dp
@@ -221,6 +218,19 @@ private fun MainContainer(
     }
 }
 
+@Composable
+private fun BackHome(
+    navController: NavController,
+) {
+    BackHandler {
+        navController.navigate(BottomNavigationRoute.HomeGraph) {
+            launchSingleTop = true
+            restoreState = true
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+        }
+    }
+}
+
 /**
  * @param onGoToProfileScreen lambda for navigating Profile screen from current screen with top NavHostController
  * @param onBottomScreenClick lambda for navigating with [nestedNavController] in BottomNavigation
@@ -265,6 +275,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
         startDestination = BottomNavigationRoute.SettingsRoute1
     ) {
         composable<BottomNavigationRoute.SettingsRoute1> { from: NavBackStackEntry ->
+            BackHome(navController = nestedNavController)
             Screen(
                 text = "Settings Screen",
                 navController = nestedNavController,
@@ -275,6 +286,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
         }
 
         composable<BottomNavigationRoute.SettingsRoute2> { from: NavBackStackEntry ->
+            BackHome(navController = nestedNavController)
             Screen(
                 text = "Settings Screen2",
                 navController = nestedNavController,
@@ -285,6 +297,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
         }
 
         composable<BottomNavigationRoute.SettingsRoute3> { from: NavBackStackEntry ->
+            BackHome(navController = nestedNavController)
             Screen(
                 text = "Settings Screen3",
                 navController = nestedNavController
@@ -293,6 +306,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
     }
 
     composable<BottomNavigationRoute.FavoritesRoute> { from: NavBackStackEntry ->
+        BackHome(navController = nestedNavController)
         Screen(
             text = "Favorites Screen",
             navController = nestedNavController,
@@ -306,6 +320,7 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
     }
 
     composable<BottomNavigationRoute.NotificationRoute> { from: NavBackStackEntry ->
+        BackHome(navController = nestedNavController)
         Screen(
             text = "Notifications Screen",
             navController = nestedNavController,
