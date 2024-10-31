@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -93,7 +94,7 @@ fun Tutorial2Screen() {
 }
 
 @Composable
-private fun RouteAScreen(navController: NavController) {
+internal fun RouteAScreen(navController: NavController) {
     RouteScreen(
         modifier = Modifier.background(Color.White),
         title = "RouteAScreen",
@@ -102,7 +103,7 @@ private fun RouteAScreen(navController: NavController) {
 }
 
 @Composable
-private fun RouteBScreen(navController: NavController) {
+internal fun RouteBScreen(navController: NavController) {
     RouteScreen(
         modifier = Modifier.background(Color.Cyan),
         title = "RouteBScreen",
@@ -111,7 +112,7 @@ private fun RouteBScreen(navController: NavController) {
 }
 
 @Composable
-private fun RouteCScreen(navController: NavController) {
+internal fun RouteCScreen(navController: NavController) {
     RouteScreen(
         modifier = Modifier.background(Color.Yellow),
         title = "RouteCScreen",
@@ -120,7 +121,7 @@ private fun RouteCScreen(navController: NavController) {
 }
 
 @Composable
-private fun RouteDScreen(navController: NavController) {
+internal fun RouteDScreen(navController: NavController) {
     RouteScreen(
         modifier = Modifier.background(Color.Green),
         title = "RouteDScreen",
@@ -243,20 +244,33 @@ private fun RouteScreen(
 
             // Don't do looped operations in actual code, it's for demonstration
             items(items = currentBackStack.reversed()) {
-                Text(
-                    text = it.destination.route
-                        ?.replace("$packageName.", "")
-                        ?.replace(
-                            "BottomNavigationRoute.",
-                            ""
-                        ) ?: it.destination.displayName,
+                Row(
                     modifier = Modifier
                         .shadow(4.dp, RoundedCornerShape(8.dp))
                         .background(Color.White)
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    fontSize = 16.sp
-                )
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = it.destination.route
+                            ?.replace("$packageName.", "")
+                            ?.replace(
+                                "BottomNavigationRoute.",
+                                ""
+                            ) ?: it.destination.displayName,
+                        fontSize = 16.sp
+                    )
+
+                    val text = if (it.destination is NavGraph) "NavGraph" else "NavDestination"
+
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = "($text)",
+                        fontSize = 10.sp
+                    )
+                }
             }
         }
     }
