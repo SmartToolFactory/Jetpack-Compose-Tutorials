@@ -12,12 +12,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 
-fun showNotification(context: Context) {
-    val id = "exampleId"
+const val id = "exampleId"
+
+fun showNotification(context: Context, uriString: String) {
 
     val deepLinkIntent = Intent(
         Intent.ACTION_VIEW,
-        "$uri/profile/$id".toUri(),
+        uriString.toUri(),
         context,
         MainActivity::class.java
     )

@@ -119,7 +119,10 @@ fun Tutorial6_1Screen() {
             hasNotificationPermission = result
 
             if (hasNotificationPermission) {
-                showNotification(context)
+                showNotification(
+                    context = context,
+                    uriString = "$uri/profile/deeplinkId"
+                )
             }
         }
 
@@ -219,7 +222,10 @@ fun Tutorial6_1Screen() {
                     MainContainer(
                         onShowDeeplinkNotification = {
                             if (hasNotificationPermission) {
-                                showNotification(context)
+                                showNotification(
+                                    context = context,
+                                    uriString = "$uri/profile/deeplinkId"
+                                )
                             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
                             }

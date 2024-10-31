@@ -30,6 +30,16 @@ object ProfileGraph
 @Serializable
 data class Profile(val id: String)
 
+// Parameters with default values are query params
+// parameter with no default values are uri params
+@Serializable
+data class Product(
+    val id: String,
+    val count: Int = 0,
+    val type: String = "default",
+)
+
+
 const val uri = "test://www.example.com"
 
 @Serializable

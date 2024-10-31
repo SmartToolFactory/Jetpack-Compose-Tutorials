@@ -18,14 +18,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,20 +56,16 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 
 /*
-    Steps to add deeplink to Profile Screen
-    1- Add deeplink scheme and host and intent filter to manifest
-    2- Add url to composable as
-    composable<Profile>(
-        deepLinks = listOf(
-            navDeepLink<Profile>(basePath = "$uri/profile")
-        )
-    3- Test with adb by calling snipped below in terminal
+
+   Test with adb by calling snipped below in terminal
     adb shell am start -W -a android.intent.action.VIEW -d "test://www.example.com/profile/2"
+    or test Product with uri param id and query params count and type
+    adb shell am start -W -a android.intent.action.VIEW -d "test://www.example.com/product/type=2?count=3&type=someType"
  */
 
 @Preview
 @Composable
-fun Tutorial4_1Screen() {
+fun Tutorial4_2Screen() {
     MainContainer()
 }
 
@@ -95,15 +90,10 @@ private fun MainContainer() {
     val permissionRequest =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
             hasNotificationPermission = result
-
-            if (hasNotificationPermission) {
-                showNotification(context, "$uri/profile/deeplinkId")
-            }
         }
 
     val intent: Intent? = (LocalContext.current as? MainActivity)?.intent
     val deeplink: Uri? = intent?.data
-    val isDeeplink = deeplink != null
 
     println("Deeplink: $deeplink")
 
@@ -122,8 +112,7 @@ private fun MainContainer() {
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        // 🔥 Change start destination based on if deeplink is available
-        startDestination = if (isDeeplink) HomeGraph else Splash
+        startDestination = HomeGraph
     ) {
         addNavGraph(navController, hasNotificationPermission, context, permissionRequest)
     }
@@ -135,35 +124,36 @@ private fun NavGraphBuilder.addNavGraph(
     context: Context,
     permissionRequest: ManagedActivityResultLauncher<String, Boolean>,
 ) {
-    composable<Splash> { navBackStackEntry: NavBackStackEntry ->
-
-        SplashScreen {
-            navController.navigate(Home) {
-                popUpTo<Splash> {
-                    inclusive = true
-                }
-            }
-        }
-    }
 
     navigation<HomeGraph>(
         startDestination = Home
     ) {
         composable<Home> { navBackStackEntry: NavBackStackEntry ->
             HomeScreen(
-                onClick = { profile: Profile ->
+                onProfileClick = { profile: Profile ->
                     navController.navigate(profile)
+                },
+                onShowProfileDeeplinkNotification = { profile: Profile ->
+                    if (hasNotificationPermission) {
+                        showNotification(context, "$uri/profile/${profile.id}")
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                },
+                onProductClick = { product: Product ->
+                    navController.navigate(product)
+                },
+                onShowProductDeeplinkNotification = { product: Product ->
+                    if (hasNotificationPermission) {
+                        showNotification(
+                            context = context,
+                            uriString = "$uri/product/${product.id}?count=${product.count}&type=${product.type}"
+                        )
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
                 }
-            ) { _: Profile ->
-                if (hasNotificationPermission) {
-                    showNotification(
-                        context = context,
-                        uriString = "$uri/profile/deeplinkId"
-                    )
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }
-            }
+            )
         }
 
         composable<Profile>(
@@ -174,78 +164,127 @@ private fun NavGraphBuilder.addNavGraph(
             val profile: Profile = navBackStackEntry.toRoute<Profile>()
             Screen(profile.toString(), navController)
         }
-    }
-}
 
-@Composable
-private fun SplashScreen(
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Splash Screen", fontSize = 34.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onClick) {
-            Text(text = "Go to Home")
+        composable<Product>(
+            deepLinks = listOf(
+                navDeepLink<Product>(basePath = "$uri/product")
+            )
+        ) { navBackStackEntry: NavBackStackEntry ->
+            val product: Product = navBackStackEntry.toRoute<Product>()
+            Screen(
+                text = "id: ${product.id}, " +
+                        "count: ${product.count}" +
+                        "type: ${product.type}, ",
+                navController = navController
+            )
         }
     }
 }
 
 @Composable
 private fun HomeScreen(
-    onClick: (Profile) -> Unit,
-    onShowDeeplinkNotification: (Profile) -> Unit,
+    onProfileClick: (Profile) -> Unit,
+    onShowProfileDeeplinkNotification: (Profile) -> Unit,
+    onProductClick: (Product) -> Unit,
+    onShowProductDeeplinkNotification: (Product) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        val list = remember {
+        val profileList = remember {
             List(20) {
                 Profile(it.toString())
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            items(list) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(4.dp, RoundedCornerShape(8.dp))
-                        .background(Color.White)
-                        .fillMaxWidth()
-                        .padding(start = 16.dp)
-                        .clickable {
-                            onClick(it)
-                        },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Profile ${it.id}",
-                        fontSize = 18.sp
-                    )
+        val productList = remember {
+            List(20) {
+                Product(
+                    id = "$it", count = it, type = if (it % 2 == 0) "even" else "odd"
+                )
+            }
+        }
 
-                    Spacer(modifier = Modifier.weight(1f))
+        val pagerState = rememberPagerState {
+            2
+        }
 
-                    IconButton(
-                        onClick = {
-                            onShowDeeplinkNotification(it)
-                        }
-                    ) {
-                        Icon(
-                            tint = MaterialTheme.colorScheme.tertiary,
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = null
+        HorizontalPager(
+            state = pagerState
+        ) { page ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+
+                if (page == 0) {
+                    items(profileList) {
+                        ListRow(
+                            text = "Profile ${it.id}",
+                            onClick = {
+                                onProfileClick(it)
+                            },
+                            onImageCLick = {
+                                onShowProfileDeeplinkNotification(it)
+                            }
                         )
+
+                    }
+                } else {
+                    items(productList) {
+                        ListRow(
+                            text = "Product ${it.id}",
+                            onClick = {
+                                onProductClick(it)
+                            },
+                            onImageCLick = {
+                                onShowProductDeeplinkNotification(it)
+                            }
+                        )
+
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ListRow(
+    text: String,
+    onClick: () -> Unit,
+    onImageCLick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(4.dp, RoundedCornerShape(8.dp))
+            .background(Color.White)
+            .fillMaxWidth()
+            .padding(start = 16.dp)
+            .clickable {
+                onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = text,
+            fontSize = 18.sp
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        IconButton(
+            onClick = {
+                onImageCLick()
+            }
+        ) {
+            Icon(
+                tint = MaterialTheme.colorScheme.tertiary,
+                imageVector = Icons.Default.Notifications,
+                contentDescription = null
+            )
         }
     }
 }

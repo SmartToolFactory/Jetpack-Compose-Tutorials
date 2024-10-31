@@ -1,10 +1,16 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphBuilder
@@ -35,20 +41,32 @@ private fun MainContainer() {
         }
     }
 
-    NavHost(
-        modifier = Modifier.fillMaxSize(),
-        navController = navController,
-        graph = navGraph,
-    )
+    Column {
+        Button(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            onClick = {
+                // 🔥This doesn't work
+//                navController.setGraph(
+//                    graph = navController.createGraph(startDestination = RouteC) {
+//                        addNavGraph(navController)
+//                    }, startDestinationArgs = null
+//                )
 
-    // Other Alternative
-//        NavHost(
-//            modifier = Modifier.fillMaxSize(),
-//            navController = navController,
-//            startDestination = RouteA
-//        ) {
-//            addNavGraph(navController)
-//        }
+                // 🔥 This also doesn't work
+                navController.graph.setStartDestination(RouteD)
+                println("Start destination: ${navController.graph.startDestinationRoute}")
+
+            }
+        ) {
+            Text("Set graph")
+        }
+
+        NavHost(
+            modifier = Modifier.fillMaxSize(),
+            navController = navController,
+            graph = navGraph,
+        )
+    }
 }
 
 private fun NavGraphBuilder.addNavGraph(navController: NavController) {
