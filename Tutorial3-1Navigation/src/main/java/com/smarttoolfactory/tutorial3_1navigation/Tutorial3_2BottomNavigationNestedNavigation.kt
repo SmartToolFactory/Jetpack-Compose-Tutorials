@@ -286,7 +286,6 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
         }
 
         composable<BottomNavigationRoute.SettingsRoute2> { from: NavBackStackEntry ->
-            BackHome(navController = nestedNavController)
             Screen(
                 text = "Settings Screen2",
                 navController = nestedNavController,
@@ -297,7 +296,6 @@ private fun NavGraphBuilder.addBottomNavigationGraph(
         }
 
         composable<BottomNavigationRoute.SettingsRoute3> { from: NavBackStackEntry ->
-            BackHome(navController = nestedNavController)
             Screen(
                 text = "Settings Screen3",
                 navController = nestedNavController
