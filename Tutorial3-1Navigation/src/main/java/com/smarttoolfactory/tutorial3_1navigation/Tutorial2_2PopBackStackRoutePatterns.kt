@@ -166,6 +166,9 @@ private fun RouteScreen(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = text,
+            label = {
+                Text("Destination")
+            },
             onValueChange = { text = it }
         )
 

@@ -430,7 +430,7 @@ fun Screen(
 }
 
 @Composable
-private fun SubItemText(destination: NavDestination, packageName: String?) {
+internal fun SubItemText(destination: NavDestination, packageName: String?) {
     Row(
         modifier = Modifier
             .padding(start = 8.dp, bottom = 2.dp)
@@ -459,7 +459,7 @@ private fun SubItemText(destination: NavDestination, packageName: String?) {
 }
 
 @Composable
-private fun MainText(destination: NavDestination, packageName: String?) {
+internal fun MainText(destination: NavDestination, packageName: String?) {
 
 
     Row(
