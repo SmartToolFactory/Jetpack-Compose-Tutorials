@@ -3,6 +3,7 @@
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -119,8 +121,10 @@ private fun MainContainer() {
                                     restoreState = true
 
                                     // Pop up backstack to the first destination and save state.
-                                    // This makes going back
-                                    // to the start destination when pressing back in any other bottom tab.
+
+                                    // Then restore any previous back stack state associated with
+                                    // the item.route destination.
+                                    // Finally navigate to the item.route destination.
                                     popUpTo(findStartDestination(navController.graph).id) {
                                         saveState = true
                                     }
@@ -180,6 +184,11 @@ private fun Screen(
     text: String,
     navController: NavController,
 ) {
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
 
     val packageName = LocalContext.current.packageName
 

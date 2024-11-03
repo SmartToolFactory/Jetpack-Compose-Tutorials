@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,7 +28,6 @@ fun Tutorial7_1Screen() {
 @Composable
 private fun MainContainer() {
     val navController = rememberNavController()
-
     // Changing this destination changes where graph will start
     val startDestination = RouteA
 

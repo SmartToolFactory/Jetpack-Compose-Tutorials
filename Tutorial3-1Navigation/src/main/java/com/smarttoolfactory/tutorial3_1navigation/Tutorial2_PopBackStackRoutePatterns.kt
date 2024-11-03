@@ -1,10 +1,11 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.smarttoolfactory.tutorial3_1navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,17 +17,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.sharp.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -37,19 +44,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 
 @Preview
 @Composable
-fun Tutorial2Screen() {
+fun Tutorial2_2Screen() {
+    /*
+        In this example popUpBackStack navigates on destination back or
+        screen with Profile(id) by using navController.popBackStack(selectedProfile, false)
+     */
+
     val navController = rememberNavController()
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = RouteA,
+        startDestination = Profile("Start"),
         enterTransition = {
             slideIntoContainer(
                 towards = SlideDirection.Start,
@@ -73,71 +87,40 @@ fun Tutorial2Screen() {
                 towards = SlideDirection.End,
                 animationSpec = tween(700)
             )
-        }
+        },
     ) {
-        composable<RouteA> {
-            RouteAScreen(navController)
-        }
+        composable<Profile> { navBackStackEntry: NavBackStackEntry ->
+            val profile = navBackStackEntry.toRoute<Profile>()
 
-        composable<RouteB> {
-            RouteBScreen(navController)
-        }
+            println("Profile: $profile")
 
-        composable<RouteC> {
-            RouteCScreen(navController)
-        }
-
-        composable<RouteD> {
-            RouteDScreen(navController)
+            RouteScreen(
+                profile = profile,
+                navController = navController
+            )
         }
     }
-}
-
-@Composable
-internal fun RouteAScreen(navController: NavController) {
-    RouteScreen(
-        modifier = Modifier.background(Color.White),
-        title = "RouteAScreen",
-        navController = navController
-    )
-}
-
-@Composable
-internal fun RouteBScreen(navController: NavController) {
-    RouteScreen(
-        modifier = Modifier.background(Color.Cyan),
-        title = "RouteBScreen",
-        navController = navController
-    )
-}
-
-@Composable
-internal fun RouteCScreen(navController: NavController) {
-    RouteScreen(
-        modifier = Modifier.background(Color.Yellow),
-        title = "RouteCScreen",
-        navController = navController
-    )
-}
-
-@Composable
-internal fun RouteDScreen(navController: NavController) {
-    RouteScreen(
-        modifier = Modifier.background(Color.Green),
-        title = "RouteDScreen",
-        navController = navController
-    )
 }
 
 @SuppressLint("RestrictedApi")
 @Composable
 private fun RouteScreen(
     modifier: Modifier = Modifier,
-    title: String,
+    profile: Profile,
     navController: NavController,
 ) {
 
-    var popUpToRoute by remember { mutableStateOf<Any?>(null) }
+    var text by rememberSaveable {
+        mutableStateOf(profile.id)
+    }
+
+    val selectedProfile by remember {
+        derivedStateOf {
+            Profile(text)
+        }
+    }
+
+    var popUpToRoute by rememberSaveable { mutableStateOf<Any?>(null) }
 
     var popUpToInclusive by rememberSaveable {
         mutableStateOf(false)
@@ -153,28 +136,49 @@ private fun RouteScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = title,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+        TopAppBar(
+            modifier = Modifier.fillMaxWidth(),
+            title = {
+                Text(
+                    text = profile.id,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = {
+                        // 🔥🔥If Profile with id exists in back stack navigates back to it
+                        navController.popBackStack(
+                            route = selectedProfile,
+                            inclusive = false
+                        )
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Sharp.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            }
         )
 
-        ExposedSelectionMenu(title = "PopUpTo",
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = text,
+            onValueChange = { text = it }
+        )
+
+        ExposedSelectionMenu(title = "navigate PopUpTo",
             index = when (popUpToRoute) {
                 null -> 0
-                RouteA -> 1
-                RouteB -> 2
-                RouteC -> 3
-                else -> 4
+                else -> 1
             },
-            options = listOf("no popUpTo", "RouteA", "RouteB", "RouteC", "RouteD"),
+            options = listOf("no popUpTo", "Profile"),
             onSelected = {
                 popUpToRoute = when (it) {
                     0 -> null
-                    1 -> RouteA
-                    2 -> RouteB
-                    3 -> RouteC
-                    else -> RouteD
+                    else -> selectedProfile
                 }
             }
         )
@@ -198,41 +202,43 @@ private fun RouteScreen(
             }
         }
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteA",
-            targetRoute = RouteA,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+        Spacer(Modifier.width(16.dp))
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteB",
-            targetRoute = RouteB,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                /*
+                 🔥Attempts to pop the controller's back stack. Analogous to when the user presses
+                 the system Back button when the associated navigation host has focus.
+                 */
+                navController.popBackStack()
+            }
+        ) {
+            Text("Pop Back Stack")
+        }
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteC",
-            targetRoute = RouteC,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+        Spacer(Modifier.width(16.dp))
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteD",
-            targetRoute = RouteD,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                navController.navigate(
+                    route = selectedProfile
+                ) {
+                    popUpToRoute?.let {
+                        popUpTo(
+                            route = it
+                        ) {
+                            inclusive = popUpToInclusive
+                        }
+                    }
+
+                    launchSingleTop = isSingleTop
+                }
+            }
+        ) {
+            Text("Navigate $selectedProfile")
+        }
 
         val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
         val packageName = LocalContext.current.packageName
@@ -243,7 +249,7 @@ private fun RouteScreen(
         ) {
 
             // Don't do looped operations in actual code, it's for demonstration
-            items(items = currentBackStack.reversed()) {
+            items(items = currentBackStack.reversed()) { backStackEntry ->
                 Row(
                     modifier = Modifier
                         .shadow(4.dp, RoundedCornerShape(8.dp))
@@ -251,82 +257,41 @@ private fun RouteScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
+
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text = it.destination.route
+                        text = backStackEntry.destination.route
                             ?.replace("$packageName.", "")
                             ?.replace(
                                 "BottomNavigationRoute.",
                                 ""
-                            ) ?: it.destination.displayName,
+                            ) ?: backStackEntry.destination.displayName,
                         fontSize = 16.sp
                     )
 
-                    val text = if (it.destination is NavGraph) "NavGraph" else "NavDestination"
+                    val destinationText =
+                        if (backStackEntry.destination is NavGraph) "NavGraph" else "NavDestination"
 
+                    val id =
+                        if (backStackEntry.destination.hasRoute(Profile::class) &&
+                            backStackEntry.destination !is NavGraph
+                        ) {
+                            "id=" + backStackEntry.toRoute<Profile>().id
+                        } else ""
+
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = id,
+                        fontSize = 12.sp
+                    )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text = "($text)",
+                        text = "($destinationText)",
                         fontSize = 10.sp
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun NavigationButton(
-    navController: NavController,
-    title: String,
-    targetRoute: Any,
-    popUpToRoute: Any? = null,
-    popUpToInclusive: Boolean,
-    singleTop: Boolean,
-) {
-    Button(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = {
-            navController.navigate(
-                route = targetRoute
-            ) {
-                popUpToRoute?.let {
-                    popUpTo(
-                        route = it
-                    ) {
-                        inclusive = popUpToInclusive
-                    }
-                }
-
-                launchSingleTop = singleTop
-            }
-        }
-    ) {
-        Text("Navigate to $title")
-    }
-}
-
-@Composable
-private fun CheckBoxWithText(
-    modifier: Modifier = Modifier,
-    title: String,
-    enabled: Boolean = true,
-    checked: Boolean,
-    onCheckChange: (Boolean) -> Unit,
-) {
-    Row(
-        modifier = modifier
-            .clickable(
-                enabled = enabled
-            ) {
-                onCheckChange(checked.not())
-            }
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(checked = checked, onCheckedChange = null, enabled = enabled)
-        Spacer(Modifier.width(16.dp))
-        Text(title)
     }
 }

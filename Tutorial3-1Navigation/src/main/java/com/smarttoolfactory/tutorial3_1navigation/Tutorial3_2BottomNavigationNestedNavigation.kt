@@ -188,8 +188,10 @@ private fun MainContainer(
                                 restoreState = true
 
                                 // Pop up backstack to the first destination and save state.
-                                // This makes going back
-                                // to the start destination when pressing back in any other bottom tab.
+
+                                // Then restore any previous back stack state associated with
+                                // the item.route destination.
+                                // Finally navigate to the item.route destination.
                                 popUpTo(findStartDestination(nestedNavController.graph).id) {
                                     saveState = true
                                 }

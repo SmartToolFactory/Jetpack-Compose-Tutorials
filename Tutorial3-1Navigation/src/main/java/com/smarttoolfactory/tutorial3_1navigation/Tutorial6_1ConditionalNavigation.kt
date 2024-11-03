@@ -534,19 +534,20 @@ private fun RegisterScreen(
     goToHomeScreen: () -> Unit,
 ) {
 
-    var email by remember {
-        mutableStateOf("")
-    }
-
     LaunchedEffect(registerViewModel.loggedIn) {
         if (registerViewModel.loggedIn) {
             goToHomeScreen()
         }
     }
 
-    var password by remember {
-        mutableStateOf("")
+    var email by remember {
+        mutableStateOf("email")
     }
+
+    var password by remember {
+        mutableStateOf("password")
+    }
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
