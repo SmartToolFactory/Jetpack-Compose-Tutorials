@@ -21,7 +21,7 @@ import androidx.navigation.createGraph
 
 @Preview
 @Composable
-fun Tutorial7_1Screen() {
+fun Tutorial8_1Screen() {
     MainContainer()
 }
 

@@ -29,12 +29,13 @@ class MainActivity : ComponentActivity() {
 //                        Tutorial1Screen()
 //                        Tutorial2_1Screen()
 //                        Tutorial3_1Screen()
-                        Tutorial3_2Screen()
+//                        Tutorial3_2Screen()
 //                        Tutorial4_1Screen()
 //                        Tutorial4_2Screen()
 //                        Tutorial5_1Screen()
 //                        Tutorial6_1Screen()
 //                        Tutorial7_1Screen()
+                        Tutorial8_1Screen()
                     }
                 }
             }
