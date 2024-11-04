@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,7 +52,7 @@ import kotlin.reflect.typeOf
 
 @Preview
 @Composable
-fun Tutorial8_1Screen() {
+fun Tutorial7_1Screen() {
 
     val navController = rememberNavController()
 
@@ -121,9 +122,15 @@ private fun MainScren(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Bottom
+        modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
+
+        Text(
+            text = "Main Screen",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.weight(1f))
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = onClick
