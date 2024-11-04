@@ -53,7 +53,7 @@ import androidx.navigation.compose.rememberNavController
 
 @Preview
 @Composable
-fun Tutorial3_1Screen() {
+fun Tutorial3_2Screen() {
     MainContainer()
 }
 

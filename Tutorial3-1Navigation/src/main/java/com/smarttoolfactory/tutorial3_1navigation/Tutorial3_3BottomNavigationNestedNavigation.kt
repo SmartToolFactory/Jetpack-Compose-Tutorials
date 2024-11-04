@@ -66,7 +66,7 @@ import androidx.navigation.toRoute
 @SuppressLint("RestrictedApi")
 @Preview
 @Composable
-fun Tutorial3_2Screen() {
+fun Tutorial3_3Screen() {
     val navController = rememberNavController()
 
     NavHost(
