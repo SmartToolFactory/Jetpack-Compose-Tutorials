@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -185,7 +186,7 @@ private fun RouteScreen(
                 enabled = popUpToRoute != null,
                 checked = popUpToInclusive
             ) {
-                popUpToInclusive = it
+                popUpToInclusive = it && popUpToRoute != null
             }
 
             Spacer(Modifier.width(8.dp))
@@ -198,41 +199,46 @@ private fun RouteScreen(
             }
         }
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteA",
-            targetRoute = RouteA,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+        Row {
+            NavigationButton(
+                navController = navController,
+                title = "RouteA",
+                targetRoute = RouteA,
+                popUpToRoute = popUpToRoute,
+                popUpToInclusive = popUpToInclusive,
+                singleTop = isSingleTop
+            )
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteB",
-            targetRoute = RouteB,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+            NavigationButton(
+                navController = navController,
+                title = "RouteB",
+                targetRoute = RouteB,
+                popUpToRoute = popUpToRoute,
+                popUpToInclusive = popUpToInclusive,
+                singleTop = isSingleTop
+            )
+        }
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteC",
-            targetRoute = RouteC,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+        Row {
 
-        NavigationButton(
-            navController = navController,
-            title = "RouteD",
-            targetRoute = RouteD,
-            popUpToRoute = popUpToRoute,
-            popUpToInclusive = popUpToInclusive,
-            singleTop = isSingleTop
-        )
+            NavigationButton(
+                navController = navController,
+                title = "RouteC",
+                targetRoute = RouteC,
+                popUpToRoute = popUpToRoute,
+                popUpToInclusive = popUpToInclusive,
+                singleTop = isSingleTop
+            )
+
+            NavigationButton(
+                navController = navController,
+                title = "RouteD",
+                targetRoute = RouteD,
+                popUpToRoute = popUpToRoute,
+                popUpToInclusive = popUpToInclusive,
+                singleTop = isSingleTop
+            )
+        }
 
         val currentBackStack: List<NavBackStackEntry> by navController.currentBackStack.collectAsState()
         val packageName = LocalContext.current.packageName
@@ -277,7 +283,7 @@ private fun RouteScreen(
 }
 
 @Composable
-internal fun NavigationButton(
+private fun RowScope.NavigationButton(
     navController: NavController,
     title: String,
     targetRoute: Any,
@@ -286,7 +292,7 @@ internal fun NavigationButton(
     singleTop: Boolean,
 ) {
     Button(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.weight(1f),
         onClick = {
             navController.navigate(
                 route = targetRoute

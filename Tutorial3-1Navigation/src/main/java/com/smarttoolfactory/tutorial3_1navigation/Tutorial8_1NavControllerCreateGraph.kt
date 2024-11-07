@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
+import androidx.navigation.navDeepLink
 
 @Preview
 @Composable
@@ -78,11 +79,19 @@ private fun NavGraphBuilder.addNavGraph(navController: NavController) {
         RouteBScreen(navController)
     }
 
-    composable<RouteC> {
+    composable<RouteC>(
+        deepLinks = listOf(
+            navDeepLink<RouteC>(basePath = "$uri/routeC")
+        )
+    ) {
         RouteCScreen(navController)
     }
 
-    composable<RouteD> {
+    composable<RouteD>(
+        deepLinks = listOf(
+            navDeepLink<RouteC>(basePath = "$uri/routeD")
+        )
+    ) {
         RouteDScreen(navController)
     }
 }
