@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,16 +33,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 @Preview
 @Composable
-fun Tutorial3_1Screen() {
+fun Tutorial5_2Screen() {
 
     /*
         In this example use saveState to save back stack state
@@ -52,6 +57,9 @@ fun Tutorial3_1Screen() {
         If you navigate from C->D with popUpTo(B) back stack is saved with
         B key. Then if you go from D to B that state is restored
         if restoreState is true
+
+        Unlike previous MultiBackStack example this time ViewModels are
+        used to store counter values
      */
     val navController = rememberNavController()
     NavHost(
@@ -84,56 +92,107 @@ fun Tutorial3_1Screen() {
         }
     ) {
         composable<RouteA> {
-            DestAScreen(navController)
+            val viewModel = hiltViewModel<RouteAViewModel>()
+            DestAScreen(
+                viewModel = viewModel,
+                navController = navController
+            )
         }
 
         composable<RouteB> {
-            DestBScreen(navController)
+            val viewModel = hiltViewModel<RouteBViewModel>()
+
+            DestBScreen(
+                viewModel = viewModel,
+                navController = navController
+            )
         }
 
         composable<RouteC> {
-            DestCScreen(navController)
+            val viewModel = hiltViewModel<RouteCViewModel>()
+            DestCScreen(
+                viewModel = viewModel,
+                navController = navController
+            )
         }
 
         composable<RouteD> {
-            DestDScreen(navController)
+            val viewModel = hiltViewModel<RouteDViewModel>()
+            DestDScreen(
+                viewModel = viewModel,
+                navController = navController
+            )
         }
     }
 }
 
 @Composable
-private fun DestAScreen(navController: NavController) {
+private fun DestAScreen(
+    viewModel: RouteAViewModel,
+    navController: NavController,
+) {
+    val counter by viewModel.counterState.collectAsStateWithLifecycle()
+
     RouteScreen(
         modifier = Modifier.background(Color.White),
         title = "DestAScreen",
-        navController = navController
+        navController = navController,
+        counter = counter,
+        onIncrease = {
+            viewModel.counterState.value++
+        }
     )
 }
 
 @Composable
-private fun DestBScreen(navController: NavController) {
+private fun DestBScreen(
+    viewModel: RouteBViewModel,
+    navController: NavController,
+) {
+    val counter by viewModel.counterState.collectAsStateWithLifecycle()
+
     RouteScreen(
         modifier = Modifier.background(Color.Cyan),
         title = "DestBScreen",
-        navController = navController
+        navController = navController,
+        counter = counter,
+        onIncrease = {
+            viewModel.counterState.value++
+        }
     )
 }
 
 @Composable
-private fun DestCScreen(navController: NavController) {
+private fun DestCScreen(
+    viewModel: RouteCViewModel,
+    navController: NavController,
+) {
+    val counter by viewModel.counterState.collectAsStateWithLifecycle()
     RouteScreen(
         modifier = Modifier.background(Color.Yellow),
         title = "DestCScreen",
-        navController = navController
+        navController = navController,
+        counter = counter,
+        onIncrease = {
+            viewModel.counterState.value++
+        }
     )
 }
 
 @Composable
-private fun DestDScreen(navController: NavController) {
+private fun DestDScreen(
+    viewModel: RouteDViewModel,
+    navController: NavController,
+) {
+    val counter by viewModel.counterState.collectAsStateWithLifecycle()
     RouteScreen(
         modifier = Modifier.background(Color.Green),
         title = "DestDScreen",
-        navController = navController
+        navController = navController,
+        counter = counter,
+        onIncrease = {
+            viewModel.counterState.value++
+        }
     )
 }
 
@@ -144,7 +203,10 @@ private fun RouteScreen(
     modifier: Modifier = Modifier,
     title: String,
     navController: NavController,
-) {
+    counter: Int,
+    onIncrease: () -> Unit,
+
+    ) {
 
     var popUpToRoute by remember { mutableStateOf<Any?>(null) }
 
@@ -164,9 +226,6 @@ private fun RouteScreen(
         mutableStateOf(false)
     }
 
-    var counter by rememberSaveable {
-        mutableIntStateOf(0)
-    }
 
     Column(
         modifier = modifier
@@ -242,7 +301,7 @@ private fun RouteScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                counter++
+                onIncrease()
             }
         ) {
             Text("Counter: $counter")
@@ -377,5 +436,43 @@ private fun RowScope.NavigationButton(
         }
     ) {
         Text("Navigate to $title")
+    }
+}
+
+
+@HiltViewModel
+class RouteAViewModel @Inject constructor() : ViewModel() {
+    val counterState = MutableStateFlow(0)
+
+
+    init {
+        println("RouteAViewModel $this")
+    }
+}
+
+@HiltViewModel
+class RouteBViewModel @Inject constructor() : ViewModel() {
+    val counterState = MutableStateFlow(0)
+
+    init {
+        println("RouteBViewModel $this")
+    }
+}
+
+@HiltViewModel
+class RouteCViewModel @Inject constructor() : ViewModel() {
+    val counterState = MutableStateFlow(0)
+
+    init {
+        println("RouteCViewModel $this")
+    }
+}
+
+@HiltViewModel
+class RouteDViewModel @Inject constructor() : ViewModel() {
+    val counterState = MutableStateFlow(0)
+
+    init {
+        println("RouteDViewModel $this")
     }
 }
