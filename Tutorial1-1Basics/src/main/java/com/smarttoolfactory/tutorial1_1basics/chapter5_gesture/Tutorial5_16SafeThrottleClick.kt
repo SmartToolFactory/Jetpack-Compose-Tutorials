@@ -59,7 +59,14 @@ fun Modifier.throttleClick(
                 pass = pass
             )
 
+            println(
+                "down-> uptimeMillis: ${down.uptimeMillis}, " +
+                        "previous: ${down.previousUptimeMillis}, " +
+                        "diff: ${down.uptimeMillis - down.previousUptimeMillis}"
+            )
+
             val uptimeMillis = down.uptimeMillis
+
 
             val diff = (uptimeMillis - lastDownTime)
 
@@ -67,6 +74,15 @@ fun Modifier.throttleClick(
                 pass = pass
             )
             up?.let {
+                // 🔥if pointer is held change time between previousUptimeMillis and uptimeMillis changes
+                // 🔥up.previousUptimeMillis is equal to down.uptimeMillis if pointer is not moved since
+                //  waitForUpOrCancellation uses awaitPointerEvent to get updates only when pointer is moved
+                println(
+                    "up-> uptimeMillis: ${up.uptimeMillis}, " +
+                            "previous: ${up.previousUptimeMillis}, " +
+                            "diff: ${up.uptimeMillis - up.previousUptimeMillis}"
+                )
+
                 if (diff >= timeout) {
                     onClick()
                     lastDownTime = uptimeMillis
