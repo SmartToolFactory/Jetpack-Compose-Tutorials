@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
@@ -293,7 +294,7 @@ private fun RowScope.NavigationButton(
 ) {
     Button(
         modifier = Modifier.weight(1f),
-        onClick = {
+        onClick = dropUnlessResumed {
             navController.navigate(
                 route = targetRoute
             ) {

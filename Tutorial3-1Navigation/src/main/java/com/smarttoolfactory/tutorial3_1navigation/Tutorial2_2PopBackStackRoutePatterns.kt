@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -147,7 +148,7 @@ private fun RouteScreen(
             },
             navigationIcon = {
                 IconButton(
-                    onClick = {
+                    onClick = dropUnlessResumed {
                         // 🔥🔥If Profile with id exists in back stack navigates back to it
                         navController.popBackStack(
                             route = selectedProfile,
@@ -209,7 +210,7 @@ private fun RouteScreen(
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {
+            onClick = dropUnlessResumed {
                 /*
                  🔥Attempts to pop the controller's back stack. Analogous to when the user presses
                  the system Back button when the associated navigation host has focus.
