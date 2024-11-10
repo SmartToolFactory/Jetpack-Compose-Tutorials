@@ -262,7 +262,8 @@ private fun DetectDragGesturesCycleExample() {
                        id: ${change.id}
                        type: ${change.type}
                        uptimeMillis: ${change.uptimeMillis}
-                       previousUptimeMillis: ${change.previousUptimeMillis}
+                       previousUptimeMillis: ${change.previousUptimeMillis},
+                       diffUpTimeMillis: ${change.uptimeMillis - change.previousUptimeMillis}
                        position: ${change.position},
                        previousPosition: ${change.previousPosition} 
                     """.trimIndent()

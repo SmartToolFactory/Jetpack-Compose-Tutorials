@@ -179,6 +179,8 @@ private fun AwaitPointerEventExample() {
                                     "positionChange(): ${pointerInputChange.positionChange()}\n" +
                                     "positionChangeIgnoreConsumed(): ${pointerInputChange.positionChangeIgnoreConsumed()}\n" +
                                     "uptimeMillis: ${pointerInputChange.uptimeMillis}\n" +
+                                    "previousUptimeMillis: ${pointerInputChange.previousUptimeMillis}\n" +
+                                    "diff: ${pointerInputChange.uptimeMillis - pointerInputChange.previousUptimeMillis}" +
                                     "previousPressed: ${pointerInputChange.previousPressed}"
                         }
 
