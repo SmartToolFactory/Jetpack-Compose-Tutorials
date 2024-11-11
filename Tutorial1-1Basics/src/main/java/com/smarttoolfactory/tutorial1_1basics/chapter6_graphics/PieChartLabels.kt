@@ -77,7 +77,7 @@ private fun PieChartWithText() {
                     textMeasurer.measure(
                         text = "${it.data.toInt()}%",
                         style = TextStyle(
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                     )
@@ -108,7 +108,7 @@ private fun PieChartWithText() {
                     val textMeasureResult = textMeasureResults[index]
                     val textSize = textMeasureResult.size
 
-                    val offset = 20.dp.toPx()
+                    val offset = 10.dp.toPx()
 
                     drawArc(
                         color = chartData.color,
@@ -122,8 +122,10 @@ private fun PieChartWithText() {
 
                     val rect = textMeasureResult.getBoundingBox(0)
 
-                    val cos = cos(startAngle.degreeToRadian)
-                    val sin = sin(startAngle.degreeToRadian)
+                    val adjustedAngle = (startAngle) % 360
+
+                    val cos = cos(adjustedAngle.degreeToRadian)
+                    val sin = sin(adjustedAngle.degreeToRadian)
 
                     val textOffset = getTextOffsets(startAngle, textSize)
                     val textOffsetX = textOffset.x
@@ -174,23 +176,35 @@ private fun getTextOffsets(startAngle: Float, textSize: IntSize): Offset {
 
     when (startAngle) {
         in 0f..90f -> {
-            textOffsetX = 0
+            textOffsetX = if (startAngle < 60) 0
+            else (-textSize.width / 2 * ((startAngle - 60) / 30)).toInt()
+
             textOffsetY = 0
         }
 
         in 90f..180f -> {
-            textOffsetX = -textSize.width
-            textOffsetY = 0
+            textOffsetX = (-textSize.width / 2 - textSize.width / 2 * (startAngle - 90f) / 45).toInt()
+                .coerceAtLeast(-textSize.width)
+
+            textOffsetY = if (startAngle < 135) 0
+            else (-textSize.height / 2 * ((startAngle - 135) / 45)).toInt()
         }
 
         in 180f..270f -> {
-            textOffsetX = -textSize.width
-            textOffsetY = -textSize.height
+            textOffsetX = if (startAngle < 240) -textSize.width
+            else (-textSize.width + textSize.width / 2 * (startAngle - 240) / 30).toInt()
+
+            textOffsetY = if (startAngle < 225) (-textSize.height / 2 * ((startAngle - 135) / 45)).toInt()
+            else -textSize.height
         }
 
         else -> {
-            textOffsetX = 0
-            textOffsetY = -textSize.height
+            textOffsetX =
+                if (startAngle < 315) (-textSize.width / 2 + (textSize.width / 2) * (startAngle - 270) / 45).toInt()
+                else 0
+
+            textOffsetY = if (startAngle < 315) -textSize.height
+            else (-textSize.height + textSize.height * (startAngle - 315) / 45).toInt()
         }
     }
     return Offset(textOffsetX.toFloat(), textOffsetY.toFloat())
