@@ -20,9 +20,7 @@ import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
-import androidx.compose.material.icons.filled.Redo
 import androidx.compose.material.icons.filled.TouchApp
-import androidx.compose.material.icons.filled.Undo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -186,12 +184,11 @@ private fun DrawingApp() {
                 MotionEvent.Move -> {
 
                     if (drawMode != DrawMode.Touch) {
-                        currentPath.quadraticBezierTo(
+                        currentPath.quadraticTo(
                             previousPosition.x,
                             previousPosition.y,
                             (previousPosition.x + currentPosition.x) / 2,
                             (previousPosition.y + currentPosition.y) / 2
-
                         )
                     }
 
@@ -344,7 +341,7 @@ private fun DrawingApp() {
 
                     val lastPath = pathsUndone.last().first
                     val lastPathProperty = pathsUndone.last().second
-                    pathsUndone.removeLast()
+                    pathsUndone.removeAt(pathsUndone.lastIndex)
                     paths.add(Pair(lastPath, lastPathProperty))
                 }
             },
@@ -433,13 +430,13 @@ private fun DrawingPropertiesMenu(
         IconButton(onClick = {
             onUndo()
         }) {
-            Icon(Icons.Filled.Undo, contentDescription = null, tint = Color.LightGray)
+            Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = null, tint = Color.LightGray)
         }
 
         IconButton(onClick = {
             onRedo()
         }) {
-            Icon(Icons.Filled.Redo, contentDescription = null, tint = Color.LightGray)
+            Icon(Icons.AutoMirrored.Filled.Redo, contentDescription = null, tint = Color.LightGray)
         }
     }
 
