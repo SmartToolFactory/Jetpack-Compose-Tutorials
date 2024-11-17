@@ -19,6 +19,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Redo
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.runtime.Composable
