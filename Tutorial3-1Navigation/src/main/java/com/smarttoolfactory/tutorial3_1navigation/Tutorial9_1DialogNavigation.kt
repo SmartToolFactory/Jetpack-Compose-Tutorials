@@ -118,9 +118,6 @@ private fun ValueSetDialog(sharedDialogViewModel: SharedDialogViewModel) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         val value = sharedDialogViewModel.counter
-
-
-
         Text(text = "Dialog", fontSize = 36.sp)
         Text("Value: $value")
 
