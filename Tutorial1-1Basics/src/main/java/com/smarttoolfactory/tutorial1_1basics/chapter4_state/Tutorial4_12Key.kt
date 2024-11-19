@@ -140,6 +140,10 @@ private fun StaggeredList(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             itemList.forEachIndexed { index, it ->
+
+                // 🔥 These keys are unique for items for every filtering
+                // without filter if items exist from previous filtering
+                // they don't leave recomposition
                 key(it.id + filter) {
 
                     var visible by remember {
