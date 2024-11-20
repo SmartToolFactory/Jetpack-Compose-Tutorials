@@ -88,7 +88,7 @@ private fun TutorialContent() {
 @Composable
 private fun CustomColumn(
     modifier: Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Layout(
         modifier = modifier,
@@ -162,7 +162,7 @@ private fun Chip(modifier: Modifier = Modifier, text: String) {
 @Composable
 fun ChipStaggeredGrid(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
 
     Layout(
@@ -190,7 +190,13 @@ fun ChipStaggeredGrid(
 
             // Measure each child
             val placeable =
-                measurable.measure(constraints.copy(minWidth = 0, maxWidth = Constraints.Infinity))
+                measurable.measure(
+                    constraints.copy(
+                        minWidth = 0,
+                        minHeight = 0,
+//                        maxWidth = Constraints.Infinity
+                    )
+                )
 
             val placeableWidth = placeable.width
             val placeableHeight = placeable.height
@@ -266,6 +272,5 @@ fun ChipStaggeredGrid(
 
 private val topics = listOf(
     "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
-    "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
-    "Religion", "Social sciences", "Technology", "TV", "Writing"
+    "Design"
 )
