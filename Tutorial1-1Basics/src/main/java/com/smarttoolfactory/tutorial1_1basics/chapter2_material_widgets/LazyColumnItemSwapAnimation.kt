@@ -4,7 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
@@ -29,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +58,6 @@ private class MyData(val uuid: String, val value: String)
 
 // TODO Fix increasing swap animations
 @Preview
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AnimatedList() {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -92,7 +91,7 @@ private fun AnimatedList() {
                 Row(
                     modifier = Modifier
 
-                        .animateItemPlacement(
+                        .animateItem(
                             tween(durationMillis = duration)
                         )
                         .shadow(1.dp, RoundedCornerShape(8.dp))
@@ -139,7 +138,7 @@ private fun AnimatedList() {
                 0
             }
 
-            animatedSwap(
+            AnimatedSwap(
                 lazyListState = lazyListState,
                 items = items,
                 from = from,
@@ -189,7 +188,7 @@ private fun alternativeAnimate(
     coroutineScope: CoroutineScope,
     lazyListState: LazyListState,
     animatable: Animatable<Int, AnimationVector1D>,
-    items: SnapshotStateList<MyData>
+    items: SnapshotStateList<MyData>,
 ) {
 
     val difference = from - to
@@ -228,15 +227,20 @@ private fun alternativeAnimate(
 }
 
 @Composable
-private fun animatedSwap(
+private fun AnimatedSwap(
     lazyListState: LazyListState,
     items: SnapshotStateList<MyData>,
     from: Int,
     to: Int,
     duration: Int,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
 ) {
 
+    val visibleItems by remember {
+        derivedStateOf {
+            lazyListState.layoutInfo.visibleItemsInfo
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
 
@@ -244,9 +248,6 @@ private fun animatedSwap(
         val increasing = difference < 0
 
         var currentValue: Int = from
-
-        var visibleItems =
-            lazyListState.layoutInfo.visibleItemsInfo
 
         var visibleItemIndices = visibleItems.map { it.index }
 
@@ -262,8 +263,6 @@ private fun animatedSwap(
         }
 
         repeat(abs(difference)) {
-
-
             val temp = currentValue
 
             if (increasing) {
@@ -271,9 +270,6 @@ private fun animatedSwap(
             } else {
                 currentValue--
             }
-
-            visibleItems =
-                lazyListState.layoutInfo.visibleItemsInfo
 
             visibleItemIndices = visibleItems.map { it.index }
 
