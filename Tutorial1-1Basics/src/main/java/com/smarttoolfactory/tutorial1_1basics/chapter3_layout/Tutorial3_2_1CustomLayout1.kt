@@ -156,7 +156,7 @@ private fun Chip(modifier: Modifier = Modifier, text: String) {
 }
 
 /**
- * This layout is a staggered grid which aligns the chip in next row based on maximumh
+ * This layout is a staggered grid which aligns the chip in next row based on maximum
  * height of Chip on previous row
  */
 @Composable
@@ -272,5 +272,6 @@ fun ChipStaggeredGrid(
 
 private val topics = listOf(
     "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
-    "Design"
+    "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
+    "Religion", "Social sciences", "Technology", "TV", "Writing"
 )
