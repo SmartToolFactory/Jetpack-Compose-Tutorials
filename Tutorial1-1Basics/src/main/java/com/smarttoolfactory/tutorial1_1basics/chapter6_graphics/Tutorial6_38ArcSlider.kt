@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -22,9 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -34,7 +34,9 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
+import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,7 +81,7 @@ fun ArcSliderSample() {
                 }
 
                 Text(
-                    text = "Value: ${(value * 100)}",
+                    text = "Value: ${(value * 100).toInt()}",
                     fontSize = 28.sp,
                     modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)
                 )
@@ -123,6 +125,10 @@ fun ArcSlider(
         mutableStateOf(false)
     }
 
+    var trackRect by remember {
+        mutableStateOf(Rect.Zero)
+    }
+
     val measurePolicy = remember {
         MeasurePolicy { measurables, constraints ->
             val strokeWidthPx = strokeWidth.roundToPx()
@@ -138,6 +144,9 @@ fun ArcSlider(
             val thumbWidth = thumbPlaceable.width
             val thumbHeight = thumbPlaceable.height
 
+            // TODO check for infinite constraints
+            // Available width is minimum of max width - thumb width versus max height - half height of thumb at the bottom
+            // and  of half thumb width - stroke width/2
             val availableWidth = (constraints.maxWidth - thumbWidth) / 2
             val availableHeight = (constraints.maxHeight - thumbHeight + strokeWidthPx / 2)
 
@@ -152,18 +161,13 @@ fun ArcSlider(
 
             // radius calculated at the center of stroke width
             val radius = sliderWidth / 2 - strokeWidthPx / 2
-            val centerX = constraints.maxWidth / 2
-            val centerY = sliderHeight + (thumbHeight - strokeWidthPx) / 2
 
-            println(
-                "Constraints: $constraints," +
-                        " sliderWidth: $sliderWidth, sliderHeight: $sliderHeight, " +
-                        "thumbWidth: $thumbWidth, thumbHeight: $thumbHeight\n" +
-                        "radius: $radius, centerX: $centerX, centerY: $centerY"
-            )
+            // Pivot points in bottom center of track for rotating thumb
+            val trackPivotX = constraints.maxWidth / 2
+            val trackPivotY = sliderHeight + (thumbHeight - strokeWidthPx) / 2
 
-            val thumbX = centerX + (-radius) * cos(angle.degreeToRadian)
-            val thumbY = centerY + (-radius) * sin(angle.degreeToRadian)
+            val thumbX = trackPivotX + (-radius) * cos(angle.degreeToRadian)
+            val thumbY = trackPivotY + (-radius) * sin(angle.degreeToRadian)
             thumbPosition = Offset(thumbX, thumbY)
 
             val layoutWidth = constraints.maxWidth
@@ -196,10 +200,10 @@ fun ArcSlider(
             onDrag = { change: PointerInputChange, _: Offset ->
                 if (isTouched) {
                     val touchPosition: Offset = change.position
-                    val radius = size.width / 2
-                    val centerX = radius
 
-                    val centerY = size.height
+                    val centerX = trackRect.bottomCenter.x
+                    val centerY = trackRect.bottomCenter.y
+
                     angle =
                         (
                                 atan2(
@@ -233,15 +237,28 @@ fun ArcSlider(
         )
     }
     Layout(
-        modifier = modifier.border(2.dp, Color.Red),
+        modifier = modifier.then(dragModifier)
+        // These 2 modifiers are for debugging for container bounds and track bounds
+//            .border(2.dp, Color.Red)
+//            .drawWithContent {
+//            drawContent()
+//            drawRect(
+//                color = Color.Cyan,
+//                topLeft = trackRect.topLeft,
+//                size = trackRect.size,
+//                style = Stroke(4.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f)))
+//            )
+//        }
+        ,
         content = {
             Box(
                 modifier = Modifier
                     .layoutId(trackId)
-                    .then(dragModifier)
-
+                    .onPlaced {
+                        trackRect = it.boundsInParent()
+                    }
             ) {
-                Canvas(modifier = Modifier.matchParentSize().border(2.dp, Color.Green)) {
+                Canvas(modifier = Modifier.matchParentSize()) {
                     val strokeWidthPx = strokeWidth.toPx()
 
                     translate(
@@ -272,13 +289,27 @@ fun ArcSlider(
                             useCenter = false
                         )
                     }
+
+                    // line for debugging angle inside canvas
+//                    val lineStrokeWidth = 1.dp.toPx()
+//
+//                    rotate(
+//                        degrees = angle,
+//                        pivot = Offset(center.x, size.height)
+//                    ) {
+//                        drawLine(
+//                            color = Color.Black,
+//                            start = Offset(center.x, size.height),
+//                            end = Offset(0f, size.height),
+//                            strokeWidth = lineStrokeWidth
+//                        )
+//                    }
                 }
             }
 
             Box(modifier = Modifier.layoutId(thumbId)
                 .onSizeChanged {
                     thumbSize = it
-                    println("Thumb size: $thumbSize")
                 }
             ) {
                 thumb()
@@ -296,16 +327,11 @@ private fun Thumb() {
         100f.toDp()
     }
     Box(
-        modifier = Modifier.size(size)
-            .drawWithContent {
-
-                drawContent()
-                drawCircle(
-                    color = Color.Red,
-                    radius = 10f
-                )
-            }
+        modifier = Modifier
+            .border(8.dp, Color.White, CircleShape)
+            .size(size)
             .shadow(4.dp, CircleShape)
-            .background(Color.Blue, CircleShape)
+            .background(Blue400, CircleShape)
+
     )
 }
