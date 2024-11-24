@@ -194,7 +194,7 @@ fun ArcSlider(
             onDragStart = { offset ->
                 if (thumbPosition != Offset.Unspecified && thumbSize != IntSize.Zero) {
                     val radius = thumbSize.width
-                    isTouched = offset.minus(thumbPosition).getDistanceSquared() < radius * radius
+                    isTouched = offset.minus(thumbPosition).getDistanceSquared() < radius / 2 * radius / 2
                 }
             },
             onDrag = { change: PointerInputChange, _: Offset ->
