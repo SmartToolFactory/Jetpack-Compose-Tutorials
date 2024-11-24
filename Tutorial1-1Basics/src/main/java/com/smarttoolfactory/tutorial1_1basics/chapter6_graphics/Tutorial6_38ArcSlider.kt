@@ -218,10 +218,10 @@ fun ArcSlider(
                     if (angle < 0) {
                         angle += 180f
                     } else if (angle < 90) {
-                        // If touch is bottom end set to 180f because it's out of slider bounds
+                        // If touch is in bottom end set to 180f because it's out of slider bounds
                         angle = 180f
                     } else {
-                        // If touch is bottom end set to 0f because it's out of slider bounds
+                        // If touch is in bottom start set to 0f because it's out of slider bounds
                         angle = 0f
                     }
 
