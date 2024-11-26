@@ -1,17 +1,17 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class, ExperimentalAnimationSpecApi::class)
 
 package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
-import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.ArcMode
+import androidx.compose.animation.core.ExperimentalAnimationSpecApi
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,22 +22,23 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomDrawer
-import androidx.compose.material.BottomDrawerValue
-import androidx.compose.material.rememberBottomDrawerState
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,110 +46,59 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.smarttoolfactory.tutorial1_1basics.R
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
 private fun SharedElementsample() {
 
     SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+        ) {
+            composable("home") {
+                BottomSheetImagePicker(
+                    sharedTransitionScope = this@SharedTransitionLayout,
+                    animatedContentScope = this@composable,
+                    onClick = {
+                        navController.navigate("details/$it")
+                    },
+                    onDismiss = {}
+                )
+            }
 
-        var state by remember {
-            mutableStateOf<Screen>(Screen.List)
-        }
-
-        BackHandler(enabled = state != Screen.List) {
-            state = Screen.List
-        }
-
-        SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
-
-            val sharedTransitionScope = this
-
-            AnimatedContent(
-                modifier = Modifier.fillMaxSize(),
-                targetState = state,
-                label = "",
-                transitionSpec = {
-                    ContentTransform(
-                        targetContentEnter = EnterTransition.None,
-                        initialContentExit = ExitTransition.None
+            composable(
+                "details/{item}",
+                arguments = listOf(navArgument("item") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val item = backStackEntry.arguments?.getInt("item") ?: 0
+                Column(
+                    modifier = Modifier.fillMaxSize().background(Color.Black),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(item),
+                        modifier = Modifier
+                            .sharedElement(
+                                state = rememberSharedContentState(key = item),
+                                animatedVisibilityScope = this@composable,
+                            )
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.CenterStart,
+                        contentDescription = null
                     )
-                }
-            ) { screenState ->
-                val animatedVisibilityScope = this
-
-                if (screenState is Screen.List) {
-                    BottomSheetImagePicker(
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedContentScope = animatedVisibilityScope,
-                        onClick = {
-                            state = Screen.Details(it)
-                        },
-                        onDismiss = {}
-                    )
-                } else if (screenState is Screen.Details) {
-                    Column(
-                        modifier = Modifier.fillMaxSize().background(Color.Black),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(screenState.item),
-                            modifier = Modifier
-                                .sharedElement(
-                                    state = rememberSharedContentState(key = screenState.item),
-                                    animatedVisibilityScope = this@AnimatedContent,
-                                )
-                                .fillMaxWidth(),
-                            contentScale = ContentScale.Crop,
-                            alignment = Alignment.CenterStart,
-                            contentDescription = null
-                        )
-                    }
                 }
             }
         }
-
-//        val navController = rememberNavController()
-//        NavHost(
-//            navController = navController,
-//            startDestination = "home",
-//        ) {
-//            composable("home") {
-//                BottomSheetImagePicker(
-//                    sharedTransitionScope = this@SharedTransitionLayout,
-//                    animatedContentScope = this@composable,
-//                    onClick = {
-//                        navController.navigate("details/$it")
-//                    },
-//                    onDismiss = {}
-//                )
-//            }
-//
-//            composable(
-//                "details/{item}",
-//                arguments = listOf(navArgument("item") { type = NavType.IntType })
-//            ) { backStackEntry ->
-//                val item = backStackEntry.arguments?.getInt("item") ?: 0
-//                Column(
-//                    modifier = Modifier.fillMaxSize().background(Color.Black),
-//                    verticalArrangement = Arrangement.Center
-//                ) {
-//                    Image(
-//                        painter = painterResource(item),
-//                        modifier = Modifier
-//                            .sharedElement(
-//                                state = rememberSharedContentState(key = item),
-//                                animatedVisibilityScope = this@composable,
-//                            )
-//                            .fillMaxWidth(),
-//                        contentScale = ContentScale.Crop,
-//                        alignment = Alignment.CenterStart,
-//                        contentDescription = null
-//                    )
-//                }
-//            }
-//        }
     }
 }
 
@@ -174,28 +124,49 @@ private fun BottomSheetImagePicker(
         )
     }
 
-    val drawerState = rememberBottomDrawerState(
-        initialValue = BottomDrawerValue.Open
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false
+        )
     )
 
-    BottomDrawer(
+    BottomSheetScaffold(
         modifier = Modifier.fillMaxSize(),
-        drawerState = drawerState,
+        scaffoldState = scaffoldState,
+        sheetPeekHeight = 400.dp,
         content = {
-            Box(modifier = Modifier.fillMaxSize())
-        },
-        drawerShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        drawerContent = {
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+
+            val bottomState = scaffoldState.bottomSheetState
+            val coroutineScope = rememberCoroutineScope()
+
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp)
+            ) {
+
+                Spacer(Modifier.weight(1f))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        coroutineScope.launch {
+                            bottomState.partialExpand()
+                        }
+                    }
+                ) {
+                    Text("Expand")
+                }
+            }
+            if (bottomState.isVisible) {
                 Box(
                     modifier = Modifier
-                        .size(48.dp, 12.dp)
-                        .background(Color.LightGray, RoundedCornerShape(16.dp))
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = .3f))
                 )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
 
+            }
+        },
+        sheetContent = {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3), // 3 columns
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -257,7 +228,8 @@ private fun ImageItem(
         Image(
             modifier = Modifier.sharedElement(
                 state = rememberSharedContentState(key = uri),
-                animatedVisibilityScope = animatedContentScope
+                animatedVisibilityScope = animatedContentScope,
+                boundsTransform = gridBoundsTransform
             ).clickable {
                 onClick(uri)
             },
@@ -265,5 +237,13 @@ private fun ImageItem(
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
+    }
+}
+
+val gridBoundsTransform = BoundsTransform { initialBounds, targetBounds ->
+    keyframes {
+        durationMillis = 500
+        initialBounds at 0 using ArcMode.ArcBelow using FastOutSlowInEasing
+        targetBounds at 500
     }
 }
