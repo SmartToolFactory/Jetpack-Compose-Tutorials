@@ -14,14 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -31,6 +38,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -45,7 +53,194 @@ fun Tutorial6_33Screen() {
 
 @Composable
 private fun TutorialContent() {
-    StoppableInfiniteAnimationSample()
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+    ) {
+        InfiniteRotationInterruptionSample()
+        Spacer(Modifier.height(16.dp))
+        StoppableInfiniteAnimationSample()
+    }
+}
+
+@Preview
+@Composable
+fun AnimatableIntteruptionSample() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        val animatable = remember {
+            Animatable(0f)
+        }
+
+        val coroutineScope = rememberCoroutineScope()
+
+        Canvas(
+            modifier = Modifier.size(100.dp).rotate(animatable.value)
+                .border(2.dp, Color.Green, CircleShape)
+        ) {
+
+            drawLine(
+                start = center,
+                end = Offset(center.x, 0f),
+                color = Color.Red,
+                strokeWidth = 4.dp.toPx()
+            )
+        }
+
+        Text(
+            "animatable2: ${animatable.value.toInt()}\n"
+        )
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                coroutineScope.launch {
+                    try {
+                        val result = animatable.animateTo(
+                            targetValue = 360f,
+                            animationSpec = tween(durationMillis = 4000, easing = LinearEasing)
+                        )
+
+                        println("Result: $result")
+                    } catch (e: CancellationException) {
+                        println("Exception: ${e.message}")
+                    }
+
+                }
+            }
+        ) {
+            Text("Animate to 360")
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                coroutineScope.launch {
+                    animatable.snapTo(350f)
+                }
+            }
+        ) {
+            Text("Snap to 350")
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                coroutineScope.launch {
+                    animatable.snapTo(0f)
+                }
+            }
+        ) {
+            Text("Snap to 0")
+        }
+    }
+}
+
+@Preview
+@Composable
+fun InfiniteRotationInterruptionSample() {
+
+    var animationDuration by remember { mutableIntStateOf(2000) }
+
+    val animatable = remember {
+        Animatable(0f)
+    }
+
+    val animatable2 = remember {
+        Animatable(0f)
+    }
+
+    LaunchedEffect(animationDuration) {
+        while (isActive) {
+            try {
+                animatable.animateTo(
+                    targetValue = 360f,
+                    animationSpec = tween(animationDuration, easing = LinearEasing)
+                )
+            } catch (e: CancellationException) {
+                println("Animation canceled with: $e")
+            }
+
+            if (animatable.value >= 360f) {
+                animatable.snapTo(targetValue = 0f)
+            }
+        }
+    }
+
+    LaunchedEffect(animationDuration) {
+        while (isActive) {
+            val currentValue = animatable2.value
+            try {
+                animatable2.animateTo(
+                    targetValue = 360f,
+                    animationSpec = tween((animationDuration * (360f - currentValue) / 360f).toInt(), easing = LinearEasing)
+                )
+
+            } catch (e: CancellationException) {
+                println("Animation2 canceled with: $e")
+            }
+
+            if (animatable2.value >= 360f) {
+                animatable2.snapTo(targetValue = 0f)
+            }
+        }
+    }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Text("Default Animatable Behaviour", fontSize = 24.sp)
+        Canvas(
+            modifier = Modifier.size(100.dp).rotate(animatable.value)
+                .border(2.dp, Color.Green, CircleShape)
+        ) {
+
+            drawLine(
+                start = center,
+                end = Offset(center.x, 0f),
+                color = Color.Red,
+                strokeWidth = 4.dp.toPx()
+            )
+        }
+
+        Text(
+            "animatable2: ${animatable.value.toInt()}\n" +
+                    "animationDuration: $animationDuration"
+        )
+
+        Text("Adjust duration after Interruption", fontSize = 24.sp)
+
+        Canvas(
+            modifier = Modifier.size(100.dp).rotate(animatable2.value)
+                .border(2.dp, Color.Green, CircleShape)
+        ) {
+
+            drawLine(
+                start = center,
+                end = Offset(center.x, 0f),
+                color = Color.Red,
+                strokeWidth = 4.dp.toPx()
+            )
+        }
+
+        Text(
+            "animatable: ${animatable2.value.toInt()}\n" +
+                    "animationDuration: $animationDuration"
+        )
+
+        Button(
+            modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+            onClick = {
+                animationDuration += 4000
+            }
+        ) {
+            Text("Change duration")
+        }
+    }
 }
 
 @Preview
@@ -64,6 +259,9 @@ private fun StoppableInfiniteAnimationSample() {
         modifier = Modifier.fillMaxSize()
     ) {
 
+
+        Text("Infinite Stoppable Animatable", fontSize = 24.sp)
+
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -72,8 +270,9 @@ private fun StoppableInfiniteAnimationSample() {
             Text("Text1")
             Column {
                 Canvas(
-                    modifier = Modifier.size(100.dp).rotate(rotateAnimationState.angle)
-                        .border(2.dp, Color.Green)
+                    modifier = Modifier.size(100.dp)
+                        .rotate(rotateAnimationState.angle)
+                        .border(2.dp, Color.Green, CircleShape)
                 ) {
 
                     drawLine(
@@ -134,7 +333,6 @@ class RotateAnimationState(
         get() = animatable.value
 
     private val animatable = Animatable(0f)
-    private val durationPerAngle = duration / 360f
 
     var rotationStatus: RotationStatus = RotationStatus.Idle
 
@@ -167,10 +365,10 @@ class RotateAnimationState(
             coroutineScope.launch {
                 rotationStatus = RotationStatus.Stopping
                 val currentValue = animatable.value
+                val durationPerAngle = duration / 360f
                 // Duration depends on how far current angle is to 360f
                 // total duration is duration per angle multiplied with total angles to rotate
                 val durationToZero = (durationPerAngle * (360 - currentValue)).toInt()
-                animatable.snapTo(currentValue)
                 animatable.animateTo(
                     targetValue = 360f,
                     tween(
