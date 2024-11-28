@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -28,14 +30,18 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -64,128 +70,151 @@ private sealed class AnimationScreen {
 @Composable
 fun SharedElementsample2() {
 
-    BottomSheetImagePicker(
-        onDismiss = {}
-    )
+    BottomSheetImagePicker()
 }
 
 @Composable
-fun BottomSheetImagePicker(
-    onDismiss: () -> Unit,
-) {
+fun BottomSheetImagePicker() {
 
     var state by remember {
         mutableStateOf<AnimationScreen>(AnimationScreen.List)
     }
 
-    ModalBottomSheet(
-        modifier = Modifier.fillMaxSize().systemBarsPadding(),
-        onDismissRequest = onDismiss
+    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    // App Content
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
 
-        BottomSheetPickerContent { uri, rect ->
-            state = AnimationScreen.Details(uri, rect)
+        Spacer(Modifier.weight(1f))
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                openBottomSheet = openBottomSheet.not()
+            }
+        ) {
+            Text("Expand")
         }
+    }
 
-        if (state is AnimationScreen.Details) {
-            BasicAlertDialog(
-                modifier = Modifier.fillMaxSize(),
-                onDismissRequest = {
-                    state = AnimationScreen.List
-                },
-                properties = DialogProperties(usePlatformDefaultWidth = false)
-            ) {
-
-                var visible by remember {
-                    mutableStateOf(false)
-                }
-
-                var expanded by remember {
-                    mutableStateOf(false)
-                }
-
-                val dispatcher = LocalOnBackPressedDispatcherOwner.current
-
-                BackHandler(visible) {
-                    visible = false
-                }
-
-                SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
-
-                    LaunchedEffect(Unit) {
-                        awaitFrame()
-                        visible = true
-                    }
-
-                    AnimatedContent(
-                        modifier = Modifier.fillMaxSize(),
-                        targetState = visible,
-                        label = "",
-                    ) { visibleState ->
-
-                        if (expanded.not()) {
-                            expanded = visibleState && isTransitionActive.not()
-                        }
-
-                        val item = (state as? AnimationScreen.Details)?.item ?: R.drawable.landscape2
-                        val rect = (state as? AnimationScreen.Details)?.rect ?: Rect.Zero
-
-                        if (visibleState) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(item),
-                                    modifier = Modifier
-                                        .sharedElement(
-                                            state = rememberSharedContentState(key = item),
-                                            animatedVisibilityScope = this@AnimatedContent,
-                                        )
-                                        .fillMaxWidth(),
-                                    contentScale = ContentScale.Crop,
-                                    contentDescription = null
-                                )
-                            }
-                        } else {
-
-                            LaunchedEffect(expanded, isTransitionActive) {
-                                if (expanded && isTransitionActive.not()) {
-                                    dispatcher?.onBackPressedDispatcher?.onBackPressed()
-                                }
-                            }
-
-                            Box(modifier = Modifier.fillMaxSize()) {
-                                val density = LocalDensity.current
-                                val width: Dp
-                                val height: Dp
-
-                                with(density) {
-                                    width = rect.width.toDp()
-                                    height = rect.height.toDp()
-                                }
-                                Image(
-                                    painter = painterResource(item),
-                                    modifier = Modifier
-                                        .offset {
-                                            rect.topLeft.round()
-                                        }
-                                        .size(width, height)
-                                        .sharedElement(
-                                            state = rememberSharedContentState(key = item),
-                                            animatedVisibilityScope = this@AnimatedContent,
-                                        ),
-                                    contentScale = ContentScale.Crop,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    }
-                }
-
+    if (openBottomSheet) {
+        ModalBottomSheet(
+            sheetState = bottomSheetState,
+            modifier = Modifier.fillMaxSize().systemBarsPadding(),
+            onDismissRequest = {
+                openBottomSheet = false
+            }
+        ) {
+            BottomSheetPickerContent { uri, rect ->
+                state = AnimationScreen.Details(uri, rect)
             }
         }
     }
+
+    if (state is AnimationScreen.Details) {
+        BasicAlertDialog(
+            modifier = Modifier.fillMaxSize().background(Color.Black),
+            onDismissRequest = {
+                state = AnimationScreen.List
+            },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+
+            var visible by remember {
+                mutableStateOf(false)
+            }
+
+            var expanded by remember {
+                mutableStateOf(false)
+            }
+
+            val dispatcher = LocalOnBackPressedDispatcherOwner.current
+
+            BackHandler(visible) {
+                visible = false
+            }
+
+            SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+
+                LaunchedEffect(Unit) {
+                    awaitFrame()
+                    visible = true
+                }
+
+                AnimatedContent(
+                    modifier = Modifier.fillMaxSize(),
+                    targetState = visible,
+                    label = "",
+                ) { visibleState ->
+
+                    if (expanded.not()) {
+                        expanded = visibleState && isTransitionActive.not()
+                    }
+
+                    val item = (state as? AnimationScreen.Details)?.item ?: R.drawable.landscape2
+                    val rect = (state as? AnimationScreen.Details)?.rect ?: Rect.Zero
+
+                    if (visibleState) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(item),
+                                modifier = Modifier
+                                    .sharedElement(
+                                        state = rememberSharedContentState(key = item),
+                                        animatedVisibilityScope = this@AnimatedContent,
+                                        boundsTransform = gridBoundsTransform
+                                    )
+                                    .fillMaxWidth(),
+                                contentScale = ContentScale.Crop,
+                                contentDescription = null
+                            )
+                        }
+                    } else {
+
+                        LaunchedEffect(expanded, isTransitionActive) {
+                            if (expanded && isTransitionActive.not()) {
+                                dispatcher?.onBackPressedDispatcher?.onBackPressed()
+                            }
+                        }
+
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            val density = LocalDensity.current
+                            val width: Dp
+                            val height: Dp
+
+                            with(density) {
+                                width = rect.width.toDp()
+                                height = rect.height.toDp()
+                            }
+                            Image(
+                                painter = painterResource(item),
+                                modifier = Modifier
+                                    .offset {
+                                        rect.topLeft.round()
+                                    }
+                                    .size(width, height)
+                                    .sharedElement(
+                                        state = rememberSharedContentState(key = item),
+                                        animatedVisibilityScope = this@AnimatedContent,
+                                        boundsTransform = gridBoundsTransform
+                                    ),
+                                contentScale = ContentScale.Crop,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
 }
 
 @Composable
