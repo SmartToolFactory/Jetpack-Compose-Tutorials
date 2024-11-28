@@ -90,6 +90,7 @@ private fun SharedElementsample() {
                             .sharedElement(
                                 state = rememberSharedContentState(key = item),
                                 animatedVisibilityScope = this@composable,
+                                boundsTransform = gridBoundsTransform
                             )
                             .fillMaxWidth(),
                         contentScale = ContentScale.Crop,

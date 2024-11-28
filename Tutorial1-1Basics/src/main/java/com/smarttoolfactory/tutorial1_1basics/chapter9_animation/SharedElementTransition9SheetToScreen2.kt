@@ -2,6 +2,8 @@
 
 package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -13,10 +15,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -34,18 +38,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.DialogProperties
 import com.smarttoolfactory.tutorial1_1basics.R
 import kotlinx.coroutines.android.awaitFrame
@@ -57,7 +62,7 @@ private sealed class AnimationScreen {
 
 @Preview
 @Composable
-private fun SharedElementsample2() {
+fun SharedElementsample2() {
 
     BottomSheetImagePicker(
         onDismiss = {}
@@ -74,95 +79,110 @@ fun BottomSheetImagePicker(
     }
 
     ModalBottomSheet(
-        modifier = Modifier
-            .systemBarsPadding()
-            .graphicsLayer {
-                alpha = if (state is AnimationScreen.List) 1f else 0f
-            },
+        modifier = Modifier.fillMaxSize().systemBarsPadding(),
         onDismissRequest = onDismiss
     ) {
 
-        if (state is AnimationScreen.List) {
-            BottomSheetPickerContent { uri, rect ->
-                state = AnimationScreen.Details(uri, rect)
-            }
+        BottomSheetPickerContent { uri, rect ->
+            state = AnimationScreen.Details(uri, rect)
+        }
 
-        } else if (state is AnimationScreen.Details) {
+        if (state is AnimationScreen.Details) {
             BasicAlertDialog(
+                modifier = Modifier.fillMaxSize(),
                 onDismissRequest = {
                     state = AnimationScreen.List
                 },
                 properties = DialogProperties(usePlatformDefaultWidth = false)
             ) {
 
-                Box(modifier = Modifier.fillMaxSize().background(Color.Black).systemBarsPadding()) {
+                var visible by remember {
+                    mutableStateOf(false)
+                }
 
-                    SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+                var expanded by remember {
+                    mutableStateOf(false)
+                }
 
-                        var visible by remember {
-                            mutableStateOf(false)
+                val dispatcher = LocalOnBackPressedDispatcherOwner.current
+
+                BackHandler(visible) {
+                    visible = false
+                }
+
+                SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+
+                    LaunchedEffect(Unit) {
+                        awaitFrame()
+                        visible = true
+                    }
+
+                    AnimatedContent(
+                        modifier = Modifier.fillMaxSize(),
+                        targetState = visible,
+                        label = "",
+                    ) { visibleState ->
+
+                        if (expanded.not()) {
+                            expanded = visibleState && isTransitionActive.not()
                         }
 
-                        LaunchedEffect(Unit) {
-                            awaitFrame()
-                            visible = true
-                        }
+                        val item = (state as? AnimationScreen.Details)?.item ?: R.drawable.landscape2
+                        val rect = (state as? AnimationScreen.Details)?.rect ?: Rect.Zero
 
-                        AnimatedContent(
-                            modifier = Modifier.fillMaxSize(),
-                            targetState = visible,
-                            label = "",
-                        ) { screenState ->
+                        if (visibleState) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(item),
+                                    modifier = Modifier
+                                        .sharedElement(
+                                            state = rememberSharedContentState(key = item),
+                                            animatedVisibilityScope = this@AnimatedContent,
+                                        )
+                                        .fillMaxWidth(),
+                                    contentScale = ContentScale.Crop,
+                                    contentDescription = null
+                                )
+                            }
+                        } else {
 
-                            val item = (state as? AnimationScreen.Details)?.item ?: R.drawable.landscape2
-                            val rect = (state as? AnimationScreen.Details)?.rect ?: Rect.Zero
-
-                            if (screenState) {
-                                Column(
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Image(
-                                        painter = painterResource(item),
-                                        modifier = Modifier
-                                            .sharedElement(
-                                                state = rememberSharedContentState(key = item),
-                                                animatedVisibilityScope = this@AnimatedContent,
-                                            )
-                                            .fillMaxWidth(),
-                                        contentScale = ContentScale.Crop,
-                                        contentDescription = null
-                                    )
+                            LaunchedEffect(expanded, isTransitionActive) {
+                                if (expanded && isTransitionActive.not()) {
+                                    dispatcher?.onBackPressedDispatcher?.onBackPressed()
                                 }
-                            } else if (state is AnimationScreen.Details) {
-                                Box(modifier = Modifier.fillMaxSize()) {
-                                    val density = LocalDensity.current
-                                    val width: Dp
-                                    val height: Dp
+                            }
 
-                                    with(density) {
-                                        width = rect.width.toDp()
-                                        height = rect.height.toDp()
-                                    }
-                                    Image(
-                                        painter = painterResource(item),
-                                        modifier = Modifier
-                                            .offset {
-                                                rect.topLeft.round()
-                                            }
-                                            .size(width, height)
-                                            .sharedElement(
-                                                state = rememberSharedContentState(key = item),
-                                                animatedVisibilityScope = this@AnimatedContent,
-                                            ),
-                                        contentScale = ContentScale.Crop,
-                                        contentDescription = null
-                                    )
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                val density = LocalDensity.current
+                                val width: Dp
+                                val height: Dp
+
+                                with(density) {
+                                    width = rect.width.toDp()
+                                    height = rect.height.toDp()
                                 }
+                                Image(
+                                    painter = painterResource(item),
+                                    modifier = Modifier
+                                        .offset {
+                                            rect.topLeft.round()
+                                        }
+                                        .size(width, height)
+                                        .sharedElement(
+                                            state = rememberSharedContentState(key = item),
+                                            animatedVisibilityScope = this@AnimatedContent,
+                                        ),
+                                    contentScale = ContentScale.Crop,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
                 }
+
             }
         }
     }
@@ -192,6 +212,9 @@ private fun BottomSheetPickerContent(
         mutableStateMapOf<Int, Rect>()
     }
 
+    val density = LocalDensity.current
+    val statusBarHeight = WindowInsets.statusBars.getTop(density)
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(3), // 3 columns
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -213,7 +236,13 @@ private fun BottomSheetPickerContent(
             ) {
                 ImageItem(
                     modifier = Modifier.onGloballyPositioned {
-                        imageMap[imageUris[0]] = it.boundsInWindow()
+                        imageMap[imageUris[0]] = Rect(
+                            offset = Offset(
+                                x = it.positionOnScreen().x,
+                                y = it.positionOnScreen().y - statusBarHeight
+                            ),
+                            size = it.size.toSize()
+                        )
                     },
                     uri = imageUris[0],
                     onClick = {
@@ -222,7 +251,13 @@ private fun BottomSheetPickerContent(
                 )
                 ImageItem(
                     modifier = Modifier.onGloballyPositioned {
-                        imageMap[imageUris[1]] = it.boundsInWindow()
+                        imageMap[imageUris[1]] = Rect(
+                            offset = Offset(
+                                x = it.positionOnScreen().x,
+                                y = it.positionOnScreen().y - statusBarHeight
+                            ),
+                            size = it.size.toSize()
+                        )
                     },
                     uri = imageUris[1],
                     onClick = {
@@ -237,7 +272,13 @@ private fun BottomSheetPickerContent(
         items(otherImages) { uri ->
             ImageItem(
                 modifier = Modifier.onGloballyPositioned {
-                    imageMap[uri] = it.boundsInWindow()
+                    imageMap[uri] = Rect(
+                        offset = Offset(
+                            x = it.positionOnScreen().x,
+                            y = it.positionOnScreen().y - statusBarHeight
+                        ),
+                        size = it.size.toSize()
+                    )
                 },
                 uri = uri,
                 onClick = {
