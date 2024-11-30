@@ -29,14 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.rememberFlingNestedScrollConnection
-import com.smarttoolfactory.tutorial1_1basics.chapter7_theming.MyViewModel
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 
 @Preview
 @Composable
-fun LazyRowSnapAndDeleteAnimation() {
+private fun LazyRowSnapAndDeleteAnimation() {
 
     val viewModel = remember {
         MyViewModel()
