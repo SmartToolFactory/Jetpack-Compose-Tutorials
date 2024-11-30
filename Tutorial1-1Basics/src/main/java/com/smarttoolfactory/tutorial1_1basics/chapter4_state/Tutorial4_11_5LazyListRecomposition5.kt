@@ -235,7 +235,11 @@ private fun TaskListItem(
 private class EditViewModel : ViewModel() {
 
     private val initialList = List(6) { index: Int ->
-        val id = UUID.randomUUID().toString().take(12)
+        val id = UUID.randomUUID().toString().apply {
+            substring(
+                startIndex = lastIndex - 6
+            )
+        }
         Task(id = id, title = "Task: $index")
     }
 

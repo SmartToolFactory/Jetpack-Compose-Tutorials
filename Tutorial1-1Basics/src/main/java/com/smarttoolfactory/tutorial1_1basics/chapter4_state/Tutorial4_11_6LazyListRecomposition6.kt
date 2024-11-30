@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -74,9 +73,6 @@ private fun MainScreen(
     viewModel: AddRemoveSwapViewModel,
 ) {
 
-
-    // 🔥 In this example we made unstable ViewModel lambda stable
-    // When rest of the MainScreen is composed it prevents each ListItem to be recomposed
     val onClick = remember {
         { index: Int ->
             viewModel.toggleSelection(index)
@@ -84,7 +80,7 @@ private fun MainScreen(
     }
 
     val onLongClick = remember {
-        { task: Task ->
+        { task: EditableTask ->
             viewModel.deleteTask(task)
         }
     }
@@ -114,9 +110,10 @@ private fun MainScreen(
             onClick = {
                 val id = UUID.randomUUID().toString().take(12)
                 viewModel.addTaskToFirstIndex(
-                    Task(
+                    EditableTask(
                         id = id,
-                        title = "Task $id"
+                        title = "Task $id",
+                        editTime = System.currentTimeMillis()
                     )
                 )
             }
@@ -170,7 +167,7 @@ private fun MainScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                viewModel.swap(firstIndex, secondIndex)
+                swap(firstIndex, secondIndex)
             }
         ) {
             Text("Swap $firstIndex with $secondIndex")
@@ -187,12 +184,9 @@ private fun MainScreen(
 
 @Composable
 private fun ListScreen(
-    // 🔥🔥 In this example replacing Unstable List with SnapshotStateList
-    // prevents recomposition for ListScreen scope even if ListItems are
-    // already prevented recomposition with ViewModel lambda stabilization
-    tasks: SnapshotStateList<Task>,
+    tasks: List<EditableTask>,
     onItemClick: (Int) -> Unit,
-    onItemLongClick: (Task) -> Unit,
+    onItemLongClick: (EditableTask) -> Unit,
 ) {
 
     SideEffect {
@@ -211,9 +205,9 @@ private fun ListScreen(
                 items = tasks,
                 // 🔥 Using key keeps scroll position when items added or
                 // removed before visible item
-//                key = { _: Int, task: Task ->
-//                    task.id
-//                }
+                key = { _: Int, task: EditableTask ->
+                    task.id
+                }
             ) { index, task ->
                 TaskListItem(
                     item = task,
@@ -230,9 +224,10 @@ private fun ListScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TaskListItem(
-    item: Task,
+    modifier: Modifier = Modifier,
+    item: EditableTask,
     onItemClick: () -> Unit,
-    onItemLongClick: (Task) -> Unit,
+    onItemLongClick: (EditableTask) -> Unit,
 ) {
 
     SideEffect {
@@ -240,7 +235,7 @@ private fun TaskListItem(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .shadow(2.dp, RoundedCornerShape(8.dp))
             .border(2.dp, getRandomColor(), RoundedCornerShape(8.dp))
             .background(Color.White)
@@ -276,20 +271,22 @@ private fun TaskListItem(
 
 private class AddRemoveSwapViewModel : ViewModel() {
 
-    private val initialList = List(10) { index: Int ->
-        val id = UUID.randomUUID().toString().take(12)
-        Task(id = id, title = "Task: $index")
+    private val initialList = List(8) { index: Int ->
+        val id = UUID.randomUUID().toString().apply {
+            substring(startIndex = lastIndex - 6)
+        }
+        EditableTask(id = id, title = "Task: $index", editTime = System.currentTimeMillis())
     }
 
-    val taskList = mutableStateListOf<Task>().apply {
+    val taskList = mutableStateListOf<EditableTask>().apply {
         addAll(initialList)
     }
 
     fun toggleSelection(index: Int) {
-        println("toggle index: $index")
         val item = taskList[index]
         val isSelected = item.isSelected
-        taskList[index] = item.copy(isSelected = !isSelected)
+        taskList[index] = item.copy(isSelected = !isSelected, editTime = System.currentTimeMillis())
+        taskList.sortByDescending { it.editTime }
     }
 
     fun swap(firsTaskIndex: Int, secondTaskIndex: Int) {
@@ -299,7 +296,7 @@ private class AddRemoveSwapViewModel : ViewModel() {
         taskList[secondTaskIndex] = firstTask
     }
 
-    fun deleteTask(task: Task) {
+    fun deleteTask(task: EditableTask) {
         taskList.remove(task)
     }
 
@@ -307,7 +304,14 @@ private class AddRemoveSwapViewModel : ViewModel() {
         taskList.removeAt(0)
     }
 
-    fun addTaskToFirstIndex(task: Task) {
+    fun addTaskToFirstIndex(task: EditableTask) {
         taskList.add(0, task)
     }
 }
+
+internal data class EditableTask(
+    val id: String,
+    val title: String,
+    val isSelected: Boolean = false,
+    val editTime: Long,
+)
