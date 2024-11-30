@@ -1,5 +1,6 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
@@ -38,6 +39,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -116,6 +118,15 @@ fun AnimatedVisibilityCloseTest() {
                         "targetState: ${visibleState.targetState}\n" +
                         "isIdle:  ${visibleState.isIdle}"
             )
+        }
+
+        val context = LocalContext.current
+
+        // Check animation end, need a flag to prevent triggering at the start, skipped if deliberately
+        LaunchedEffect(key1 = visibleState.currentState, key2 = visibleState.targetState) {
+            if (visibleState.targetState == visibleState.currentState) {
+                Toast.makeText(context, "Animation finished", Toast.LENGTH_SHORT).show()
+            }
         }
 
         AnimatedVisibility(
