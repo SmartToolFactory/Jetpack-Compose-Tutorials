@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun Tutorial4_11Screen6() {
+fun Tutorial4_12Screen() {
     Column {
         TutorialHeader("LazyList Scroll Direction")
         TutorialContent()

@@ -8,24 +8,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,15 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
-import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import java.util.UUID
 
-
 @Preview
 @Composable
-fun Tutorial4_11Screen5() {
+fun Tutorial4_11Screen6() {
     // 🔥 Adding item to the top recomposes every item as removing first item
     // 🔥 Using key keeps scroll position when items added or removed before visible item
     TutorialContent()
@@ -58,23 +62,16 @@ private fun TutorialContent() {
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        TutorialHeader(text = "LazyList Recomposition5")
+        TutorialHeader(text = "LazyList Recomposition6")
 
-        StyleableTutorialText(
-            text = "In this example items are added to top which recomposes every item. When first item is " +
-                    "removed remaining items get recomposed. Long clicking an item removes it from the list and " +
-                    "recomposes items below deleted item.",
-            bullets = false
-        )
-
-        val viewModel = EditViewModel()
+        val viewModel = AddRemoveSwapViewModel()
         MainScreen(viewModel = viewModel)
     }
 }
 
 @Composable
 private fun MainScreen(
-    viewModel: EditViewModel,
+    viewModel: AddRemoveSwapViewModel,
 ) {
 
 
@@ -90,6 +87,20 @@ private fun MainScreen(
         { task: Task ->
             viewModel.deleteTask(task)
         }
+    }
+
+    val swap = remember {
+        { firstIndex: Int, secondIndex: Int ->
+            viewModel.swap(firstIndex, secondIndex)
+        }
+    }
+
+    var firstIndex by remember {
+        mutableIntStateOf(0)
+    }
+
+    var secondIndex by remember {
+        mutableIntStateOf(4)
     }
 
     Column(
@@ -113,8 +124,6 @@ private fun MainScreen(
             Text("Add Task to Top")
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
@@ -127,6 +136,45 @@ private fun MainScreen(
         }
 
         Spacer(modifier = Modifier.height(10.dp))
+
+        Row {
+            OutlinedTextField(
+                modifier = Modifier.weight(1f),
+                label = {
+                    Text("First Index")
+                },
+                value = "$firstIndex",
+                onValueChange = {
+                    it.toIntOrNull()?.let {
+                        firstIndex = it
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            OutlinedTextField(
+                modifier = Modifier.weight(1f),
+                label = {
+                    Text("Second Index")
+                },
+                value = "$secondIndex",
+                onValueChange = {
+                    it.toIntOrNull()?.let {
+                        secondIndex = it
+                    }
+                }
+            )
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                viewModel.swap(firstIndex, secondIndex)
+            }
+        ) {
+            Text("Swap $firstIndex with $secondIndex")
+        }
 
         ListScreen(
             tasks = tasks,
@@ -152,12 +200,6 @@ private fun ListScreen(
     }
 
     Column {
-        Text(
-            text = "Header",
-            modifier = Modifier.border(2.dp, getRandomColor()),
-            fontSize = 30.sp
-        )
-        Spacer(modifier = Modifier.height(10.dp))
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -169,9 +211,9 @@ private fun ListScreen(
                 items = tasks,
                 // 🔥 Using key keeps scroll position when items added or
                 // removed before visible item
-                key = { _: Int, task: Task ->
-                    task.hashCode()
-                }
+//                key = { _: Int, task: Task ->
+//                    task.id
+//                }
             ) { index, task ->
                 TaskListItem(
                     item = task,
@@ -232,9 +274,9 @@ private fun TaskListItem(
     }
 }
 
-private class EditViewModel : ViewModel() {
+private class AddRemoveSwapViewModel : ViewModel() {
 
-    private val initialList = List(6) { index: Int ->
+    private val initialList = List(10) { index: Int ->
         val id = UUID.randomUUID().toString().take(12)
         Task(id = id, title = "Task: $index")
     }
@@ -248,6 +290,13 @@ private class EditViewModel : ViewModel() {
         val item = taskList[index]
         val isSelected = item.isSelected
         taskList[index] = item.copy(isSelected = !isSelected)
+    }
+
+    fun swap(firsTaskIndex: Int, secondTaskIndex: Int) {
+        val firstTask = taskList[firsTaskIndex]
+        val secondTask = taskList[secondTaskIndex]
+        taskList[firsTaskIndex] = secondTask
+        taskList[secondTaskIndex] = firstTask
     }
 
     fun deleteTask(task: Task) {

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
+import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.getRandomColor
 import java.util.UUID
@@ -43,6 +44,8 @@ import java.util.UUID
 @Preview
 @Composable
 fun Tutorial4_11Screen4() {
+    // Adding or removing item to bottom of the list only recomposes item added
+    // no items when last item is removed
     TutorialContent()
 }
 
@@ -56,6 +59,12 @@ private fun TutorialContent() {
     ) {
         TutorialHeader(text = "LazyList Recomposition4")
 
+        StyleableTutorialText(
+            text = "In this example items are added to bottom which only triggers composition for added item. When last " +
+                    "item is removed nothing is recomposed",
+            bullets = false
+        )
+
         val viewModel = AddRemoveViewModel()
         MainScreen(viewModel = viewModel)
     }
@@ -63,7 +72,7 @@ private fun TutorialContent() {
 
 @Composable
 private fun MainScreen(
-    viewModel: AddRemoveViewModel
+    viewModel: AddRemoveViewModel,
 ) {
 
 
@@ -88,7 +97,7 @@ private fun MainScreen(
                 viewModel.addTask(Task(id = UUID.randomUUID().toString(), title = "Task: $index"))
             }
         ) {
-            Text("Add Task")
+            Text("Add Task to Bottom")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -101,7 +110,7 @@ private fun MainScreen(
                 }
             }
         ) {
-            Text("Delete Task")
+            Text("Delete Last Task")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -119,7 +128,7 @@ private fun ListScreen(
     // prevents recomposition for ListScreen scope even if ListItems are
     // already prevented recomposition with ViewModel lambda stabilization
     tasks: SnapshotStateList<Task>,
-    onItemClick: (Int) -> Unit
+    onItemClick: (Int) -> Unit,
 ) {
 
     SideEffect {
@@ -161,7 +170,7 @@ private fun ListScreen(
 private fun TaskListItem(item: Task, onItemClick: () -> Unit) {
 
     SideEffect {
-        println("Recomposing ${item.id}, selected: ${item.isSelected}")
+        println("Recomposing ${item.title}, selected: ${item.isSelected}")
     }
 
     Column(
@@ -178,7 +187,7 @@ private fun TaskListItem(item: Task, onItemClick: () -> Unit) {
                 }
                 .padding(8.dp)
         ) {
-            Text(item.title, fontSize = 20.sp)
+            Text("${item.title}, id: ${item.id.substring(startIndex = item.id.length - 6)}", fontSize = 20.sp)
             if (item.isSelected) {
                 Icon(
                     modifier = Modifier
@@ -196,7 +205,7 @@ private fun TaskListItem(item: Task, onItemClick: () -> Unit) {
 
 internal class AddRemoveViewModel : ViewModel() {
 
-    private val initialList = List(5) { index: Int ->
+    private val initialList = List(6) { index: Int ->
         Task(id = UUID.randomUUID().toString(), title = "Task: $index")
     }
 
