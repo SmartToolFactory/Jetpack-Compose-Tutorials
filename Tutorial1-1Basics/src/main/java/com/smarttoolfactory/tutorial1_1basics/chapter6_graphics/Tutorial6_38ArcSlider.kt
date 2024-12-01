@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,6 +50,50 @@ import com.smarttoolfactory.tutorial1_1basics.ui.Blue400
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
+
+
+@Preview
+@Composable
+fun DrawEllipticArc() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        Canvas(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .aspectRatio(3f)
+                .border(1.dp, Color.Red)
+        ) {
+
+            drawArc(
+                color = Color.Green,
+                startAngle = 180f,
+                sweepAngle = 180f,
+                size = Size(size.width, size.height * 2),
+                useCenter = true
+            )
+
+            val strokeWidthPx = 12.dp.toPx()
+
+            translate(
+                top = strokeWidthPx / 2,
+                left = strokeWidthPx / 2
+            ) {
+                drawArc(
+                    color = Blue400,
+                    size = Size(size.width - strokeWidthPx, (size.height - strokeWidthPx / 2) * 2),
+                    startAngle = 180f,
+                    sweepAngle = 180f,
+                    style = Stroke(strokeWidthPx),
+                    useCenter = false
+                )
+            }
+
+        }
+    }
+}
 
 @Preview
 @Composable
