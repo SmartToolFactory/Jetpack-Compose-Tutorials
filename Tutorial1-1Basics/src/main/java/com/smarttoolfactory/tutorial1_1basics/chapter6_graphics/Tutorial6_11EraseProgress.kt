@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,9 +46,12 @@ import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.MotionEve
 import com.smarttoolfactory.tutorial1_1basics.chapter5_gesture.gesture.pointerMotionEvents
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlin.time.measureTime
 
 @Preview
 @Composable
@@ -64,21 +68,28 @@ private fun TutorialContent() {
             .background(backgroundColor)
     ) {
         StyleableTutorialText(
-            text = "In this example using Canvas(imageBitmap) and reading pixels we compare" +
-                    "which percentage of original image is erased.",
+            text = "In this example using **Canvas(imageBitmap)** and **reading pixels** " +
+                    "we compare which percentage of original image is erased.",
             bullets = false
         )
 
-        val imageBitmap = ImageBitmap.imageResource(
+        val sourceImageBitmap: ImageBitmap = ImageBitmap.imageResource(
             LocalContext.current.resources,
             R.drawable.landscape5
-        ).asAndroidBitmap().copy(Bitmap.Config.ARGB_8888, true).asImageBitmap()
+        )
 
-        val aspectRatio = imageBitmap.width / imageBitmap.height.toFloat()
+        // mutable bitmap is required to draw to Canvas(bitmap)
+        val mutableImageBitmap = remember(sourceImageBitmap) {
+            sourceImageBitmap.asAndroidBitmap()
+                .copy(Bitmap.Config.ARGB_8888, true)
+                .asImageBitmap()
+        }
+
+        val aspectRatio = mutableImageBitmap.width / mutableImageBitmap.height.toFloat()
 
 
         EraseBitmapSample(
-            imageBitmap = imageBitmap,
+            imageBitmap = mutableImageBitmap,
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(aspectRatio)
@@ -91,7 +102,7 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
 
 
     var matchPercent by remember {
-        mutableStateOf(100f)
+        mutableFloatStateOf(100f)
     }
 
     BoxWithConstraints(modifier) {
@@ -110,8 +121,13 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
         val imageHeight = constraints.maxHeight
 
 
-        val drawImageBitmap = remember {
-            Bitmap.createScaledBitmap(imageBitmap.asAndroidBitmap(), imageWidth, imageHeight, false)
+        val drawImageBitmap: ImageBitmap = remember(imageBitmap) {
+            Bitmap.createScaledBitmap(
+                imageBitmap.asAndroidBitmap(),
+                imageWidth,
+                imageHeight,
+                false
+            )
                 .asImageBitmap()
         }
 
@@ -166,6 +182,7 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
                 .onEach {
                     matchPercent = it
                 }
+                .flowOn(Dispatchers.Default)
                 .launchIn(this)
         }
 
@@ -181,6 +198,7 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
                     previousPosition = currentPosition
 
                 }
+
                 MotionEvent.Move -> {
 
                     erasePath.quadraticTo(
@@ -198,6 +216,7 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
                     previousPosition = currentPosition
                     motionEvent = MotionEvent.Idle
                 }
+
                 else -> Unit
             }
 
@@ -282,7 +301,6 @@ fun EraseBitmapSample(imageBitmap: ImageBitmap, modifier: Modifier) {
         color = androidx.compose.ui.graphics.Color.Red,
         fontSize = 22.sp
     )
-
 }
 
 @Synchronized
@@ -298,13 +316,18 @@ private fun compareBitmaps(
     val size = imageWidth * imageHeight
     val erasedBitmapPixels = IntArray(size)
 
-    erasedBitmap.readPixels(
-        buffer = erasedBitmapPixels,
-        startX = 0,
-        startY = 0,
-        width = imageWidth,
-        height = imageHeight
-    )
+    val totalTime = measureTime {
+        erasedBitmap.readPixels(
+            buffer = erasedBitmapPixels,
+            startX = 0,
+            startY = 0,
+            width = imageWidth,
+            height = imageHeight
+        )
+    }
+
+    println("Thread: ${Thread.currentThread().name},totalTime: $totalTime")
+
 
     erasedBitmapPixels.forEachIndexed { index, pixel: Int ->
         if (originalPixels[index] == pixel) {
