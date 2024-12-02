@@ -34,6 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.PathEffect
@@ -55,6 +57,22 @@ import kotlin.random.Random
 
 enum class Direction {
     Top, TopStart, TopEnd, Bottom, BottomStart, BottomEnd
+}
+
+class Particle(var x: Int, var y: Int, val width: Int, val height: Int, val color: Color) {
+
+    var alpha: Float = 1f
+
+    val center: Offset
+        get() = Offset(x + width / 2f, y + height / 2f)
+
+    var radius: Float = width.coerceAtMost(height) / 2f
+
+    val rect: Rect
+        get() = Rect(
+            offset = Offset(x.toFloat(), y.toFloat()),
+            size = Size(width.toFloat(), height.toFloat())
+        )
 }
 
 @Preview
