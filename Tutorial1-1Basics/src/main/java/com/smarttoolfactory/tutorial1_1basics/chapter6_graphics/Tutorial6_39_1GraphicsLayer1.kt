@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -59,21 +60,6 @@ enum class Direction {
     Top, TopStart, TopEnd, Bottom, BottomStart, BottomEnd
 }
 
-class Particle(var x: Int, var y: Int, val width: Int, val height: Int, val color: Color) {
-
-    var alpha: Float = 1f
-
-    val center: Offset
-        get() = Offset(x + width / 2f, y + height / 2f)
-
-    var radius: Float = width.coerceAtMost(height) / 2f
-
-    val rect: Rect
-        get() = Rect(
-            offset = Offset(x.toFloat(), y.toFloat()),
-            size = Size(width.toFloat(), height.toFloat())
-        )
-}
 
 @Preview
 @Composable
@@ -154,6 +140,38 @@ fun GraphicsLayerToImageBitmapSample() {
             )
         }
     }
+}
+
+data class Particle(
+    val initialCenter: Offset,
+    val initialSize: Size,
+    val color: Color,
+    val lifeSpan: Float = 1f,
+    val scale: Float = 1f
+) {
+
+    val initialRadius: Float = initialSize.width.coerceAtMost(initialSize.height) / 2f
+    var radius: Float = scale * initialRadius
+
+    var alpha: Float = 1f
+
+
+    var center: Offset = initialCenter
+
+    val initialRect: Rect
+        get() = Rect(
+            offset = Offset(
+                x = initialCenter.x - initialRadius,
+                y = initialCenter.y - initialRadius
+            ),
+            size = initialSize
+        )
+
+    val rect: Rect
+        get() = Rect(
+            offset = Offset(center.x - radius, center.y - radius),
+            size = Size(radius, radius)
+        )
 }
 
 @Preview
@@ -248,32 +266,42 @@ fun GraphicsLayerToParticles() {
         if (particleList.isEmpty().not()) {
             Canvas(
                 modifier = Modifier
+                    .border(1.dp, Color.Blue)
                     .clickable {
                         coroutineScope.launch {
-                            animatable.snapTo(1f)
+                            animatable.snapTo(0f)
+                            var currentTime = System.currentTimeMillis()
                             animatable.animateTo(
-                                targetValue = 0f,
+                                targetValue = 1f,
                                 animationSpec = tween(duration.toInt()),
                                 block = {
+
                                     val progress = this.value
-                                    particleList.forEachIndexed { index, particle ->
-                                        particle.x =
-                                            (particle.x + 5f * progress * Random.nextFloat()).toInt()
 
-                                        particle.y =
-                                            (particle.y - 20f * progress * Random.nextFloat()).toInt()
+                                    val timePassed = System.currentTimeMillis() - currentTime
+                                    println("Time passed: $timePassed")
 
+                                    particleList.forEach { particle ->
 
-                                        if (animateSize) {
-                                            val newRadius =
-                                                (particle.radius - (1 - progress) * Random.nextInt(2))
-                                            particle.radius = newRadius
+                                        val oldCenter = particle.center
+                                        val posX = oldCenter.x
+                                        val posY = oldCenter.y
 
-                                        }
-                                        if (animateAlpha) {
-                                            particle.alpha -= (1 - progress) * Random.nextFloat()
-                                                .coerceAtMost(.2f)
-                                        }
+                                        val newX = posX + 5f * progress * Random.nextFloat()
+                                        val newY = posY - 5f * progress * Random.nextFloat()
+
+                                        particle.center = Offset(newX, newY)
+
+//                                        if (animateSize) {
+//                                            val newRadius =
+//                                                particle.radius * (particle.lifeSpan - progress)
+//                                                    .coerceAtLeast(0f)
+//                                        }
+//
+//                                        if (animateAlpha) {
+//                                            particle.alpha -= (1 - progress) * Random.nextFloat()
+//                                                .coerceAtMost(.2f)
+//                                        }
                                     }
                                 }
                             )
@@ -300,7 +328,7 @@ fun GraphicsLayerToParticles() {
                 particleList.forEach { particle: Particle ->
 
                     // For debugging borders of particles
-//                    val rect = particle.rect
+//                    val rect = particle.initialRect
 //                    drawRect(
 //                        color = Color.Red,
 //                        topLeft = rect.topLeft,
@@ -310,7 +338,7 @@ fun GraphicsLayerToParticles() {
 
                     drawCircle(
                         color = particle.color.copy(alpha = particle.alpha),
-                        radius = particle.radius * 1f,
+                        radius = particle.radius,
                         center = particle.center,
                     )
                 }
@@ -323,7 +351,7 @@ fun GraphicsLayerToParticles() {
                 onValueChange = {
                     particleSize = it
                 },
-                valueRange = 2f..50f
+                valueRange = 2f..100f
             )
 
             Text("Duration: ${duration.toInt()}", fontSize = 22.sp)
@@ -370,22 +398,41 @@ fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<Particle>
                 "columnCount: $columnCount, rowCount: $rowCount"
     )
 
+    val particleRadius = particleSize / 2
+
+    // divide image into squares based on particle size
+    // 110x100x image is divided into 10x10 squares
+
     for (posX in 0 until width step particleSize) {
         for (posY in 0 until height step particleSize) {
 
-            val pixel: Int = bitmap.getPixel(posX, posY)
+            // Get pixel at center of this pixel rectangle
+            // If last pixel is out of image get it from end of the width or height
+            // 🔥x must be < bitmap.width() and y must be < bitmap.height()
+            val pixelCenterX = (posX + particleRadius).coerceAtMost(width - 1)
+            val pixelCenterY = (posY + particleRadius).coerceAtMost(height - 1)
+
+//            println(
+//                "posX: $posX, pixelCenterX: $pixelCenterX,  " +
+//                        "posY: $posY, pixelCenterY: $pixelCenterY"
+//            )
+
+            val pixel: Int = bitmap.getPixel(pixelCenterX, pixelCenterY)
             val color = Color(pixel)
 
-            println("posX: $posX, posY: $posY, color: $color")
-
             if (color != Color.Unspecified) {
+                val size = particleSize * 1f
+
                 particleList.add(
                     Particle(
-                        x = posX,
-                        y = posY,
-                        width = particleSize,
-                        height = particleSize,
-                        color = color
+                        initialCenter = Offset(
+                            x = pixelCenterX.toFloat(),
+                            y = pixelCenterY.toFloat()
+                        ),
+                        initialSize = Size(size, size),
+                        color = color,
+                        scale = Random.nextInt(50, 150) / 100f,
+                        lifeSpan = Random.nextFloat().coerceAtLeast(.5f)
                     )
                 )
             } else {
