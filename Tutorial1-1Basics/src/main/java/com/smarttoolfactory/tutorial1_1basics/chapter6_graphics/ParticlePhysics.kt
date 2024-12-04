@@ -3,7 +3,6 @@ package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 import android.content.res.Resources
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
