@@ -21,7 +21,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -46,7 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.mapInRange
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.toPx
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
@@ -58,11 +57,11 @@ fun SingleParticleTrajectorySample() {
 
     var progress by remember { mutableFloatStateOf(0f) }
 
-    var visibilityThresholdLow by remember {
+    var trajectoryProgressStart by remember {
         mutableFloatStateOf(0f)
     }
 
-    var visibilityThresholdHigh by remember {
+    var trajectoryProgressEnd by remember {
         mutableFloatStateOf(1f)
     }
 
@@ -80,7 +79,7 @@ fun SingleParticleTrajectorySample() {
 
     val particleState = rememberParticleState()
 
-    LaunchedEffect(visibilityThresholdLow, visibilityThresholdHigh) {
+    LaunchedEffect(trajectoryProgressStart, trajectoryProgressEnd) {
         particleState.particleList.clear()
         particleState.addParticle(
             Particle(
@@ -91,17 +90,16 @@ fun SingleParticleTrajectorySample() {
                 ),
                 initialSize = Size(5.dp.toPx(), 5.dp.toPx()),
                 endSize = Size(sizePx, sizePx),
-                finalCenter = Offset(
+                displacement = Offset(
                     sizePxHalf,
                     sizePxHalf
                 ),
-                trajectoryProgressRange = visibilityThresholdLow..visibilityThresholdHigh,
+                trajectoryProgressRange = trajectoryProgressStart..trajectoryProgressEnd,
                 row = 0,
                 column = 0
             )
         )
     }
-
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -158,22 +156,22 @@ fun SingleParticleTrajectorySample() {
             }
         )
 
-        Text("visibilityThresholdLow: $visibilityThresholdLow")
+        Text("trajectoryProgressStart: $trajectoryProgressStart")
         Slider(
             modifier = Modifier.fillMaxWidth(),
-            value = visibilityThresholdLow,
+            value = trajectoryProgressStart,
             onValueChange = {
-                visibilityThresholdLow = it.coerceAtMost(visibilityThresholdHigh)
+                trajectoryProgressStart = it.coerceAtMost(trajectoryProgressEnd)
             },
             valueRange = 0f..1f
         )
 
-        Text("visibilityThresholdHigh: $visibilityThresholdHigh")
+        Text("trajectoryProgressEnd: $trajectoryProgressEnd")
         Slider(
             modifier = Modifier.fillMaxWidth(),
-            value = visibilityThresholdHigh,
+            value = trajectoryProgressEnd,
             onValueChange = {
-                visibilityThresholdHigh = it.coerceAtLeast(visibilityThresholdLow)
+                trajectoryProgressEnd = it.coerceAtLeast(trajectoryProgressStart)
             },
             valueRange = 0f..1f
         )
@@ -188,7 +186,7 @@ fun ParticleAnimationSample() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 32.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
@@ -201,11 +199,15 @@ fun ParticleAnimationSample() {
 
         val context = LocalContext.current
 
+        var progress by remember {
+            mutableFloatStateOf(0f)
+        }
         Image(
             painter = painterResource(R.drawable.avatar_2_raster),
             modifier = Modifier
                 .border(2.dp, Color.Red)
                 .explode(
+                    progress = progress,
                     particleState = particleState,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
@@ -218,6 +220,12 @@ fun ParticleAnimationSample() {
             contentDescription = null
         )
 
+        Slider(
+            value = progress,
+            onValueChange = {
+                progress = it
+            }
+        )
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
@@ -231,12 +239,12 @@ fun ParticleAnimationSample() {
 
 data class Particle(
     val initialCenter: Offset,
-    val finalCenter: Offset,
+    val displacement: Offset,
     val initialSize: Size,
     val endSize: Size,
     val color: Color,
     val trajectoryProgressRange: ClosedRange<Float> = 0f..1f,
-    val velocity: Float = 4 * finalCenter.y,
+    val velocity: Float = 4 * displacement.y,
     val acceleration: Float = -2 * velocity,
     val column: Int,
     val row: Int
@@ -254,6 +262,7 @@ data class Particle(
 }
 
 fun Modifier.explode(
+    progress: Float,
     particleState: ParticleState,
     onStart: () -> Unit = {},
     onEnd: () -> Unit = {}
@@ -305,11 +314,13 @@ fun Modifier.explode(
 
             if (animationStatus != AnimationStatus.Idle) {
 
-                val progress = particleState.progress
+//                val progress = particleState.progress
 
                 particleState.particleList.forEach { particle ->
 
-//                    particleState.updateParticle(progress, particle)
+                    if (progress > 0 && progress <= 1f) {
+                        particleState.updateParticle(progress, particle)
+                    }
 
                     val color = particle.color
                     val radius = particle.currentSize.width / 2f
@@ -341,7 +352,7 @@ fun rememberParticleState(): ParticleState {
 @Stable
 class ParticleState internal constructor() {
 
-    var particleSize by mutableStateOf(50.dp)
+    var particleSize by mutableStateOf(200.dp)
 
     val animatable = Animatable(0f)
     val particleList = mutableStateListOf<Particle>()
@@ -396,17 +407,23 @@ class ParticleState internal constructor() {
                 if (color != Color.Unspecified) {
 
                     val initialCenter = Offset(pixelCenterX.toFloat(), pixelCenterY.toFloat())
+                    val horizontalDisplacement = width / 2f
+                    val verticalDisplacement = height / 2f
+
+                    val velocity = 4 * verticalDisplacement
+                    val acceleration = -2 * velocity
+
                     particleList.add(
                         Particle(
                             initialCenter = initialCenter,
-                            finalCenter = initialCenter.plus(Offset(width / 2f, -height / 2f)),
+                            displacement = Offset(horizontalDisplacement, verticalDisplacement),
                             initialSize = Size(particleSize.toFloat(), particleSize.toFloat()),
                             endSize = Size.Zero,
                             color = color,
                             column = column,
                             row = row,
-                            velocity = 0f,
-                            acceleration = 0f
+                            velocity = velocity,
+                            acceleration = acceleration
                         )
                     )
 
@@ -416,7 +433,7 @@ class ParticleState internal constructor() {
             }
         }
 
-//        println("PARTICLE count: ${particleList.size}")
+        println("PARTICLE count: ${particleList.size}")
 
     }
 
@@ -432,22 +449,27 @@ class ParticleState internal constructor() {
             // Each 0.1f change in trajectoryProgress 0.5f total range
             // corresponds to 0.2f change of current time
 
-            val visibilityThresholdLow = trajectoryProgressRange.start
-            val visibilityThresholdHigh = trajectoryProgressRange.endInclusive
+            val trajectoryProgressStart = trajectoryProgressRange.start
+            val trajectoryProgressEnd = trajectoryProgressRange.endInclusive
 
             val startXPosition = initialCenter.x
             val startYPosition = initialCenter.x
 
-            val maxHorizontalDisplacement = finalCenter.x
+            val maxHorizontalDisplacement = displacement.x
 
             trajectoryProgress =
-                if (explosionProgress < visibilityThresholdLow) {
+                if (explosionProgress < trajectoryProgressStart) {
                     0f
-                } else if (explosionProgress > visibilityThresholdHigh) {
+                } else if (explosionProgress > trajectoryProgressEnd) {
                     1f
                 } else {
-                    explosionProgress
-                        .mapInRange(visibilityThresholdLow, visibilityThresholdHigh, 0f, 1f)
+                    scale(
+                        a1 = trajectoryProgressStart,
+                        b1 = trajectoryProgressEnd,
+                        x1 = explosionProgress,
+                        a2 = 0f,
+                        b2 = 1f
+                    )
                 }
 
             currentTime = trajectoryProgress
@@ -457,12 +479,16 @@ class ParticleState internal constructor() {
 //                alpha = if (trajectoryProgress < .7f) 1f else
 //                    scale(.7f, 1f, trajectoryProgress, 1f, 0f)
 
+            val horizontalDisplacement = maxHorizontalDisplacement * trajectoryProgress
+
             val verticalDisplacement =
-                currentTime * velocity + 0.5 * acceleration * currentTime * currentTime
+                velocity * currentTime + 0.5f * acceleration * currentTime * currentTime
+
+            println("horizontalDisplacement: $horizontalDisplacement, verticalDisplacement: $verticalDisplacement")
 
             currentPosition = Offset(
-                x = startXPosition + maxHorizontalDisplacement * trajectoryProgress,
-                y = (startYPosition - verticalDisplacement).toFloat()
+                x = startXPosition + horizontalDisplacement,
+                y = startYPosition - verticalDisplacement
             )
         }
     }
@@ -475,7 +501,7 @@ class ParticleState internal constructor() {
         try {
             animatable.snapTo(0f)
             animatable.animateTo(1f, tween(2000))
-            animationStatus = AnimationStatus.Idle
+//            animationStatus = AnimationStatus.Idle
         } catch (e: CancellationException) {
             println("FAILED: ${e.message}")
         }

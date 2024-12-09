@@ -43,7 +43,6 @@ fun ControlledExplosion() {
         mutableFloatStateOf(1f)
     }
 
-
     val particleCount = 1
 
     val density = LocalDensity.current
@@ -219,8 +218,13 @@ class ExplodingParticle(
             } else if (explosionProgress > visibilityThresholdHigh) {
                 1f
             } else {
-                explosionProgress
-                    .mapInRange(visibilityThresholdLow, visibilityThresholdHigh, 0f, 1f)
+                scale(
+                    a1 = visibilityThresholdLow,
+                    b1 = visibilityThresholdHigh,
+                    x1 = explosionProgress,
+                    a2 = 0f,
+                    b2 = 1f
+                )
             }
 
         currentTime = trajectoryProgress
@@ -240,11 +244,6 @@ class ExplodingParticle(
     }
 }
 
-fun Float.mapInRange(inMin: Float, inMax: Float, outMin: Float, outMax: Float): Float {
-    return outMin + (((this - inMin) / (inMax - inMin)) * (outMax - outMin))
-}
-
-fun Int.dpToPx() = toFloat().dpToPx()
 fun Dp.toPx() = value.dpToPx()
 
 fun Float.dpToPx() = this * Resources.getSystem().displayMetrics.density
