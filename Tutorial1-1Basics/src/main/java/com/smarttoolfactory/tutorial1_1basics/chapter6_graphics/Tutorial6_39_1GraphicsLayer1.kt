@@ -1,8 +1,8 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import android.graphics.Bitmap
-import android.media.Image
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -135,7 +135,7 @@ fun GraphicsLayerToImageBitmapSample() {
     }
 }
 
-data class Particle(
+data class TestParticle(
     val initialCenter: Offset,
     val initialSize: Size,
     val initialAlpha: Float,
@@ -170,12 +170,6 @@ data class Particle(
         )
 }
 
-class ParticleController(
-) {
-    var imageBitmap: ImageBitmap? = null
-    val particles = mutableStateListOf<Particle>()
-}
-
 @Preview
 @Composable
 fun GraphicsLayerToParticles() {
@@ -183,7 +177,7 @@ fun GraphicsLayerToParticles() {
     val graphicsLayer = rememberGraphicsLayer()
 
     val particleList = remember {
-        mutableStateListOf<Particle>()
+        mutableStateListOf<TestParticle>()
     }
 
     var particleSize by remember {
@@ -266,95 +260,51 @@ fun GraphicsLayerToParticles() {
                                 targetValue = 1f,
                                 animationSpec = tween(
                                     durationMillis = duration.toInt(),
-//                                    easing = LinearEasing
+                                    easing = LinearEasing
                                 ),
                                 block = {
 
                                     val progress = this.value
 
-                                    particleList.forEachIndexed { index, particle ->
+                                    particleList.forEachIndexed { _, particle ->
 
                                         if (particle.active) {
-                                            val posX = particle.initialCenter.x
-                                            val posY = particle.initialCenter.y
+                                            val posX = particle.center.x
+                                            val posY = particle.center.y
 
+                                            val newX =
+                                                posX + 3f * Random.nextFloat()
+                                            val newY = posY - 15f * Random.nextFloat()
 
-                                            val range = progress
+                                            particle.center =
+                                                Offset(newX, newY)
 
-                                            val columnFraction =
-                                                index / (particleList.size.toFloat())
+                                            val particleDecayFactor = particle.decayFactor
 
-                                            val columnSection = columnFraction * 100
+                                            val decayFactor =
+                                                if (progress < .80f) particleDecayFactor
+                                                else if (progress < .85f) particleDecayFactor + 1
+                                                else if (progress < .9f) particleDecayFactor + 4
+                                                else if (progress < .97)
+                                                    particleDecayFactor
+                                                        .coerceAtLeast(5) + 1
+                                                else 1
 
-                                            val animate = columnFraction < range
+                                            if (animateSize) {
+                                                val radius = particle.radius
+                                                val newRadius =
+                                                    radius - progress * decayFactor * particle.initialRadius / 100f
 
-                                            val sectionBasedProgress =
-                                                scale(
-                                                    a1 = columnFraction,
-                                                    b1 = 1f,
-                                                    x1 = progress,
-                                                    a2 = 0f,
-                                                    b2 = 1f
-                                                )
-
-                                            if (animate) {
-
-
-                                                println(
-                                                    "progress: $progress, " +
-                                                            "sectionBasedProgress: $sectionBasedProgress, " +
-                                                            "columnFraction: $columnFraction, " +
-                                                            "columnSection: $columnSection, " +
-                                                            "range: $range," +
-                                                            " index: $index, " +
-                                                            "animate: $animate"
-                                                )
-
-                                                val velocityX = -30f + (60f) * Random.nextFloat()
-                                                val velocityY =
-                                                    -40f * Random.nextInt(100, 150) / 100f
-
-
-                                                val newX =
-                                                    posX + velocityX * sectionBasedProgress
-                                                val newY = posY + velocityY * sectionBasedProgress
-
-                                                particle.center =
-                                                    Offset(newX, newY)
-
-                                                val particleDecayFactor = particle.decayFactor
-
-                                                val decayFactor =
-                                                    if (progress < .80f) particleDecayFactor
-                                                    else if (progress < .85f) particleDecayFactor + 1
-                                                    else if (progress < .9f) particleDecayFactor + 4
-                                                    else
-                                                        particleDecayFactor
-                                                            .coerceAtLeast(5) + 1
-
-                                                if (animateSize) {
-                                                    val radius = particle.radius
-                                                    val newRadius =
-                                                        radius - progress * decayFactor * particle.initialRadius / 100f
-
-                                                    particle.radius = newRadius.coerceAtLeast(0f)
-
-//                                                println(
-//                                                    "Time passed: $timePassed, " +
-//                                                            "timeFraction: $timeFraction, " +
-//                                                            "newRadius: $newRadius, " +
-//                                                            "center: ${particle.center}"
-//                                                )
-                                                }
-//
-                                                if (animateAlpha) {
-                                                    particle.alpha -= (progress) * Random.nextFloat() / 20f
-                                                }
-
-                                                if (progress == 1f) {
-                                                    particle.alpha = 0f
-                                                }
+                                                particle.radius = newRadius.coerceAtLeast(0f)
                                             }
+                                            if (animateAlpha) {
+                                                particle.alpha -= (progress) * Random.nextFloat() / 20f
+                                            }
+
+                                            if (progress == 1f) {
+                                                particle.alpha = 0f
+                                            }
+
                                         }
                                     }
 
@@ -383,7 +333,7 @@ fun GraphicsLayerToParticles() {
                 // TODO Remove this and invalidate Canvas more gracefully
                 drawCircle(color = Color.Transparent, radius = animatable.value)
 
-                particleList.forEach { particle: Particle ->
+                particleList.forEach { particle: TestParticle ->
 
                     if (particle.active) {
                         // For debugging borders of particles
@@ -442,8 +392,8 @@ fun GraphicsLayerToParticles() {
     }
 }
 
-fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<Particle> {
-    val particleList = mutableStateListOf<Particle>()
+fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<TestParticle> {
+    val particleList = mutableStateListOf<TestParticle>()
 
     val width = imageBitmap.width
     val height = imageBitmap.height
@@ -486,7 +436,7 @@ fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<Particle>
                 val size = particleSize * 1f
 
                 particleList.add(
-                    Particle(
+                    TestParticle(
                         initialCenter = Offset(
                             x = pixelCenterX.toFloat(),
                             y = pixelCenterY.toFloat()

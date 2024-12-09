@@ -43,6 +43,7 @@ fun ControlledExplosion() {
         mutableFloatStateOf(1f)
     }
 
+
     val particleCount = 1
 
     val density = LocalDensity.current
@@ -60,6 +61,16 @@ fun ControlledExplosion() {
         visibilityThresholdHigh
     ) {
         List(particleCount) {
+
+            val initialDisplacementX: Float = 1f
+            val initialDisplacementY: Float = 1f
+
+
+//            with(density) {
+//                initialDisplacementX = 10.dp.toPx() * randomInRange(-1f, 1f)
+//                initialDisplacementY = 10.dp.toPx() * randomInRange(-1f, 1f)
+//            }
+
             ExplodingParticle(
                 color = Color(listOf(0xffea4335, 0xff4285f4, 0xfffbbc05, 0xff34a853).random()),
                 startXPosition = sizePxHalf.toInt(),
@@ -67,7 +78,9 @@ fun ControlledExplosion() {
                 maxHorizontalDisplacement = sizePxHalf,
                 maxVerticalDisplacement = sizePxHalf,
                 visibilityThresholdLow = visibilityThresholdLow,
-                visibilityThresholdHigh = visibilityThresholdHigh
+                visibilityThresholdHigh = visibilityThresholdHigh,
+                initialDisplacementX = initialDisplacementX,
+                initialDisplacementY = initialDisplacementY
             )
         }
     }
@@ -174,7 +187,9 @@ class ExplodingParticle(
     val maxHorizontalDisplacement: Float,
     val maxVerticalDisplacement: Float,
     val visibilityThresholdLow: Float,
-    val visibilityThresholdHigh: Float
+    val visibilityThresholdHigh: Float,
+    val initialDisplacementX: Float,
+    val initialDisplacementY: Float
 ) {
     private val velocity = 4 * maxVerticalDisplacement
     private val acceleration = -2 * velocity
@@ -211,11 +226,16 @@ class ExplodingParticle(
         currentTime = trajectoryProgress
 //            .mapInRange(0f, 1f, 0f, 1.4f)
 
+        // While trajectory progress is less than 70% have full alpha then slowly cre
+        alpha = if (trajectoryProgress < .7f) 1f else
+            scale(.7f, 1f, trajectoryProgress, 1f, 0f)
+
         val verticalDisplacement =
             currentTime * velocity + 0.5 * acceleration * currentTime * currentTime
 
-        currentXPosition = startXPosition + maxHorizontalDisplacement * trajectoryProgress
-        currentYPosition = (startYPosition - verticalDisplacement).toFloat()
+        currentXPosition =
+            startXPosition + initialDisplacementX + maxHorizontalDisplacement * trajectoryProgress
+        currentYPosition = (startYPosition + initialDisplacementY - verticalDisplacement).toFloat()
 
     }
 }

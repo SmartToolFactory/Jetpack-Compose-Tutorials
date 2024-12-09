@@ -414,3 +414,6 @@ And run task to check for compiler reports for stability inside **build/compiler
 <br>
 [Composable metrics-Chris Banes](https://chrisbanes.me/posts/composable-metrics/)
 <br>
+[Creating a particle explosion animation in Jetpack Compose-Omkar Tenkale](https://proandroiddev.com/creating-a-particle-explosion-animation-in-jetpack-compose-4ee42022bbfa)
+<br>
+
