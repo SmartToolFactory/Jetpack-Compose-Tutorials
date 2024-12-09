@@ -106,9 +106,9 @@ fun ControlledExplosion() {
             modifier = Modifier.fillMaxWidth(),
             value = visibilityThresholdLow,
             onValueChange = {
-                visibilityThresholdLow = it
+                visibilityThresholdLow = it.coerceAtMost(visibilityThresholdHigh)
             },
-            valueRange = 0f..visibilityThresholdHigh
+            valueRange = 0f..1f
         )
 
         Text("visibilityThresholdHigh: $visibilityThresholdHigh")
@@ -116,9 +116,9 @@ fun ControlledExplosion() {
             modifier = Modifier.fillMaxWidth(),
             value = visibilityThresholdHigh,
             onValueChange = {
-                visibilityThresholdHigh = it
+                visibilityThresholdHigh = it.coerceAtLeast(visibilityThresholdLow)
             },
-            valueRange = visibilityThresholdLow..1f
+            valueRange = 0f..1f
         )
         Spacer(Modifier.height(16.dp))
     }
@@ -199,10 +199,10 @@ class ExplodingParticle(
         // Each 0.1f change in trajectoryProgress 0.5f total range
         // corresponds to 0.2f change of current time
         trajectoryProgress =
-            if (explosionProgress < visibilityThresholdLow ||
-                (explosionProgress > visibilityThresholdHigh)
-            ) {
-                return
+            if (explosionProgress < visibilityThresholdLow) {
+                0f
+            } else if (explosionProgress > visibilityThresholdHigh) {
+                1f
             } else {
                 explosionProgress
                     .mapInRange(visibilityThresholdLow, visibilityThresholdHigh, 0f, 1f)
