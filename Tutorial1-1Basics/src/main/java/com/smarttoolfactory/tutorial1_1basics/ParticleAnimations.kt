@@ -3,10 +3,13 @@ package com.smarttoolfactory.tutorial1_1basics
 import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,12 +43,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomInRange
@@ -53,6 +57,7 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.toPx
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
+import kotlin.random.Random
 
 
 @Preview
@@ -68,8 +73,6 @@ fun SingleParticleTrajectorySample() {
     var trajectoryProgressEnd by remember {
         mutableFloatStateOf(1f)
     }
-
-    val particleCount = 1
 
     val density = LocalDensity.current
 
@@ -94,13 +97,11 @@ fun SingleParticleTrajectorySample() {
                 ),
                 initialSize = Size(5.dp.toPx(), 5.dp.toPx()),
                 endSize = Size(sizePx, sizePx),
-                displacement = Offset(
-                    sizePxHalf,
-                    sizePxHalf
+                velocity = Velocity(
+                    x = sizePxHalf,
+                    y = sizePxHalf * 4
                 ),
-                trajectoryProgressRange = trajectoryProgressStart..trajectoryProgressEnd,
-                row = 0,
-                column = 0
+                trajectoryProgressRange = trajectoryProgressStart..trajectoryProgressEnd
             )
         )
     }
@@ -189,6 +190,7 @@ fun ParticleAnimationSample() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.DarkGray)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 100.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -244,15 +246,12 @@ fun ParticleAnimationSample() {
 
 data class Particle(
     val initialCenter: Offset,
-    val displacement: Offset,
     val initialSize: Size,
     val endSize: Size,
     val color: Color,
     val trajectoryProgressRange: ClosedRange<Float> = 0f..1f,
-    var velocity: Float = 4 * displacement.y,
-    var acceleration: Float = -2 * velocity,
-    val column: Int,
-    val row: Int
+    var velocity: Velocity = Velocity(0f, 0f),
+    var acceleration: Float = -2 * velocity.y
 ) {
     var currentPosition: Offset = initialCenter
         internal set
@@ -278,6 +277,8 @@ fun Modifier.explode(
     val animationStatus = particleState.animationStatus
     val density = LocalDensity.current
     val particleSizePx = with(density) { particleState.particleSize.roundToPx() }
+
+    val progress = particleState.progress
 
     LaunchedEffect(animationStatus) {
         if (animationStatus == AnimationStatus.Initializing) {
@@ -319,14 +320,12 @@ fun Modifier.explode(
 
             if (animationStatus != AnimationStatus.Idle) {
 
-                val animatedProgress = particleState.progress
-
                 particleState.particleList.forEach { particle ->
 
-                    particleState.updateParticle(animatedProgress, particle)
+                    particleState.updateParticle(progress, particle)
 
                     val color = particle.color
-                    val radius = particle.currentSize.width * .7f
+                    val radius = particle.currentSize.width * .65f
                     val position = particle.currentPosition
                     val alpha = particle.alpha
 
@@ -336,20 +335,28 @@ fun Modifier.explode(
                         color = color,
                         radius = radius,
                         center = position,
-//                        alpha = alpha
+                        alpha = alpha
                     )
                 }
 
+                // TODO disintegrate image non-uniformly, with blend mode of particles
 //                clipRect(
-//                    left = animatedProgress * size.width
+//                    left = progress * size.width
 //                ) {
 //                    this@onDrawWithContent.drawContent()
 //                }
+
+                // For debugging
+                drawRect(
+                    color = Color.Black,
+                    topLeft = Offset(progress * size.width, 0f),
+                    size = Size(size.width - progress * size.width, size.height),
+                    style = Stroke(4.dp.toPx())
+                )
             }
         }
     }
 }
-
 
 @Composable
 fun rememberParticleState(): ParticleState {
@@ -406,35 +413,41 @@ class ParticleState internal constructor() {
                 val pixel: Int = bitmap.getPixel(pixelCenterX, pixelCenterY)
                 val color = Color(pixel)
 
-//                println(
-//                    "Column: $column, " +
-//                            "row: $row," +
-//                            " pixelCenterX: $pixelCenterX, " +
-//                            "pixelCenterY: $pixelCenterY, color: $color"
-//                )
-
                 if (color != Color.Unspecified) {
-
                     val initialCenter = Offset(pixelCenterX.toFloat(), pixelCenterY.toFloat())
                     val horizontalDisplacement = randomInRange(-50f, 50f)
-                    val verticalDisplacement = randomInRange(-height * .1f, height * .2f)
 
-                    val velocity = verticalDisplacement
+                    val verticalDisplacement = randomInRange(-height * .1f, height * .2f)
                     val acceleration = randomInRange(-2f, 2f)
-                    val progressStart = (initialCenter.x / width).coerceAtMost(.7f)
-                    val progressEnd = progressStart + 0.3f
+
+                    val fractionToImageWidth = initialCenter.x / width
+                    val fractionToImageHeight = initialCenter.y / height
+
+                    // Get trajectory for each 5 percent of the image in x direction
+                    // This creates wave effect where particles at the start animation earlier
+                    var trajectoryProgressRange =
+                        valueInRange(fractionToImageWidth, .05f)
+
+                    // Add some vertical randomization for trajectory so particles don't start
+                    // animating vertically as well. Particles with smaller y value in same x
+                    // coordinate tend to start earlier
+                    trajectoryProgressRange =
+                        trajectoryProgressRange.start + fractionToImageHeight * Random.nextFloat()
+                            .coerceAtMost(.2f)..trajectoryProgressRange.endInclusive
+
+                    val endSize = randomInRange(0f, particleSize.toFloat() * .5f)
 
                     particleList.add(
                         Particle(
                             initialCenter = initialCenter,
-                            displacement = Offset(horizontalDisplacement, verticalDisplacement),
                             initialSize = Size(particleSize.toFloat(), particleSize.toFloat()),
-//                            trajectoryProgressRange = progressStart..progressEnd,
-                            endSize = Size.Zero,
+                            trajectoryProgressRange = trajectoryProgressRange,
+                            endSize = Size(endSize, endSize),
                             color = color,
-                            column = column / particleSize,
-                            row = row / particleRadius,
-                            velocity = velocity,
+                            velocity = Velocity(
+                                x = horizontalDisplacement,
+                                y = verticalDisplacement
+                            ),
                             acceleration = acceleration
                         )
                     )
@@ -447,7 +460,6 @@ class ParticleState internal constructor() {
     }
 
     fun updateParticle(progress: Float, particle: Particle) {
-
         particle.run {
             // Trajectory progress translates progress from 0f-1f to
             // visibilityThresholdLow-visibilityThresholdHigh
@@ -457,31 +469,28 @@ class ParticleState internal constructor() {
 
             // Each 0.1f change in trajectoryProgress 0.5f total range
             // corresponds to 0.2f change of current time
-
             setTrajectoryProgress(progress)
 
             currentTime = trajectoryProgress
-            //            .mapInRange(0f, 1f, 0f, 1.4f)
 
             // Set size
-            val width = initialSize.width + (endSize.width - initialSize.width) * currentTime
-            val height = initialSize.height + (endSize.height - initialSize.height) * currentTime
-//            currentSize = Size(width, height)
+            val width =
+                initialSize.width + (endSize.width - initialSize.width) * currentTime * .5f
+            val height =
+                initialSize.height + (endSize.height - initialSize.height) * currentTime * .5f
+
+            currentSize = Size(width, height)
 
             // Set alpha
-            // While trajectory progress is less than 70% have full alpha then slowly cre
-//            alpha = if (trajectoryProgress == 0f) 0f
-//            else if (trajectoryProgress < .7f) 1f
-//            else scale(.7f, 1f, trajectoryProgress, 1f, 0f)
+            // While trajectory progress is less than 80% have full alpha then slowly
+            // reduce to zero for particles to disappear
+            alpha = if (trajectoryProgress == 0f) 1f
+            else if (trajectoryProgress < .8f) 1f
+            else scale(.8f, 1f, trajectoryProgress, 1f, 0f)
 
-            // Set position
-//            acceleration = randomInRange(-5f, 5f)
-//            velocity = 1f * Random.nextInt(10)
-
-            val maxHorizontalDisplacement = displacement.x
-            val horizontalDisplacement = maxHorizontalDisplacement * trajectoryProgress
+            val horizontalDisplacement = velocity.x * trajectoryProgress
             val verticalDisplacement =
-                velocity * currentTime + 0.5f * acceleration * currentTime * currentTime
+                velocity.y * currentTime + 0.5f * acceleration * currentTime * currentTime
             currentPosition = Offset(
                 x = initialCenter.x + horizontalDisplacement,
                 y = initialCenter.y - verticalDisplacement
@@ -516,13 +525,30 @@ class ParticleState internal constructor() {
     suspend fun animate() {
         try {
             animatable.snapTo(0f)
-            animatable.animateTo(1f, tween(durationMillis = 2000, easing = LinearEasing))
+            animatable.animateTo(1f, tween(durationMillis = 2400, easing = FastOutSlowInEasing))
 //            animationStatus = AnimationStatus.Idle
         } catch (e: CancellationException) {
             println("FAILED: ${e.message}")
         }
 
     }
+}
+
+fun valueInRange(
+    input: Float,
+    range: Float,
+    minValue: Float = 0f,
+    maxValue: Float = 1f
+): ClosedRange<Float> {
+
+    if (range == 0f || range > 1f) return minValue..maxValue
+    val remainder = input % range
+    val multiplier = input / range
+
+    return (range * (multiplier - 4f) - remainder)
+        .coerceAtLeast(0f)..(range * (multiplier + 15f) - remainder)
+        .coerceAtMost(maxValue)
+
 }
 
 enum class AnimationStatus {
