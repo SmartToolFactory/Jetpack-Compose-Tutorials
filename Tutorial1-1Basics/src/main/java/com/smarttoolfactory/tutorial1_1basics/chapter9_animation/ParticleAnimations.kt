@@ -1,11 +1,9 @@
-package com.smarttoolfactory.tutorial1_1basics
+package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
 import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -52,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomInRange
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.toPx
@@ -213,8 +212,9 @@ fun ParticleAnimationSample() {
             painter = painterResource(R.drawable.avatar_2_raster),
             modifier = Modifier
                 .border(2.dp, Color.Red)
-                .explode(
-                    progress = progress,
+                .size(widthDp)
+                .disintegrate(
+//                    progress = progress,
                     particleState = particleState,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
@@ -222,8 +222,7 @@ fun ParticleAnimationSample() {
                     onEnd = {
                         Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
                     }
-                )
-                .size(widthDp),
+                ),
             contentDescription = null
         )
 
@@ -265,7 +264,20 @@ data class Particle(
         internal set
 }
 
-fun Modifier.explode(
+fun Modifier.disintegrate(
+    particleState: ParticleState,
+    onStart: () -> Unit = {},
+    onEnd: () -> Unit = {}
+) = this.then(
+    Modifier.disintegrate(
+        progress = particleState.progress,
+        particleState = particleState,
+        onStart = onStart,
+        onEnd = onEnd
+    )
+)
+
+fun Modifier.disintegrate(
     progress: Float,
     particleState: ParticleState,
     onStart: () -> Unit = {},
@@ -278,32 +290,29 @@ fun Modifier.explode(
     val density = LocalDensity.current
     val particleSizePx = with(density) { particleState.particleSize.roundToPx() }
 
-    val progress = particleState.progress
+    LaunchedEffect(animationStatus != AnimationStatus.Idle) {
+        if (animationStatus != AnimationStatus.Idle) {
 
-    LaunchedEffect(animationStatus) {
-        if (animationStatus == AnimationStatus.Initializing) {
-            val imageBitmap = graphicsLayer
-                .toImageBitmap()
-                .asAndroidBitmap()
-                .copy(Bitmap.Config.ARGB_8888, false)
-                .asImageBitmap()
+            if (particleState.imageBitmap == null) {
+                val imageBitmap = graphicsLayer
+                    .toImageBitmap()
+                    .asAndroidBitmap()
+                    .copy(Bitmap.Config.ARGB_8888, false)
+                    .asImageBitmap()
 
-            particleState.imageBitmap = imageBitmap
+                particleState.imageBitmap = imageBitmap
 
-            particleState.createParticles(
-                particleSize = particleSizePx,
-                imageBitmap = imageBitmap
-            )
+                particleState.createParticles(
+                    particleSize = particleSizePx,
+                    imageBitmap = imageBitmap
+                )
+            }
 
             particleState.animationStatus = AnimationStatus.Playing
-        }
-    }
-
-    LaunchedEffect(particleState.animationStatus) {
-        if (particleState.animationStatus == AnimationStatus.Playing) {
-            onStart()
-            particleState.animate()
-            onEnd()
+            particleState.animate(
+                onStart = onStart,
+                onEnd = onEnd
+            )
         }
     }
 
@@ -328,8 +337,6 @@ fun Modifier.explode(
                     val radius = particle.currentSize.width * .65f
                     val position = particle.currentPosition
                     val alpha = particle.alpha
-
-//                    println("UPDATE Particle position: $position, size: $radius, color: $color")
 
                     drawCircle(
                         color = color,
@@ -420,13 +427,20 @@ class ParticleState internal constructor() {
                     val verticalDisplacement = randomInRange(-height * .1f, height * .2f)
                     val acceleration = randomInRange(-2f, 2f)
 
+                    // If this particle is at 20% of image width in x plane
+                    // it returns 0.2f
                     val fractionToImageWidth = initialCenter.x / width
                     val fractionToImageHeight = initialCenter.y / height
 
                     // Get trajectory for each 5 percent of the image in x direction
                     // This creates wave effect where particles at the start animation earlier
-                    var trajectoryProgressRange =
-                        valueInRange(fractionToImageWidth, .05f)
+                    // For fraction that is 0.2f range returns
+                    // (0.15f - offsetMin )..(0.2f + offsetMax)
+
+                    var trajectoryProgressRange = getTrajectoryRange(
+                        fraction = fractionToImageWidth,
+                        sectionFraction = .05f
+                    )
 
                     // Add some vertical randomization for trajectory so particles don't start
                     // animating vertically as well. Particles with smaller y value in same x
@@ -522,33 +536,46 @@ class ParticleState internal constructor() {
         animationStatus = AnimationStatus.Initializing
     }
 
-    suspend fun animate() {
+    suspend fun animate(
+        onStart: () -> Unit,
+        onEnd: () -> Unit
+    ) {
         try {
+            onStart()
             animatable.snapTo(0f)
             animatable.animateTo(1f, tween(durationMillis = 2400, easing = FastOutSlowInEasing))
-//            animationStatus = AnimationStatus.Idle
+            animationStatus = AnimationStatus.Idle
         } catch (e: CancellationException) {
             println("FAILED: ${e.message}")
+        } finally {
+            onEnd()
+            animationStatus = AnimationStatus.Idle
         }
-
     }
 }
 
-fun valueInRange(
-    input: Float,
-    range: Float,
-    minValue: Float = 0f,
-    maxValue: Float = 1f
+/**
+ * Calculate range based in [sectionFraction] to create a range for particles to have trajectory.
+ * This is for animating particles from start to end instead of every particles animating at once.
+ *
+ * For [fraction] that might be 0.11, 0.12, 0.15 for [sectionFraction] 0.1
+ * range returns 0-0.1 which causes  first 10% to start while rest of the particles are stationary.
+ */
+fun getTrajectoryRange(
+    fraction: Float,
+    sectionFraction: Float,
+    from: Float = 0f,
+    until: Float = 1f,
 ): ClosedRange<Float> {
 
-    if (range == 0f || range > 1f) return minValue..maxValue
-    val remainder = input % range
-    val multiplier = input / range
+    if (sectionFraction == 0f || sectionFraction > 1f) return from..until
+    val remainder = fraction % sectionFraction
+    val multiplier = fraction / sectionFraction
 
-    return (range * (multiplier - 4f) - remainder)
-        .coerceAtLeast(0f)..(range * (multiplier + 15f) - remainder)
-        .coerceAtMost(maxValue)
+    val min = (sectionFraction * (multiplier - 4f) - remainder).coerceAtLeast(from)
+    val max = (sectionFraction * (multiplier + 15f) - remainder).coerceAtMost(until)
 
+    return min..max
 }
 
 enum class AnimationStatus {
