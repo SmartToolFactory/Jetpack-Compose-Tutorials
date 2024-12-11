@@ -41,8 +41,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -58,7 +60,6 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
 import kotlin.random.Random
-
 
 @Preview
 @Composable
@@ -219,12 +220,13 @@ fun ParticleAnimationSample() {
                 .border(2.dp, Color.Red)
                 .size(widthDp)
                 .disintegrate(
-//                    progress = progress,
+                    progress = progress,
                     particleState = particleState,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
                     },
                     onEnd = {
+//                        particleState.animationStatus = AnimationStatus.Idle
                         Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
                     }
                 ),
@@ -323,22 +325,23 @@ fun Modifier.disintegrate(
         }
     }
 
-    Modifier.drawWithCache {
-        onDrawWithContent {
-            if (animationStatus != AnimationStatus.Playing) {
-                drawContent()
-                graphicsLayer.record {
-                    this@onDrawWithContent.drawContent()
+    Modifier
+        .drawWithCache {
+            onDrawWithContent {
+                if (animationStatus != AnimationStatus.Playing) {
+                    drawContent()
+                    graphicsLayer.record {
+                        this@onDrawWithContent.drawContent()
+                    }
                 }
-            }
 
-            particleState.updateAndDrawParticles(
-                drawScope = this,
-                particleList = particleState.particleList,
-                progress = progress
-            )
+                particleState.updateAndDrawParticles(
+                    drawScope = this,
+                    particleList = particleState.particleList,
+                    progress = progress
+                )
+            }
         }
-    }
 }
 
 @Composable
@@ -365,6 +368,11 @@ class ParticleState internal constructor(particleSize: Dp) {
     var bitmap: Bitmap? = null
         internal set
 
+    var animationSpec = tween<Float>(
+        durationMillis = 2000,
+        easing = FastOutSlowInEasing
+    )
+
     fun addParticle(particle: Particle) {
         particleList.add(particle)
     }
@@ -376,6 +384,15 @@ class ParticleState internal constructor(particleSize: Dp) {
     ) {
         with(drawScope) {
             if (animationStatus != AnimationStatus.Idle) {
+
+                // TODO disintegrate image non-uniformly, with blend mode of particles
+//                clipRect(
+//                    left = progress * size.width
+//                ) {
+//                    bitmap?.asImageBitmap()?.let {
+//                        drawImage(it)
+//                    }
+//                }
 
                 particleList.forEach { particle ->
 
@@ -393,13 +410,6 @@ class ParticleState internal constructor(particleSize: Dp) {
                         alpha = alpha
                     )
                 }
-
-                // TODO disintegrate image non-uniformly, with blend mode of particles
-//                clipRect(
-//                    left = progress * size.width
-//                ) {
-//                    this@onDrawWithContent.drawContent()
-//                }
 
                 // For debugging
                 drawRect(
@@ -421,7 +431,6 @@ class ParticleState internal constructor(particleSize: Dp) {
 
         val width = bitmap.width
         val height = bitmap.height
-
 
         val particleRadius = particleSize / 2
 
@@ -467,9 +476,11 @@ class ParticleState internal constructor(particleSize: Dp) {
                     // Add some vertical randomization for trajectory so particles don't start
                     // animating vertically as well. Particles with smaller y value in same x
                     // coordinate tend to start earlier
+                    val startYOffset =
+                        (fractionToImageHeight * Random.nextFloat()).coerceAtMost(.2f)
+
                     trajectoryProgressRange =
-                        trajectoryProgressRange.start + fractionToImageHeight * Random.nextFloat()
-                            .coerceAtMost(.2f)..trajectoryProgressRange.endInclusive
+                        trajectoryProgressRange.start + startYOffset..trajectoryProgressRange.endInclusive
 
                     val endSize = randomInRange(0f, particleSize.toFloat() * .5f)
 
@@ -565,13 +576,14 @@ class ParticleState internal constructor(particleSize: Dp) {
         try {
             onStart()
             animatable.snapTo(0f)
-            animatable.animateTo(1f, tween(durationMillis = 2400, easing = FastOutSlowInEasing))
-            animationStatus = AnimationStatus.Idle
+            animatable.animateTo(
+                targetValue = 1f,
+                animationSpec = animationSpec
+            )
         } catch (e: CancellationException) {
             println("FAILED: ${e.message}")
         } finally {
             onEnd()
-            animationStatus = AnimationStatus.Idle
         }
     }
 
