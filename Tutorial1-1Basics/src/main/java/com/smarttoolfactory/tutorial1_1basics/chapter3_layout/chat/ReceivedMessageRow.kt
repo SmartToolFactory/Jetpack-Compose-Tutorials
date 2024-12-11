@@ -30,6 +30,7 @@ var recipientOriginalName = "Some user"
  */
 @Composable
 fun ReceivedMessageRowAlt(
+    modifier: Modifier = Modifier,
     text: String,
     quotedMessage: String? = null,
     quotedImage: Int? = null,
@@ -47,11 +48,10 @@ fun ReceivedMessageRowAlt(
 
         // This is chat bubble
         SubcomposeColumn(
-            modifier = Modifier
+            modifier = modifier
                 .shadow(1.dp, RoundedCornerShape(8.dp))
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color.White)
-                .clickable { },
+                .background(Color.White),
             content = {
                 RecipientName(
                     name = recipientRegisteredName,

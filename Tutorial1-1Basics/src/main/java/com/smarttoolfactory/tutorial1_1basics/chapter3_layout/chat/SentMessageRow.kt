@@ -21,6 +21,7 @@ import com.smarttoolfactory.tutorial1_1basics.ui.SentQuoteColor
  */
 @Composable
 fun SentMessageRowAlt(
+    modifier: Modifier = Modifier,
     text: String,
     quotedMessage: String? = null,
     quotedImage: Int? = null,
@@ -40,15 +41,13 @@ fun SentMessageRowAlt(
 
 
     ) {
-
-
+        
         // This is chat bubble
         SubcomposeColumn(
-            modifier = Modifier
+            modifier = modifier
                 .shadow(1.dp, RoundedCornerShape(8.dp))
                 .clip(RoundedCornerShape(8.dp))
-                .background(SentMessageColor)
-                .clickable { },
+                .background(SentMessageColor),
 
             content = {
                 // 💬 Quoted message

@@ -92,12 +92,13 @@ private fun TutorialContent() {
             items(messages) { message: ChatMessage ->
 
                 // Remember random stats icon to not create in every recomposition
-                val messageStatus = remember { MessageStatus.values()[Random.nextInt(3)] }
+                val messageStatus = remember { MessageStatus.entries[Random.nextInt(3)] }
 
                 // Toggle between sent and received message
                 when (message.id.toInt() % 4) {
                     1 -> {
                         SentMessageRowAlt(
+                            modifier = Modifier,
                             text = message.message,
                             quotedMessage = "Quote message",
                             messageTime = sdf.format(System.currentTimeMillis()),
@@ -105,16 +106,20 @@ private fun TutorialContent() {
                         )
 
                     }
+
                     2 -> {
                         ReceivedMessageRowAlt(
+                            modifier = Modifier,
                             text = message.message,
                             quotedMessage = "Quote",
                             messageTime = sdf.format(System.currentTimeMillis()),
                         )
 
                     }
+
                     3 -> {
                         SentMessageRowAlt(
+                            modifier = Modifier,
                             text = message.message,
                             quotedImage = R.drawable.landscape1,
                             messageTime = sdf.format(System.currentTimeMillis()),
@@ -122,8 +127,10 @@ private fun TutorialContent() {
                         )
 
                     }
+
                     else -> {
                         ReceivedMessageRowAlt(
+                            modifier = Modifier,
                             text = message.message,
                             quotedImage = R.drawable.landscape2,
                             messageTime = sdf.format(System.currentTimeMillis()),
@@ -134,7 +141,7 @@ private fun TutorialContent() {
         }
 
         ChatInput(
-            modifier=Modifier.imePadding(),
+            modifier = Modifier.imePadding(),
             onMessageChange = { messageContent ->
                 messages.add(
                     ChatMessage(
