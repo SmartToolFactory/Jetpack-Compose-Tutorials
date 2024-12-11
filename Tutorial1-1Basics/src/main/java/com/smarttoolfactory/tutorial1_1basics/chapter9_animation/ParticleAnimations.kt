@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -40,20 +41,20 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomInRange
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
-import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.toPx
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
 import kotlin.random.Random
@@ -85,6 +86,10 @@ fun SingleParticleTrajectorySample() {
 
     val particleState = rememberParticleState()
 
+    val particleSize = with(density) {
+        5.dp.toPx()
+    }
+
     LaunchedEffect(trajectoryProgressStart, trajectoryProgressEnd) {
         particleState.particleList.clear()
         particleState.addParticle(
@@ -94,7 +99,7 @@ fun SingleParticleTrajectorySample() {
                     x = sizePxHalf,
                     y = sizePxHalf,
                 ),
-                initialSize = Size(5.dp.toPx(), 5.dp.toPx()),
+                initialSize = Size(particleSize, particleSize),
                 endSize = Size(sizePx, sizePx),
                 velocity = Velocity(
                     x = sizePxHalf,
@@ -293,18 +298,20 @@ fun Modifier.disintegrate(
     LaunchedEffect(animationStatus != AnimationStatus.Idle) {
         if (animationStatus != AnimationStatus.Idle) {
 
-            if (particleState.imageBitmap == null) {
-                val imageBitmap = graphicsLayer
+            if (particleState.bitmap == null || particleState.bitmap?.isRecycled == true) {
+                val bitmap = graphicsLayer
                     .toImageBitmap()
                     .asAndroidBitmap()
                     .copy(Bitmap.Config.ARGB_8888, false)
-                    .asImageBitmap()
 
-                particleState.imageBitmap = imageBitmap
+                bitmap.prepareToDraw()
+
+                particleState.bitmap = bitmap
 
                 particleState.createParticles(
+                    particleList = particleState.particleList,
                     particleSize = particleSizePx,
-                    imageBitmap = imageBitmap
+                    bitmap = bitmap
                 )
             }
 
@@ -317,9 +324,7 @@ fun Modifier.disintegrate(
     }
 
     Modifier.drawWithCache {
-
         onDrawWithContent {
-
             if (animationStatus != AnimationStatus.Playing) {
                 drawContent()
                 graphicsLayer.record {
@@ -327,11 +332,54 @@ fun Modifier.disintegrate(
                 }
             }
 
+            particleState.updateAndDrawParticles(
+                drawScope = this,
+                particleList = particleState.particleList,
+                progress = progress
+            )
+        }
+    }
+}
+
+@Composable
+fun rememberParticleState(particleSize: Dp = 2.dp): ParticleState {
+    return remember {
+        ParticleState(particleSize)
+    }
+}
+
+@Stable
+class ParticleState internal constructor(particleSize: Dp) {
+
+    var particleSize by mutableStateOf(particleSize)
+
+    val animatable = Animatable(0f)
+    val particleList = mutableStateListOf<Particle>()
+
+    var animationStatus by mutableStateOf(AnimationStatus.Idle)
+        internal set
+
+    val progress: Float
+        get() = animatable.value
+
+    var bitmap: Bitmap? = null
+        internal set
+
+    fun addParticle(particle: Particle) {
+        particleList.add(particle)
+    }
+
+    fun updateAndDrawParticles(
+        drawScope: DrawScope,
+        particleList: SnapshotStateList<Particle>,
+        progress: Float
+    ) {
+        with(drawScope) {
             if (animationStatus != AnimationStatus.Idle) {
 
-                particleState.particleList.forEach { particle ->
+                particleList.forEach { particle ->
 
-                    particleState.updateParticle(progress, particle)
+                    updateParticle(progress, particle)
 
                     val color = particle.color
                     val radius = particle.currentSize.width * .65f
@@ -363,43 +411,17 @@ fun Modifier.disintegrate(
             }
         }
     }
-}
 
-@Composable
-fun rememberParticleState(): ParticleState {
-    return remember {
-        ParticleState()
-    }
-}
-
-@Stable
-class ParticleState internal constructor() {
-
-    var particleSize by mutableStateOf(2.dp)
-
-    val animatable = Animatable(0f)
-    val particleList = mutableStateListOf<Particle>()
-
-    var animationStatus by mutableStateOf(AnimationStatus.Idle)
-        internal set
-
-    val progress: Float
-        get() = animatable.value
-
-    var imageBitmap: ImageBitmap? = null
-        internal set
-
-    fun addParticle(particle: Particle) {
-        particleList.add(particle)
-    }
-
-    fun createParticles(particleSize: Int, imageBitmap: ImageBitmap) {
+    fun createParticles(
+        particleList: SnapshotStateList<Particle>,
+        particleSize: Int,
+        bitmap: Bitmap
+    ) {
         particleList.clear()
 
-        val width = imageBitmap.width
-        val height = imageBitmap.height
+        val width = bitmap.width
+        val height = bitmap.height
 
-        val bitmap: Bitmap = imageBitmap.asAndroidBitmap()
 
         val particleRadius = particleSize / 2
 
@@ -552,6 +574,18 @@ class ParticleState internal constructor() {
             animationStatus = AnimationStatus.Idle
         }
     }
+
+    fun dispose() {
+        bitmap?.recycle()
+    }
+}
+
+interface DisintegrationStrategy {
+    fun updateParticle(progress: Float, particle: Particle)
+
+    fun createParticles(particleSize: Int, imageBitmap: ImageBitmap)
+
+    fun updateAndDrawParticles(drawScope: DrawScope)
 }
 
 /**

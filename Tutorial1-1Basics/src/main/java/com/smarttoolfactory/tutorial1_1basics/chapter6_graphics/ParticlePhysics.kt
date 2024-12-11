@@ -1,6 +1,5 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
-import android.content.res.Resources
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -243,11 +242,6 @@ class ExplodingParticle(
 
     }
 }
-
-fun Dp.toPx() = value.dpToPx()
-
-fun Float.dpToPx() = this * Resources.getSystem().displayMetrics.density
-
 
 private val random = Random()
 fun Float.randomTillZero() = this * random.nextFloat()
