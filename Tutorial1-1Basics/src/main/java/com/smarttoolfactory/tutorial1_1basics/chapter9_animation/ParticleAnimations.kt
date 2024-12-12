@@ -308,16 +308,13 @@ fun Modifier.disintegrate(
             withContext(Dispatchers.Default) {
                 val bitmap =
                     if (particleState.bitmap == null || particleState.bitmap?.isRecycled == true) {
-
-                        val bitmap = graphicsLayer
+                        graphicsLayer
                             .toImageBitmap()
                             .asAndroidBitmap()
                             .copy(Bitmap.Config.ARGB_8888, false)
                             .apply {
                                 this.prepareToDraw()
                             }
-                        bitmap
-
                     } else particleState.bitmap
 
                 bitmap?.let {
@@ -352,6 +349,7 @@ fun Modifier.disintegrate(
                     particleState.updateAndDrawParticles(
                         drawScope = this,
                         particleList = particleState.particleList,
+                        bitmap = particleState.bitmap,
                         progress = progress
                     )
                 }
@@ -401,6 +399,8 @@ class ParticleState internal constructor(particleSize: Dp) {
         easing = FastOutSlowInEasing
     )
 
+    private val strategy = DisintegrateStrategy()
+
     fun addParticle(particle: Particle) {
         particleList.add(particle)
     }
@@ -408,54 +408,58 @@ class ParticleState internal constructor(particleSize: Dp) {
     fun updateAndDrawParticles(
         drawScope: DrawScope,
         particleList: SnapshotStateList<Particle>,
+        bitmap: Bitmap?,
         progress: Float
     ) {
-        with(drawScope) {
-            if (animationStatus != AnimationStatus.Idle) {
-
-                drawWithLayer {
-                    particleList.forEach { particle ->
-                        updateParticle(progress, particle)
-
-                        val color = particle.color
-                        val radius = particle.currentSize.width * .5f
-                        val position = particle.currentPosition
-                        val alpha = particle.alpha
-
-                        // Destination
-                        drawCircle(
-                            color = color,
-                            radius = radius,
-                            center = position,
-                            alpha = alpha
-                        )
-                    }
-
-                    clipRect(
-                        left = progress * size.width * 2f
-                    ) {
-                        bitmap?.asImageBitmap()?.let {
-                            // Source
-                            drawImage(
-                                image = it,
-                                blendMode = BlendMode.SrcOut
-                            )
-                        }
-                    }
-
-                    // For debugging
-                    drawRect(
-                        color = Color.Black,
-                        topLeft = Offset(progress * size.width, 0f),
-                        size = Size(size.width - progress * size.width, size.height),
-                        style = Stroke(4.dp.toPx())
-                    )
-                }
+        if (animationStatus != AnimationStatus.Idle) {
+            bitmap?.let {
+                strategy.updateAndDrawParticles(drawScope, particleList, bitmap, progress)
             }
         }
     }
 
     fun createParticles(
+        particleList: SnapshotStateList<Particle>,
+        particleSize: Int,
+        bitmap: Bitmap
+    ) {
+        strategy.createParticles(particleList, particleSize, bitmap)
+    }
+
+    fun updateParticle(progress: Float, particle: Particle) {
+        strategy.updateParticle(progress, particle)
+    }
+
+    fun startAnimation() {
+        animationStatus = AnimationStatus.Initializing
+    }
+
+    suspend fun animate(
+        onStart: () -> Unit,
+        onEnd: () -> Unit
+    ) {
+        try {
+            onStart()
+            animatable.snapTo(0f)
+            animatable.animateTo(
+                targetValue = 1f,
+                animationSpec = animationSpec
+            )
+        } catch (e: CancellationException) {
+            println("FAILED: ${e.message}")
+        } finally {
+            onEnd()
+        }
+    }
+
+    fun dispose() {
+        bitmap?.recycle()
+    }
+}
+
+open class DisintegrateStrategy : ParticleStrategy {
+
+    override fun createParticles(
         particleList: SnapshotStateList<Particle>,
         particleSize: Int,
         bitmap: Bitmap
@@ -494,15 +498,14 @@ class ParticleState internal constructor(particleSize: Dp) {
 
                     // Get trajectory for each 5 percent of the image in x direction
                     // This creates wave effect where particles at the start animation earlier
-                    val sectionFraction = 0.05f
-                    val particleTimeEnd = 0.5f
+                    val sectionFraction = ParticleCreationFraction / 10f
 
                     // This range is between 0-0.5f to display all of the particles
                     // until half of the progress is reached
                     var trajectoryProgressRange = getTrajectoryRange(
                         fraction = fractionToImageWidth,
                         sectionFraction = sectionFraction,
-                        until = particleTimeEnd
+                        until = ParticleCreationFraction
                     )
 
                     // Add randomization for trajectory so particles don't start
@@ -555,7 +558,56 @@ class ParticleState internal constructor(particleSize: Dp) {
         }
     }
 
-    fun updateParticle(progress: Float, particle: Particle) {
+    override fun updateAndDrawParticles(
+        drawScope: DrawScope,
+        particleList: SnapshotStateList<Particle>,
+        bitmap: Bitmap,
+        progress: Float,
+    ) {
+        with(drawScope) {
+
+            drawWithLayer {
+                particleList.forEach { particle ->
+                    updateParticle(progress, particle)
+
+                    val color = particle.color
+                    val radius = particle.currentSize.width * .5f
+                    val position = particle.currentPosition
+                    val alpha = particle.alpha
+
+                    // Destination
+                    drawCircle(
+                        color = color,
+                        radius = radius,
+                        center = position,
+                        alpha = alpha
+                    )
+                }
+
+                clipRect(
+                    left = progress * size.width * 2f
+                ) {
+                    bitmap?.asImageBitmap()?.let {
+                        // Source
+                        drawImage(
+                            image = it,
+                            blendMode = BlendMode.SrcOut
+                        )
+                    }
+                }
+
+                // For debugging
+                drawRect(
+                    color = Color.Black,
+                    topLeft = Offset(progress * size.width, 0f),
+                    size = Size(size.width - progress * size.width, size.height),
+                    style = Stroke(4.dp.toPx())
+                )
+            }
+        }
+    }
+
+    override fun updateParticle(progress: Float, particle: Particle) {
         particle.run {
             // Trajectory progress translates progress from 0f-1f to
             // trajectoryStart-trajectoryEnd
@@ -573,7 +625,6 @@ class ParticleState internal constructor(particleSize: Dp) {
                 initialSize.width + (endSize.width - initialSize.width) * currentTime * .5f
             val height =
                 initialSize.height + (endSize.height - initialSize.height) * currentTime * .5f
-
             currentSize = Size(width, height)
 
             // Set alpha
@@ -587,46 +638,30 @@ class ParticleState internal constructor(particleSize: Dp) {
             val horizontalDisplacement = velocity.x * currentTime
             val verticalDisplacement =
                 velocity.y * currentTime + 0.5f * acceleration * currentTime * currentTime
+
             currentPosition = Offset(
                 x = initialCenter.x + horizontalDisplacement,
                 y = initialCenter.y + verticalDisplacement
             )
         }
     }
-
-    fun startAnimation() {
-        animationStatus = AnimationStatus.Initializing
-    }
-
-    suspend fun animate(
-        onStart: () -> Unit,
-        onEnd: () -> Unit
-    ) {
-        try {
-            onStart()
-            animatable.snapTo(0f)
-            animatable.animateTo(
-                targetValue = 1f,
-                animationSpec = animationSpec
-            )
-        } catch (e: CancellationException) {
-            println("FAILED: ${e.message}")
-        } finally {
-            onEnd()
-        }
-    }
-
-    fun dispose() {
-        bitmap?.recycle()
-    }
 }
 
-interface DisintegrationStrategy {
+interface ParticleStrategy {
+    fun createParticles(
+        particleList: SnapshotStateList<Particle>,
+        particleSize: Int,
+        bitmap: Bitmap
+    )
+
+    fun updateAndDrawParticles(
+        drawScope: DrawScope,
+        particleList: SnapshotStateList<Particle>,
+        bitmap: Bitmap,
+        progress: Float
+    )
+
     fun updateParticle(progress: Float, particle: Particle)
-
-    fun createParticles(particleSize: Int, imageBitmap: ImageBitmap)
-
-    fun updateAndDrawParticles(drawScope: DrawScope)
 }
 
 /**
@@ -704,3 +739,5 @@ private fun DrawScope.drawWithLayer(block: DrawScope.() -> Unit) {
         restoreToCount(checkPoint)
     }
 }
+
+private const val ParticleCreationFraction = 0.5f
