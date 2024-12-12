@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +66,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @Preview
 @Composable
@@ -236,16 +234,16 @@ fun ParticleAnimationSample() {
                     particleState.startAnimation()
                 }
                 .disintegrate(
-//                    progress = progress,
-                particleState = particleState,
-                onStart = {
-                    Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
-                },
-                onEnd = {
-                    particleState.animationStatus = AnimationStatus.Idle
-                    Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
-                }
-            ),
+                    progress = progress,
+                    particleState = particleState,
+                    onStart = {
+                        Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
+                    },
+                    onEnd = {
+//                        particleState.animationStatus = AnimationStatus.Idle
+                        Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
+                    }
+                ),
             quotedImage = R.drawable.avatar_4_raster,
             text = "Some long message",
             messageTime = "11.02.2024",
@@ -263,20 +261,24 @@ fun ParticleAnimationSample() {
                     particleState2.startAnimation()
                 }
                 .disintegrate(
-//                    progress = progress,
+                    progress = progress,
                     particleState = particleState2,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
                     },
                     onEnd = {
-                        particleState2.animationStatus = AnimationStatus.Idle
+//                        particleState2.animationStatus = AnimationStatus.Idle
                         Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
                     }
                 ),
             contentDescription = null
         )
 
-        Text("Progress: ${(progress * 100).roundToInt() / 100f}")
+        Text(
+            text = "Progress: ${(progress * 100).roundToInt() / 100f}",
+            fontSize = 22.sp,
+            color = Color.White
+        )
 
         Slider(
             value = progress,
@@ -394,7 +396,6 @@ class ParticleState internal constructor(particleSize: Dp) {
     var bitmap: Bitmap? = null
         internal set
 
-
     var animationSpec = tween<Float>(
         durationMillis = 2000,
         easing = FastOutSlowInEasing
@@ -417,11 +418,11 @@ class ParticleState internal constructor(particleSize: Dp) {
                         updateParticle(progress, particle)
 
                         val color = particle.color
-                        val radius = particle.currentSize.width * .65f
+                        val radius = particle.currentSize.width * .5f
                         val position = particle.currentPosition
                         val alpha = particle.alpha
 
-                        // Source
+                        // Destination
                         drawCircle(
                             color = color,
                             radius = radius,
@@ -430,11 +431,16 @@ class ParticleState internal constructor(particleSize: Dp) {
                         )
                     }
 
-                    bitmap?.asImageBitmap()?.let {
-                        drawImage(
-                            image = it,
-                            blendMode = BlendMode.SrcIn
-                        )
+                    clipRect(
+                        left = progress * size.width * 2f
+                    ) {
+                        bitmap?.asImageBitmap()?.let {
+                            // Source
+                            drawImage(
+                                image = it,
+                                blendMode = BlendMode.SrcOut
+                            )
+                        }
                     }
 
                     // For debugging
@@ -455,7 +461,6 @@ class ParticleState internal constructor(particleSize: Dp) {
         bitmap: Bitmap
     ) {
 
-        println("CREATE particles thread: ${Thread.currentThread().name}")
         particleList.clear()
 
         val width = bitmap.width
@@ -485,45 +490,48 @@ class ParticleState internal constructor(particleSize: Dp) {
 
                     // If this particle is at 20% of image width in x plane
                     // it returns 0.2f
-                    val fractionToImageWidth = initialCenter.x / width
-                    val fractionToImageHeight = initialCenter.y / height
+                    val fractionToImageWidth = (initialCenter.x - particleRadius) / width
 
                     // Get trajectory for each 5 percent of the image in x direction
                     // This creates wave effect where particles at the start animation earlier
-                    // For fraction that is 0.2f range returns
-                    // (0.15f - offsetMin )..(0.2f + offsetMax)
+                    val sectionFraction = 0.05f
+                    val particleTimeEnd = 0.5f
 
+                    // This range is between 0-0.5f to display all of the particles
+                    // until half of the progress is reached
                     var trajectoryProgressRange = getTrajectoryRange(
                         fraction = fractionToImageWidth,
-                        sectionFraction = .05f
+                        sectionFraction = sectionFraction,
+                        until = particleTimeEnd
                     )
 
-                    // Add some vertical randomization for trajectory so particles don't start
-                    // animating vertically as well. Particles with smaller y value in same x
-                    // coordinate tend to start earlier
-                    val startYOffset =
-                        (fractionToImageHeight * Random.nextFloat()).coerceAtMost(.2f)
+                    // Add randomization for trajectory so particles don't start
+                    // animating in each 5% section vertically
+                    val minOffset = randomInRange(-sectionFraction, sectionFraction)
 
-                    trajectoryProgressRange =
-                        trajectoryProgressRange.start + startYOffset..trajectoryProgressRange.endInclusive
+                    val start = (trajectoryProgressRange.start + minOffset)
+                        .coerceAtLeast(0f)
+                    val end = (start + 0.5f).coerceAtMost(1f)
+                    trajectoryProgressRange = start..end
 
                     val imageMinDimension = width.coerceAtMost(height) * 1f
 
                     val velocityX = randomInRange(
                         // Particles close to end should have less randomization to start of image
-                        -(particleSize * 30f * (1 - fractionToImageWidth))
+                        -(particleSize * 20f * (1 - fractionToImageWidth))
                             .coerceAtMost(imageMinDimension),
-                        (particleSize * 30f).coerceAtMost(imageMinDimension)
+                        (particleSize * 20f).coerceAtMost(imageMinDimension)
                     )
                     val velocityY = randomInRange(
-                        -(particleSize * 20f).coerceAtMost(imageMinDimension),
-                        (particleSize * 30f).coerceAtMost(imageMinDimension)
+                        -(particleSize * 30f).coerceAtMost(imageMinDimension),
+                        (particleSize * 10f).coerceAtMost(imageMinDimension)
                     )
-                    val acceleration = randomInRange(-1f, 1f)
+
+                    val acceleration = randomInRange(10f, 15f)
 
                     // Set initial and final sizes
                     val initialSize = Size(particleSize.toFloat(), particleSize.toFloat())
-                    val endSize = randomInRange(0f, particleSize.toFloat() * .5f)
+                    val endSize = randomInRange(0f, particleSize.toFloat() * .2f)
 
                     particleList.add(
                         Particle(
@@ -550,13 +558,12 @@ class ParticleState internal constructor(particleSize: Dp) {
     fun updateParticle(progress: Float, particle: Particle) {
         particle.run {
             // Trajectory progress translates progress from 0f-1f to
-            // visibilityThresholdLow-visibilityThresholdHigh
-            // range. For instance, 0.1-0.6f range movement starts when
-            // explosionProgress is at 0.1f and reaches 1f
-            // when explosionProgress reaches 0.6f and trajectoryProgress .
+            // trajectoryStart-trajectoryEnd
+            // range. For instance, for trajectory with 0.1-0.6f, trajectoryProgress starts when
+            // progress is at 0.1f and reaches 1f when progress is at 0.6f.
 
-            // Each 0.1f change in trajectoryProgress 0.5f total range
-            // corresponds to 0.2f change of current time
+            // Scale from trajectory to progress, for 0.1-06f trajectory 0.35f(half of range)
+            // corresponds to 0.5f, to trajectoryProgress
             setTrajectoryProgress(progress)
 
             currentTime = trajectoryProgress
@@ -570,18 +577,19 @@ class ParticleState internal constructor(particleSize: Dp) {
             currentSize = Size(width, height)
 
             // Set alpha
-            // While trajectory progress is less than 80% have full alpha then slowly
+            // While trajectory progress is less than 40% have full alpha then slowly
             // reduce to zero for particles to disappear
-            alpha = if (trajectoryProgress == 0f) 1f
-            else if (trajectoryProgress < .5f) 1f
-            else scale(.5f, 1f, trajectoryProgress, 1f, 0f)
+            alpha = if (trajectoryProgress == 0f) 0f
+            else if (trajectoryProgress < .4f) 1f
+            else scale(.4f, 1f, trajectoryProgress, 1f, 0f)
 
-            val horizontalDisplacement = velocity.x * trajectoryProgress
+            // Set position
+            val horizontalDisplacement = velocity.x * currentTime
             val verticalDisplacement =
                 velocity.y * currentTime + 0.5f * acceleration * currentTime * currentTime
             currentPosition = Offset(
                 x = initialCenter.x + horizontalDisplacement,
-                y = initialCenter.y - verticalDisplacement
+                y = initialCenter.y + verticalDisplacement
             )
         }
     }
@@ -637,38 +645,12 @@ fun getTrajectoryRange(
 
     if (sectionFraction == 0f || sectionFraction > 1f) return from..until
     val remainder = fraction % sectionFraction
-    val multiplier = fraction / sectionFraction
 
-    val min = (sectionFraction * (multiplier - 4f) - remainder).coerceAtLeast(from)
-    val max = (sectionFraction * (multiplier + 15f) - remainder).coerceAtMost(until)
-
-    return min..max
-}
-
-/*
-fun getTrajectoryRange(
-    fraction: Float,
-    sectionFraction: Float,
-    from: Float = 0f,
-    until: Float = 1f,
-): ClosedRange<Float> {
-
-    if (sectionFraction == 0f || sectionFraction > 1f) return from..until
-    val remainder = fraction % sectionFraction
-    val multiplier = fraction / sectionFraction
-
-    val min = (
-            (sectionFraction * (multiplier - 1) - remainder) + randomInRange(
-                -sectionFraction,
-                sectionFraction
-            )
-            ).coerceAtLeast(from)
-
-    val max = randomInRange(min + 5 * sectionFraction, until).coerceAtMost(until)
+    val min = ((fraction - remainder) * (until - from)).coerceIn(from, until)
+    val max = (min + sectionFraction).coerceAtMost(until)
 
     return min..max
 }
- */
 
 private fun Particle.setTrajectoryProgress(progress: Float) {
     val trajectoryProgressStart = trajectoryProgressRange.start
