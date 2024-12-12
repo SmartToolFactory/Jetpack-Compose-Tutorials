@@ -38,13 +38,14 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -57,8 +58,10 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomInRange
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
+import com.smarttoolfactory.tutorial1_1basics.ui.BlueGrey400
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @Preview
@@ -158,6 +161,8 @@ fun SingleParticleTrajectorySample() {
                 fontSize = 18.sp
             )
         }
+
+        Text("Progress: ${(progress * 100).roundToInt() / 100f}")
         Slider(
             modifier = Modifier.fillMaxWidth(),
             value = progress,
@@ -233,6 +238,8 @@ fun ParticleAnimationSample() {
             contentDescription = null
         )
 
+        Text("Progress: ${(progress * 100).roundToInt() / 100f}")
+
         Slider(
             value = progress,
             onValueChange = {
@@ -254,15 +261,15 @@ data class Particle(
     val initialCenter: Offset,
     val initialSize: Size,
     val endSize: Size,
-    val color: Color,
     val trajectoryProgressRange: ClosedRange<Float> = 0f..1f,
+    var color: Color,
     var velocity: Velocity = Velocity(0f, 0f),
     var acceleration: Float = -2 * velocity.y
 ) {
     var currentPosition: Offset = initialCenter
         internal set
     var currentSize: Size = initialSize
-
+        internal set
     var alpha = 1f
         internal set
     var currentTime: Float = 0f
@@ -385,39 +392,44 @@ class ParticleState internal constructor(particleSize: Dp) {
         with(drawScope) {
             if (animationStatus != AnimationStatus.Idle) {
 
-                // TODO disintegrate image non-uniformly, with blend mode of particles
-//                clipRect(
-//                    left = progress * size.width
-//                ) {
-//                    bitmap?.asImageBitmap()?.let {
-//                        drawImage(it)
-//                    }
-//                }
+                drawWithLayer {
 
-                particleList.forEach { particle ->
+                    particleList.forEach { particle ->
 
-                    updateParticle(progress, particle)
+                        updateParticle(progress, particle)
 
-                    val color = particle.color
-                    val radius = particle.currentSize.width * .65f
-                    val position = particle.currentPosition
-                    val alpha = particle.alpha
+                        val color = particle.color
+                        val radius = particle.currentSize.width * .65f
+                        val position = particle.currentPosition
+                        val alpha = particle.alpha
 
-                    drawCircle(
-                        color = color,
-                        radius = radius,
-                        center = position,
-                        alpha = alpha
-                    )
+                        drawCircle(
+                            color = color,
+                            radius = radius,
+                            center = position,
+                            alpha = alpha
+                        )
+                    }
+
+                    clipRect(
+                        left = progress * size.width
+                    ) {
+                        bitmap?.asImageBitmap()?.let {
+                            drawImage(
+                                image = it,
+                                blendMode = BlendMode.SrcIn
+                            )
+                        }
+                    }
+
+                    // For debugging
+//                    drawRect(
+//                        color = Color.Black,
+//                        topLeft = Offset(progress * size.width, 0f),
+//                        size = Size(size.width - progress * size.width, size.height),
+//                        style = Stroke(4.dp.toPx())
+//                    )
                 }
-
-                // For debugging
-                drawRect(
-                    color = Color.Black,
-                    topLeft = Offset(progress * size.width, 0f),
-                    size = Size(size.width - progress * size.width, size.height),
-                    style = Stroke(4.dp.toPx())
-                )
             }
         }
     }
@@ -626,4 +638,12 @@ fun getTrajectoryRange(
 
 enum class AnimationStatus {
     Idle, Initializing, Playing
+}
+
+private fun DrawScope.drawWithLayer(block: DrawScope.() -> Unit) {
+    with(drawContext.canvas.nativeCanvas) {
+        val checkPoint = saveLayer(null, null)
+        block()
+        restoreToCount(checkPoint)
+    }
 }
