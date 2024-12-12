@@ -9,6 +9,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -63,6 +64,11 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomInRange
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -227,24 +233,27 @@ fun ParticleAnimationSample() {
             mutableFloatStateOf(0f)
         }
 
-
-        SentMessageRowAlt(
-            modifier = Modifier.disintegrate(
-//                    progress = progress,
-                particleState = particleState,
-                onStart = {
-                    Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
-                },
-                onEnd = {
-                    particleState.animationStatus = AnimationStatus.Idle
-                    Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
-                }
-            ),
-            quotedImage = R.drawable.avatar_4_raster,
-            text = "Some long message",
-            messageTime = "11.02.2024",
-            messageStatus = MessageStatus.READ
-        )
+//        SentMessageRowAlt(
+//            modifier = Modifier
+//                .clickable {
+//                    particleState.startAnimation()
+//                }
+//                .disintegrate(
+////                    progress = progress,
+//                particleState = particleState,
+//                onStart = {
+//                    Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
+//                },
+//                onEnd = {
+//                    particleState.animationStatus = AnimationStatus.Idle
+//                    Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
+//                }
+//            ),
+//            quotedImage = R.drawable.avatar_4_raster,
+//            text = "Some long message",
+//            messageTime = "11.02.2024",
+//            messageStatus = MessageStatus.READ
+//        )
 
         Spacer(Modifier.height(16.dp))
 
@@ -253,14 +262,17 @@ fun ParticleAnimationSample() {
             modifier = Modifier
                 .border(2.dp, Color.Red)
                 .size(widthDp)
+                .clickable {
+                    particleState2.startAnimation()
+                }
                 .disintegrate(
-//                    progress = progress,
+                    progress = progress,
                     particleState = particleState2,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
                     },
                     onEnd = {
-                        particleState2.animationStatus = AnimationStatus.Idle
+//                        particleState2.animationStatus = AnimationStatus.Idle
                         Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
                     }
                 ),
@@ -275,15 +287,6 @@ fun ParticleAnimationSample() {
                 progress = it
             }
         )
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                particleState.startAnimation()
-                particleState2.startAnimation()
-            }
-        ) {
-            Text("Convert graphicsLayer to particles")
-        }
     }
 }
 
@@ -337,28 +340,37 @@ fun Modifier.disintegrate(
     LaunchedEffect(animationStatus != AnimationStatus.Idle) {
         if (animationStatus != AnimationStatus.Idle) {
 
-            if (particleState.bitmap == null || particleState.bitmap?.isRecycled == true) {
-                val bitmap = graphicsLayer
-                    .toImageBitmap()
-                    .asAndroidBitmap()
-                    .copy(Bitmap.Config.ARGB_8888, false)
+            withContext(Dispatchers.Default) {
+                val bitmap =
+                    if (particleState.bitmap == null || particleState.bitmap?.isRecycled == true) {
 
-                bitmap.prepareToDraw()
+                        val bitmap = graphicsLayer
+                            .toImageBitmap()
+                            .asAndroidBitmap()
+                            .copy(Bitmap.Config.ARGB_8888, false)
+                            .apply {
+                                this.prepareToDraw()
+                            }
+                        bitmap
 
-                particleState.bitmap = bitmap
+                    } else particleState.bitmap
 
-                particleState.createParticles(
-                    particleList = particleState.particleList,
-                    particleSize = particleSizePx,
-                    bitmap = bitmap
-                )
+                bitmap?.let {
+                    particleState.createParticles(
+                        particleList = particleState.particleList,
+                        particleSize = particleSizePx,
+                        bitmap = bitmap
+                    )
+
+                    withContext(Dispatchers.Main) {
+                        particleState.animationStatus = AnimationStatus.Playing
+                        particleState.animate(
+                            onStart = onStart,
+                            onEnd = onEnd
+                        )
+                    }
+                }
             }
-
-            particleState.animationStatus = AnimationStatus.Playing
-            particleState.animate(
-                onStart = onStart,
-                onEnd = onEnd
-            )
         }
     }
 
@@ -370,19 +382,19 @@ fun Modifier.disintegrate(
                     graphicsLayer.record {
                         this@onDrawWithContent.drawContent()
                     }
+                } else {
+                    particleState.updateAndDrawParticles(
+                        drawScope = this,
+                        particleList = particleState.particleList,
+                        progress = progress
+                    )
                 }
-
-                particleState.updateAndDrawParticles(
-                    drawScope = this,
-                    particleList = particleState.particleList,
-                    progress = progress
-                )
             }
         }
 }
 
 @Composable
-fun rememberParticleState(particleSize: Dp = 1.dp): ParticleState {
+fun rememberParticleState(particleSize: Dp = 2.dp): ParticleState {
     return remember {
         ParticleState(particleSize)
     }
@@ -404,6 +416,7 @@ class ParticleState internal constructor(particleSize: Dp) {
 
     var bitmap: Bitmap? = null
         internal set
+
 
     var animationSpec = tween<Float>(
         durationMillis = 2000,
@@ -431,6 +444,7 @@ class ParticleState internal constructor(particleSize: Dp) {
                         val position = particle.currentPosition
                         val alpha = particle.alpha
 
+                        // Destination
                         drawCircle(
                             color = color,
                             radius = radius,
@@ -442,10 +456,12 @@ class ParticleState internal constructor(particleSize: Dp) {
                     clipRect(
                         left = progress * size.width
                     ) {
+
+                        // Source
                         bitmap?.asImageBitmap()?.let {
                             drawImage(
                                 image = it,
-                                blendMode = BlendMode.SrcIn
+                                blendMode = BlendMode.SrcOut
                             )
                         }
                     }
@@ -467,6 +483,8 @@ class ParticleState internal constructor(particleSize: Dp) {
         particleSize: Int,
         bitmap: Bitmap
     ) {
+
+        println("CREATE particles thread: ${Thread.currentThread().name}")
         particleList.clear()
 
         val width = bitmap.width
