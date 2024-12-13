@@ -4,7 +4,8 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -24,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -57,6 +59,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.packFloats
+import androidx.compose.ui.util.unpackFloat1
+import androidx.compose.ui.util.unpackFloat2
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageStatus
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.SentMessageRowAlt
@@ -103,7 +108,7 @@ fun SingleParticleTrajectorySample() {
 
         val velocity = Velocity(
             x = sizePxHalf,
-            y = sizePxHalf * 4
+            y = -sizePxHalf * 4
         )
 
         particleState.addParticle(
@@ -116,7 +121,7 @@ fun SingleParticleTrajectorySample() {
                 initialSize = Size(particleSize, particleSize),
                 endSize = Size(sizePx, sizePx),
                 velocity = velocity,
-                acceleration = -2 * velocity.y,
+                acceleration = Acceleration(0f, -2 * velocity.y),
                 trajectoryProgressRange = trajectoryProgressStart..trajectoryProgressEnd
             )
         )
@@ -258,7 +263,7 @@ fun ParticleAnimationSample() {
                 .border(2.dp, Color.Red)
                 .size(widthDp)
                 .clickable {
-                    particleState2.changeProgressManually = true
+                    particleState2.forceUpdateProgress = true
                     particleState2.startAnimation()
                 }
                 .disintegrate(
@@ -377,17 +382,29 @@ fun Modifier.disintegrate(
 @Composable
 fun rememberParticleState(
     particleSize: Dp = 2.dp,
+    animationSpec: AnimationSpec<Float> = tween(
+        durationMillis = 2000,
+        easing = FastOutLinearInEasing
+    ),
+    strategy: ParticleStrategy = DisintegrateStrategy()
 ): ParticleState {
-    return remember {
-        ParticleState(particleSize)
+    return remember(
+//        particleSize, strategy, animationSpec
+    ) {
+        ParticleState(
+            particleSize = particleSize,
+            animationSpec = animationSpec,
+            strategy = strategy
+        )
     }
 }
 
 @Stable
-class ParticleState internal constructor(particleSize: Dp) {
-
-    var particleSize by mutableStateOf(particleSize)
-
+class ParticleState internal constructor(
+    val particleSize: Dp,
+    val animationSpec: AnimationSpec<Float>,
+    val strategy: ParticleStrategy,
+) {
     val animatable = Animatable(0f)
     val particleList = mutableStateListOf<Particle>()
 
@@ -400,14 +417,7 @@ class ParticleState internal constructor(particleSize: Dp) {
     var bitmap: ImageBitmap? = null
         internal set
 
-    var animationSpec = tween<Float>(
-        durationMillis = 2000,
-        easing = FastOutSlowInEasing
-    )
-
-    var changeProgressManually: Boolean = false
-
-    private val strategy: ParticleStrategy = DisintegrateStrategy()
+    var forceUpdateProgress: Boolean = false
 
     fun addParticle(particle: Particle) {
         particleList.add(particle)
@@ -449,7 +459,7 @@ class ParticleState internal constructor(particleSize: Dp) {
         try {
             onStart()
             animatable.snapTo(0f)
-            if (changeProgressManually.not()) {
+            if (forceUpdateProgress.not()) {
                 animatable.animateTo(
                     targetValue = 1f,
                     animationSpec = animationSpec
@@ -458,7 +468,7 @@ class ParticleState internal constructor(particleSize: Dp) {
         } catch (e: CancellationException) {
             Log.e("Particle", "${e.message}")
         } finally {
-            if (changeProgressManually.not()) {
+            if (forceUpdateProgress.not()) {
                 animationStatus = AnimationStatus.Idle
                 onEnd()
             }
@@ -540,14 +550,15 @@ open class DisintegrateStrategy : ParticleStrategy {
                     )
                     val velocityY = randomInRange(
                         -(particleSize * 30f).coerceAtMost(imageMinDimension),
-                        (particleSize * 10f).coerceAtMost(imageMinDimension)
+                        (particleSize * 30f).coerceAtMost(imageMinDimension)
                     )
 
-                    val acceleration = randomInRange(10f, 15f)
+                    val acceleration =
+                        Acceleration(0f, randomInRange(-velocityY * .1f, -velocityY * .2f))
 
                     // Set initial and final sizes
                     val initialSize = Size(particleSize.toFloat(), particleSize.toFloat())
-                    val endSize = randomInRange(0f, particleSize.toFloat() * .2f)
+                    val endSize = randomInRange(.4f, particleSize.toFloat() * .7f)
 
                     particleList.add(
                         Particle(
@@ -645,9 +656,10 @@ open class DisintegrateStrategy : ParticleStrategy {
             else scale(.4f, 1f, trajectoryProgress, 1f, 0f)
 
             // Set position
-            val horizontalDisplacement = velocity.x * currentTime
+            val horizontalDisplacement =
+                velocity.x * currentTime + 0.5f * acceleration.x * currentTime * currentTime
             val verticalDisplacement =
-                velocity.y * currentTime + 0.5f * acceleration * currentTime * currentTime
+                velocity.y * currentTime + 0.5f * acceleration.y * currentTime * currentTime
 
             currentPosition = Offset(
                 x = initialCenter.x + horizontalDisplacement,
@@ -658,12 +670,10 @@ open class DisintegrateStrategy : ParticleStrategy {
 }
 
 data class ParticleBoundaries(
-    val velocityHorizontalLowerBound: ClosedRange<Float>? = null,
-    val velocityHorizontalUpperBound: ClosedRange<Float>? = null,
-    val velocityVerticalLowerBound: ClosedRange<Float>? = null,
-    val velocityVerticalUpperBound: ClosedRange<Float>? = null,
-    val accelerationLowerBound: ClosedRange<Float>? = null,
-    val accelerationLowerUpperBound: ClosedRange<Float>? = null,
+    val velocityLowerBound: Velocity? = null,
+    val velocityUpperBound: Velocity? = null,
+    val accelerationLowerBound: Acceleration? = null,
+    val accelerationLowerUpperBound: Acceleration? = null,
     val startSizeLowerBound: Size? = null,
     val startSizeUpperBound: Size? = null,
     val endSizeLowerBound: Size? = null,
@@ -740,7 +750,7 @@ data class Particle(
     val trajectoryProgressRange: ClosedRange<Float> = 0f..1f,
     var color: Color,
     var velocity: Velocity = Velocity(0f, 0f),
-    var acceleration: Float = 0f
+    var acceleration: Acceleration = Acceleration(0f, 0f)
 ) {
     var currentPosition: Offset = initialCenter
         internal set
@@ -755,7 +765,7 @@ data class Particle(
 }
 
 enum class AnimationStatus {
-    Idle, Initializing, Playing, Finished
+    Idle, Initializing, Playing
 }
 
 private fun DrawScope.drawWithLayer(block: DrawScope.() -> Unit) {
@@ -767,3 +777,37 @@ private fun DrawScope.drawWithLayer(block: DrawScope.() -> Unit) {
 }
 
 private const val ParticleCreationFraction = 0.5f
+
+@Stable
+fun Acceleration(x: Float, y: Float) = Acceleration(packFloats(x, y))
+
+/**
+ * A two dimensional velocity in pixels per second.
+ */
+@Immutable
+@JvmInline
+value class Acceleration internal constructor(private val packedValue: Long) {
+    /**
+     * The horizontal component of the velocity in pixels per second.
+     */
+    @Stable
+    val x: Float get() = unpackFloat1(packedValue)
+
+    /**
+     * The vertical component of the velocity in pixels per second.
+     */
+    @Stable
+    val y: Float get() = unpackFloat2(packedValue)
+
+    /**
+     * The horizontal component of the velocity in pixels per second.
+     */
+    @Stable
+    inline operator fun component1(): Float = x
+
+    /**
+     * The vertical component of the velocity in pixels per second.
+     */
+    @Stable
+    inline operator fun component2(): Float = y
+}
