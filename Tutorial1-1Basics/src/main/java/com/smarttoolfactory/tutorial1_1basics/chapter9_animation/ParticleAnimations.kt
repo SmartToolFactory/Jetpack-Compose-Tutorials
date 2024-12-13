@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -234,13 +235,12 @@ fun ParticleAnimationSample() {
                     particleState.startAnimation()
                 }
                 .disintegrate(
-                    progress = progress,
+//                    progress = progress,
                     particleState = particleState,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
                     },
                     onEnd = {
-//                        particleState.animationStatus = AnimationStatus.Idle
                         Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
                     }
                 ),
@@ -258,6 +258,7 @@ fun ParticleAnimationSample() {
                 .border(2.dp, Color.Red)
                 .size(widthDp)
                 .clickable {
+                    particleState2.changeProgressManually = true
                     particleState2.startAnimation()
                 }
                 .disintegrate(
@@ -267,7 +268,6 @@ fun ParticleAnimationSample() {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
                     },
                     onEnd = {
-//                        particleState2.animationStatus = AnimationStatus.Idle
                         Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
                     }
                 ),
@@ -306,8 +306,11 @@ fun Modifier.disintegrate(
         if (animationStatus != AnimationStatus.Idle) {
 
             withContext(Dispatchers.Default) {
+
+                val currentBitmap = particleState.bitmap?.asAndroidBitmap()
+
                 val bitmap =
-                    if (particleState.bitmap == null || particleState.bitmap?.isRecycled == true) {
+                    if (currentBitmap == null || currentBitmap.isRecycled) {
                         graphicsLayer
                             .toImageBitmap()
                             .asAndroidBitmap()
@@ -315,10 +318,11 @@ fun Modifier.disintegrate(
                             .apply {
                                 this.prepareToDraw()
                             }
-                    } else particleState.bitmap
+
+                    } else particleState.bitmap?.asAndroidBitmap()
 
                 bitmap?.let {
-                    particleState.bitmap = bitmap
+                    particleState.bitmap = bitmap.asImageBitmap()
                     particleState.createParticles(
                         particleList = particleState.particleList,
                         particleSize = particleSizePx,
@@ -371,7 +375,9 @@ fun Modifier.disintegrate(
 )
 
 @Composable
-fun rememberParticleState(particleSize: Dp = 2.dp): ParticleState {
+fun rememberParticleState(
+    particleSize: Dp = 2.dp,
+): ParticleState {
     return remember {
         ParticleState(particleSize)
     }
@@ -391,7 +397,7 @@ class ParticleState internal constructor(particleSize: Dp) {
     val progress: Float
         get() = animatable.value
 
-    var bitmap: Bitmap? = null
+    var bitmap: ImageBitmap? = null
         internal set
 
     var animationSpec = tween<Float>(
@@ -399,7 +405,9 @@ class ParticleState internal constructor(particleSize: Dp) {
         easing = FastOutSlowInEasing
     )
 
-    private val strategy = DisintegrateStrategy()
+    var changeProgressManually: Boolean = false
+
+    private val strategy: ParticleStrategy = DisintegrateStrategy()
 
     fun addParticle(particle: Particle) {
         particleList.add(particle)
@@ -408,7 +416,7 @@ class ParticleState internal constructor(particleSize: Dp) {
     fun updateAndDrawParticles(
         drawScope: DrawScope,
         particleList: SnapshotStateList<Particle>,
-        bitmap: Bitmap?,
+        bitmap: ImageBitmap?,
         progress: Float
     ) {
         if (animationStatus != AnimationStatus.Idle) {
@@ -441,19 +449,24 @@ class ParticleState internal constructor(particleSize: Dp) {
         try {
             onStart()
             animatable.snapTo(0f)
-            animatable.animateTo(
-                targetValue = 1f,
-                animationSpec = animationSpec
-            )
+            if (changeProgressManually.not()) {
+                animatable.animateTo(
+                    targetValue = 1f,
+                    animationSpec = animationSpec
+                )
+            }
         } catch (e: CancellationException) {
-            println("FAILED: ${e.message}")
+            Log.e("Particle", "${e.message}")
         } finally {
-            onEnd()
+            if (changeProgressManually.not()) {
+                animationStatus = AnimationStatus.Idle
+                onEnd()
+            }
         }
     }
 
     fun dispose() {
-        bitmap?.recycle()
+        bitmap?.asAndroidBitmap()?.recycle()
     }
 }
 
@@ -561,7 +574,7 @@ open class DisintegrateStrategy : ParticleStrategy {
     override fun updateAndDrawParticles(
         drawScope: DrawScope,
         particleList: SnapshotStateList<Particle>,
-        bitmap: Bitmap,
+        imageBitmap: ImageBitmap,
         progress: Float,
     ) {
         with(drawScope) {
@@ -587,13 +600,10 @@ open class DisintegrateStrategy : ParticleStrategy {
                 clipRect(
                     left = progress * size.width * 2f
                 ) {
-                    bitmap?.asImageBitmap()?.let {
-                        // Source
-                        drawImage(
-                            image = it,
-                            blendMode = BlendMode.SrcOut
-                        )
-                    }
+                    drawImage(
+                        image = imageBitmap,
+                        blendMode = BlendMode.SrcOut
+                    )
                 }
 
                 // For debugging
@@ -622,9 +632,9 @@ open class DisintegrateStrategy : ParticleStrategy {
 
             // Set size
             val width =
-                initialSize.width + (endSize.width - initialSize.width) * currentTime * .5f
+                initialSize.width + (endSize.width - initialSize.width) * currentTime
             val height =
-                initialSize.height + (endSize.height - initialSize.height) * currentTime * .5f
+                initialSize.height + (endSize.height - initialSize.height) * currentTime
             currentSize = Size(width, height)
 
             // Set alpha
@@ -647,7 +657,23 @@ open class DisintegrateStrategy : ParticleStrategy {
     }
 }
 
+data class ParticleBoundaries(
+    val velocityHorizontalLowerBound: ClosedRange<Float>? = null,
+    val velocityHorizontalUpperBound: ClosedRange<Float>? = null,
+    val velocityVerticalLowerBound: ClosedRange<Float>? = null,
+    val velocityVerticalUpperBound: ClosedRange<Float>? = null,
+    val accelerationLowerBound: ClosedRange<Float>? = null,
+    val accelerationLowerUpperBound: ClosedRange<Float>? = null,
+    val startSizeLowerBound: Size? = null,
+    val startSizeUpperBound: Size? = null,
+    val endSizeLowerBound: Size? = null,
+    val endSizeUpperBound: Size? = null,
+    val alphaLowerBound: ClosedRange<Float>? = null,
+    val alphaUpperbound: ClosedRange<Float>? = null
+)
+
 interface ParticleStrategy {
+
     fun createParticles(
         particleList: SnapshotStateList<Particle>,
         particleSize: Int,
@@ -657,7 +683,7 @@ interface ParticleStrategy {
     fun updateAndDrawParticles(
         drawScope: DrawScope,
         particleList: SnapshotStateList<Particle>,
-        bitmap: Bitmap,
+        imageBitmap: ImageBitmap,
         progress: Float
     )
 
@@ -729,7 +755,7 @@ data class Particle(
 }
 
 enum class AnimationStatus {
-    Idle, Initializing, Playing
+    Idle, Initializing, Playing, Finished
 }
 
 private fun DrawScope.drawWithLayer(block: DrawScope.() -> Unit) {
