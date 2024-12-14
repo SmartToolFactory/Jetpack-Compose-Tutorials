@@ -313,18 +313,6 @@ fun GraphicsLayerToParticles() {
                                     println("alive particle size: $aliveParticle, progress: $progress")
                                 }
                             )
-//                            animatable.snapTo(1f)
-//                            graphicsLayer.toImageBitmap().let {
-//                                particleList.clear()
-//                                particleList.addAll(
-//                                    createParticles(
-//                                        imageBitmap = it.asAndroidBitmap()
-//                                            .copy(Bitmap.Config.ARGB_8888, false)
-//                                            .asImageBitmap(),
-//                                        particleSize = particleSize.toInt()
-//                                    )
-//                                )
-//                            }
                         }
                     }
                     .size(widthDp)
@@ -456,4 +444,3 @@ fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<TestParti
 
     return particleList
 }
-

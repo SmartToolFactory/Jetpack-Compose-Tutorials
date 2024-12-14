@@ -82,16 +82,11 @@ private fun Easingsample() {
 
             val x = (width * currentTime / 1000f).coerceAtMost(1000f)
 
-//            val y = height * (1 - progress)
-            val y = height * progress
+            val y = height * (1 - progress)
 
             (animatable.velocity as? Float)?.let {
                 totalVelocity += it
             }
-            println(
-                "Time: $currentTime, progress: $progress, x: $x, y: $y, " +
-                        "velocity: ${animatable.velocity}, totalVelocity: $totalVelocity"
-            )
 
             if (path.isEmpty.not()) {
                 path.lineTo(x, y)
@@ -117,7 +112,7 @@ private fun Easingsample() {
                         targetValue = 1f,
                         animationSpec = tween(
                             durationMillis = 1000,
-                            easing = LinearEasing
+                            easing = LinearOutSlowInEasing
                         )
                     )
 
@@ -131,14 +126,18 @@ private fun Easingsample() {
     }
 }
 
+data class PathWithAnimatable(val path: Path, val animatable: Animatable<Float, AnimationVector1D>)
 
 @Preview
 @Composable
 private fun EasingTest2() {
 
-    val animatableList = remember {
+    val data = remember {
         List(5) {
-            Animatable(0f)
+            PathWithAnimatable(
+                Path(),
+                Animatable(0f)
+            )
         }
     }
 
@@ -151,17 +150,19 @@ private fun EasingTest2() {
     Column {
         Box(modifier = Modifier.fillMaxWidth().aspectRatio(1f)) {
 
-            animatableList.forEachIndexed { index, animatable ->
+            data.forEachIndexed { index, data ->
                 val color = when (index) {
                     0 -> Color.Red
-                    1 -> Color.Yellow
+                    1 -> Color.Blue
                     2 -> Color.Green
                     3 -> Color.Magenta
                     else -> Color.Black
                 }
 
                 EasingTestBox(
-                    animatable = animatable,
+                    modifier = Modifier.padding(16.dp),
+                    animatable = data.animatable,
+                    path = data.path,
                     color = color,
                     startTime = startTime
                 )
@@ -173,7 +174,7 @@ private fun EasingTest2() {
             onClick = {
 
                 startTime = System.currentTimeMillis()
-                animatableList.forEachIndexed { index, animatable ->
+                data.forEachIndexed { index, data ->
 
                     val animationSpec = when (index) {
                         0 -> tween(
@@ -201,12 +202,16 @@ private fun EasingTest2() {
                         else -> spring()
                     }
                     coroutineScope.launch {
+
+                        val path = data.path
+                        path.reset()
+                        val animatable = data.animatable
+
                         animatable.snapTo(0f)
                         animatable.animateTo(
-                            targetValue = 0f,
+                            targetValue = 1f,
                             animationSpec = animationSpec
                         )
-
                     }
                 }
             }
@@ -220,17 +225,14 @@ private fun EasingTest2() {
 
 @Composable
 private fun EasingTestBox(
+    modifier: Modifier = Modifier,
+    path: Path,
     animatable: Animatable<Float, AnimationVector1D>,
     startTime: Long,
     color: Color,
 ) {
-
-    val path = remember {
-        Path()
-    }
-
     Canvas(
-        modifier = Modifier.fillMaxWidth().aspectRatio(1f).border(1.dp, Color.Blue)
+        modifier = modifier.fillMaxWidth().aspectRatio(1f).border(1.dp, Color.Blue)
     ) {
         val progress = animatable.value
         val width = size.width
