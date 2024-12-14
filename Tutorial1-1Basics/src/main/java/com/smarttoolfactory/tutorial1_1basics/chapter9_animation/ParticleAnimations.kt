@@ -386,15 +386,17 @@ fun rememberParticleState(
         durationMillis = 2000,
         easing = FastOutLinearInEasing
     ),
-    strategy: ParticleStrategy = DisintegrateStrategy()
+    strategy: ParticleStrategy = DisintegrateStrategy(),
+    particleBoundaries: ParticleBoundaries? = null
 ): ParticleState {
     return remember(
-//        particleSize, strategy, animationSpec
+//        particleSize, strategy, animationSpec, particleBoundaries
     ) {
         ParticleState(
             particleSize = particleSize,
             animationSpec = animationSpec,
-            strategy = strategy
+            strategy = strategy,
+            particleBoundaries = particleBoundaries
         )
     }
 }
@@ -404,6 +406,7 @@ class ParticleState internal constructor(
     val particleSize: Dp,
     val animationSpec: AnimationSpec<Float>,
     val strategy: ParticleStrategy,
+    val particleBoundaries: ParticleBoundaries?,
 ) {
     val animatable = Animatable(0f)
     val particleList = mutableStateListOf<Particle>()
@@ -431,7 +434,12 @@ class ParticleState internal constructor(
     ) {
         if (animationStatus != AnimationStatus.Idle) {
             bitmap?.let {
-                strategy.updateAndDrawParticles(drawScope, particleList, bitmap, progress)
+                strategy.updateAndDrawParticles(
+                    drawScope = drawScope,
+                    particleList = particleList, imageBitmap = bitmap,
+                    progress = progress,
+                    particleBoundaries = particleBoundaries
+                )
             }
         }
     }
@@ -439,13 +447,21 @@ class ParticleState internal constructor(
     fun createParticles(
         particleList: SnapshotStateList<Particle>,
         particleSize: Int,
-        bitmap: Bitmap
+        bitmap: Bitmap,
     ) {
-        strategy.createParticles(particleList, particleSize, bitmap)
+        strategy.createParticles(
+            particleList = particleList,
+            particleSize = particleSize,
+            bitmap = bitmap,
+            particleBoundaries = particleBoundaries
+        )
     }
 
     fun updateParticle(progress: Float, particle: Particle) {
-        strategy.updateParticle(progress, particle)
+        strategy.updateParticle(
+            progress = progress,
+            particle = particle
+        )
     }
 
     fun startAnimation() {
@@ -485,7 +501,8 @@ open class DisintegrateStrategy : ParticleStrategy {
     override fun createParticles(
         particleList: SnapshotStateList<Particle>,
         particleSize: Int,
-        bitmap: Bitmap
+        bitmap: Bitmap,
+        particleBoundaries: ParticleBoundaries?
     ) {
 
         particleList.clear()
@@ -542,23 +559,55 @@ open class DisintegrateStrategy : ParticleStrategy {
 
                     val imageMinDimension = width.coerceAtMost(height) * 1f
 
+                    val velocityHorizontalMin =
+                        particleBoundaries?.velocityLowerBound?.x ?: (particleSize * 20f)
+                    val velocityHorizontalMax =
+                        particleBoundaries?.velocityUpperBound?.x ?: (particleSize * 20f)
+
+                    val velocityVerticalMin =
+                        particleBoundaries?.velocityLowerBound?.y ?: (particleSize * 30f)
+                    val velocityVerticalMax =
+                        particleBoundaries?.velocityUpperBound?.y ?: (particleSize * 30f)
+
                     val velocityX = randomInRange(
                         // Particles close to end should have less randomization to start of image
-                        -(particleSize * 20f * (1 - fractionToImageWidth))
+                        -(velocityHorizontalMin * (1 - fractionToImageWidth))
                             .coerceAtMost(imageMinDimension),
-                        (particleSize * 20f).coerceAtMost(imageMinDimension)
+                        (velocityHorizontalMax).coerceAtMost(imageMinDimension)
                     )
                     val velocityY = randomInRange(
-                        -(particleSize * 30f).coerceAtMost(imageMinDimension),
-                        (particleSize * 30f).coerceAtMost(imageMinDimension)
+                        -(velocityVerticalMin).coerceAtMost(imageMinDimension),
+                        (velocityVerticalMax).coerceAtMost(imageMinDimension)
                     )
 
-                    val acceleration =
-                        Acceleration(0f, randomInRange(-velocityY * .1f, -velocityY * .2f))
+                    val accelerationHorizontalMin =
+                        particleBoundaries?.accelerationLowerBound?.x ?: 0f
+                    val accelerationHorizontalMax =
+                        particleBoundaries?.accelerationLowerBound?.x ?: 0f
 
+                    val accelerationVerticalMin =
+                        particleBoundaries?.accelerationLowerBound?.y ?: (-velocityY * .1f)
+                    val accelerationVerticalMax =
+                        particleBoundaries?.accelerationLowerBound?.y ?: (-velocityY * .2f)
+
+                    val acceleration = Acceleration(
+                        randomInRange(accelerationHorizontalMin, accelerationHorizontalMax),
+                        randomInRange(accelerationVerticalMin, accelerationVerticalMax)
+                    )
+
+                    // TODO Add boundaries for size
                     // Set initial and final sizes
                     val initialSize = Size(particleSize.toFloat(), particleSize.toFloat())
                     val endSize = randomInRange(.4f, particleSize.toFloat() * .7f)
+
+                    // Set alpha
+                    val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
+                    val alphaStartMax = (particleBoundaries?.alphaLowerBound?.endInclusive) ?: 1f
+                    val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
+
+                    val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
+                    val alphaEndMax = (particleBoundaries?.alphaLowerBound?.endInclusive) ?: 0f
+                    val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
 
                     particleList.add(
                         Particle(
@@ -571,7 +620,9 @@ open class DisintegrateStrategy : ParticleStrategy {
                                 x = velocityX,
                                 y = velocityY
                             ),
-                            acceleration = acceleration
+                            acceleration = acceleration,
+                            initialAlpha = alphaStart,
+                            endAlpha = alphaEnd
                         )
                     )
 
@@ -587,12 +638,16 @@ open class DisintegrateStrategy : ParticleStrategy {
         particleList: SnapshotStateList<Particle>,
         imageBitmap: ImageBitmap,
         progress: Float,
+        particleBoundaries: ParticleBoundaries?
     ) {
         with(drawScope) {
 
             drawWithLayer {
                 particleList.forEach { particle ->
-                    updateParticle(progress, particle)
+                    updateParticle(
+                        progress = progress,
+                        particle = particle
+                    )
 
                     val color = particle.color
                     val radius = particle.currentSize.width * .5f
@@ -628,7 +683,10 @@ open class DisintegrateStrategy : ParticleStrategy {
         }
     }
 
-    override fun updateParticle(progress: Float, particle: Particle) {
+    override fun updateParticle(
+        progress: Float,
+        particle: Particle
+    ) {
         particle.run {
             // Trajectory progress translates progress from 0f-1f to
             // trajectoryStart-trajectoryEnd
@@ -653,7 +711,7 @@ open class DisintegrateStrategy : ParticleStrategy {
             // reduce to zero for particles to disappear
             alpha = if (trajectoryProgress == 0f) 0f
             else if (trajectoryProgress < .4f) 1f
-            else scale(.4f, 1f, trajectoryProgress, 1f, 0f)
+            else scale(.4f, 1f, trajectoryProgress, particle.initialAlpha, particle.endAlpha)
 
             // Set position
             val horizontalDisplacement =
@@ -687,17 +745,22 @@ interface ParticleStrategy {
     fun createParticles(
         particleList: SnapshotStateList<Particle>,
         particleSize: Int,
-        bitmap: Bitmap
+        bitmap: Bitmap,
+        particleBoundaries: ParticleBoundaries?
     )
 
     fun updateAndDrawParticles(
         drawScope: DrawScope,
         particleList: SnapshotStateList<Particle>,
         imageBitmap: ImageBitmap,
-        progress: Float
+        progress: Float,
+        particleBoundaries: ParticleBoundaries?
     )
 
-    fun updateParticle(progress: Float, particle: Particle)
+    fun updateParticle(
+        progress: Float,
+        particle: Particle
+    )
 }
 
 /**
@@ -748,6 +811,8 @@ data class Particle(
     val initialSize: Size,
     val endSize: Size,
     val trajectoryProgressRange: ClosedRange<Float> = 0f..1f,
+    val initialAlpha: Float = 1f,
+    val endAlpha: Float = 0f,
     var color: Color,
     var velocity: Velocity = Velocity(0f, 0f),
     var acceleration: Acceleration = Acceleration(0f, 0f)
@@ -798,16 +863,4 @@ value class Acceleration internal constructor(private val packedValue: Long) {
      */
     @Stable
     val y: Float get() = unpackFloat2(packedValue)
-
-    /**
-     * The horizontal component of the velocity in pixels per second.
-     */
-    @Stable
-    inline operator fun component1(): Float = x
-
-    /**
-     * The vertical component of the velocity in pixels per second.
-     */
-    @Stable
-    inline operator fun component2(): Float = y
 }
