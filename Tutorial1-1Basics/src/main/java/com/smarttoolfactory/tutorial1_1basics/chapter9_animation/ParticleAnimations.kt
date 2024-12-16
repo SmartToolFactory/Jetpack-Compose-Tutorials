@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -44,6 +45,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -65,13 +67,19 @@ import androidx.compose.ui.util.unpackFloat2
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.MessageStatus
 import com.smarttoolfactory.tutorial1_1basics.chapter3_layout.chat.SentMessageRowAlt
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.degreeToRadian
+import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomBoolean
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.randomInRange
 import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.random.Random
 
 @Preview
 @Composable
@@ -225,8 +233,20 @@ fun ParticleAnimationSample() {
             500.toDp()
         }
 
-        val particleState = rememberParticleState()
-        val particleState2 = rememberParticleState()
+        val particleState = rememberParticleState(
+            particleSize = 1.5.dp,
+            animationSpec = tween(durationMillis = 1000, easing = FastOutLinearInEasing)
+        )
+
+        val particleState2 = rememberParticleState(
+            particleSize = 4.dp,
+            strategy = DefaultStrategy(),
+            animationSpec = tween(durationMillis = 1000)
+        )
+
+        val particleState3 = rememberParticleState(
+            particleSize = 1.5.dp
+        )
 
         val context = LocalContext.current
 
@@ -240,7 +260,6 @@ fun ParticleAnimationSample() {
                     particleState.startAnimation()
                 }
                 .disintegrate(
-//                    progress = progress,
                     particleState = particleState,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
@@ -258,17 +277,38 @@ fun ParticleAnimationSample() {
         Spacer(Modifier.height(16.dp))
 
         Image(
+            painter = painterResource(R.drawable.avatar_5_raster),
+            modifier = Modifier
+                .size(80.dp)
+                .clickable {
+                    particleState2.startAnimation()
+                }
+                .disintegrate(
+                    particleState = particleState2,
+                    onStart = {
+                        Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
+                    },
+                    onEnd = {
+                        Toast.makeText(context, "Animation ended...", Toast.LENGTH_SHORT).show()
+                    }
+                ),
+            contentDescription = null
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        Image(
             painter = painterResource(R.drawable.avatar_2_raster),
             modifier = Modifier
                 .border(2.dp, Color.Red)
                 .size(widthDp)
                 .clickable {
-                    particleState2.forceUpdateProgress = true
-                    particleState2.startAnimation()
+                    particleState3.forceUpdateProgress = true
+                    particleState3.startAnimation()
                 }
                 .disintegrate(
                     progress = progress,
-                    particleState = particleState2,
+                    particleState = particleState3,
                     onStart = {
                         Toast.makeText(context, "Animation started...", Toast.LENGTH_SHORT).show()
                     },
@@ -383,8 +423,8 @@ fun Modifier.disintegrate(
 fun rememberParticleState(
     particleSize: Dp = 2.dp,
     animationSpec: AnimationSpec<Float> = tween(
-        durationMillis = 2000,
-        easing = FastOutLinearInEasing
+        durationMillis = 750,
+        easing = LinearEasing
     ),
     strategy: ParticleStrategy = DisintegrateStrategy(),
     particleBoundaries: ParticleBoundaries? = null
@@ -449,6 +489,8 @@ class ParticleState internal constructor(
         particleSize: Int,
         bitmap: Bitmap,
     ) {
+
+        println("Create particles in thread: ${Thread.currentThread().name}")
         strategy.createParticles(
             particleList = particleList,
             particleSize = particleSize,
@@ -504,7 +546,6 @@ open class DisintegrateStrategy : ParticleStrategy {
         bitmap: Bitmap,
         particleBoundaries: ParticleBoundaries?
     ) {
-
         particleList.clear()
 
         val width = bitmap.width
@@ -542,7 +583,7 @@ open class DisintegrateStrategy : ParticleStrategy {
 
                     // This range is between 0-0.5f to display all of the particles
                     // until half of the progress is reached
-                    var trajectoryProgressRange = getTrajectoryRange(
+                    var trajectoryProgressRange: ClosedRange<Float> = getTrajectoryRange(
                         fraction = fractionToImageWidth,
                         sectionFraction = sectionFraction,
                         until = ParticleCreationFraction
@@ -560,60 +601,73 @@ open class DisintegrateStrategy : ParticleStrategy {
                     val imageMinDimension = width.coerceAtMost(height) * 1f
 
                     val velocityHorizontalMin =
-                        particleBoundaries?.velocityLowerBound?.x ?: (particleSize * 20f)
+                        particleBoundaries?.velocityLowerBound?.x ?: -(particleSize * 20f)
                     val velocityHorizontalMax =
                         particleBoundaries?.velocityUpperBound?.x ?: (particleSize * 20f)
 
                     val velocityVerticalMin =
-                        particleBoundaries?.velocityLowerBound?.y ?: (particleSize * 30f)
+                        particleBoundaries?.velocityLowerBound?.y ?: -(particleSize * 30f)
                     val velocityVerticalMax =
                         particleBoundaries?.velocityUpperBound?.y ?: (particleSize * 30f)
 
                     val velocityX = randomInRange(
-                        // Particles close to end should have less randomization to start of image
-                        -(velocityHorizontalMin * (1 - fractionToImageWidth))
+                        // Particles close to end should have less randomization compared
+                        // to start of image
+                        (velocityHorizontalMin * (1 - fractionToImageWidth))
                             .coerceAtMost(imageMinDimension),
-                        (velocityHorizontalMax).coerceAtMost(imageMinDimension)
+                        (velocityHorizontalMax)
+                            .coerceAtMost(imageMinDimension)
                     )
                     val velocityY = randomInRange(
-                        -(velocityVerticalMin).coerceAtMost(imageMinDimension),
+                        (velocityVerticalMin).coerceAtMost(imageMinDimension),
                         (velocityVerticalMax).coerceAtMost(imageMinDimension)
                     )
 
                     val accelerationHorizontalMin =
                         particleBoundaries?.accelerationLowerBound?.x ?: 0f
                     val accelerationHorizontalMax =
-                        particleBoundaries?.accelerationLowerBound?.x ?: 0f
+                        particleBoundaries?.accelerationUpperBound?.x ?: 0f
 
                     val accelerationVerticalMin =
                         particleBoundaries?.accelerationLowerBound?.y ?: (-velocityY * .1f)
                     val accelerationVerticalMax =
-                        particleBoundaries?.accelerationLowerBound?.y ?: (-velocityY * .2f)
+                        particleBoundaries?.accelerationUpperBound?.y ?: (-velocityY * .2f)
 
                     val acceleration = Acceleration(
                         randomInRange(accelerationHorizontalMin, accelerationHorizontalMax),
                         randomInRange(accelerationVerticalMin, accelerationVerticalMax)
                     )
 
-                    // TODO Add boundaries for size
                     // Set initial and final sizes
-                    val initialSize = Size(particleSize.toFloat(), particleSize.toFloat())
-                    val endSize = randomInRange(.4f, particleSize.toFloat() * .7f)
+                    val particleSizePx = particleSize.toFloat()
+                    val initialMinSize =
+                        (particleBoundaries?.startSizeLowerBound?.width) ?: particleSizePx
+                    val initialMaxSizeSize =
+                        (particleBoundaries?.startSizeUpperBound?.width) ?: particleSizePx
+                    val initialWidth = randomInRange(initialMinSize, initialMaxSizeSize)
+                    val initialSize = Size(initialWidth, initialWidth)
+
+                    val endMinSize =
+                        (particleBoundaries?.endSizeLowerBound?.width) ?: (particleSizePx * .4f)
+                    val endMaxSize =
+                        (particleBoundaries?.endSizeUpperBound?.width) ?: (particleSizePx * .7f)
+                    val endWidth = randomInRange(endMinSize, endMaxSize)
+                    val endSize = Size(endWidth, endWidth)
 
                     // Set alpha
                     val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
-                    val alphaStartMax = (particleBoundaries?.alphaLowerBound?.endInclusive) ?: 1f
+                    val alphaStartMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 1f
                     val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
 
                     val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
-                    val alphaEndMax = (particleBoundaries?.alphaLowerBound?.endInclusive) ?: 0f
+                    val alphaEndMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 0f
                     val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
 
                     particleList.add(
                         Particle(
                             initialCenter = initialCenter,
                             initialSize = initialSize,
-                            endSize = Size(endSize, endSize),
+                            endSize = endSize,
                             trajectoryProgressRange = trajectoryProgressRange,
                             color = color,
                             velocity = Velocity(
@@ -641,16 +695,16 @@ open class DisintegrateStrategy : ParticleStrategy {
         particleBoundaries: ParticleBoundaries?
     ) {
         with(drawScope) {
-
-            drawWithLayer {
-                particleList.forEach { particle ->
+//            drawWithLayer {
+            particleList.forEach { particle ->
+                if (particle.isActive) {
                     updateParticle(
                         progress = progress,
                         particle = particle
                     )
 
                     val color = particle.color
-                    val radius = particle.currentSize.width * .5f
+                    val radius = particle.currentSize.width * .65f
                     val position = particle.currentPosition
                     val alpha = particle.alpha
 
@@ -662,24 +716,25 @@ open class DisintegrateStrategy : ParticleStrategy {
                         alpha = alpha
                     )
                 }
-
-                clipRect(
-                    left = progress * size.width * 2f
-                ) {
-                    drawImage(
-                        image = imageBitmap,
-                        blendMode = BlendMode.SrcOut
-                    )
-                }
-
-                // For debugging
-                drawRect(
-                    color = Color.Black,
-                    topLeft = Offset(progress * size.width, 0f),
-                    size = Size(size.width - progress * size.width, size.height),
-                    style = Stroke(4.dp.toPx())
-                )
             }
+
+//                clipRect(
+//                    left = progress * size.width * 2f
+//                ) {
+//                    drawImage(
+//                        image = imageBitmap,
+//                        blendMode = BlendMode.SrcOut
+//                    )
+//                }
+
+            // For debugging
+//                drawRect(
+//                    color = Color.Black,
+//                    topLeft = Offset(progress * size.width, 0f),
+//                    size = Size(size.width - progress * size.width, size.height),
+//                    style = Stroke(4.dp.toPx())
+//                )
+//            }
         }
     }
 
@@ -709,7 +764,7 @@ open class DisintegrateStrategy : ParticleStrategy {
             // Set alpha
             // While trajectory progress is less than 40% have full alpha then slowly
             // reduce to zero for particles to disappear
-            alpha = if (trajectoryProgress == 0f) 0f
+            alpha = if (trajectoryProgress == 0f) 1f
             else if (trajectoryProgress < .4f) 1f
             else scale(.4f, 1f, trajectoryProgress, particle.initialAlpha, particle.endAlpha)
 
@@ -731,14 +786,211 @@ data class ParticleBoundaries(
     val velocityLowerBound: Velocity? = null,
     val velocityUpperBound: Velocity? = null,
     val accelerationLowerBound: Acceleration? = null,
-    val accelerationLowerUpperBound: Acceleration? = null,
+    val accelerationUpperBound: Acceleration? = null,
     val startSizeLowerBound: Size? = null,
     val startSizeUpperBound: Size? = null,
     val endSizeLowerBound: Size? = null,
     val endSizeUpperBound: Size? = null,
     val alphaLowerBound: ClosedRange<Float>? = null,
-    val alphaUpperbound: ClosedRange<Float>? = null
+    val alphaUpperbound: ClosedRange<Float>? = null,
+    val trajectoryProgressRange: ClosedRange<Float>? = null,
+    val anchor: TransformOrigin? = null
 )
+
+open class DefaultStrategy : ParticleStrategy {
+    override fun createParticles(
+        particleList: SnapshotStateList<Particle>,
+        particleSize: Int,
+        bitmap: Bitmap,
+        particleBoundaries: ParticleBoundaries?
+    ) {
+        particleList.clear()
+
+        val width = bitmap.width
+        val height = bitmap.height
+
+        val particleRadius = particleSize / 2
+
+        // divide image into squares based on particle size
+        // 110x100x image is divided into 10x10 squares
+
+        for (column in 0 until width step particleSize) {
+            for (row in 0 until height step particleSize) {
+
+                // Get pixel at center of this pixel rectangle
+                // If last pixel is out of image get it from end of the width or height
+                // 🔥x must be < bitmap.width() and y must be < bitmap.height()
+
+                val pixelCenterX = (column + particleRadius).coerceAtMost(width - 1)
+                val pixelCenterY = (row + particleRadius).coerceAtMost(height - 1)
+
+                val pixel: Int = bitmap.getPixel(pixelCenterX, pixelCenterY)
+                val color = Color(pixel)
+
+                if (color != Color.Unspecified) {
+
+                    val halfWidth = width / 2f
+                    val halfHeight = height / 2f
+
+
+                    // Set center
+                    val angle = randomInRange(0f, 360f).degreeToRadian
+                    val radius = randomInRange(0f, 2f * particleSize)
+                    val centerX = halfWidth + radius * cos(angle)
+                    val centerY = halfHeight + radius * sin(angle)
+                    val initialCenter = Offset(centerX, centerY)
+
+                    // Set trajectoryRange
+                    val trajectoryStart = randomInRange(0f, 0.1f)
+                    val trajectoryEnd = randomInRange(trajectoryStart, 1f)
+
+                    val velocityHorizontalMin =
+                        particleBoundaries?.velocityLowerBound?.x ?: (-2 * halfWidth)
+                    val velocityHorizontalMax =
+                        particleBoundaries?.velocityUpperBound?.x ?: (2 * halfWidth)
+
+                    val velocityVerticalMin =
+                        particleBoundaries?.velocityLowerBound?.y ?: (-3f * halfHeight)
+                    val velocityVerticalMax =
+                        particleBoundaries?.velocityUpperBound?.y ?: (-4f * halfHeight)
+
+                    val velocityX = randomInRange(velocityHorizontalMin, velocityHorizontalMax)
+                    val velocityY = randomInRange(velocityVerticalMin, velocityVerticalMax)
+
+                    val accelerationHorizontalMin =
+                        particleBoundaries?.accelerationLowerBound?.x ?: 0f
+                    val accelerationHorizontalMax =
+                        particleBoundaries?.accelerationUpperBound?.x ?: 0f
+
+                    val accelerationVerticalMin =
+                        particleBoundaries?.accelerationLowerBound?.y ?: (-velocityY * 2)
+                    val accelerationVerticalMax =
+                        particleBoundaries?.accelerationUpperBound?.y ?: (-velocityY * 4)
+
+                    val acceleration = Acceleration(
+                        randomInRange(accelerationHorizontalMin, accelerationHorizontalMax),
+                        randomInRange(accelerationVerticalMin, accelerationVerticalMax)
+                    )
+
+                    // TODO Add boundaries for size
+                    // Set initial and final sizes
+                    val initialSize = Size(particleSize.toFloat(), particleSize.toFloat())
+                    val endSize = if (randomBoolean(8)) {
+                        randomInRange(particleSize * 1f, particleSize.toFloat() * 2.5f)
+                    } else {
+                        randomInRange(particleSize * .4f, particleSize * 1f)
+                    }
+
+                    // Set alpha
+                    val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
+                    val alphaStartMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 1f
+                    val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
+
+                    val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
+                    val alphaEndMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 0f
+                    val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
+
+                    particleList.add(
+                        Particle(
+                            initialCenter = initialCenter,
+                            initialSize = initialSize,
+                            endSize = Size(endSize, endSize),
+                            color = color,
+                            velocity = Velocity(
+                                x = velocityX,
+                                y = velocityY
+                            ),
+                            acceleration = acceleration,
+                            initialAlpha = alphaStart,
+                            endAlpha = alphaEnd,
+                            trajectoryProgressRange = trajectoryStart..trajectoryEnd
+                        )
+                    )
+                } else {
+                    println("Not adding transparent pixel")
+                }
+            }
+        }
+    }
+
+    override fun updateAndDrawParticles(
+        drawScope: DrawScope,
+        particleList: SnapshotStateList<Particle>,
+        imageBitmap: ImageBitmap,
+        progress: Float,
+        particleBoundaries: ParticleBoundaries?
+    ) {
+        with(drawScope) {
+            particleList.forEach { particle ->
+                updateParticle(
+                    progress = progress,
+                    particle = particle
+                )
+
+                val color = particle.color
+                val radius = particle.currentSize.width * .5f
+                val position = particle.currentPosition
+                val alpha = particle.alpha
+
+                // Destination
+                drawCircle(
+                    color = color,
+                    radius = radius,
+                    center = position,
+                    alpha = alpha
+                )
+            }
+
+            // For debugging
+//            drawRect(
+//                color = Color.Black,
+//                topLeft = Offset(progress * size.width, 0f),
+//                size = Size(size.width - progress * size.width, size.height),
+//                style = Stroke(4.dp.toPx())
+//            )
+        }
+    }
+
+    override fun updateParticle(progress: Float, particle: Particle) {
+        particle.run {
+            // Trajectory progress translates progress from 0f-1f to
+            // trajectoryStart-trajectoryEnd
+            // range. For instance, for trajectory with 0.1-0.6f, trajectoryProgress starts when
+            // progress is at 0.1f and reaches 1f when progress is at 0.6f.
+
+            // Scale from trajectory to progress, for 0.1-06f trajectory 0.35f(half of range)
+            // corresponds to 0.5f, to trajectoryProgress
+            setTrajectoryProgress(progress)
+
+            currentTime = scale(0f, 1f, trajectoryProgress, 0f, 1.5f)
+
+            // Set size
+            val width =
+                initialSize.width + (endSize.width - initialSize.width) * currentTime
+            val height =
+                initialSize.height + (endSize.height - initialSize.height) * currentTime
+            currentSize = Size(width, height)
+
+            // Set alpha
+            // While trajectory progress is less than 70% have full alpha then slowly
+            // reduce to zero for particles to disappear
+            alpha = if (trajectoryProgress == 0f) 0f
+            else if (trajectoryProgress < .7f) 1f
+            else scale(.7f, 1f, trajectoryProgress, particle.initialAlpha, particle.endAlpha)
+
+            // Set position
+            val horizontalDisplacement =
+                velocity.x * currentTime + 0.5f * acceleration.x * currentTime * currentTime
+            val verticalDisplacement =
+                velocity.y * currentTime + 0.5f * acceleration.y * currentTime * currentTime
+
+            currentPosition = Offset(
+                x = initialCenter.x + horizontalDisplacement,
+                y = initialCenter.y + verticalDisplacement
+            )
+        }
+    }
+}
 
 interface ParticleStrategy {
 
@@ -817,11 +1069,14 @@ data class Particle(
     var velocity: Velocity = Velocity(0f, 0f),
     var acceleration: Acceleration = Acceleration(0f, 0f)
 ) {
+    val isActive: Boolean
+        get() = alpha > 0f && currentSize != Size.Zero
+
     var currentPosition: Offset = initialCenter
         internal set
     var currentSize: Size = initialSize
         internal set
-    var alpha = 1f
+    var alpha = initialAlpha
         internal set
     var currentTime: Float = 0f
         internal set

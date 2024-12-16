@@ -226,8 +226,7 @@ class ExplodingParticle(
                 )
             }
 
-        currentTime = trajectoryProgress
-//            .mapInRange(0f, 1f, 0f, 1.4f)
+        currentTime = scale(0f, 1f, trajectoryProgress, 0f, 1.4f)
 
         // While trajectory progress is less than 70% have full alpha then slowly cre
         alpha = if (trajectoryProgress < .7f) 1f else
