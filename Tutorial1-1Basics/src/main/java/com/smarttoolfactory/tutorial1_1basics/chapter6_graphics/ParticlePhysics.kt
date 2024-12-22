@@ -42,7 +42,7 @@ fun ControlledExplosion() {
         mutableFloatStateOf(1f)
     }
 
-    val particleCount = 1
+    val particleCount = 100
 
     val density = LocalDensity.current
 
@@ -69,14 +69,17 @@ fun ControlledExplosion() {
 //                initialDisplacementY = 10.dp.toPx() * randomInRange(-1f, 1f)
 //            }
 
+            val min = randomInRange(0f, visibilityThresholdLow)
+            val max = randomInRange(min, visibilityThresholdHigh)
+
             ExplodingParticle(
                 color = Color(listOf(0xffea4335, 0xff4285f4, 0xfffbbc05, 0xff34a853).random()),
                 startXPosition = sizePxHalf.toInt(),
                 startYPosition = sizePxHalf.toInt(),
-                maxHorizontalDisplacement = sizePxHalf,
-                maxVerticalDisplacement = sizePxHalf,
-                visibilityThresholdLow = visibilityThresholdLow,
-                visibilityThresholdHigh = visibilityThresholdHigh,
+                maxHorizontalDisplacement = sizePxHalf * randomInRange(-.9f, .9f),
+                maxVerticalDisplacement = sizePxHalf * randomInRange(0.2f, 0.38f),
+                visibilityThresholdLow = min,
+                visibilityThresholdHigh = max,
                 initialDisplacementX = initialDisplacementX,
                 initialDisplacementY = initialDisplacementY
             )
