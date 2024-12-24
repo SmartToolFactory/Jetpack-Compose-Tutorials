@@ -229,8 +229,8 @@ fun ParticleAnimationSample() {
         }
 
         val particleState = rememberParticleState(
-            particleSize = 1.5.dp,
-            animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+            particleSize = 2.dp,
+            animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing)
         )
 
         val particleState2 = rememberParticleState(
@@ -568,101 +568,42 @@ open class DisintegrateStrategy : ParticleStrategy {
                 val color = Color(pixel)
 
                 if (color != Color.Unspecified) {
+
                     // Set center
-                    val initialCenter = Offset(pixelCenterX.toFloat(), pixelCenterY.toFloat())
+                    val initialCenter =
+                        setCenter(
+                            particleSize = particleSize,
+                            pixelCenter = Offset(pixelCenterX.toFloat(), pixelCenterY.toFloat()),
+                            halfWidth = width / 2f,
+                            halfHeight = height / 2f
+                        )
 
                     // If this particle is at 20% of image width in x plane
                     // it returns 0.2f
                     val fractionToImageWidth = (initialCenter.x - particleRadius) / width
-
-                    // Get trajectory for each 5 percent of the image in x direction
-                    // This creates wave effect where particles at the start animation earlier
-                    val sectionFraction = ParticleCreationFraction / 10f
-
-                    // This range is between 0-0.5f to display all of the particles
-                    // until half of the progress is reached
-                    var trajectoryProgressRange: ClosedRange<Float> = getTrajectoryRange(
-                        fraction = fractionToImageWidth,
-                        sectionFraction = sectionFraction,
-                        until = ParticleCreationFraction
-                    )
-
-                    // Add randomization for trajectory so particles don't start
-                    // animating in each 5% section vertically
-                    val minOffset = randomInRange(-sectionFraction, sectionFraction)
-
-                    val start = (trajectoryProgressRange.start + minOffset)
-                        .coerceAtLeast(0f)
-                    val end = (start + 0.5f).coerceAtMost(1f)
-                    trajectoryProgressRange = start..end
+                    val trajectoryProgressRange = setTrajectoryInterval(fractionToImageWidth)
 
                     // Set Velocity
-                    val imageMinDimension = width.coerceAtMost(height) * 1f
-                    val velocityHorizontalMin =
-                        particleBoundaries?.velocityLowerBound?.x ?: -(particleSize * 20f)
-                    val velocityHorizontalMax =
-                        particleBoundaries?.velocityUpperBound?.x ?: (particleSize * 20f)
-
-                    val velocityVerticalMin =
-                        particleBoundaries?.velocityLowerBound?.y ?: -(particleSize * 30f)
-                    val velocityVerticalMax =
-                        particleBoundaries?.velocityUpperBound?.y ?: (particleSize * 30f)
-
-                    val velocityX = randomInRange(
-                        // Particles close to end should have less randomization compared
-                        // to start of image
-                        (velocityHorizontalMin * (1 - fractionToImageWidth))
-                            .coerceAtMost(imageMinDimension),
-                        (velocityHorizontalMax)
-                            .coerceAtMost(imageMinDimension)
+                    val velocity = setVelocity(
+                        width = width,
+                        height = height,
+                        particleBoundaries = particleBoundaries,
+                        particleSize = particleSize,
+                        fractionToImageWidth = fractionToImageWidth
                     )
-                    val velocityY = randomInRange(
-                        (velocityVerticalMin).coerceAtMost(imageMinDimension),
-                        (velocityVerticalMax).coerceAtMost(imageMinDimension)
-                    )
-
-                    val velocity = Velocity(x = velocityX, y = velocityY)
 
                     // Set acceleration
-                    val accelerationHorizontalMin =
-                        particleBoundaries?.accelerationLowerBound?.x ?: 0f
-                    val accelerationHorizontalMax =
-                        particleBoundaries?.accelerationUpperBound?.x ?: 0f
-
-                    val accelerationVerticalMin =
-                        particleBoundaries?.accelerationLowerBound?.y ?: (-velocityY * .1f)
-                    val accelerationVerticalMax =
-                        particleBoundaries?.accelerationUpperBound?.y ?: (-velocityY * .2f)
-
-                    val acceleration = Acceleration(
-                        randomInRange(accelerationHorizontalMin, accelerationHorizontalMax),
-                        randomInRange(accelerationVerticalMin, accelerationVerticalMax)
-                    )
+                    val acceleration = setAcceleration(particleBoundaries, velocity)
 
                     // Set initial and final sizes
                     val particleSizePx = particleSize.toFloat()
-                    val initialMinSize =
-                        (particleBoundaries?.startSizeLowerBound?.width) ?: particleSizePx
-                    val initialMaxSizeSize =
-                        (particleBoundaries?.startSizeUpperBound?.width) ?: particleSizePx
-                    val initialWidth = randomInRange(initialMinSize, initialMaxSizeSize)
-                    val initialSize = Size(initialWidth, initialWidth)
 
-                    val endMinSize =
-                        (particleBoundaries?.endSizeLowerBound?.width) ?: (particleSizePx * .4f)
-                    val endMaxSize =
-                        (particleBoundaries?.endSizeUpperBound?.width) ?: (particleSizePx * .7f)
-                    val endWidth = randomInRange(endMinSize, endMaxSize)
-                    val endSize = Size(endWidth, endWidth)
+                    val initialSize = setInitialSize(particleBoundaries, particleSizePx)
+                    val endSize = setEndSize(particleBoundaries, particleSizePx.toInt())
 
                     // Set alpha
-                    val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
-                    val alphaStartMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 1f
-                    val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
-
-                    val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
-                    val alphaEndMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 0f
-                    val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
+                    val alphaStart = setInitialAlpha(particleBoundaries)
+                    val alphaEnd = setEndAlpha(particleBoundaries)
 
                     particleList.add(
                         Particle(
@@ -682,6 +623,135 @@ open class DisintegrateStrategy : ParticleStrategy {
                 }
             }
         }
+    }
+
+    override fun setTrajectoryInterval(fractionToImageWidth: Float): ClosedRange<Float> {
+        // Get trajectory for each 5 percent of the image in x direction
+        // This creates wave effect where particles at the start animation earlier
+        val sectionFraction = ParticleCreationFraction / 10f
+
+        // This range is between 0-0.5f to display all of the particles
+        // until half of the progress is reached
+        var trajectoryProgressRange: ClosedRange<Float> = getTrajectoryRange(
+            fraction = fractionToImageWidth,
+            sectionFraction = sectionFraction,
+            until = ParticleCreationFraction
+        )
+
+        // Add randomization for trajectory so particles don't start
+        // animating in each 5% section vertically
+        val minOffset = randomInRange(-sectionFraction, sectionFraction)
+
+        val start = (trajectoryProgressRange.start + minOffset)
+            .coerceAtLeast(0f)
+        val end = (start + 0.5f).coerceAtMost(1f)
+        trajectoryProgressRange = start..end
+        return trajectoryProgressRange
+    }
+
+    override fun setCenter(
+        particleSize: Int,
+        pixelCenter: Offset,
+        halfWidth: Float,
+        halfHeight: Float
+    ): Offset {
+        return pixelCenter
+    }
+
+    override fun setInitialSize(
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Float
+    ): Size {
+        val initialMinSize =
+            (particleBoundaries?.startSizeLowerBound?.width) ?: particleSize
+        val initialMaxSizeSize =
+            (particleBoundaries?.startSizeUpperBound?.width) ?: particleSize
+        val initialWidth = randomInRange(initialMinSize, initialMaxSizeSize)
+        val initialSize = Size(initialWidth, initialWidth)
+        return initialSize
+    }
+
+    override fun setEndSize(
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Int
+    ): Size {
+        val endMinSize =
+            (particleBoundaries?.endSizeLowerBound?.width) ?: (particleSize * .4f)
+        val endMaxSize =
+            (particleBoundaries?.endSizeUpperBound?.width) ?: (particleSize * .7f)
+        val endWidth = randomInRange(endMinSize, endMaxSize)
+        val endSize = Size(endWidth, endWidth)
+        return endSize
+    }
+
+    override fun setVelocity(
+        width: Int,
+        height: Int,
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Int,
+        fractionToImageWidth: Float
+    ): Velocity {
+        val imageMinDimension = width.coerceAtMost(height) * 1f
+        val velocityHorizontalMin =
+            particleBoundaries?.velocityLowerBound?.x ?: -(particleSize * 20f)
+        val velocityHorizontalMax =
+            particleBoundaries?.velocityUpperBound?.x ?: (particleSize * 20f)
+
+        val velocityVerticalMin =
+            particleBoundaries?.velocityLowerBound?.y ?: -(particleSize * 30f)
+        val velocityVerticalMax =
+            particleBoundaries?.velocityUpperBound?.y ?: (particleSize * 30f)
+
+        val velocityX = randomInRange(
+            // Particles close to end should have less randomization compared
+            // to start of image
+            (velocityHorizontalMin * (1 - fractionToImageWidth))
+                .coerceAtMost(imageMinDimension),
+            (velocityHorizontalMax)
+                .coerceAtMost(imageMinDimension)
+        )
+        val velocityY = randomInRange(
+            (velocityVerticalMin).coerceAtMost(imageMinDimension),
+            (velocityVerticalMax).coerceAtMost(imageMinDimension)
+        )
+
+        val velocity = Velocity(x = velocityX, y = velocityY)
+        return velocity
+    }
+
+    override fun setAcceleration(
+        particleBoundaries: ParticleBoundaries?,
+        velocity: Velocity
+    ): Acceleration {
+        val accelerationHorizontalMin =
+            particleBoundaries?.accelerationLowerBound?.x ?: 0f
+        val accelerationHorizontalMax =
+            particleBoundaries?.accelerationUpperBound?.x ?: 0f
+
+        val accelerationVerticalMin =
+            particleBoundaries?.accelerationLowerBound?.y ?: (-velocity.y * .1f)
+        val accelerationVerticalMax =
+            particleBoundaries?.accelerationUpperBound?.y ?: (-velocity.y * .2f)
+
+        val acceleration = Acceleration(
+            randomInRange(accelerationHorizontalMin, accelerationHorizontalMax),
+            randomInRange(accelerationVerticalMin, accelerationVerticalMax)
+        )
+        return acceleration
+    }
+
+    override fun setInitialAlpha(particleBoundaries: ParticleBoundaries?): Float {
+        val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
+        val alphaStartMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 1f
+        val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
+        return alphaStart
+    }
+
+    override fun setEndAlpha(particleBoundaries: ParticleBoundaries?): Float {
+        val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
+        val alphaEndMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 0f
+        val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
+        return alphaEnd
     }
 
     override fun updateAndDrawParticles(
@@ -856,27 +926,29 @@ open class DefaultStrategy : ParticleStrategy {
             val halfHeight = height / 2f
 
             // Set center
-            val initialCenter = setCenter(particleSize, halfWidth, halfHeight)
+            val initialCenter = setCenter(
+                particleSize,
+                Offset(
+                    pixelCenterX.toFloat(),
+                    pixelCenterY.toFloat()
+                ),
+                halfWidth,
+                halfHeight
+            )
 
             // Set trajectoryRange
-            val trajectoryRange = setTrajectory()
+            val trajectoryRange = setTrajectoryInterval(0f)
 
             // Set Velocity
-            val velocity = setVelocity(particleBoundaries, halfWidth, halfHeight)
+            val velocity = setVelocity(width, height, particleBoundaries, particleSize, 0f)
 
             // Set acceleration
             val acceleration = setAcceleration(particleBoundaries, velocity)
 
-            // TODO Add boundaries for size
             // Set initial and final sizes
-            val initialSize = Size(particleSize.toFloat(), particleSize.toFloat())
+            val initialSize = setInitialSize(particleBoundaries, particleSize.toFloat())
 
-            val endSizePx = if (randomBoolean(8)) {
-                randomInRange(particleSize * 1f, particleSize.toFloat() * 2.5f)
-            } else {
-                randomInRange(particleSize * .4f, particleSize * 1f)
-            }
-            val endSize = Size(endSizePx, endSizePx)
+            val endSize = setEndSize(particleBoundaries, particleSize)
 
             // Set alpha
             val alphaStart = setInitialAlpha(particleBoundaries)
@@ -897,21 +969,89 @@ open class DefaultStrategy : ParticleStrategy {
         } else return null
     }
 
-    private fun setEndAlpha(particleBoundaries: ParticleBoundaries?): Float {
-        val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
-        val alphaEndMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 0f
-        val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
-        return alphaEnd
+    override fun setTrajectoryInterval(fractionToImageWidth: Float): ClosedFloatingPointRange<Float> {
+        val trajectoryStart = randomInRange(0f, 0.03f)
+        val trajectoryEnd = randomInRange(trajectoryStart, 1f)
+        val trajectoryRange = trajectoryStart..trajectoryEnd
+        return trajectoryRange
     }
 
-    private fun setInitialAlpha(particleBoundaries: ParticleBoundaries?): Float {
-        val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
-        val alphaStartMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 1f
-        val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
-        return alphaStart
+    override fun setCenter(
+        particleSize: Int,
+        pixelCenter: Offset,
+        halfWidth: Float,
+        halfHeight: Float
+    ): Offset {
+        val angle = randomInRange(0f, 360f).degreeToRadian
+        val radius = randomInRange(0f, 1f * particleSize)
+        val centerX = halfWidth + radius * cos(angle)
+        val centerY = halfHeight + radius * sin(angle)
+        val initialCenter = Offset(centerX, centerY)
+        return initialCenter
     }
 
-    private fun setAcceleration(
+    override fun setInitialSize(
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Float
+    ): Size {
+        val initialMinSize =
+            (particleBoundaries?.startSizeLowerBound?.width) ?: particleSize
+        val initialMaxSizeSize =
+            (particleBoundaries?.startSizeUpperBound?.width) ?: particleSize
+        val initialWidth = randomInRange(initialMinSize, initialMaxSizeSize)
+        val initialSize = Size(initialWidth, initialWidth)
+        return initialSize
+    }
+
+    override fun setEndSize(
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Int
+    ): Size {
+        val endSizePx = if (randomBoolean(8)) {
+            randomInRange(particleSize * 1f, particleSize.toFloat() * 2.5f)
+        } else {
+            randomInRange(particleSize * .4f, particleSize * 1f)
+        }
+
+        val endMinSize =
+            (particleBoundaries?.endSizeLowerBound?.width) ?: (endSizePx)
+        val endMaxSize =
+            (particleBoundaries?.endSizeUpperBound?.width) ?: (endSizePx)
+
+        val finalSize = randomInRange(endMinSize, endMaxSize)
+
+        val endSize = Size(finalSize, finalSize)
+        return endSize
+    }
+
+    override fun setVelocity(
+        width: Int,
+        height: Int,
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Int,
+        fractionToImageWidth: Float
+    ): Velocity {
+
+        val halfWidth = width / 2f
+        val halfHeight = height / 2f
+
+        val velocityHorizontalMin =
+            particleBoundaries?.velocityLowerBound?.x ?: (-2 * halfWidth)
+        val velocityHorizontalMax =
+            particleBoundaries?.velocityUpperBound?.x ?: (2 * halfWidth)
+
+        val velocityVerticalMin =
+            particleBoundaries?.velocityLowerBound?.y ?: (-1f * halfHeight)
+        val velocityVerticalMax =
+            particleBoundaries?.velocityUpperBound?.y ?: (-2f * halfHeight)
+
+        val velocityX = randomInRange(velocityHorizontalMin, velocityHorizontalMax)
+        val velocityY = randomInRange(velocityVerticalMin, velocityVerticalMax)
+        val velocity = Velocity(x = velocityX, y = velocityY)
+        return velocity
+    }
+
+    override fun setAcceleration(
         particleBoundaries: ParticleBoundaries?,
         velocity: Velocity
     ): Acceleration {
@@ -932,45 +1072,18 @@ open class DefaultStrategy : ParticleStrategy {
         return acceleration
     }
 
-    private fun setVelocity(
-        particleBoundaries: ParticleBoundaries?,
-        halfWidth: Float,
-        halfHeight: Float
-    ): Velocity {
-        val velocityHorizontalMin =
-            particleBoundaries?.velocityLowerBound?.x ?: (-2 * halfWidth)
-        val velocityHorizontalMax =
-            particleBoundaries?.velocityUpperBound?.x ?: (2 * halfWidth)
-
-        val velocityVerticalMin =
-            particleBoundaries?.velocityLowerBound?.y ?: (-1f * halfHeight)
-        val velocityVerticalMax =
-            particleBoundaries?.velocityUpperBound?.y ?: (-2f * halfHeight)
-
-        val velocityX = randomInRange(velocityHorizontalMin, velocityHorizontalMax)
-        val velocityY = randomInRange(velocityVerticalMin, velocityVerticalMax)
-        val velocity = Velocity(x = velocityX, y = velocityY)
-        return velocity
+    override fun setInitialAlpha(particleBoundaries: ParticleBoundaries?): Float {
+        val alphaStartMin = (particleBoundaries?.alphaLowerBound?.start) ?: 1f
+        val alphaStartMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 1f
+        val alphaStart = randomInRange(alphaStartMin, alphaStartMax)
+        return alphaStart
     }
 
-    private fun setTrajectory(): ClosedFloatingPointRange<Float> {
-        val trajectoryStart = randomInRange(0f, 0.03f)
-        val trajectoryEnd = randomInRange(trajectoryStart, 1f)
-        val trajectoryRange = trajectoryStart..trajectoryEnd
-        return trajectoryRange
-    }
-
-    private fun setCenter(
-        particleSize: Int,
-        halfWidth: Float,
-        halfHeight: Float
-    ): Offset {
-        val angle = randomInRange(0f, 360f).degreeToRadian
-        val radius = randomInRange(0f, 2f * particleSize)
-        val centerX = halfWidth + radius * cos(angle)
-        val centerY = halfHeight + radius * sin(angle)
-        val initialCenter = Offset(centerX, centerY)
-        return initialCenter
+    override fun setEndAlpha(particleBoundaries: ParticleBoundaries?): Float {
+        val alphaEndMin = (particleBoundaries?.alphaLowerBound?.start) ?: 0f
+        val alphaEndMax = (particleBoundaries?.alphaUpperbound?.endInclusive) ?: 0f
+        val alphaEnd = randomInRange(alphaEndMin, alphaEndMax)
+        return alphaEnd
     }
 
     override fun updateAndDrawParticles(
@@ -1073,6 +1186,36 @@ interface ParticleStrategy {
         progress: Float,
         particle: Particle
     )
+
+    fun setTrajectoryInterval(fractionToImageWidth: Float): ClosedRange<Float>
+
+    fun setCenter(
+        particleSize: Int,
+        pixelCenter: Offset,
+        halfWidth: Float,
+        halfHeight: Float
+    ): Offset
+
+    fun setEndSize(particleBoundaries: ParticleBoundaries?, particleSize: Int): Size
+
+    fun setInitialSize(particleBoundaries: ParticleBoundaries?, particleSize: Float): Size
+
+    fun setVelocity(
+        width: Int,
+        height: Int,
+        particleBoundaries: ParticleBoundaries?,
+        particleSize: Int,
+        fractionToImageWidth: Float
+    ): Velocity
+
+    fun setAcceleration(
+        particleBoundaries: ParticleBoundaries?,
+        velocity: Velocity
+    ): Acceleration
+
+    fun setInitialAlpha(particleBoundaries: ParticleBoundaries?): Float
+
+    fun setEndAlpha(particleBoundaries: ParticleBoundaries?): Float
 }
 
 /**
