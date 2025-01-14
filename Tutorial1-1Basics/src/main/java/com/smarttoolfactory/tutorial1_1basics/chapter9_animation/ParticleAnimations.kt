@@ -2,6 +2,7 @@ package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
 import android.graphics.Bitmap
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +36,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -42,12 +45,15 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -71,10 +77,93 @@ import com.smarttoolfactory.tutorial1_1basics.chapter6_graphics.scale
 import com.smarttoolfactory.tutorial1_1basics.ui.Pink400
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
+
+@Preview
+@Composable
+fun ShakeTest() {
+
+
+    val animatable = remember {
+        Animatable(0f)
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(32.dp)
+    ) {
+
+        Image(
+            modifier = Modifier
+                .size(100.dp)
+                .graphicsLayer {
+
+                    val progress = animatable.value
+                    val endValue = .95f
+                    val scale = if (progress < endValue) 1f else scale(endValue, 1f, progress, 1f, 0f)
+
+                    translationX = if (progress < endValue) size.width * .05f * progress * randomInRange(
+                        -1f,
+                        1f
+                    ) else 1f
+                    translationY = if (progress < endValue) size.height * .05f * progress * randomInRange(
+                        -1f,
+                        1f
+                    ) else 1f
+
+                    scaleX = scale
+                    scaleY = scale
+                    alpha = scale
+                },
+            painter = painterResource(R.drawable.avatar_2_raster),
+            contentDescription = null
+        )
+
+
+
+        Spacer(modifier = Modifier.height(30.dp))
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                coroutineScope.launch {
+                    animatable.snapTo(0f)
+                    animatable.animateTo(
+                        targetValue = 1f,
+                        animationSpec = tween(800)
+                    )
+                }
+            }
+        ) {
+            Text("Shake")
+        }
+
+
+    }
+}
+
+fun Modifier.shake() = composed {
+    val animatable = remember {
+        Animatable(0f)
+    }
+
+
+    LaunchedEffect(Unit) {
+        animatable.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(1000)
+        )
+    }
+    Modifier.graphicsLayer {
+        translationX = size.width * .1f * animatable.value * randomInRange(-1f, 1f)
+        translationY = size.width * .1f * animatable.value * randomInRange(-1f, 1f)
+    }
+
+}
 
 @Preview
 @Composable
@@ -229,8 +318,8 @@ fun ParticleAnimationSample() {
         }
 
         val particleState = rememberParticleState(
-            particleSize = 2.dp,
-            animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing)
+            particleSize = 1.5.dp,
+            animationSpec = tween(durationMillis = 1800, easing = FastOutSlowInEasing)
         )
 
         val particleState2 = rememberParticleState(
@@ -599,7 +688,7 @@ open class DisintegrateStrategy : ParticleStrategy {
                     val particleSizePx = particleSize.toFloat()
 
                     val initialSize = setInitialSize(particleBoundaries, particleSizePx)
-                    val endSize = setEndSize(particleBoundaries, particleSizePx.toInt())
+                    val endSize = setEndSize(particleBoundaries, particleSizePx)
 
                     // Set alpha
                     val alphaStart = setInitialAlpha(particleBoundaries)
@@ -673,7 +762,7 @@ open class DisintegrateStrategy : ParticleStrategy {
 
     override fun setEndSize(
         particleBoundaries: ParticleBoundaries?,
-        particleSize: Int
+        particleSize: Float
     ): Size {
         val endMinSize =
             (particleBoundaries?.endSizeLowerBound?.width) ?: (particleSize * .4f)
@@ -762,16 +851,16 @@ open class DisintegrateStrategy : ParticleStrategy {
         particleBoundaries: ParticleBoundaries?
     ) {
         with(drawScope) {
-//            drawWithLayer {
-            particleList.forEach { particle ->
-                if (particle.isActive) {
+            drawWithLayer {
+                particleList.forEach { particle ->
+//                if (particle.isActive) {
                     updateParticle(
                         progress = progress,
                         particle = particle
                     )
 
                     val color = particle.color
-                    val radius = particle.currentSize.width * .65f
+                    val radius = particle.currentSize.width * .5f
                     val position = particle.currentPosition
                     val alpha = particle.alpha
 
@@ -782,26 +871,36 @@ open class DisintegrateStrategy : ParticleStrategy {
                         center = position,
                         alpha = alpha
                     )
-                }
-            }
-
-//                clipRect(
-//                    left = progress * size.width * 2f
-//                ) {
-//                    drawImage(
-//                        image = imageBitmap,
-//                        blendMode = BlendMode.SrcOut
-//                    )
 //                }
+                }
 
-            // For debugging
+                if (progress < .65f) {
+                    val coEfficient = if (progress < .2f) {
+                        progress * .8f
+                    } else progress * 1.5f
+                    clipRect(
+                        left = size.width * coEfficient
+                    ) {
+                        drawImage(
+                            image = imageBitmap,
+                            blendMode = BlendMode.DstIn
+                        )
+
+                        drawImage(
+                            image = imageBitmap,
+                            blendMode = BlendMode.SrcOut
+                        )
+                    }
+                }
+
+                // For debugging
 //                drawRect(
 //                    color = Color.Black,
 //                    topLeft = Offset(progress * size.width, 0f),
 //                    size = Size(size.width - progress * size.width, size.height),
 //                    style = Stroke(4.dp.toPx())
 //                )
-//            }
+            }
         }
     }
 
@@ -831,7 +930,7 @@ open class DisintegrateStrategy : ParticleStrategy {
             // Set alpha
             // While trajectory progress is less than 40% have full alpha then slowly
             // reduce to zero for particles to disappear
-            alpha = if (trajectoryProgress == 0f) 1f
+            alpha = if (trajectoryProgress == 0f) 0f
             else if (trajectoryProgress < .4f) 1f
             else scale(.4f, 1f, trajectoryProgress, particle.initialAlpha, particle.endAlpha)
 
@@ -948,7 +1047,7 @@ open class DefaultStrategy : ParticleStrategy {
             // Set initial and final sizes
             val initialSize = setInitialSize(particleBoundaries, particleSize.toFloat())
 
-            val endSize = setEndSize(particleBoundaries, particleSize)
+            val endSize = setEndSize(particleBoundaries, particleSize.toFloat())
 
             // Set alpha
             val alphaStart = setInitialAlpha(particleBoundaries)
@@ -1005,7 +1104,7 @@ open class DefaultStrategy : ParticleStrategy {
 
     override fun setEndSize(
         particleBoundaries: ParticleBoundaries?,
-        particleSize: Int
+        particleSize: Float
     ): Size {
         val endSizePx = if (randomBoolean(8)) {
             randomInRange(particleSize * 1f, particleSize.toFloat() * 2.5f)
@@ -1196,7 +1295,7 @@ interface ParticleStrategy {
         halfHeight: Float
     ): Offset
 
-    fun setEndSize(particleBoundaries: ParticleBoundaries?, particleSize: Int): Size
+    fun setEndSize(particleBoundaries: ParticleBoundaries?, particleSize: Float): Size
 
     fun setInitialSize(particleBoundaries: ParticleBoundaries?, particleSize: Float): Size
 
