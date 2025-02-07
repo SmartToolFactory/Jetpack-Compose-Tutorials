@@ -187,7 +187,6 @@ private fun NeonDrawingSample() {
     // This is previous motion event before next touch is saved into this current position
     var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
 
-
     val transition: InfiniteTransition = rememberInfiniteTransition()
 
     // Infinite phase animation for PathEffect
@@ -218,17 +217,18 @@ private fun NeonDrawingSample() {
 
                 this.color = transparent
             }
+
+            asFrameworkPaint().setShadowLayer(
+                35f * phase,
+                0f,
+                0f,
+                color
+                    .copy(alpha = phase)
+                    .toArgb()
+            )
         }
     }
 
-    paint.asFrameworkPaint().setShadowLayer(
-        35f * phase,
-        0f,
-        0f,
-        color
-            .copy(alpha = phase)
-            .toArgb()
-    )
 
     // Path is what is used for drawing line on Canvas
     val path = remember { Path() }
@@ -263,7 +263,7 @@ private fun NeonDrawingSample() {
             }
 
             MotionEvent.Move -> {
-                path.quadraticBezierTo(
+                path.quadraticTo(
                     previousPosition.x,
                     previousPosition.y,
                     (previousPosition.x + currentPosition.x) / 2,
@@ -296,4 +296,3 @@ private fun NeonDrawingSample() {
         }
     }
 }
-
