@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,17 +32,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -443,4 +449,74 @@ fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<TestParti
     }
 
     return particleList
+}
+
+@Preview
+@Composable
+fun InversePixelsSample() {
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+
+        androidx.compose.material3.Text(
+            text = "Original Colors",
+            fontSize = 34.sp,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
+        Row {
+            Image(
+                modifier = Modifier.weight(1f).aspectRatio(1f),
+                painter = painterResource(R.drawable.avatar_1_raster),
+                contentDescription = null
+            )
+            Image(
+                modifier = Modifier.weight(1f).aspectRatio(1f),
+                painter = painterResource(R.drawable.avatar_2_raster),
+                contentDescription = null
+            )
+        }
+
+        androidx.compose.material3.Text(
+            text = "Inverted Colors",
+            fontSize = 34.sp,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .drawWithCache {
+                    val graphicsLayer = obtainGraphicsLayer()
+
+                    val values = floatArrayOf(
+                        -1f, 0f, 0f, 0f, 255f,
+                        0f, -1f, 0f, 0f, 255f,
+                        0f, 0f, -1f, 0f, 255f,
+                        0f, 0f, 0f, 1f, 0f
+                    )
+
+                    graphicsLayer.apply {
+                        record {
+                            drawContent()
+                        }
+                        blendMode = BlendMode.Difference
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix(values))
+                    }
+
+                    onDrawWithContent {
+                        drawLayer(graphicsLayer)
+                    }
+                }
+        ) {
+            Image(
+                modifier = Modifier.weight(1f).aspectRatio(1f),
+                painter = painterResource(R.drawable.avatar_1_raster),
+                contentDescription = null
+            )
+            Image(
+                modifier = Modifier.weight(1f).aspectRatio(1f),
+                painter = painterResource(R.drawable.avatar_2_raster),
+                contentDescription = null
+            )
+        }
+
+    }
 }
