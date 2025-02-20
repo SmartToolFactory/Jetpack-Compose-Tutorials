@@ -1,6 +1,7 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter3_layout
 
-import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,11 +13,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,9 +74,38 @@ private fun TutorialContent() {
     val messages = remember { mutableStateListOf<ChatMessage>() }
     val sdf = remember { SimpleDateFormat("hh:mm", Locale.ROOT) }
 
+    var selected by remember {
+        mutableStateOf(false)
+    }
+
+    val saturation by animateFloatAsState(
+        targetValue = if (selected) 0f else 1f,
+        animationSpec = tween(3000)
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .then(
+                Modifier.drawWithCache {
+                    val graphicsLayer = obtainGraphicsLayer()
+
+                    graphicsLayer.apply {
+                        record {
+                            drawContent()
+                        }
+                        colorFilter = ColorFilter.colorMatrix(
+                            ColorMatrix().apply {
+                                setToSaturation(saturation)
+                            })
+                    }
+
+                    onDrawWithContent {
+                        drawLayer(graphicsLayer)
+                    }
+                }
+
+            )
             .background(Color(0xffFBE9E7))
     ) {
 
@@ -76,7 +113,7 @@ private fun TutorialContent() {
             title = "Flexible ChatRows",
             description = description,
             onClick = {
-                Toast.makeText(context, description, Toast.LENGTH_SHORT).show()
+                selected = selected.not()
             }
         )
         val scrollState = rememberLazyListState()

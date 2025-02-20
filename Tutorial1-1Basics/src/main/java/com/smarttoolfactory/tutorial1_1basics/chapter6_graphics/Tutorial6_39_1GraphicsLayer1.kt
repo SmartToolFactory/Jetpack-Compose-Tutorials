@@ -38,7 +38,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
@@ -456,7 +455,7 @@ fun createParticles(imageBitmap: ImageBitmap, particleSize: Int): List<TestParti
 fun InversePixelsSample() {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-        androidx.compose.material3.Text(
+        Text(
             text = "Original Colors",
             fontSize = 34.sp,
             modifier = Modifier.padding(vertical = 16.dp)
@@ -475,8 +474,8 @@ fun InversePixelsSample() {
             )
         }
 
-        androidx.compose.material3.Text(
-            text = "Inverted Colors",
+       Text(
+            text = "Color Filtered",
             fontSize = 34.sp,
             modifier = Modifier.padding(vertical = 16.dp)
         )
@@ -486,10 +485,17 @@ fun InversePixelsSample() {
                 .drawWithCache {
                     val graphicsLayer = obtainGraphicsLayer()
 
-                    val values = floatArrayOf(
+                    val invertedColorMatrix = floatArrayOf(
                         -1f, 0f, 0f, 0f, 255f,
                         0f, -1f, 0f, 0f, 255f,
                         0f, 0f, -1f, 0f, 255f,
+                        0f, 0f, 0f, 1f, 0f
+                    )
+
+                    val sepiaMatrix = floatArrayOf(
+                        1f, 0f, 0f, 0f, 0f,
+                        0f, 1f, 0f, 0f, 0f,
+                        0f, 0f, 0.85f, 0f, 0f,
                         0f, 0f, 0f, 1f, 0f
                     )
 
@@ -497,8 +503,13 @@ fun InversePixelsSample() {
                         record {
                             drawContent()
                         }
-                        blendMode = BlendMode.Difference
-                        colorFilter = ColorFilter.colorMatrix(ColorMatrix(values))
+//                        blendMode = BlendMode.Difference
+                        // Sepia or inverted Matrices
+//                        colorFilter = ColorFilter.colorMatrix(ColorMatrix(sepiaMatrix))
+                        // Black-White
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                            this.setToSaturation(0f)
+                        })
                     }
 
                     onDrawWithContent {
