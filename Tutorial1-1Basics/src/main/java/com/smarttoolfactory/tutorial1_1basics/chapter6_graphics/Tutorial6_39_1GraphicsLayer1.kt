@@ -1,22 +1,29 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
@@ -56,12 +64,58 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Preview
 @Composable
-fun GraphicsLayerToImageBitmapSample() {
+private fun GraphicsLayerSample() {
+    val graphicsLayer = rememberGraphicsLayer()
+
+    Column {
+        Canvas(
+            Modifier.fillMaxWidth()
+                .border(2.dp, Color.Red)
+                .clipToBounds()
+                .aspectRatio(4 / 3f)
+        ) {
+            drawLayer(graphicsLayer)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        LazyColumn(
+            modifier = Modifier
+                .border(2.dp, Color.Green)
+                .background(backgroundColor)
+                .fillMaxSize()
+                .drawWithContent {
+                    // 🔥Without this LazyColumn does not draw its content
+                    drawContent()
+                    graphicsLayer.record {
+                        this@drawWithContent.drawContent()
+                    }
+                },
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(100) {
+
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(Color.White, RoundedCornerShape(16.dp)).padding(16.dp)
+                ) {
+                    androidx.compose.material3.Text("Row $it", fontSize = 22.sp)
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun GraphicsLayerToImageBitmapSample() {
 
     val coroutineScope = rememberCoroutineScope()
     val graphicsLayer = rememberGraphicsLayer()
@@ -474,7 +528,7 @@ fun InversePixelsSample() {
             )
         }
 
-       Text(
+        Text(
             text = "Color Filtered",
             fontSize = 34.sp,
             modifier = Modifier.padding(vertical = 16.dp)
