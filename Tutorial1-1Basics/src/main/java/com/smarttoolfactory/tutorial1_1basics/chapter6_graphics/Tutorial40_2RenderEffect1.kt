@@ -11,9 +11,11 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,21 +24,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -59,15 +62,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.roundToIntSize
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.R
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialText2
-import kotlinx.coroutines.delay
 import org.intellij.lang.annotations.Language
 import kotlin.math.roundToInt
 
@@ -76,7 +80,6 @@ import kotlin.math.roundToInt
 fun Tutorial6_40Screen2() {
     TutorialContent()
 }
-
 
 @Composable
 private fun TutorialContent() {
@@ -507,19 +510,11 @@ fun RenderNodeSample() {
 
     val graphicsLayer = rememberGraphicsLayer()
 
-    var counter by remember {
-        mutableIntStateOf(0)
-    }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(60)
-            counter++
-        }
-    }
+    val state = rememberLazyListState()
 
     Box {
         LazyColumn(
+            state = state,
             modifier = Modifier
                 .background(backgroundColor)
                 .fillMaxSize()
@@ -536,20 +531,6 @@ fun RenderNodeSample() {
                     ) {
                         this@drawWithContent.drawContent()
                     }
-
-//                    val recordingCanvas = contentNode.beginRecording()
-//                    canvasHolder.drawInto(recordingCanvas) {
-//                        drawContext.also {
-//                            it.layoutDirection = layoutDirection
-//                            it.size = size
-//                            it.canvas = this
-//                        }
-////                        this@drawWithContent.drawContent()
-//                        drawLayer(graphicsLayer)
-//                    }
-//
-//                    contentNode.endRecording()
-
                 },
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -600,8 +581,6 @@ fun RenderNodeSample() {
                     )
                 )
 
-                println("Drawing...$counter")
-
                 drawIntoCanvas { canvas: Canvas ->
                     val recordingCanvas = contentNode.beginRecording()
                     canvasHolder.drawInto(recordingCanvas) {
@@ -624,6 +603,167 @@ fun RenderNodeSample() {
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
                 fontSize = 26.sp
             )
+        }
+    }
+}
+
+fun Modifier.frostedGlass(height: Dp) = this.then(
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        Modifier.drawWithCache {
+            val topBarHeightPx = height.toPx()
+
+            val blurLayer = obtainGraphicsLayer().apply {
+                renderEffect = RenderEffect
+                    .createBlurEffect(16f, 16f, Shader.TileMode.DECAL)
+                    .asComposeRenderEffect()
+            }
+
+            onDrawWithContent {
+                blurLayer.record(size.copy(height = topBarHeightPx).roundToIntSize()) {
+                    this@onDrawWithContent.drawContent()
+                }
+
+                drawLayer(blurLayer)
+                clipRect(top = topBarHeightPx) {
+                    this@onDrawWithContent.drawContent()
+                }
+            }
+        }
+    } else {
+        Modifier
+    }
+)
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Preview(showBackground = true)
+@Composable
+fun PartialBlurTest() {
+
+    val scrollState = rememberLazyListState()
+    val topBarHeight = 180.dp
+
+    LazyColumn(
+        state = scrollState,
+        modifier = Modifier
+            .fillMaxSize()
+            .frostedGlass(height = topBarHeight),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+        item {
+            Spacer(modifier = Modifier.height(topBarHeight))
+        }
+
+        item {
+            LazyRow(
+                modifier = Modifier.fillMaxWidth().aspectRatio(2f),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(5) {
+                    Image(
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .aspectRatio(2f),
+                        contentScale = ContentScale.Crop,
+                        painter = painterResource(R.drawable.landscape11), contentDescription = null
+                    )
+                }
+            }
+        }
+        items(100) {
+            if (it == 5) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(.5f),
+                    painter = painterResource(R.drawable.landscape11),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .clickable {
+
+                        }
+                        .fillMaxWidth()
+                        .background(Color.White, RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Text("Row $it", fontSize = 22.sp)
+                }
+            }
+        }
+    }
+}
+
+
+@Language("GLSL")
+val CheapFrostedGlassTopBarAGSL =
+    """
+    const vec4 white = vec4(1.0);
+    
+    uniform shader inputShader;
+    uniform float barHeight;
+    
+    vec4 main(vec2 coord) {
+        if (coord.y > barHeight) {
+            return inputShader.eval(coord);
+        } else {
+            vec2 factor = vec2(3.0);
+            
+            vec4 color = vec4(0.0);
+            color += inputShader.eval(coord - 3.0 * factor) * 0.0540540541;
+            color += inputShader.eval(coord - 2.0 * factor) * 0.1216216216;
+            color += inputShader.eval(coord - factor) * 0.1945945946;
+            color += inputShader.eval(coord) * 0.2270270270;
+            color += inputShader.eval(coord + factor) * 0.1945945946;
+            color += inputShader.eval(coord + 2.0 * factor) * 0.1216216216;
+            color += inputShader.eval(coord + 3.0 * factor) * 0.0540540541;
+            
+            return mix(color, white, 0.7);
+        }
+    }
+    """.trimIndent()
+
+val TopAppBarHeight = 180.dp
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Preview(showBackground = true)
+@Composable
+fun FrostedGlassTopBarTest() {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer {
+                val shader = RuntimeShader(CheapFrostedGlassTopBarAGSL)
+                shader.setFloatUniform("barHeight", TopAppBarHeight.toPx())
+                val androidRenderEffect = android.graphics.RenderEffect
+                    .createRuntimeShaderEffect(shader, "inputShader")
+                renderEffect = androidRenderEffect.asComposeRenderEffect()
+            }
+    ) {
+        items(100) {
+            if (it == 5) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2f),
+                    painter = painterResource(R.drawable.landscape11),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White, RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    Text("Row $it", fontSize = 22.sp)
+                }
+            }
         }
     }
 }
