@@ -135,7 +135,7 @@ fun SharedTransitionScope.SnackItem(
             SnackContents(
                 snack = snack,
                 modifier = Modifier.sharedElement(
-                    state = rememberSharedContentState(key = snack.name),
+                    sharedContentState = rememberSharedContentState(key = snack.name),
                     animatedVisibilityScope = this@AnimatedVisibility,
                     boundsTransform = boundsTransition,
                 ),

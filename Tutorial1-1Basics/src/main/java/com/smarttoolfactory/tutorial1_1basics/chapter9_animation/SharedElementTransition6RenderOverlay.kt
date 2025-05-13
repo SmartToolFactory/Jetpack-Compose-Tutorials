@@ -150,7 +150,7 @@ fun SharedElementRenderInSharedTransitionScopeOverlay() {
                             painter = painterResource(images[item % 3]),
                             modifier = Modifier
                                 .sharedElement(
-                                    state = rememberSharedContentState(key = "item-image$item"),
+                                    sharedContentState = rememberSharedContentState(key = "item-image$item"),
                                     animatedVisibilityScope = this@AnimatedContent,
                                 )
                                 .fillMaxWidth(),

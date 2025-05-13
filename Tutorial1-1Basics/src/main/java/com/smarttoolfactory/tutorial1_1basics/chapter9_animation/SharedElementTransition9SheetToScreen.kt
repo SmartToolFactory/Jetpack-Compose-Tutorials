@@ -88,7 +88,7 @@ private fun SharedElementsample() {
                         painter = painterResource(item),
                         modifier = Modifier
                             .sharedElement(
-                                state = rememberSharedContentState(key = item),
+                                sharedContentState = rememberSharedContentState(key = item),
                                 animatedVisibilityScope = this@composable,
                                 boundsTransform = gridBoundsTransform
                             )
@@ -228,7 +228,7 @@ private fun ImageItem(
     with(sharedTransitionScope) {
         Image(
             modifier = Modifier.sharedElement(
-                state = rememberSharedContentState(key = uri),
+                sharedContentState = rememberSharedContentState(key = uri),
                 animatedVisibilityScope = animatedContentScope,
                 boundsTransform = gridBoundsTransform
             ).clickable {

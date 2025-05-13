@@ -166,7 +166,7 @@ fun BottomSheetImagePicker() {
                                 painter = painterResource(item),
                                 modifier = Modifier
                                     .sharedElement(
-                                        state = rememberSharedContentState(key = item),
+                                        sharedContentState = rememberSharedContentState(key = item),
                                         animatedVisibilityScope = this@AnimatedContent,
                                         boundsTransform = gridBoundsTransform
                                     )
@@ -200,7 +200,7 @@ fun BottomSheetImagePicker() {
                                     }
                                     .size(width, height)
                                     .sharedElement(
-                                        state = rememberSharedContentState(key = item),
+                                        sharedContentState = rememberSharedContentState(key = item),
                                         animatedVisibilityScope = this@AnimatedContent,
                                         boundsTransform = gridBoundsTransform
                                     ),

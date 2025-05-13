@@ -121,7 +121,7 @@ fun ListToDetailsDemo() {
                                         Modifier.sharedElement(
                                             // 🔥 key should match for
                                             // shared element transitions
-                                            state = rememberSharedContentState(key = "item-image$item"),
+                                            sharedContentState = rememberSharedContentState(key = "item-image$item"),
                                             animatedVisibilityScope = this@AnimatedContent,
                                         )
                                     } else Modifier

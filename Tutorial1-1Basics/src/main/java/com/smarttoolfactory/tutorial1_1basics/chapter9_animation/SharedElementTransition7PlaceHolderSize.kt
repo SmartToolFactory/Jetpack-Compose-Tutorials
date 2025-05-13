@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
+@file:OptIn(ExperimentalSharedTransitionApi::class, ExperimentalSharedTransitionApi::class)
 
 package com.smarttoolfactory.tutorial1_1basics.chapter9_animation
 
@@ -177,7 +177,7 @@ fun SharedElement_PlaceholderSize() {
                                 painter = painterResource(listSnacks[index].image),
                                 modifier = Modifier
                                     .sharedElement(
-                                        state = rememberSharedContentState(key = "item-image$index"),
+                                        sharedContentState = rememberSharedContentState(key = "item-image$index"),
                                         animatedVisibilityScope = this@AnimatedContent,
                                         // 🔥 Changing placeHolderSize effects how other
                                         // items will react during animation
