@@ -388,10 +388,6 @@ fun ShapesOnImage(
                     positionProvider = provider,
                     tooltip = {
                         PlainTooltip(
-                            caretSize = DpSize(
-                                width = 8.dp,
-                                height = 8.dp
-                            ),
                             shape = RoundedCornerShape(16.dp),
                             containerColor = Color.Red
                         ) {

@@ -125,10 +125,6 @@ private fun TooltipBoxSample(
                         .width(contentWidth)
 //                        .fillMaxWidth()
                     ,
-                    caretSize = DpSize(
-                        width = 24.dp,
-                        height = 16.dp
-                    ),
                     shape = RoundedCornerShape(16.dp),
                     containerColor = Purple400
                 ) {
