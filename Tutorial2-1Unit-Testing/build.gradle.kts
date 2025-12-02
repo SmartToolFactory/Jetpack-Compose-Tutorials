@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.smarttoolfactory.tutorial2_1unit_testing"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.smarttoolfactory.tutorial2_1unit_testing"
