@@ -25,10 +25,8 @@ class Test1WithInit {
         init(this)
     }
 
-
     @Test
     fun `Add two numbers`() {
-
         // Given
 //        every { calcService.add(10.0, 20.0) } returns 30.0
 

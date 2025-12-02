@@ -8,6 +8,7 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
+import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 

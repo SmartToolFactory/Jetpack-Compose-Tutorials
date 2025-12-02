@@ -39,13 +39,11 @@ class Test9CapturingParams {
         every { calcService.log(capture(slot)) } returns "Expected Output"
 
         // when
-        calcService.log("Expected Param")
+        mathApplication.log("Expected Param")
 
         // then
         assertEquals("Expected Param", slot.captured)
     }
-
-
 
     @Test
     fun `Returns captured parameter with list`() {
@@ -60,7 +58,6 @@ class Test9CapturingParams {
         // then
         assertEquals("Expected Param", list[0])
     }
-
 
     @Test
     fun `Returns captured multiple parameters with slot`() {
@@ -106,15 +103,12 @@ class Test9CapturingParams {
             Outcome.RECORDED
         }
 
-
         every {
             car.recordTelemetry(
                 speed = capture(list),
                 direction = Direction.SOUTH
             )
         } answers {
-            println(list)
-
             Outcome.RECORDED
         }
 
@@ -132,12 +126,10 @@ class Test9CapturingParams {
         }
 
         confirmVerified(car)
-
     }
 
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
     }
-
 }

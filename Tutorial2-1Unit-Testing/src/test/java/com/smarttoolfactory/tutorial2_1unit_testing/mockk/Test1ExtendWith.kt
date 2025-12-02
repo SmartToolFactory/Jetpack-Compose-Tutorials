@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith
  * Methods with @BeforeAll and @AfterAll annotations which are static methods should be inside
  * Companion object.
  *
- * Mocck is either used with @ExtendWith(MockKExtension::class) or
+ * Mockk is either used with @ExtendWith(MockKExtension::class) or
  *  MockKAnnotations.init(this) is called in method with @BeforeEach annotation
  *
  */
@@ -43,7 +43,6 @@ internal class Test1ExtendWith {
         }
     }
 
-
     @Test
     fun `Add two numbers`() {
 
@@ -58,5 +57,4 @@ internal class Test1ExtendWith {
         // Verify that add method is called with 10.0 and 20.0 parameters
         verify(exactly =  1) { calcService.add(10.0, 20.0) }
     }
-
 }

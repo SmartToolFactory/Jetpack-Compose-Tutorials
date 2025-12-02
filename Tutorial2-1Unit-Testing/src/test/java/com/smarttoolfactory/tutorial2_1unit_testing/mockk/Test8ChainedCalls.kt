@@ -70,9 +70,7 @@ class Test8ChainedCalls {
         assertEquals(expectedCar, car)
 //        assertEquals(expectedWindowState, WindowState.UP)
 //        verify { car.door(DoorType.FRONT_LEFT).windowState() }
-
     }
-
 
     @Test
     fun `Returns different mock when param with chain mock call`() {
@@ -121,5 +119,4 @@ class Test8ChainedCalls {
         verify { car.door(DoorType.FRONT_LEFT).windowState() }
 
     }
-
 }

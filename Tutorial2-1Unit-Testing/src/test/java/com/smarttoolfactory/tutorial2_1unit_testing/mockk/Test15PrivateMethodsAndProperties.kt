@@ -49,12 +49,9 @@ class Test15PrivateMethodsAndProperties {
 }
 
 class Player(private val levelManager: LevelManager) {
-
-
     fun isAboveLevelAndStat(): Boolean {
         return levelManager.isAboveLevelAndStat()
     }
-
 }
 
 class LevelManager {
@@ -65,5 +62,4 @@ class LevelManager {
     fun isAboveLevelAndStat(): Boolean {
         return stat > 10 && level > 10
     }
-
 }

@@ -65,11 +65,8 @@ class Test11VerificationOrder {
         }
 
         confirmVerified(obj)
-
     }
-
 }
-
 
 class MockedClass {
     fun sum(a: Int, b: Int) = a + b

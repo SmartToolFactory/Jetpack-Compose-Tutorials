@@ -76,7 +76,5 @@ class Test7PartialArgumentMatching {
         // Then
         verify { car.recordTelemetry(60, Direction.NORTH, 51.1377382, 17.0257142) }
         confirmVerified(car)
-
     }
-
 }

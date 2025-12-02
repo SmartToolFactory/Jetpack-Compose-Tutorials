@@ -24,7 +24,6 @@ class Test1WithMockK {
         mathApplication.calcService = calcService
     }
 
-
     @Test
     fun `Add two numbers`() {
 

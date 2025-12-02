@@ -30,7 +30,6 @@ class Test2ObjectMockK {
         // or unmockkObject(MockObj)
     }
 
-
     @Test
     fun `Add two numbers with mock Object `() {
 
@@ -45,9 +44,7 @@ class Test2ObjectMockK {
         verify(exactly = 2) { CalculusObject.add(1, 2) }
 
     }
-
 }
-
 
 object CalculusObject {
 

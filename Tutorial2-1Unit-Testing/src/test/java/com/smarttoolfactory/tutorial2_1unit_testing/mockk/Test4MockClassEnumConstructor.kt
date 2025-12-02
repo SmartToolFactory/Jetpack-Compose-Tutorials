@@ -48,12 +48,10 @@ class Test4MockClassEnumConstructor {
             // Then
             assertEquals(42, Enumeration.CONSTANT.goodInt)
         }
-
     }
 
     @Nested
     inner class Test4MockConstructor
-
 }
 
 enum class Enumeration(val goodInt: Int) {

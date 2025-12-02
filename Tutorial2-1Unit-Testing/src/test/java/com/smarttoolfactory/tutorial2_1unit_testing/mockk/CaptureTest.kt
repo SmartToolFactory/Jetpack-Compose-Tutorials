@@ -23,7 +23,6 @@ class CaptureTest {
         MockKAnnotations.init(this)
     }
 
-
     @Test
     fun `Returns captured parameter with slot`() {
 
@@ -34,7 +33,7 @@ class CaptureTest {
             Item("Row $it")
         }
         // WHEN
-        val result = useCase.getItems(size = size)
+        useCase.getItems(size = size)
         // THEN
         Truth.assertThat(size).isEqualTo(slot.captured)
 
@@ -54,4 +53,3 @@ class Repository {
 }
 
 data class Item(val text: String)
-

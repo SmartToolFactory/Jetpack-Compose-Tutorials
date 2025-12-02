@@ -31,8 +31,5 @@ class Test15ReturnUnit {
             obj.sum(1, 2)
             obj.sum(1, 3)
         }
-
     }
-
-
 }

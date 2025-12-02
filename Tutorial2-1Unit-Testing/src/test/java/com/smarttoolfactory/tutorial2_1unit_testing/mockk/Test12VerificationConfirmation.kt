@@ -96,5 +96,4 @@ class Test12VerificationConfirmation {
         confirmVerified(car) // makes sure all calls were covered with verification
 
     }
-
 }
