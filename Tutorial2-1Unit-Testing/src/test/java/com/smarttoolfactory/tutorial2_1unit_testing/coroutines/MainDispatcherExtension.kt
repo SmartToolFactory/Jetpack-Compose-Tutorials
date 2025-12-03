@@ -15,7 +15,6 @@ class MainDispatcherExtension(
     val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
 ) : BeforeEachCallback, AfterEachCallback {
 
-
     override fun beforeEach(context: ExtensionContext) {
         Dispatchers.setMain(testDispatcher)
     }

@@ -27,8 +27,16 @@ class CoroutinesTest1 {
     fun standardTest() = runTest {
         val userRepo = UserRepository()
 
-        launch { userRepo.registerUsers("Alice") }
-        launch { userRepo.registerUsers("Bob") }
+        println("Start")
+        launch {
+            println("Add Alice")
+            userRepo.registerUsers("Alice")
+        }
+        launch {
+            println("Add Bob")
+            userRepo.registerUsers("Bob")
+        }
+        println("End")
 
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ❌ Fails
     }
@@ -36,12 +44,20 @@ class CoroutinesTest1 {
     @Test
     fun standardTestWithJoin() = runTest {
         val userRepo = UserRepository()
+        println("Start")
+        val job1 = launch {
+            println("Add Alice")
+            userRepo.registerUsers("Alice")
+        }
+        val job2 = launch {
+            println("Add Bob")
+            userRepo.registerUsers("Bob")
+        }
 
-        val job1 = launch { userRepo.registerUsers("Alice") }
-        val job2 = launch { userRepo.registerUsers("Bob") }
-
+        println("End")
         job1.join()
         job2.join()
+        println("End After Join")
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ✅ Passes
     }
 
@@ -76,8 +92,16 @@ class CoroutinesTest1 {
     fun unconfinedTest() = runTest(UnconfinedTestDispatcher()) {
         val userRepo = UserRepository()
 
-        launch { userRepo.registerUsers("Alice") }
-        launch { userRepo.registerUsers("Bob") }
+        println("Start")
+        launch {
+            println("Add Alice")
+            userRepo.registerUsers("Alice")
+        }
+        launch {
+            println("Add Bob")
+            userRepo.registerUsers("Bob")
+        }
+        println("End")
 
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ✅ Passes
     }
@@ -86,10 +110,31 @@ class CoroutinesTest1 {
     fun unconfinedTest2() = runTest(UnconfinedTestDispatcher()) {
         val userRepo = UserRepository()
 
-        launch { userRepo.registerUserWithDelay("Alice") }
-        launch { userRepo.registerUserWithDelay("Bob") }
+        println("Start")
+        launch {
+            println("Add Alice")
+            userRepo.registerUserWithDelay("Alice")
+            println("Add Alice complete")
+        }
+        launch {
+            println("Add Bob")
+            userRepo.registerUserWithDelay("Bob")
+            println("Add Bob complete")
+        }
+        println("End")
         // 🔥 Need to call for past to test
         advanceUntilIdle()
+        println("End after advanceUntilIdle")
+        /*
+        Prints:
+            Start
+            Add Alice
+            Add Bob
+            End
+            Add Alice complete
+            Add Bob complete
+            End after advanceUntilIdle
+         */
 
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ✅ Passes
     }
@@ -178,14 +223,12 @@ class CoroutinesTest1 {
         assertTrue(entered2)
     }
 
-
     @Test
     fun testAsyncConcurrently() = runTest {
         val deferred1 = async {
             delay(100)
             "Hello"
         }
-
 
         val deferred2 = async {
             delay(100)
@@ -198,7 +241,6 @@ class CoroutinesTest1 {
         }
 
         val actual = deferred1.await() + deferred2.await() + deferred3.await()
-
 
         Truth.assertThat(actual).isEqualTo("Hello World")
     }
@@ -233,5 +275,4 @@ class CoroutinesTest1 {
         println("Testing...")
         deferred.await()
     }
-
 }
