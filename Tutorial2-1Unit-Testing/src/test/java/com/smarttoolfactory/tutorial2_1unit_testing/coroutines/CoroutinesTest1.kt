@@ -122,7 +122,7 @@ class CoroutinesTest1 {
             println("Add Bob complete")
         }
         println("End")
-        // 🔥 Need to call for past to test
+        // 🔥 Need to call for pass the test
         advanceUntilIdle()
         println("End after advanceUntilIdle")
         /*

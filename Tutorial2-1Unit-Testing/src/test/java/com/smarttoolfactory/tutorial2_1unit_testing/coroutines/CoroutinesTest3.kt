@@ -58,7 +58,6 @@ class CoroutinesTest3 {
 
     @Test
     fun stateInTest() = runTest {
-
         val customViewModel = CustomViewModel()
 
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
@@ -75,7 +74,6 @@ class CoroutinesTest3 {
         // Trigger-assert like before
         customViewModel.flow.emit(1)
         assertEquals(1, customViewModel.stateFlow.value)
-
     }
 
     @Test
@@ -103,7 +101,6 @@ class CoroutinesTest3 {
         fakeRepository.emit(3)
         assertEquals(3, viewModel.score.value)
     }
-
 }
 
 /**

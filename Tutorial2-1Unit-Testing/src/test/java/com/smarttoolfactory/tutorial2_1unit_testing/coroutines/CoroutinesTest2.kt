@@ -1,9 +1,17 @@
 package com.smarttoolfactory.tutorial2_1unit_testing.coroutines
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -39,7 +47,22 @@ class CoroutinesTest2 {
         viewModel.loadResultWithDelay()
         val loading = viewModel.result
         advanceUntilIdle()
+
         val result = (viewModel.result as ResponseResult.Success).data
+        // then
+        Truth.assertThat(loading).isInstanceOf(ResponseResult.Loading::class.java)
+        Truth.assertThat(result).isEqualTo("Result")
+    }
+
+    @Test
+    fun loadResultWithDelayToFlowTest() = runTest {
+        // given
+        val viewModel = CoroutinesViewModel()
+        // when
+        viewModel.loadResultWithDelayToStateFlow()
+        val loading = viewModel.messageFlow.value
+        advanceUntilIdle()
+        val result = (viewModel.messageFlow.value as ResponseResult.Success).data
         // then
         Truth.assertThat(loading).isInstanceOf(ResponseResult.Loading::class.java)
         Truth.assertThat(result).isEqualTo("Result")
@@ -109,4 +132,48 @@ private class FakeDataSource : DataSource {
 
 interface DataSource {
     fun counts(): Flow<Int>
+}
+
+class CoroutinesViewModel : ViewModel() {
+
+    var result by mutableStateOf<ResponseResult>(ResponseResult.Idle)
+
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String> get() = _message
+
+    private val _messageFlow = MutableStateFlow<ResponseResult>(ResponseResult.Idle)
+    val messageFlow: StateFlow<ResponseResult> get() = _messageFlow
+
+    fun loadMessage() {
+        viewModelScope.launch {
+            _message.value = "Greetings!"
+        }
+    }
+
+    fun loadResultWithDelay() {
+        viewModelScope.launch {
+            result = ResponseResult.Loading
+            val resultFromApi = getResult()
+            result = resultFromApi
+        }
+    }
+
+    fun loadResultWithDelayToStateFlow() {
+        viewModelScope.launch {
+            _messageFlow.value = ResponseResult.Loading
+            val resultFromApi = getResult()
+            _messageFlow.value = resultFromApi
+        }
+    }
+
+    private suspend fun getResult(): ResponseResult {
+        delay(100)
+        return ResponseResult.Success("Result")
+    }
+}
+
+sealed class ResponseResult {
+    object Idle : ResponseResult()
+    object Loading : ResponseResult()
+    data class Success(val data: String) : ResponseResult()
 }
