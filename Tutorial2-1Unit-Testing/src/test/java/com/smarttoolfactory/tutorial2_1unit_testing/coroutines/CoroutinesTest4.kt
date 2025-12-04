@@ -10,6 +10,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -75,7 +77,6 @@ class FlowViewModel(private val flowUseCase: FlowUseCase) : ViewModel() {
             }
         }
     }
-
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -218,5 +219,24 @@ class FlowTest {
 
         // ❌ Fails
         Truth.assertThat(expected).hasSize(3)
+    }
+
+    @Test
+    fun viewModelWitFlowWithDelayCollectTest3() = runTest {
+        val viewModel = FlowViewModel(FlowUseCase())
+
+        // Start the flow collection inside the ViewModel
+        viewModel.getResultFlowWitDelay()
+
+        // Suspend until the StateFlow emits a non-empty value
+        val expected = viewModel.resultFlow
+            .filter { it.isNotEmpty() }
+            .first()
+
+        // ✅ Passes
+        Truth.assertThat(expected).hasSize(3)
+        // Optionally:
+        // Truth.assertThat(expected)
+        //     .containsExactly("Item With delay 1", "Item With delay 2", "Item With delay 3")
     }
 }
