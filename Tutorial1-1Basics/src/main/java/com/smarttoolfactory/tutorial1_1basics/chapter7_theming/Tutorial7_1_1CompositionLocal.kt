@@ -12,11 +12,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,12 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 
-
 data class Elevations(val card: Dp = 0.dp, val default: Dp = 0.dp)
 
 // Define a CompositionLocal global object with a default
 // This instance can be accessed by all composables in the app
-val LocalElevations = compositionLocalOf { Elevations() }
+val LocalElevations: ProvidableCompositionLocal<Elevations> = compositionLocalOf { Elevations() }
 
 @Preview
 @Composable
@@ -87,8 +88,9 @@ private fun Test() {
     }
 }
 
+@Preview
 @Composable
-fun SomeComposable() {
+private fun SomeComposable() {
     // Access the globally defined LocalElevations variable to get the
     // current Elevations in this part of the Composition
     Card(
@@ -101,7 +103,7 @@ fun SomeComposable() {
 
 @Preview
 @Composable
-fun CompositionLocalExample() {
+private fun CompositionLocalExample() {
     MaterialTheme { // MaterialTheme sets ContentAlpha.high as default
         Column(
             Modifier
@@ -120,8 +122,31 @@ fun CompositionLocalExample() {
     }
 }
 
+@Preview
 @Composable
-fun DescendantExample() {
+private fun CompositionLocalExample2() {
+    MaterialTheme {
+        // Surface provides contentColorFor(MaterialTheme.colorScheme.surface) by default
+        // This is to automatically make text and other content contrast to the background
+        // correctly.
+        Surface {
+            Column {
+                Text("Uses Surface's provided content color")
+                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.primary) {
+                    Text("Primary color provided by LocalContentColor")
+                    Text("This Text also uses primary as textColor")
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.error) {
+                        DescendantExample()
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun DescendantExample() {
     // CompositionLocalProviders also work across composable functions
     Text("This Text uses the disabled alpha now")
 }
