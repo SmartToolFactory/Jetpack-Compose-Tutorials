@@ -35,14 +35,14 @@ class CaptureTest {
         // WHEN
         useCase.getItems(size = size)
         // THEN
-        Truth.assertThat(size).isEqualTo(slot.captured)
+        Truth.assertThat(slot.captured).isEqualTo(10)
 
     }
 }
 
 class UseCase(private val repository: Repository) {
     fun getItems(size: Int): List<Item> {
-        return repository.getItems(size)
+        return repository.getItems(size * 2)
     }
 }
 
