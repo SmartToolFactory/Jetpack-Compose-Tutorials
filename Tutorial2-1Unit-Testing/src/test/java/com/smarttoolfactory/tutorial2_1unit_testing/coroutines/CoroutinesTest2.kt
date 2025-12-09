@@ -48,7 +48,7 @@ class CoroutinesTest2 {
         val loading = viewModel.result
         advanceUntilIdle()
 
-        val result = (viewModel.result as ResponseResult.Success).data
+        val result = (viewModel.result as? ResponseResult.Success)?.data
         // then
         Truth.assertThat(loading).isInstanceOf(ResponseResult.Loading::class.java)
         Truth.assertThat(result).isEqualTo("Result")
@@ -69,12 +69,55 @@ class CoroutinesTest2 {
     }
 
     @Test
+    fun statedFlowTest() = runTest {
+        val flow = MutableStateFlow(0)
+        // 🔥 This test does not complete, it times out
+        flow.collect {}
+    }
+
+    @Test
+    fun stateFlowTest2() = runTest {
+        val flow = MutableStateFlow(0)
+
+        val list = mutableListOf<Int>()
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            flow.collect {
+                list.add(it)
+            }
+        }
+
+        flow.emit(1)
+        flow.emit(3)
+        flow.emit(4)
+
+        Truth.assertThat(list).containsExactly(0, 1, 3, 4)
+    }
+
+    @Test
     fun sharedFlowTest() = runTest {
         val flow = MutableSharedFlow<Int>()
         // 🔥 This test does not complete, it times out
-        flow.collect {
+        flow.collect {}
+    }
 
+    @Test
+    fun sharedFlowTest2() = runTest {
+        val flow = MutableSharedFlow<Int>()
+
+        val list = mutableListOf<Int>()
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            flow.collect {
+                list.add(it)
+            }
         }
+
+        flow.emit(1)
+        flow.emit(3)
+        flow.emit(4)
+
+        Truth.assertThat(list).containsExactly(1, 3, 4)
     }
 
     @Test
@@ -118,7 +161,7 @@ class CoroutinesTest2 {
     }
 }
 
-class Repository(private val dataSource: DataSource) {
+private class Repository(private val dataSource: DataSource) {
     fun scores(): Flow<Int> {
         return dataSource.counts().map { it * 10 }
     }
@@ -134,7 +177,7 @@ interface DataSource {
     fun counts(): Flow<Int>
 }
 
-class CoroutinesViewModel : ViewModel() {
+private class CoroutinesViewModel : ViewModel() {
 
     var result by mutableStateOf<ResponseResult>(ResponseResult.Idle)
 
@@ -172,7 +215,7 @@ class CoroutinesViewModel : ViewModel() {
     }
 }
 
-sealed class ResponseResult {
+internal sealed class ResponseResult {
     object Idle : ResponseResult()
     object Loading : ResponseResult()
     data class Success(val data: String) : ResponseResult()

@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,41 +28,11 @@ class CoroutinesTest3 {
     }
 
     @Test
-    fun testHotFakeRepository() = runTest {
-        val fakeRepository = FakeRepository()
-        val viewModel = MyViewModel(fakeRepository)
-
-        assertEquals(0, viewModel.score.value) // Assert on the initial value
-
-        // Start collecting values from the Repository
-        viewModel.initialize()
-
-        // Then we can send in values one by one, which the ViewModel will collect
-        fakeRepository.emit(1)
-        assertEquals(1, viewModel.score.value)
-
-        fakeRepository.emit(2)
-        fakeRepository.emit(3)
-        assertEquals(3, viewModel.score.value) // Assert on the latest value
-    }
-
-    class CustomViewModel : ViewModel() {
-
-        val flow = MutableSharedFlow<Int>()
-
-        val stateFlow = (flow as Flow<Int>).stateIn(
-            viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = 0
-        )
-    }
-
-    @Test
     fun stateInTest() = runTest {
-        val customViewModel = CustomViewModel()
+        val viewModelWithStateIn = ViewModelWithStateIn()
 
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            customViewModel.stateFlow.collect {}
+            viewModelWithStateIn.stateFlow.collect {}
         }
 
         // 🔥 Fails after 10s timeout
@@ -69,11 +40,11 @@ class CoroutinesTest3 {
 //            customViewModel.stateFlow.collect {}
 //        }
 
-        assertEquals(0, customViewModel.stateFlow.value) // Can assert initial value
+        assertEquals(0, viewModelWithStateIn.stateFlow.value) // Can assert initial value
 
         // Trigger-assert like before
-        customViewModel.flow.emit(1)
-        assertEquals(1, customViewModel.stateFlow.value)
+        viewModelWithStateIn.flow.emit(1)
+        assertEquals(1, viewModelWithStateIn.stateFlow.value)
     }
 
     @Test
@@ -101,6 +72,98 @@ class CoroutinesTest3 {
         fakeRepository.emit(3)
         assertEquals(3, viewModel.score.value)
     }
+
+    @Test
+    fun testHotFakeRepository() = runTest {
+        val fakeRepository = FakeRepository()
+        val values = mutableListOf<Int>()
+
+       backgroundScope.launch(UnconfinedTestDispatcher()) {
+           fakeRepository.scores().collect {
+               values.add(it)
+           }
+       }
+        assertEquals(0, values.size)
+
+        fakeRepository.emit(1)
+        fakeRepository.emit(2)
+        fakeRepository.emit(3)
+        assertEquals(3, values.size) // Assert the number of items collected
+    }
+
+    @Test
+    fun testHotFakeRepository2() = runTest {
+        val fakeRepository = FakeRepository()
+        val values = mutableListOf<Int>()
+
+        val job =launch(UnconfinedTestDispatcher()) {
+            fakeRepository.scores().collect {
+                values.add(it)
+            }
+        }
+        assertEquals(0, values.size)
+
+        fakeRepository.emit(1)
+        fakeRepository.emit(2)
+        fakeRepository.emit(3)
+        job.cancel()
+        assertEquals(3, values.size) // Assert the number of items collected
+    }
+
+    @Test
+    fun testHotFakeRepositoryShared() = runTest {
+        val fakeRepository = FakeRepository()
+        val values = mutableListOf<Int>()
+
+        backgroundScope.launch(UnconfinedTestDispatcher()) {
+            fakeRepository.scoresShared().collect {
+                values.add(it)
+            }
+        }
+        assertEquals(0, values.size)
+
+        fakeRepository.emit(1)
+        fakeRepository.emit(2)
+        fakeRepository.emit(3)
+        assertEquals(3, values.size) // Assert the number of items collected
+    }
+
+    @Test
+    fun testViewModelWithHotFakeRepository() = runTest {
+        val fakeRepository = FakeRepository()
+        val viewModel = MyViewModel(fakeRepository)
+
+        assertEquals(0, viewModel.score.value) // Assert on the initial value
+
+        // Start collecting values from the Repository
+        viewModel.initialize()
+
+        // Then we can send in values one by one, which the ViewModel will collect
+        fakeRepository.emit(1)
+        assertEquals(1, viewModel.score.value)
+
+        fakeRepository.emit(2)
+        fakeRepository.emit(3)
+        assertEquals(3, viewModel.score.value) // Assert on the latest value
+    }
+
+    @Test
+    fun testViewModelWithHotFakeRepositoryShared() = runTest {
+        val fakeRepository = FakeRepository()
+        val viewModel = MyViewModel(fakeRepository)
+
+        assertEquals(0, viewModel.score.value) // Assert on the initial value
+
+        // Start collecting values from the Repository
+        viewModel.initializeShared()
+
+        // Then we can send in values one by one, which the ViewModel will collect
+        fakeRepository.emit(1)
+        assertEquals(1, viewModel.score.value)
+        fakeRepository.emit(2)
+        fakeRepository.emit(3)
+        assertEquals(3, viewModel.score.value) // Assert on the latest value
+    }
 }
 
 /**
@@ -109,7 +172,7 @@ class CoroutinesTest3 {
  * operator doesn't start collecting the underlying flow,
  * and the StateFlow's value will never be updated.
  */
-class MyViewModelWithStateIn(myRepository: MyRepository) : ViewModel() {
+private class MyViewModelWithStateIn(myRepository: MyRepository) : ViewModel() {
     val score: StateFlow<Int> = myRepository.scores()
         .stateIn(
             scope = viewModelScope,
@@ -118,7 +181,17 @@ class MyViewModelWithStateIn(myRepository: MyRepository) : ViewModel() {
         )
 }
 
-class MyViewModel(private val myRepository: MyRepository) : ViewModel() {
+private class ViewModelWithStateIn : ViewModel() {
+    val flow = MutableSharedFlow<Int>()
+
+    val stateFlow = (flow as Flow<Int>).stateIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
+}
+
+private class MyViewModel(private val myRepository: MyRepository) : ViewModel() {
     private val _score = MutableStateFlow(0)
     val score: StateFlow<Int> = _score.asStateFlow()
 
@@ -129,14 +202,24 @@ class MyViewModel(private val myRepository: MyRepository) : ViewModel() {
             }
         }
     }
+
+    fun initializeShared() {
+        viewModelScope.launch {
+            myRepository.scoresShared().collect { score ->
+                _score.value = score
+            }
+        }
+    }
 }
 
-class FakeRepository : MyRepository {
+private class FakeRepository : MyRepository {
     private val flow = MutableSharedFlow<Int>()
     suspend fun emit(value: Int) = flow.emit(value)
     override fun scores(): Flow<Int> = flow
+    override fun scoresShared(): SharedFlow<Int> = flow
 }
 
-interface MyRepository {
+private interface MyRepository {
     fun scores(): Flow<Int>
+    fun scoresShared(): SharedFlow<Int>
 }

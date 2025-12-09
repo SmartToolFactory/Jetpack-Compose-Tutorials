@@ -161,17 +161,6 @@ class CoroutinesTest1 {
         assertEquals(listOf("Alice", "Bob"), userRepo.getAllUsers()) // ❌ Fails
     }
 
-    @Test
-    fun testFooWithTimeout() = runTest {
-        assertFailsWith<TimeoutCancellationException> {
-            withTimeout(1_000) {
-                delay(999)
-                delay(2)
-                println("this won't be reached")
-            }
-        }
-    }
-
     /*
         Like Dispatchers.Unconfined, this one does not provide guarantees about the execution
         order when several coroutines are queued in this dispatcher.
