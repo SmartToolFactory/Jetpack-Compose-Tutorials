@@ -2,6 +2,8 @@ package com.smarttoolfactory.tutorial2_1unit_testing.coroutines
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import kotlin.coroutines.EmptyCoroutineContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CoroutinesTest3 {
@@ -78,11 +81,12 @@ class CoroutinesTest3 {
         val fakeRepository = FakeRepository()
         val values = mutableListOf<Int>()
 
-       backgroundScope.launch(UnconfinedTestDispatcher()) {
-           fakeRepository.scores().collect {
-               values.add(it)
-           }
-       }
+        // 🔥 BackgroundScope or job.cancel should be called for this test to success
+        backgroundScope.launch(UnconfinedTestDispatcher()) {
+            fakeRepository.scores().collect {
+                values.add(it)
+            }
+        }
         assertEquals(0, values.size)
 
         fakeRepository.emit(1)
@@ -96,7 +100,8 @@ class CoroutinesTest3 {
         val fakeRepository = FakeRepository()
         val values = mutableListOf<Int>()
 
-        val job =launch(UnconfinedTestDispatcher()) {
+        // 🔥 BackgroundScope or job.cancel should be called for this test to success
+        val job = launch(UnconfinedTestDispatcher()) {
             fakeRepository.scores().collect {
                 values.add(it)
             }
@@ -163,6 +168,60 @@ class CoroutinesTest3 {
         fakeRepository.emit(2)
         fakeRepository.emit(3)
         assertEquals(3, viewModel.score.value) // Assert on the latest value
+    }
+
+    @Test
+    fun sampleClassTest() = runTest {
+        val fakeRepository = FakeRepository()
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val myClass = SampleClass(
+            scope = coroutineScope,
+            myRepository = fakeRepository
+        )
+
+        // 🔥 Without backgroundScope or job.join() this test fails
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            myClass.initialize()
+        }
+
+        fakeRepository.emit(1)
+        assertEquals(1, myClass.score.value)
+    }
+
+    @Test
+    fun sampleClassTest2() = runTest {
+        val fakeRepository = FakeRepository()
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val myClass = SampleClass(
+            scope = coroutineScope,
+            myRepository = fakeRepository
+        )
+
+        // 🔥 Without backgroundScope or job.join() this test fails
+        val job = launch(UnconfinedTestDispatcher(testScheduler)) {
+            myClass.initialize()
+        }
+        job.join()
+        fakeRepository.emit(1)
+        assertEquals(1, myClass.score.value)
+    }
+}
+
+private class SampleClass(
+    private val scope: CoroutineScope,
+    val myRepository: MyRepository
+) {
+    private val _score = MutableStateFlow(0)
+    val score: StateFlow<Int> = _score.asStateFlow()
+
+    fun initialize() {
+        scope.launch {
+            myRepository.scores().collect { score ->
+                _score.value = score
+            }
+        }
     }
 }
 

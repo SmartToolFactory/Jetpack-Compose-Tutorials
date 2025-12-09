@@ -49,26 +49,57 @@ class FlowTest {
         val result = mutableListOf<String>()
 
         val useCase = FlowUseCase()
-
-        println("Start")
-        launch(UnconfinedTestDispatcher(testScheduler)) {
-            useCase.getResultFlowWithDelay().collect {
-                result.addAll(it)
-            }
+        useCase.getResultFlowWithDelay().collect {
+            result.addAll(it)
         }
 
-        advanceUntilIdle()
-
-        // ❌ Fails
+        // ✅ Passes
         Truth.assertThat(result).hasSize(3)
     }
 
     @Test
     fun useCaseWithDelayTest2() = runTest {
         val result = mutableListOf<String>()
+
+        val useCase = FlowUseCase()
+
+        val job = launch {
+            useCase.getResultFlowWithDelay().collect {
+                result.addAll(it)
+            }
+        }
+
+        // 🔥 Without job.join() this test fails
+        job.join()
+
+        // ✅ Passes
+        Truth.assertThat(result).hasSize(3)
+    }
+
+    @Test
+    fun useCaseWithDelayTest3() = runTest {
+        val result = mutableListOf<String>()
         val useCase = FlowUseCase(mainDispatcherExtension.testDispatcher)
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+        launch {
+            useCase.getResultFlowWithDelay().collect {
+                result.addAll(it)
+            }
+        }
+
+        advanceUntilIdle()
+
+        // ✅ Passes
+        Truth.assertThat(result).hasSize(3)
+    }
+
+    @Test
+    fun useCaseWithDelayTest4() = runTest {
+        val result = mutableListOf<String>()
+        val useCase = FlowUseCase(mainDispatcherExtension.testDispatcher)
+
+        // 🔥🔥🔥backgroundScope does not work when flow emits after delay
+        backgroundScope.launch(mainDispatcherExtension.testDispatcher) {
             useCase.getResultFlowWithDelay().collect {
                 result.addAll(it)
             }
@@ -77,25 +108,6 @@ class FlowTest {
         advanceUntilIdle()
 
         // ❌ Fails
-        Truth.assertThat(result).hasSize(3)
-    }
-
-    @Test
-    fun useCaseWithDelayTest3() = runTest {
-        val result = mutableListOf<String>()
-
-        val useCase = FlowUseCase()
-
-        println("Start")
-        val job = launch {
-            useCase.getResultFlowWithDelay().collect {
-                result.addAll(it)
-            }
-        }
-
-        job.join()
-
-        // ✅ Passes
         Truth.assertThat(result).hasSize(3)
     }
 
@@ -127,7 +139,7 @@ class FlowTest {
 
         val expected = viewModel.resultFlow.value
 
-        // ✅ Passes
+        // ✅ Passes but backgroundScope is not needed
         Truth.assertThat(expected).hasSize(3)
     }
 
@@ -140,7 +152,7 @@ class FlowTest {
 
         val expected = viewModel.resultFlow.value
 
-        // ❌ Fails
+        // ✅ Passes but job.join() is not needed
         job.join()
         Truth.assertThat(expected).hasSize(3)
     }
@@ -164,12 +176,11 @@ class FlowTest {
     @Test
     fun viewModelWitFlowWithDelayCollectTest2() = runTest(UnconfinedTestDispatcher()) {
         val viewModel = FlowViewModel(FlowUseCase())
-        val job = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             viewModel.fetchResultFlowWitDelay()
         }
 
         advanceUntilIdle()
-        job.join()
 
         val expected = viewModel.resultFlow.value
 
@@ -191,9 +202,6 @@ class FlowTest {
 
         // ✅ Passes
         Truth.assertThat(expected).hasSize(3)
-        // Optionally:
-        // Truth.assertThat(expected)
-        //     .containsExactly("Item With delay 1", "Item With delay 2", "Item With delay 3")
     }
 }
 
@@ -225,7 +233,6 @@ class FlowUseCase(val dispatcher: CoroutineDispatcher = Dispatchers.Default) {
         emit(result)
     }
         .map { res: List<Int> ->
-            println("🚀 FlowUseCase getResultFlow() in thread: ${Thread.currentThread().name}")
             res.map {
                 "Item $it"
             }
@@ -234,7 +241,6 @@ class FlowUseCase(val dispatcher: CoroutineDispatcher = Dispatchers.Default) {
 
 
     fun getResultFlowWithDelay() = flow {
-        println("🚀FlowUseCase getResultFlowWithDelay() map in ${Thread.currentThread().name}")
         val result = getResultWithDelay()
         emit(result)
     }
