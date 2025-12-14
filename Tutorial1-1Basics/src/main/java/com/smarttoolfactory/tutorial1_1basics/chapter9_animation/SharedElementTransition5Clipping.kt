@@ -92,9 +92,10 @@ private fun SharedElement_Clipping() {
                                         easing = FastOutSlowInEasing
                                     )
                                 ),
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(
-                                    contentScale = ContentScale.FillBounds
-                                )
+                                // FIXME Compose 1.10 removed ScaleToBounds
+//                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(
+//                                    contentScale = ContentScale.FillBounds
+//                                )
                             )
                             .background(Color.Green.copy(alpha = 0.5f), shapeForShared)
                             .clip(shapeForShared)
@@ -149,9 +150,10 @@ private fun SharedElement_Clipping() {
                                         easing = FastOutSlowInEasing
                                     )
                                 ),
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(
-                                    contentScale = ContentScale.FillBounds
-                                )
+                                // FIXME Compose 1.10 removed ScaleToBounds
+//                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(
+//                                    contentScale = ContentScale.FillBounds
+//                                )
                             )
                             .background(Color.Blue.copy(alpha = 0.3f), shapeForShared)
                             .clip(shapeForShared)

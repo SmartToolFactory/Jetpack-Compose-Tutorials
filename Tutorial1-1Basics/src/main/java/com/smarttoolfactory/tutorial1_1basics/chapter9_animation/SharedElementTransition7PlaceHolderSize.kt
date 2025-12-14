@@ -58,146 +58,146 @@ data class SnackItem(
     @DrawableRes val image: Int,
 )
 
-@Preview
-@Composable
-fun SharedElement_PlaceholderSize() {
-    var state by remember {
-        mutableStateOf<Screen>(Screen.List)
-    }
-
-    val listScrollState = rememberLazyListState()
-
-    var placeHolderIndex by remember {
-        mutableIntStateOf(0)
-    }
-
-    var placeHolderSize by remember {
-        mutableStateOf(
-            SharedTransitionScope.PlaceHolderSize.contentSize
-        )
-    }
-
-
-    Column {
-
-        ExposedSelectionMenu(
-            title = "ResizeMode",
-            index = placeHolderIndex,
-            options = listOf(
-                "contentSize", "animatedSize"
-            ),
-            onSelected = {
-                placeHolderIndex = it
-
-                placeHolderSize = if (placeHolderIndex == 0) {
-                    SharedTransitionScope.PlaceHolderSize.contentSize
-                } else {
-                    SharedTransitionScope.PlaceHolderSize.animatedSize
-                }
-            }
-        )
-
-
-        SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
-
-
-            AnimatedContent(
-                targetState = state,
-                label = "",
-                contentKey = { it.javaClass },
-                transitionSpec = {
-                    EnterTransition.None togetherWith ExitTransition.None
-                }
-            ) {
-                when (it) {
-                    Screen.List -> {
-                        Column {
-                            LazyRow(
-                                state = listScrollState,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                itemsIndexed(items = listSnacks) { index, item: SnackItem ->
-                                    Row(modifier = Modifier
-                                        .clickable(
-                                            interactionSource = remember { MutableInteractionSource() },
-                                            indication = null
-                                        ) {
-                                            state = Screen.Details(index)
-                                        }
-
-                                    ) {
-                                        Image(
-                                            painter = painterResource(item.image),
-                                            modifier = Modifier
-                                                .sharedElement(
-                                                    rememberSharedContentState(
-                                                        key = "item-image$index"
-                                                    ),
-                                                    animatedVisibilityScope = this@AnimatedContent,
-                                                    // 🔥 Changing placeHolderSize effects how other
-                                                    // items will react during animation
-                                                    placeHolderSize = placeHolderSize,
-                                                    boundsTransform = imageBoundsTransform,
-                                                    clipInOverlayDuringTransition = OverlayClip(
-                                                        shapeForShared
-                                                    )
-                                                )
-                                                .width(100.dp)
-                                                .aspectRatio(3 / 4f)
-                                                .clip(RoundedCornerShape(16.dp)),
-                                            contentScale = ContentScale.Crop,
-                                            contentDescription = null
-                                        )
-
-                                    }
-                                }
-                            }
-
-                            Image(
-                                modifier = Modifier.padding(16.dp).clip(RoundedCornerShape(16.dp)),
-                                painter = painterResource(R.drawable.eclair),
-                                contentScale = ContentScale.FillWidth,
-                                contentDescription = null
-                            )
-                        }
-                    }
-
-                    is Screen.Details -> {
-                        val index = it.item
-                        Column(modifier = Modifier
-                            .fillMaxSize()
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                state = Screen.List
-                            }) {
-
-                            Image(
-                                painter = painterResource(listSnacks[index].image),
-                                modifier = Modifier
-                                    .sharedElement(
-                                        sharedContentState = rememberSharedContentState(key = "item-image$index"),
-                                        animatedVisibilityScope = this@AnimatedContent,
-                                        // 🔥 Changing placeHolderSize effects how other
-                                        // items will react during animation
-                                        placeHolderSize = placeHolderSize,
-                                        boundsTransform = imageBoundsTransform,
-                                        clipInOverlayDuringTransition = OverlayClip(shapeForShared)
-                                    )
-                                    .fillMaxSize(),
-                                contentScale = ContentScale.Crop,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-private val imageBoundsTransform: BoundsTransform = BoundsTransform { _: Rect, _: Rect ->
-    tween(durationMillis = 1000, easing = FastOutSlowInEasing)
-}
+//@Preview
+//@Composable
+//fun SharedElement_PlaceholderSize() {
+//    var state by remember {
+//        mutableStateOf<Screen>(Screen.List)
+//    }
+//
+//    val listScrollState = rememberLazyListState()
+//
+//    var placeHolderIndex by remember {
+//        mutableIntStateOf(0)
+//    }
+//
+//    var placeHolderSize by remember {
+//        mutableStateOf(
+//            SharedTransitionScope.PlaceHolderSize.contentSize
+//        )
+//    }
+//
+//
+//    Column {
+//
+//        ExposedSelectionMenu(
+//            title = "ResizeMode",
+//            index = placeHolderIndex,
+//            options = listOf(
+//                "contentSize", "animatedSize"
+//            ),
+//            onSelected = {
+//                placeHolderIndex = it
+//
+//                placeHolderSize = if (placeHolderIndex == 0) {
+//                    SharedTransitionScope.PlaceHolderSize.contentSize
+//                } else {
+//                    SharedTransitionScope.PlaceHolderSize.animatedSize
+//                }
+//            }
+//        )
+//
+//
+//        SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+//
+//
+//            AnimatedContent(
+//                targetState = state,
+//                label = "",
+//                contentKey = { it.javaClass },
+//                transitionSpec = {
+//                    EnterTransition.None togetherWith ExitTransition.None
+//                }
+//            ) {
+//                when (it) {
+//                    Screen.List -> {
+//                        Column {
+//                            LazyRow(
+//                                state = listScrollState,
+//                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+//                            ) {
+//                                itemsIndexed(items = listSnacks) { index, item: SnackItem ->
+//                                    Row(modifier = Modifier
+//                                        .clickable(
+//                                            interactionSource = remember { MutableInteractionSource() },
+//                                            indication = null
+//                                        ) {
+//                                            state = Screen.Details(index)
+//                                        }
+//
+//                                    ) {
+//                                        Image(
+//                                            painter = painterResource(item.image),
+//                                            modifier = Modifier
+//                                                .sharedElement(
+//                                                    rememberSharedContentState(
+//                                                        key = "item-image$index"
+//                                                    ),
+//                                                    animatedVisibilityScope = this@AnimatedContent,
+//                                                    // 🔥 Changing placeHolderSize effects how other
+//                                                    // items will react during animation
+//                                                    placeHolderSize = placeHolderSize,
+//                                                    boundsTransform = imageBoundsTransform,
+//                                                    clipInOverlayDuringTransition = OverlayClip(
+//                                                        shapeForShared
+//                                                    )
+//                                                )
+//                                                .width(100.dp)
+//                                                .aspectRatio(3 / 4f)
+//                                                .clip(RoundedCornerShape(16.dp)),
+//                                            contentScale = ContentScale.Crop,
+//                                            contentDescription = null
+//                                        )
+//
+//                                    }
+//                                }
+//                            }
+//
+//                            Image(
+//                                modifier = Modifier.padding(16.dp).clip(RoundedCornerShape(16.dp)),
+//                                painter = painterResource(R.drawable.eclair),
+//                                contentScale = ContentScale.FillWidth,
+//                                contentDescription = null
+//                            )
+//                        }
+//                    }
+//
+//                    is Screen.Details -> {
+//                        val index = it.item
+//                        Column(modifier = Modifier
+//                            .fillMaxSize()
+//                            .clickable(
+//                                interactionSource = remember { MutableInteractionSource() },
+//                                indication = null
+//                            ) {
+//                                state = Screen.List
+//                            }) {
+//
+//                            Image(
+//                                painter = painterResource(listSnacks[index].image),
+//                                modifier = Modifier
+//                                    .sharedElement(
+//                                        sharedContentState = rememberSharedContentState(key = "item-image$index"),
+//                                        animatedVisibilityScope = this@AnimatedContent,
+//                                        // 🔥 Changing placeHolderSize effects how other
+//                                        // items will react during animation
+//                                        placeHolderSize = placeHolderSize,
+//                                        boundsTransform = imageBoundsTransform,
+//                                        clipInOverlayDuringTransition = OverlayClip(shapeForShared)
+//                                    )
+//                                    .fillMaxSize(),
+//                                contentScale = ContentScale.Crop,
+//                                contentDescription = null
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//private val imageBoundsTransform: BoundsTransform = BoundsTransform { _: Rect, _: Rect ->
+//    tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+//}
