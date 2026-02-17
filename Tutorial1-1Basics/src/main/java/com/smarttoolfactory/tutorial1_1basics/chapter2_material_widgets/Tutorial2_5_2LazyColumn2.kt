@@ -93,7 +93,7 @@ private fun TutorialContent() {
             Button(
                 onClick = {
                     if (list.size > 0) {
-                        list.removeLast()
+                        list.removeAt(list.lastIndex)
                     }
                 },
                 shape = RoundedCornerShape(8.dp)

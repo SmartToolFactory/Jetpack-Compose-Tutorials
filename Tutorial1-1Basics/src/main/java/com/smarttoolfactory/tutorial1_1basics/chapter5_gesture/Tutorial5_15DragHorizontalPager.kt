@@ -421,7 +421,7 @@ fun DragPagerTest() {
 //                }
 
                 .pointerInput(
-                    keys = arrayOf(
+                    keys = arrayOf<Any>(
                         shouldAwaitPointerEventScope,
                         requireUnconsumed,
                         passForSlopDetection,
@@ -819,7 +819,7 @@ fun DragCustomPropagationTest() {
                     }
                 )
                 .pointerInput(
-                    keys = arrayOf(
+                    keys = arrayOf<Any>(
                         shouldAwaitPointerEventScope,
                         requireUnconsumed,
                         passForSlopDetection,
