@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,10 +23,13 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
@@ -46,6 +50,7 @@ fun Tutorial6_7Screen() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
+            .systemBarsPadding()
             .fillMaxSize()
             .background(backgroundColor)
     ) {
@@ -134,7 +139,6 @@ private fun GooeyEffectSample() {
     }
 }
 
-
 @Composable
 private fun GooeyEffectSample2() {
 
@@ -160,7 +164,12 @@ private fun GooeyEffectSample2() {
         .fillMaxSize()
 
     val paint = remember {
-        Paint()
+        Paint().apply {
+            style = PaintingStyle.Stroke
+            this.strokeWidth = 8f
+            strokeJoin = StrokeJoin.Round
+            strokeCap = StrokeCap.Round
+        }
     }
 
     var isPaintSetUp by remember {
@@ -178,7 +187,7 @@ private fun GooeyEffectSample2() {
         pathDynamic.addOval(
             Rect(
                 center = position,
-                radius = 100f
+                radius = 150f
             )
         )
 
