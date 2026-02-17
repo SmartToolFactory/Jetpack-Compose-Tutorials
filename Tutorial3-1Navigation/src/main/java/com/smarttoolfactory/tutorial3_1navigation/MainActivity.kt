@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding)
                     ) {
-//                        Tutorial1Screen()
+                        Tutorial1Screen()
 //                        Tutorial2_1Screen()
 //                        Tutorial3_1Screen()
 //                        Tutorial3_2Screen()
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 //                        Tutorial6_1Screen()
 //                        Tutorial7_1Screen()
 //                        Tutorial8_1Screen()
-                        Tutorial9_1Screen()
+//                        Tutorial9_1Screen()
                     }
                 }
             }
