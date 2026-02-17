@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,6 +59,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.tutorial1_1basics.chapter2_material_widgets.CheckBoxWithTextRippleFullRow
+import com.smarttoolfactory.tutorial1_1basics.ui.backgroundColor
 import com.smarttoolfactory.tutorial1_1basics.ui.components.StyleableTutorialText
 import com.smarttoolfactory.tutorial1_1basics.ui.components.TutorialHeader
 import kotlin.math.roundToInt
@@ -72,6 +75,7 @@ fun Tutorial6_41Screen2() {
 private fun TutorialContent() {
     Column(
         modifier = Modifier
+            .background(backgroundColor)
             .systemBarsPadding()
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
@@ -296,7 +300,7 @@ private fun CustomAnimatedShadowSample() {
         Slider(
             value = radius,
             onValueChange = { radius = it },
-            valueRange = 0f..30f,
+            valueRange = 0f..50f,
         )
 
         Text(text = "spread: ${spread.roundToInt()}")
@@ -306,11 +310,21 @@ private fun CustomAnimatedShadowSample() {
             valueRange = 0f..30f,
         )
 
-        Text(text = "alpha: $alpha")
-        Slider(
-            value = alpha,
-            onValueChange = { alpha = it },
-        )
+        var animateAlpha by remember {
+            mutableStateOf(true)
+        }
+
+        var animateRotation by remember {
+            mutableStateOf(true)
+        }
+
+        CheckBoxWithTextRippleFullRow(label = "animateAlpha", animateAlpha) {
+            animateAlpha = it
+        }
+
+        CheckBoxWithTextRippleFullRow(label = "animateRotation", animateRotation) {
+            animateRotation = it
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -330,7 +344,9 @@ private fun CustomAnimatedShadowSample() {
                             alpha = alpha,
                             radius = radius.dp,
                             spread = spread.dp
-                        )
+                        ),
+                        animateAlpha = animateAlpha,
+                        animateRotation = animateRotation
                     )
                     .background(
                         color = Color.White,
@@ -354,7 +370,9 @@ private fun CustomAnimatedShadowSample() {
                             alpha = alpha,
                             radius = radius.dp,
                             spread = spread.dp
-                        )
+                        ),
+                        animateAlpha = animateAlpha,
+                        animateRotation = animateRotation
                     )
                     .background(
                         color = Color.White.copy(alpha = .7f),
@@ -383,7 +401,9 @@ private fun CustomAnimatedShadowSample() {
                         alpha = alpha,
                         radius = radius.dp,
                         spread = spread.dp
-                    )
+                    ),
+                    animateAlpha = animateAlpha,
+                    animateRotation = animateRotation
                 )
                 .background(
                     color = Color.White,
@@ -454,33 +474,47 @@ fun Modifier.drawShadow(
 fun Modifier.drawAnimatedShadow(
     shape: Shape,
     shadow: Shadow,
+    animateAlpha: Boolean = true,
+    animateRotation: Boolean = true,
     durationMillis: Int = 2000,
     border: Border? = Border(width = 2.dp, brush = shadow.brush ?: Brush.sweepGradient(colors))
 ) = composed {
     val infiniteTransition = rememberInfiniteTransition(label = "rotation")
-    val angle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Restart
-        ), label = "rotation"
-    )
 
-    val phase by infiniteTransition.animateFloat(
-        initialValue = .3f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = durationMillis,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Reverse
+    val angle = if (animateRotation) {
+        val angle by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis,
+                    easing = LinearEasing
+                ),
+                repeatMode = RepeatMode.Restart
+            ), label = "rotation"
         )
-    )
+        angle
+    } else {
+        0f
+    }
+
+    val phase = if (animateAlpha) {
+        val phase by infiniteTransition.animateFloat(
+            initialValue = .3f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = durationMillis,
+                    easing = LinearEasing
+                ),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
+        phase
+    } else {
+        1f
+    }
+
     val radius = shadow.radius
     val spread = shadow.spread
     val brush = shadow.brush ?: SolidColor(shadow.color)
@@ -580,7 +614,7 @@ fun Modifier.drawAnimatedShadow(
                     val strokeWidthPx = border.width.toPx()
                     drawOutline(
                         outline = borderOutline,
-                        color = Color.White,
+                        color = Color.White.copy(alpha = alpha),
                         style = Stroke(strokeWidthPx)
                     )
 
