@@ -7,11 +7,11 @@ accompanist = "0.36.0"
 accompanistCoil = "0.6.2"
 activityCompose = "1.9.3"
 androidGradlePlugin = "8.13.2"
-androidx-activity-compose = "1.12.1"
+androidx-activity-compose = "1.12.2"
 androidx-appcompat = "1.7.1"
 androidx-benchmark = "1.4.1"
 androidx-benchmark-junit4 = "1.4.1"
-androidx-compose-bom = "2025.12.00"
+androidx-compose-bom = "2025.12.01"
 androidx-compose-latest = "1.10.0"
 androidx-compose-material3 = "1.3.0"
 androidx-compose-material3-adaptive = "1.0.0"
@@ -21,6 +21,7 @@ androidx-corektx = "1.17.0"
 androidx-lifecycle-compose = "2.10.0"
 androidx-lifecycle-runtime-compose = "2.10.0"
 androidx-navigation = "2.9.6"
+kotlinMetadataJvm = "2.3.0"
 kotlinxSerializationJson = "1.9.0"
 kotlinxSerialization = "2.2.21"
 androidx-test = "1.7.0"
@@ -46,11 +47,11 @@ junitJupiterApi = "6.0.1"
 junitJupiterEngine = "6.0.1"
 junitVersion = "1.2.1"
 junitVintageEngine = "6.0.1"
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 kotlinTest = "2.0.20"
 kotlinx_immutable = "1.10.2"
 kotlinxCoroutinesTest = "1.9.0"
-ksp = "2.0.20-1.0.25"
+ksp = "2.2.21-2.0.4"
 lifecycleRuntimeCompose = "2.8.6"
 lifecycleRuntimeKtx = "2.8.6"
 maps-compose = "3.1.1"
@@ -61,8 +62,13 @@ materialVersion = "1.12.0"
 minSdk = "23"
 mockkAndroid = "1.14.7"
 modernstoragePhotopicker = "1.0.0-alpha06"
+moshi = "1.15.2"
+moshiKotlin = "1.15.2"
+moshiKotlinCodegen = "1.15.2"
 okhttp = "5.3.2"
 okhttp-sse = "5.3.2"
+chucker = "4.2.0"
+richtextUi = "1.0.0-alpha03"
 roborazzi = "1.52.0"
 secrets = "2.0.1"
 # @keep
@@ -101,6 +107,7 @@ androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-mani
 androidx-compose-ui-text = { module = "androidx.compose.ui:ui-text" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-corektx" }
@@ -117,6 +124,7 @@ androidx-material3 = { module = "androidx.compose.material3:material3", version.
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+kotlin-metadata-jvm = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlinMetadataJvm" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
@@ -147,6 +155,10 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 material3 = { module = "androidx.compose.material3:material3" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
 modernstorage-photopicker = { module = "com.google.modernstorage:modernstorage-photopicker", version.ref = "modernstoragePhotopicker" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
+richtext-ui = { module = "com.halilibo.compose-richtext:richtext-ui", version.ref = "richtextUi" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 ui = { module = "androidx.compose.ui:ui" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -156,6 +168,7 @@ ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-sse = { module = "com.squareup.okhttp3:okhttp-sse", version.ref = "okhttp-sse" }
+chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -164,7 +177,6 @@ android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
