@@ -294,8 +294,6 @@ fun Modifier.drawAnimatedBorder(
 
             val outline: Outline = shape.createOutline(size, layoutDirection, this)
 
-            val pathBounds = outline.bounds
-
             onDrawWithContent {
                 // This is actual content of the Composable that this modifier is assigned to
                 drawContent()

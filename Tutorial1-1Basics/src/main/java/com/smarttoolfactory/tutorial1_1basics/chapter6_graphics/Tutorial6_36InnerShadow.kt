@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 
 @Preview
 @Composable
-fun InnerShadowSample() {
+private fun InnerShadowSample() {
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -71,14 +71,14 @@ fun InnerShadowSample() {
 
         Row(
             modifier = Modifier
-                .innerShadow(
+                .customInnerShadow(
                     shape = RoundedCornerShape(16.dp),
                     color = Color.White.copy(.8f),
                     x = (-2).dp,
                     y = (-2).dp,
                     blurRadius = blurRadiusWhite.dp
                 )
-                .innerShadow(
+                .customInnerShadow(
                     shape = RoundedCornerShape(16.dp),
                     color = Color.Black,
                     x = 2.dp,
@@ -97,7 +97,7 @@ fun InnerShadowSample() {
     }
 }
 
-fun Modifier.innerShadow(
+private fun Modifier.customInnerShadow(
     shape: Shape,
     color: Color = Color.Black,
     x: Dp = 2.dp,

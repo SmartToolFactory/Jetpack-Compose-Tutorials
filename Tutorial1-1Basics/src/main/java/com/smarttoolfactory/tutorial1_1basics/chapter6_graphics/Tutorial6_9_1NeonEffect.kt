@@ -55,7 +55,7 @@ private fun TutorialContent() {
     ) {
         StyleableTutorialText(
             text = "Use **paint.asFrameworkPaint()** to create blur effect to mimic neon glow" +
-                    "and infinite animation to dim and glow infinitely",
+                    " and infinite animation to dim and glow infinitely",
             bullets = false
         )
         NeonSample()
