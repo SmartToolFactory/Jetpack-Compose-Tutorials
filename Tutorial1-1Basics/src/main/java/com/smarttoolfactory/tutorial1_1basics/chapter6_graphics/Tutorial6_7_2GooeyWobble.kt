@@ -53,7 +53,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
-import kotlin.math.sqrt
 
 enum class StretchPhase {
     None, Early, Late
@@ -121,11 +120,11 @@ fun GooeyStretchAndSnapSample(
     val unionPaint = remember {
         Paint().apply {
             style = PaintingStyle.Stroke
+            color = Color.Red
             strokeWidth = 4f
             isAntiAlias = true
         }
     }
-    var isShaderInitialized by remember { mutableStateOf(false) }
 
     val stretchAmount = remember { Animatable(0f) }
 
@@ -431,17 +430,6 @@ fun GooeyStretchAndSnapSample(
                 drawCircle(Color(0x55FFFFFF), radius = dynamicRadiusPx, center = dynamicCenter, style = Stroke(width = 1f))
                 drawCircle(Color(0x55FFFFFF), radius = staticRadiusPx, center = staticCenter, style = Stroke(width = 1f))
             }
-        }
-
-        // Union shader once
-        if (!isShaderInitialized) {
-            unionPaint.shader = LinearGradientShader(
-                from = Offset.Zero,
-                to = Offset(size.width, size.height),
-                colors = listOf(Color(0xffFFEB3B), Color(0xffE91E63)),
-                tileMode = TileMode.Clamp
-            )
-            isShaderInitialized = true
         }
 
         // Final union: (dynamic ∪ static) ∪ ligament
