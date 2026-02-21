@@ -31,12 +31,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
@@ -54,18 +52,18 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sin
 
-enum class StretchPhase {
+private enum class GooeyStretchPhase {
     None, Early, Late
 }
 
-data class GooeyDebugState(
+private data class DebugState(
     val isAttached: Boolean,
     val isPullingApart: Boolean,
     val gapPx: Float,
     val overlapDepthPx: Float,
     val targetStretch: Float,
     val bridgeStrength: Float,
-    val phase: StretchPhase,
+    val phase: GooeyStretchPhase,
     val ligamentThicknessPx: Float?,
     val handleLengthPx: Float?
 )
@@ -76,14 +74,14 @@ data class GooeyDebugState(
  * Points are stored as [FloatArray] in x,y interleaved form:
  *   [x0, y0, x1, y1, ...]
  */
-private data class GooeyGeometryResult(
+private data class GeometryResult(
     val dynamicPoints: FloatArray,
     val staticPoints: FloatArray,
-    val ligament: LigamentGeometry?
+    val ligament: PathLigamentGeometry?
 )
 
 @Composable
-fun GooeyStretchAndSnapSample(
+private fun GooeyStretchAndSnapWobbleSample(
     modifier: Modifier = Modifier,
 
     // Stretch limiter near shallow overlap
@@ -105,7 +103,7 @@ fun GooeyStretchAndSnapSample(
     debugDrawArcSpans: Boolean = true,
 
     // Debug state callback (Preview uses this to show EARLY/LATE)
-    onDebugState: (GooeyDebugState) -> Unit = {}
+    onDebugState: (DebugState) -> Unit = {}
 ) {
     // Paths built on main thread (safe)
     val dynamicBlobPath = remember { Path() }
@@ -143,7 +141,8 @@ fun GooeyStretchAndSnapSample(
     var lastStaticFacingAngleRad by remember { mutableFloatStateOf(Math.PI.toFloat()) }
 
     // Geometry
-    val staticCenter = remember(canvasSize) { Offset(canvasSize.width / 2f, canvasSize.height / 2f) }
+    val staticCenter =
+        remember(canvasSize) { Offset(canvasSize.width / 2f, canvasSize.height / 2f) }
     val dynamicCenter = if (pointerPosition == Offset.Unspecified) staticCenter else pointerPosition
 
     val dynamicRadiusPx = 150f
@@ -258,13 +257,13 @@ fun GooeyStretchAndSnapSample(
     // Phase indicator
     val phase =
         if (!(isAttached && isPullingApart) || targetStretch <= 0f) {
-            StretchPhase.None
+            GooeyStretchPhase.None
         } else {
-            if (bridgeStrength <= 0f) StretchPhase.Early else StretchPhase.Late
+            if (bridgeStrength <= 0f) GooeyStretchPhase.Early else GooeyStretchPhase.Late
         }
 
     // --- Off-main-thread geometry computation ---
-    var geometryResult by remember { mutableStateOf<GooeyGeometryResult?>(null) }
+    var geometryResult by remember { mutableStateOf<GeometryResult?>(null) }
 
     LaunchedEffect(
         dynamicCenter,
@@ -317,7 +316,7 @@ fun GooeyStretchAndSnapSample(
                     )
                 } else null
 
-            GooeyGeometryResult(
+            GeometryResult(
                 dynamicPoints = dynamicPoints,
                 staticPoints = staticPoints,
                 ligament = ligamentGeometry
@@ -329,7 +328,7 @@ fun GooeyStretchAndSnapSample(
     SideEffect {
         val ligament = geometryResult?.ligament
         onDebugState(
-            GooeyDebugState(
+            DebugState(
                 isAttached = isAttached,
                 isPullingApart = isPullingApart,
                 gapPx = gapPx,
@@ -394,10 +393,30 @@ fun GooeyStretchAndSnapSample(
 
             if (ligament != null) {
                 if (debugDrawHandles) {
-                    drawLine(Color.Magenta, ligament.firstTop, ligament.firstTopControl, strokeWidth = 2f)
-                    drawLine(Color.Magenta, ligament.secondTop, ligament.secondTopControl, strokeWidth = 2f)
-                    drawLine(Color.Magenta, ligament.secondBottom, ligament.secondBottomControl, strokeWidth = 2f)
-                    drawLine(Color.Magenta, ligament.firstBottom, ligament.firstBottomControl, strokeWidth = 2f)
+                    drawLine(
+                        Color.Magenta,
+                        ligament.firstTop,
+                        ligament.firstTopControl,
+                        strokeWidth = 2f
+                    )
+                    drawLine(
+                        Color.Magenta,
+                        ligament.secondTop,
+                        ligament.secondTopControl,
+                        strokeWidth = 2f
+                    )
+                    drawLine(
+                        Color.Magenta,
+                        ligament.secondBottom,
+                        ligament.secondBottomControl,
+                        strokeWidth = 2f
+                    )
+                    drawLine(
+                        Color.Magenta,
+                        ligament.firstBottom,
+                        ligament.firstBottomControl,
+                        strokeWidth = 2f
+                    )
 
                     drawCircle(Color.Magenta, radius = 4f, center = ligament.firstTopControl)
                     drawCircle(Color.Magenta, radius = 4f, center = ligament.secondTopControl)
@@ -411,10 +430,30 @@ fun GooeyStretchAndSnapSample(
                     drawCircle(Color.Yellow, radius = 5f, center = ligament.secondTop)
                     drawCircle(Color.Yellow, radius = 5f, center = ligament.secondBottom)
 
-                    drawLine(Color.Yellow, ligament.firstCenter, ligament.firstTop, strokeWidth = 1.5f)
-                    drawLine(Color.Yellow, ligament.firstCenter, ligament.firstBottom, strokeWidth = 1.5f)
-                    drawLine(Color.Yellow, ligament.secondCenter, ligament.secondTop, strokeWidth = 1.5f)
-                    drawLine(Color.Yellow, ligament.secondCenter, ligament.secondBottom, strokeWidth = 1.5f)
+                    drawLine(
+                        Color.Yellow,
+                        ligament.firstCenter,
+                        ligament.firstTop,
+                        strokeWidth = 1.5f
+                    )
+                    drawLine(
+                        Color.Yellow,
+                        ligament.firstCenter,
+                        ligament.firstBottom,
+                        strokeWidth = 1.5f
+                    )
+                    drawLine(
+                        Color.Yellow,
+                        ligament.secondCenter,
+                        ligament.secondTop,
+                        strokeWidth = 1.5f
+                    )
+                    drawLine(
+                        Color.Yellow,
+                        ligament.secondCenter,
+                        ligament.secondBottom,
+                        strokeWidth = 1.5f
+                    )
                 }
             }
 
@@ -424,11 +463,31 @@ fun GooeyStretchAndSnapSample(
                 val dynDir = Offset(cos(dynamicFacingAngleRad), sin(dynamicFacingAngleRad))
                 val staDir = Offset(cos(staticFacingAngleRad), sin(staticFacingAngleRad))
 
-                drawLine(Color.Green, dynamicCenter, dynamicCenter + dynDir * (dynamicRadiusPx * 0.9f), strokeWidth = 2f)
-                drawLine(Color.Green, staticCenter, staticCenter + staDir * (staticRadiusPx * 0.9f), strokeWidth = 2f)
+                drawLine(
+                    Color.Green,
+                    dynamicCenter,
+                    dynamicCenter + dynDir * (dynamicRadiusPx * 0.9f),
+                    strokeWidth = 2f
+                )
+                drawLine(
+                    Color.Green,
+                    staticCenter,
+                    staticCenter + staDir * (staticRadiusPx * 0.9f),
+                    strokeWidth = 2f
+                )
 
-                drawCircle(Color(0x55FFFFFF), radius = dynamicRadiusPx, center = dynamicCenter, style = Stroke(width = 1f))
-                drawCircle(Color(0x55FFFFFF), radius = staticRadiusPx, center = staticCenter, style = Stroke(width = 1f))
+                drawCircle(
+                    Color(0x55FFFFFF),
+                    radius = dynamicRadiusPx,
+                    center = dynamicCenter,
+                    style = Stroke(width = 1f)
+                )
+                drawCircle(
+                    Color(0x55FFFFFF),
+                    radius = staticRadiusPx,
+                    center = staticCenter,
+                    style = Stroke(width = 1f)
+                )
             }
         }
 
@@ -516,7 +575,7 @@ private fun fillPathFromPoints(outPath: Path, points: FloatArray) {
     outPath.close()
 }
 
-private data class LigamentGeometry(
+private data class PathLigamentGeometry(
     val firstCenter: Offset,
     val secondCenter: Offset,
 
@@ -545,7 +604,7 @@ private fun computeLigamentGeometry(
     bridgeThicknessMaxPx: Float,
     bridgeThicknessMinPx: Float,
     bridgeHandleScale: Float
-): LigamentGeometry {
+): PathLigamentGeometry {
     fun smoothstep(x: Float): Float = x * x * (3f - 2f * x)
     fun clamp(x: Float): Float = x.coerceIn(0f, 1f)
 
@@ -567,11 +626,15 @@ private fun computeLigamentGeometry(
 
     fun tangentUnit(angleRad: Float): Offset = Offset(-sin(angleRad), cos(angleRad))
 
-    val firstTop = pointOnCircle(firstCenter, firstRadiusPx, firstFacingAngleRad + firstAngleSpanRad)
-    val firstBottom = pointOnCircle(firstCenter, firstRadiusPx, firstFacingAngleRad - firstAngleSpanRad)
+    val firstTop =
+        pointOnCircle(firstCenter, firstRadiusPx, firstFacingAngleRad + firstAngleSpanRad)
+    val firstBottom =
+        pointOnCircle(firstCenter, firstRadiusPx, firstFacingAngleRad - firstAngleSpanRad)
 
-    val secondTop = pointOnCircle(secondCenter, secondRadiusPx, secondFacingAngleRad - secondAngleSpanRad)
-    val secondBottom = pointOnCircle(secondCenter, secondRadiusPx, secondFacingAngleRad + secondAngleSpanRad)
+    val secondTop =
+        pointOnCircle(secondCenter, secondRadiusPx, secondFacingAngleRad - secondAngleSpanRad)
+    val secondBottom =
+        pointOnCircle(secondCenter, secondRadiusPx, secondFacingAngleRad + secondAngleSpanRad)
 
     val topSpanPx = (secondTop - firstTop).getDistance()
     val bottomSpanPx = (firstBottom - secondBottom).getDistance()
@@ -593,7 +656,7 @@ private fun computeLigamentGeometry(
     val secondBottomControl = secondBottom + secondBottomTangent * handleLengthPx
     val firstBottomControl = firstBottom - firstBottomTangent * handleLengthPx
 
-    return LigamentGeometry(
+    return PathLigamentGeometry(
         firstCenter = firstCenter,
         secondCenter = secondCenter,
         firstTop = firstTop,
@@ -611,7 +674,7 @@ private fun computeLigamentGeometry(
 
 @Preview(showBackground = true, widthDp = 420, heightDp = 720)
 @Composable
-private fun GooeyStretchAndSnapSample_Preview() {
+private fun GooeyStretchAndSnapSamplePreview() {
     var minStretchScaleAtTouch by remember { mutableFloatStateOf(0.60f) }
     var shallowOverlapBandPx by remember { mutableFloatStateOf(100f) }
 
@@ -628,14 +691,14 @@ private fun GooeyStretchAndSnapSample_Preview() {
 
     var debugState by remember {
         mutableStateOf(
-            GooeyDebugState(
+            DebugState(
                 isAttached = true,
                 isPullingApart = false,
                 gapPx = 0f,
                 overlapDepthPx = 0f,
                 targetStretch = 0f,
                 bridgeStrength = 0f,
-                phase = StretchPhase.None,
+                phase = GooeyStretchPhase.None,
                 ligamentThicknessPx = null,
                 handleLengthPx = null
             )
@@ -664,14 +727,20 @@ private fun GooeyStretchAndSnapSample_Preview() {
 
         Spacer(Modifier.height(10.dp))
 
-        Text("minStretchScaleAtTouch = ${"%.2f".format(minStretchScaleAtTouch)}", color = Color.White)
+        Text(
+            "minStretchScaleAtTouch = ${"%.2f".format(minStretchScaleAtTouch)}",
+            color = Color.White
+        )
         Slider(
             value = minStretchScaleAtTouch,
             onValueChange = { minStretchScaleAtTouch = it.coerceIn(0f, 1f) },
             valueRange = 0f..1f
         )
 
-        Text("shallowOverlapBandPx = ${"%.0f".format(shallowOverlapBandPx)} px", color = Color.White)
+        Text(
+            "shallowOverlapBandPx = ${"%.0f".format(shallowOverlapBandPx)} px",
+            color = Color.White
+        )
         Slider(
             value = shallowOverlapBandPx,
             onValueChange = { shallowOverlapBandPx = it.coerceIn(5f, 200f) },
@@ -703,7 +772,9 @@ private fun GooeyStretchAndSnapSample_Preview() {
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             DebugToggleText("Debug", debugEnabled) { debugEnabled = !debugEnabled }
-            DebugToggleText("Ligament", debugDrawLigament) { debugDrawLigament = !debugDrawLigament }
+            DebugToggleText("Ligament", debugDrawLigament) {
+                debugDrawLigament = !debugDrawLigament
+            }
             DebugToggleText("Handles", debugDrawHandles) { debugDrawHandles = !debugDrawHandles }
             DebugToggleText("Vectors", debugDrawVectors) { debugDrawVectors = !debugDrawVectors }
             DebugToggleText("Spans", debugDrawArcSpans) { debugDrawArcSpans = !debugDrawArcSpans }
@@ -716,7 +787,7 @@ private fun GooeyStretchAndSnapSample_Preview() {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            GooeyStretchAndSnapSample(
+            GooeyStretchAndSnapWobbleSample(
                 modifier = Modifier.fillMaxSize(),
                 minStretchScaleAtTouch = minStretchScaleAtTouch,
                 shallowOverlapBandPx = shallowOverlapBandPx,
