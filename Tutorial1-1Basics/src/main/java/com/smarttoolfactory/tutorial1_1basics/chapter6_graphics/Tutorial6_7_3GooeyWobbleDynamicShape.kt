@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.TabRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -213,117 +214,330 @@ private fun GooeyStretchDynamicShapeSample(
         }
 
         if (showSheet) {
+            //  Drop-in replacement for your ModalBottomSheet content.
+            // This adds a TabRow with two pages:
+            // 1) "Shapes"  -> ONLY shape selection + size sliders for shapes
+            // 2) "Tuning"  -> stretch/bridge/wobble + debug toggles
+            //
+            // Put this inside your `if (showSheet) { ModalBottomSheet(...) { ... } }` block,
+            // replacing the current Column(...) content.
+
             ModalBottomSheet(
                 sheetState = sheetState,
                 onDismissRequest = { showSheet = false },
                 containerColor = Color(0xFF111826),
                 contentWindowInsets = { WindowInsets.safeDrawing }
             ) {
+                var selectedTab by rememberSaveable { mutableStateOf(0) }
+                val tabTitles = listOf("Shapes", "Tuning")
+
                 Column(
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
                         .fillMaxWidth()
                         .imePadding()
-                        .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
-                    Text("Dynamic shape", color = Color.White)
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DebugToggleText("Circle", dynamicShape == DynamicBlobShape.Circle) { dynamicShape = DynamicBlobShape.Circle }
-                        DebugToggleText("Rect", dynamicShape == DynamicBlobShape.Rect) { dynamicShape = DynamicBlobShape.Rect }
-                        DebugToggleText("RoundRect", dynamicShape == DynamicBlobShape.RoundedRect) { dynamicShape = DynamicBlobShape.RoundedRect }
+                    TabRow(
+                        selectedTabIndex = selectedTab,
+                        modifier = Modifier.fillMaxWidth(),
+                        contentColor = Color.White
+                    ) {
+                        tabTitles.forEachIndexed { i, title ->
+                            androidx.compose.material3.Tab(
+                                selected = selectedTab == i,
+                                onClick = { selectedTab = i },
+                                text = { Text(title, maxLines = 1) }
+                            )
+                        }
                     }
 
-                    Spacer(Modifier.height(10.dp))
+                    // --- Pages ---
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 10.dp)
+                    ) {
+                        when (selectedTab) {
+                            0 -> {
+                                // =========================
+                                // TAB 0: SHAPES ONLY
+                                // =========================
+                                Text("Dynamic shape", color = Color.White)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DebugToggleText(
+                                        "Circle",
+                                        dynamicShape == DynamicBlobShape.Circle
+                                    ) {
+                                        dynamicShape = DynamicBlobShape.Circle
+                                    }
+                                    DebugToggleText("Rect", dynamicShape == DynamicBlobShape.Rect) {
+                                        dynamicShape = DynamicBlobShape.Rect
+                                    }
+                                    DebugToggleText(
+                                        "RoundRect",
+                                        dynamicShape == DynamicBlobShape.RoundedRect
+                                    ) {
+                                        dynamicShape = DynamicBlobShape.RoundedRect
+                                    }
+                                }
 
-                    when (dynamicShape) {
-                        DynamicBlobShape.Circle -> {
-                            Text("Dynamic radius = ${"%.0f".format(dynamicCircleRadiusPx)} px", color = Color.White)
-                            Slider(dynamicCircleRadiusPx, { dynamicCircleRadiusPx = it.coerceIn(60f, 260f) }, valueRange = 60f..260f)
-                        }
-                        DynamicBlobShape.Rect, DynamicBlobShape.RoundedRect -> {
-                            Text("Dynamic rect width = ${"%.0f".format(dynamicRectWidthPx)} px", color = Color.White)
-                            Slider(dynamicRectWidthPx, { dynamicRectWidthPx = it.coerceIn(120f, 520f) }, valueRange = 120f..520f)
+                                Spacer(Modifier.height(10.dp))
 
-                            Text("Dynamic rect height = ${"%.0f".format(dynamicRectHeightPx)} px", color = Color.White)
-                            Slider(dynamicRectHeightPx, { dynamicRectHeightPx = it.coerceIn(120f, 520f) }, valueRange = 120f..520f)
+                                when (dynamicShape) {
+                                    DynamicBlobShape.Circle -> {
+                                        Text(
+                                            "Dynamic radius = ${"%.0f".format(dynamicCircleRadiusPx)} px",
+                                            color = Color.White
+                                        )
+                                        Slider(
+                                            value = dynamicCircleRadiusPx,
+                                            onValueChange = {
+                                                dynamicCircleRadiusPx = it.coerceIn(60f, 260f)
+                                            },
+                                            valueRange = 60f..260f
+                                        )
+                                    }
 
-                            if (dynamicShape == DynamicBlobShape.RoundedRect) {
-                                val maxCorner = min(dynamicRectWidthPx, dynamicRectHeightPx) * 0.5f
-                                Text("Dynamic corner = ${"%.0f".format(dynamicCornerPx)} px", color = Color.White)
-                                Slider(
-                                    value = dynamicCornerPx.coerceIn(0f, maxCorner),
-                                    onValueChange = { dynamicCornerPx = it.coerceIn(0f, maxCorner) },
-                                    valueRange = 0f..max(1f, maxCorner)
+                                    DynamicBlobShape.Rect, DynamicBlobShape.RoundedRect -> {
+                                        Text(
+                                            "Dynamic rect width = ${"%.0f".format(dynamicRectWidthPx)} px",
+                                            color = Color.White
+                                        )
+                                        Slider(
+                                            value = dynamicRectWidthPx,
+                                            onValueChange = {
+                                                dynamicRectWidthPx = it.coerceIn(120f, 520f)
+                                            },
+                                            valueRange = 120f..520f
+                                        )
+
+                                        Text(
+                                            "Dynamic rect height = ${
+                                                "%.0f".format(
+                                                    dynamicRectHeightPx
+                                                )
+                                            } px",
+                                            color = Color.White
+                                        )
+                                        Slider(
+                                            value = dynamicRectHeightPx,
+                                            onValueChange = {
+                                                dynamicRectHeightPx = it.coerceIn(120f, 520f)
+                                            },
+                                            valueRange = 120f..520f
+                                        )
+
+                                        if (dynamicShape == DynamicBlobShape.RoundedRect) {
+                                            val maxCorner =
+                                                min(dynamicRectWidthPx, dynamicRectHeightPx) * 0.5f
+                                            Text(
+                                                "Dynamic corner = ${"%.0f".format(dynamicCornerPx)} px",
+                                                color = Color.White
+                                            )
+                                            Slider(
+                                                value = dynamicCornerPx.coerceIn(0f, maxCorner),
+                                                onValueChange = {
+                                                    dynamicCornerPx = it.coerceIn(0f, maxCorner)
+                                                },
+                                                valueRange = 0f..max(1f, maxCorner)
+                                            )
+                                        }
+                                    }
+                                }
+
+                                Spacer(Modifier.height(14.dp))
+
+                                Text("Static shape", color = Color.White)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DebugToggleText(
+                                        "Circle",
+                                        staticShape == StaticBlobShape.Circle
+                                    ) {
+                                        staticShape = StaticBlobShape.Circle
+                                    }
+                                    DebugToggleText("Rect", staticShape == StaticBlobShape.Rect) {
+                                        staticShape = StaticBlobShape.Rect
+                                    }
+                                    DebugToggleText(
+                                        "RoundRect",
+                                        staticShape == StaticBlobShape.RoundedRect
+                                    ) {
+                                        staticShape = StaticBlobShape.RoundedRect
+                                    }
+                                }
+
+                                Spacer(Modifier.height(10.dp))
+
+                                // Static size sliders are still "shape config", so they live here:
+                                Text(
+                                    "Static rect width = ${"%.0f".format(staticRectWidthPx)} px",
+                                    color = Color.White
                                 )
+                                Slider(
+                                    value = staticRectWidthPx,
+                                    onValueChange = {
+                                        staticRectWidthPx = it.coerceIn(240f, 1400f)
+                                    },
+                                    valueRange = 240f..1400f
+                                )
+
+                                Text(
+                                    "Static rect height = ${"%.0f".format(staticRectHeightPx)} px",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = staticRectHeightPx,
+                                    onValueChange = {
+                                        staticRectHeightPx = it.coerceIn(120f, 720f)
+                                    },
+                                    valueRange = 120f..720f
+                                )
+
+                                val maxStaticCorner =
+                                    min(staticRectWidthPx, staticRectHeightPx) * 0.5f
+                                Text(
+                                    "Static corner radius = ${"%.0f".format(staticCornerPx)} px",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = staticCornerPx.coerceIn(0f, maxStaticCorner),
+                                    onValueChange = {
+                                        staticCornerPx = it.coerceIn(0f, maxStaticCorner)
+                                    },
+                                    valueRange = 0f..max(1f, maxStaticCorner)
+                                )
+
+                                // If you ever want static circle radius slider, it belongs here too:
+                                if (staticShape == StaticBlobShape.Circle) {
+                                    Spacer(Modifier.height(10.dp))
+                                    Text(
+                                        "Static circle radius = ${
+                                            "%.0f".format(
+                                                staticCircleRadiusPx
+                                            )
+                                        } px", color = Color.White
+                                    )
+                                    Slider(
+                                        value = staticCircleRadiusPx,
+                                        onValueChange = {
+                                            staticCircleRadiusPx = it.coerceIn(80f, 420f)
+                                        },
+                                        valueRange = 80f..420f
+                                    )
+                                }
+
+                                Spacer(Modifier.height(10.dp))
+                            }
+
+                            else -> {
+                                // =========================
+                                // TAB 1: TUNING + DEBUG
+                                // =========================
+                                Text(
+                                    "Detach wobble amplitude = ${"%.0f".format(detachWobbleMaxPx)} px",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = detachWobbleMaxPx,
+                                    onValueChange = { detachWobbleMaxPx = it.coerceIn(0f, 48f) },
+                                    valueRange = 0f..48f
+                                )
+
+                                Spacer(Modifier.height(10.dp))
+
+                                Text(
+                                    "minStretchScaleAtTouch = ${
+                                        "%.2f".format(
+                                            minStretchScaleAtTouch
+                                        )
+                                    }", color = Color.White
+                                )
+                                Slider(
+                                    value = minStretchScaleAtTouch,
+                                    onValueChange = {
+                                        minStretchScaleAtTouch = it.coerceIn(0f, 1f)
+                                    },
+                                    valueRange = 0f..1f
+                                )
+
+                                Text(
+                                    "shallowOverlapBandPx = ${"%.0f".format(shallowOverlapBandPx)} px",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = shallowOverlapBandPx,
+                                    onValueChange = {
+                                        shallowOverlapBandPx = it.coerceIn(5f, 240f)
+                                    },
+                                    valueRange = 5f..240f
+                                )
+
+                                Spacer(Modifier.height(10.dp))
+
+                                Text(
+                                    "bridgeThicknessMaxPx = ${"%.1f".format(bridgeThicknessMaxPx)}",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = bridgeThicknessMaxPx,
+                                    onValueChange = { bridgeThicknessMaxPx = it.coerceIn(2f, 60f) },
+                                    valueRange = 2f..60f
+                                )
+
+                                Text(
+                                    "bridgeThicknessMinPx = ${"%.1f".format(bridgeThicknessMinPx)}",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = bridgeThicknessMinPx,
+                                    onValueChange = {
+                                        bridgeThicknessMinPx =
+                                            it.coerceIn(0.5f, bridgeThicknessMaxPx)
+                                    },
+                                    valueRange = 0.5f..60f
+                                )
+
+                                Text(
+                                    "bridgeHandleScale = ${"%.2f".format(bridgeHandleScale)}",
+                                    color = Color.White
+                                )
+                                Slider(
+                                    value = bridgeHandleScale,
+                                    onValueChange = {
+                                        bridgeHandleScale = it.coerceIn(0.10f, 2.50f)
+                                    },
+                                    valueRange = 0.10f..2.50f
+                                )
+
+                                Spacer(Modifier.height(12.dp))
+
+                                Text("Debug", color = Color.White)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DebugToggleText("On", debugEnabled) {
+                                        debugEnabled = !debugEnabled
+                                    }
+                                    DebugToggleText(
+                                        "Ligament",
+                                        debugDrawLigament
+                                    ) { debugDrawLigament = !debugDrawLigament }
+                                    DebugToggleText(
+                                        "Handles",
+                                        debugDrawHandles
+                                    ) { debugDrawHandles = !debugDrawHandles }
+                                    DebugToggleText(
+                                        "Vectors",
+                                        debugDrawVectors
+                                    ) { debugDrawVectors = !debugDrawVectors }
+                                    DebugToggleText(
+                                        "Spans",
+                                        debugDrawArcSpans
+                                    ) { debugDrawArcSpans = !debugDrawArcSpans }
+                                }
+
+                                Spacer(Modifier.height(18.dp))
                             }
                         }
                     }
-
-                    Spacer(Modifier.height(14.dp))
-
-                    Text("Static shape", color = Color.White)
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DebugToggleText("Circle", staticShape == StaticBlobShape.Circle) { staticShape = StaticBlobShape.Circle }
-                        DebugToggleText("Rect", staticShape == StaticBlobShape.Rect) { staticShape = StaticBlobShape.Rect }
-                        DebugToggleText("RoundRect", staticShape == StaticBlobShape.RoundedRect) { staticShape = StaticBlobShape.RoundedRect }
-                    }
-
-                    Spacer(Modifier.height(10.dp))
-
-                    Text("Static rect width = ${"%.0f".format(staticRectWidthPx)} px", color = Color.White)
-                    Slider(staticRectWidthPx, { staticRectWidthPx = it.coerceIn(240f, 1400f) }, valueRange = 240f..1400f)
-
-                    Text("Static rect height = ${"%.0f".format(staticRectHeightPx)} px", color = Color.White)
-                    Slider(staticRectHeightPx, { staticRectHeightPx = it.coerceIn(120f, 720f) }, valueRange = 120f..720f)
-
-                    val maxCorner = min(staticRectWidthPx, staticRectHeightPx) * 0.5f
-                    Text("Static corner radius = ${"%.0f".format(staticCornerPx)} px", color = Color.White)
-                    Slider(
-                        value = staticCornerPx.coerceIn(0f, maxCorner),
-                        onValueChange = { staticCornerPx = it.coerceIn(0f, maxCorner) },
-                        valueRange = 0f..max(1f, maxCorner)
-                    )
-
-                    Spacer(Modifier.height(14.dp))
-
-                    Text("Detach wobble amplitude = ${"%.0f".format(detachWobbleMaxPx)} px", color = Color.White)
-                    Slider(detachWobbleMaxPx, { detachWobbleMaxPx = it.coerceIn(0f, 48f) }, valueRange = 0f..48f)
-
-                    Spacer(Modifier.height(10.dp))
-
-                    Text("minStretchScaleAtTouch = ${"%.2f".format(minStretchScaleAtTouch)}", color = Color.White)
-                    Slider(minStretchScaleAtTouch, { minStretchScaleAtTouch = it.coerceIn(0f, 1f) }, valueRange = 0f..1f)
-
-                    Text("shallowOverlapBandPx = ${"%.0f".format(shallowOverlapBandPx)} px", color = Color.White)
-                    Slider(shallowOverlapBandPx, { shallowOverlapBandPx = it.coerceIn(5f, 240f) }, valueRange = 5f..240f)
-
-                    Spacer(Modifier.height(10.dp))
-
-                    Text("bridgeThicknessMaxPx = ${"%.1f".format(bridgeThicknessMaxPx)}", color = Color.White)
-                    Slider(bridgeThicknessMaxPx, { bridgeThicknessMaxPx = it.coerceIn(2f, 60f) }, valueRange = 2f..60f)
-
-                    Text("bridgeThicknessMinPx = ${"%.1f".format(bridgeThicknessMinPx)}", color = Color.White)
-                    Slider(
-                        bridgeThicknessMinPx,
-                        { bridgeThicknessMinPx = it.coerceIn(0.5f, bridgeThicknessMaxPx) },
-                        valueRange = 0.5f..60f
-                    )
-
-                    Text("bridgeHandleScale = ${"%.2f".format(bridgeHandleScale)}", color = Color.White)
-                    Slider(bridgeHandleScale, { bridgeHandleScale = it.coerceIn(0.10f, 2.50f) }, valueRange = 0.10f..2.50f)
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Text("Debug", color = Color.White)
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DebugToggleText("On", debugEnabled) { debugEnabled = !debugEnabled }
-                        DebugToggleText("Ligament", debugDrawLigament) { debugDrawLigament = !debugDrawLigament }
-                        DebugToggleText("Handles", debugDrawHandles) { debugDrawHandles = !debugDrawHandles }
-                        DebugToggleText("Vectors", debugDrawVectors) { debugDrawVectors = !debugDrawVectors }
-                        DebugToggleText("Spans", debugDrawArcSpans) { debugDrawArcSpans = !debugDrawArcSpans }
-                    }
-
-                    Spacer(Modifier.height(18.dp))
                 }
             }
         }
@@ -401,7 +615,8 @@ private fun GooeyStretchAndSnapCanvas(
     val detachWobble = remember { Animatable(0f) }
     var prevAttached by remember { mutableStateOf(true) }
 
-    val staticCenter = remember(canvasSize) { Offset(canvasSize.width / 2f, canvasSize.height / 2f) }
+    val staticCenter =
+        remember(canvasSize) { Offset(canvasSize.width / 2f, canvasSize.height / 2f) }
     val dynamicCenter = if (pointerPosition == Offset.Unspecified) staticCenter else pointerPosition
 
     // Static extents
@@ -419,7 +634,12 @@ private fun GooeyStretchAndSnapCanvas(
     val sdStatic: Float = when (staticShape) {
         StaticBlobShape.Circle -> (dynamicCenter - staticCenter).getDistance() - staticCircleRadiusPx
         StaticBlobShape.Rect -> signedDistanceBox(pLocalStatic, sHalfW, sHalfH)
-        StaticBlobShape.RoundedRect -> signedDistanceRoundedBox(pLocalStatic, sHalfW, sHalfH, sCorner)
+        StaticBlobShape.RoundedRect -> signedDistanceRoundedBox(
+            pLocalStatic,
+            sHalfW,
+            sHalfH,
+            sCorner
+        )
     }
 
     val staticContactPoint: Offset = when (staticShape) {
@@ -427,8 +647,14 @@ private fun GooeyStretchAndSnapCanvas(
             val dir = normalizeSafe(dynamicCenter - staticCenter)
             staticCenter + dir * staticCircleRadiusPx
         }
+
         StaticBlobShape.Rect -> staticCenter + closestPointOnBox(pLocalStatic, sHalfW, sHalfH)
-        StaticBlobShape.RoundedRect -> staticCenter + closestPointOnRoundedBox(pLocalStatic, sHalfW, sHalfH, sCorner)
+        StaticBlobShape.RoundedRect -> staticCenter + closestPointOnRoundedBox(
+            pLocalStatic,
+            sHalfW,
+            sHalfH,
+            sCorner
+        )
     }
 
     // Direction from dynamic center toward the contact region (for dynamic "support radius")
@@ -438,7 +664,12 @@ private fun GooeyStretchAndSnapCanvas(
     val dynamicSupportPx = when (dynamicShape) {
         DynamicBlobShape.Circle -> dynamicCircleRadiusPx
         DynamicBlobShape.Rect -> rayDistanceToBox(dynToContactDir, dHalfW, dHalfH)
-        DynamicBlobShape.RoundedRect -> rayDistanceToRoundedBox(dynToContactDir, dHalfW, dHalfH, dCorner)
+        DynamicBlobShape.RoundedRect -> rayDistanceToRoundedBox(
+            dynToContactDir,
+            dHalfW,
+            dHalfH,
+            dCorner
+        )
     }
 
     val gapPx = sdStatic - dynamicSupportPx
@@ -446,8 +677,18 @@ private fun GooeyStretchAndSnapCanvas(
     // ---------- OUTWARD NORMAL AT CONTACT (STATIC) ----------
     val staticOutwardNormal: Offset = when (staticShape) {
         StaticBlobShape.Circle -> normalizeSafe(staticContactPoint - staticCenter)
-        StaticBlobShape.Rect -> outwardNormalOnBox(staticContactPoint - staticCenter, sHalfW, sHalfH)
-        StaticBlobShape.RoundedRect -> outwardNormalOnRoundedBox(staticContactPoint - staticCenter, sHalfW, sHalfH, sCorner)
+        StaticBlobShape.Rect -> outwardNormalOnBox(
+            staticContactPoint - staticCenter,
+            sHalfW,
+            sHalfH
+        )
+
+        StaticBlobShape.RoundedRect -> outwardNormalOnRoundedBox(
+            staticContactPoint - staticCenter,
+            sHalfW,
+            sHalfH,
+            sCorner
+        )
     }
 
     // Orient so it faces dynamic (robust even if overlapping)
@@ -829,14 +1070,24 @@ private fun outwardNormalOnBox(contactLocal: Offset, hx: Float, hy: Float): Offs
     val ay = abs(contactLocal.y)
 
     return when {
-        ax >= hx - eps && ay <= hy + eps -> Offset(sign(contactLocal.x.takeIf { it != 0f } ?: 1f), 0f)
-        ay >= hy - eps && ax <= hx + eps -> Offset(0f, sign(contactLocal.y.takeIf { it != 0f } ?: 1f))
+        ax >= hx - eps && ay <= hy + eps -> Offset(sign(contactLocal.x.takeIf { it != 0f } ?: 1f),
+            0f)
+
+        ay >= hy - eps && ax <= hx + eps -> Offset(
+            0f,
+            sign(contactLocal.y.takeIf { it != 0f } ?: 1f))
+
         ax > ay -> Offset(sign(contactLocal.x.takeIf { it != 0f } ?: 1f), 0f)
         else -> Offset(0f, sign(contactLocal.y.takeIf { it != 0f } ?: 1f))
     }
 }
 
-private fun outwardNormalOnRoundedBox(contactLocal: Offset, hx: Float, hy: Float, r: Float): Offset {
+private fun outwardNormalOnRoundedBox(
+    contactLocal: Offset,
+    hx: Float,
+    hy: Float,
+    r: Float
+): Offset {
     val rr = r.coerceIn(0f, min(hx, hy))
     val ix = (hx - rr).coerceAtLeast(0f)
     val iy = (hy - rr).coerceAtLeast(0f)
@@ -942,6 +1193,7 @@ private fun buildBoundarySamplePointsForDynamic(
             }
             points
         }
+
         DynamicBlobShape.Rect -> {
             buildStaticBoundarySamplePoints(
                 center = center,
@@ -953,6 +1205,7 @@ private fun buildBoundarySamplePointsForDynamic(
                 samplePointCount = samplePointCount
             )
         }
+
         DynamicBlobShape.RoundedRect -> {
             buildStaticBoundarySamplePoints(
                 center = center,
@@ -1026,7 +1279,12 @@ private fun buildStaticBoundarySamplePoints(
     return points
 }
 
-private fun pointOnRectPerimeter(center: Offset, hw: Float, hh: Float, s: Float): Pair<Float, Float> {
+private fun pointOnRectPerimeter(
+    center: Offset,
+    hw: Float,
+    hh: Float,
+    s: Float
+): Pair<Float, Float> {
     val w = 2f * hw
     val h = 2f * hh
     val per = 2f * (w + h)
@@ -1293,7 +1551,8 @@ private fun computeLigamentFromPointArrays(
         bridgeThicknessMaxPx + (bridgeThicknessMinPx - bridgeThicknessMaxPx) * strengthSmoothed
 
     val first = anchorsFromPolyline(firstCenter, firstPoints, firstFacingDir, ligamentThicknessPx)
-    val second = anchorsFromPolyline(secondCenter, secondPoints, secondFacingDir, ligamentThicknessPx)
+    val second =
+        anchorsFromPolyline(secondCenter, secondPoints, secondFacingDir, ligamentThicknessPx)
 
     val topSpanPx = (second.top - first.top).getDistance()
     val bottomSpanPx = (first.bottom - second.bottom).getDistance()
