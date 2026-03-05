@@ -66,8 +66,11 @@ import kotlin.math.sign
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+enum class StretchPhase { None, Early, Late }
+enum class StaticBlobShape { Circle, Rect, RoundedRect }
+enum class DynamicBlobShape { Circle, Rect, RoundedRect }
 
-data class GooeyDebugState(
+data class GeometryDebugState(
     val isAttached: Boolean,
     val isPullingApart: Boolean,
     val gapPx: Float,
@@ -79,30 +82,37 @@ data class GooeyDebugState(
     val handleLengthPx: Float?
 )
 
-private data class GooeyGeometryResult(
+private data class PathGeometryResult(
     val dynamicPoints: FloatArray,
     val staticPoints: FloatArray,
-    val ligament: LigamentGeometry?,
+    val ligament: LigamentStretchGeometry?,
     val staticContactPoint: Offset,
 )
 
 @Composable
-fun GooeyStretchAndSnapSample(
+private fun GooeyStretchDynamicShapeSample(
     modifier: Modifier = Modifier,
 ) {
     var showSheet by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-    // Setup you want: RoundedRect near screen width + circle
+    // Setup: Static = RoundedRect near screen width + Dynamic = selectable
     var staticShape by remember { mutableStateOf(StaticBlobShape.RoundedRect) }
+    var dynamicShape by remember { mutableStateOf(DynamicBlobShape.Circle) }
 
-    var dynamicRadiusPx by remember { mutableFloatStateOf(100f) }
+    // Dynamic params
+    var dynamicCircleRadiusPx by remember { mutableFloatStateOf(100f) }
+    var dynamicRectWidthPx by remember { mutableFloatStateOf(220f) }
+    var dynamicRectHeightPx by remember { mutableFloatStateOf(220f) }
+    var dynamicCornerPx by remember { mutableFloatStateOf(60f) }
+
+    // Static params
     var staticCircleRadiusPx by remember { mutableFloatStateOf(150f) }
-
     var staticRectWidthPx by remember { mutableFloatStateOf(650f) }
     var staticRectHeightPx by remember { mutableFloatStateOf(200f) }
     var staticCornerPx by remember { mutableFloatStateOf(90f) }
 
+    // Stretch/bridge controls
     var minStretchScaleAtTouch by remember { mutableFloatStateOf(0.60f) }
     var shallowOverlapBandPx by remember { mutableFloatStateOf(100f) }
 
@@ -112,6 +122,7 @@ fun GooeyStretchAndSnapSample(
 
     var detachWobbleMaxPx by remember { mutableFloatStateOf(18f) }
 
+    // Debug toggles
     var debugEnabled by remember { mutableStateOf(true) }
     var debugDrawLigament by remember { mutableStateOf(true) }
     var debugDrawHandles by remember { mutableStateOf(true) }
@@ -120,7 +131,7 @@ fun GooeyStretchAndSnapSample(
 
     var debugState by remember {
         mutableStateOf(
-            GooeyDebugState(
+            GeometryDebugState(
                 isAttached = true,
                 isPullingApart = false,
                 gapPx = 0f,
@@ -142,22 +153,29 @@ fun GooeyStretchAndSnapSample(
         GooeyStretchAndSnapCanvas(
             modifier = Modifier.fillMaxSize(),
 
-            dynamicRadiusPx = dynamicRadiusPx,
+            // Dynamic
+            dynamicShape = dynamicShape,
+            dynamicCircleRadiusPx = dynamicCircleRadiusPx,
+            dynamicRectWidthPx = dynamicRectWidthPx,
+            dynamicRectHeightPx = dynamicRectHeightPx,
+            dynamicCornerPx = dynamicCornerPx,
+
+            // Static
+            staticShape = staticShape,
             staticCircleRadiusPx = staticCircleRadiusPx,
             staticRectWidthPx = staticRectWidthPx,
             staticRectHeightPx = staticRectHeightPx,
             staticRectCornerRadiusPx = staticCornerPx,
-            staticShape = staticShape,
 
+            // Stretch/bridge
             minStretchScaleAtTouch = minStretchScaleAtTouch,
             shallowOverlapBandPx = shallowOverlapBandPx,
-
             bridgeThicknessMaxPx = bridgeThicknessMaxPx,
             bridgeThicknessMinPx = bridgeThicknessMinPx,
             bridgeHandleScale = bridgeHandleScale,
-
             detachWobbleMaxPx = detachWobbleMaxPx,
 
+            // Debug
             debugEnabled = debugEnabled,
             debugDrawLigament = debugDrawLigament,
             debugDrawHandles = debugDrawHandles,
@@ -208,6 +226,41 @@ fun GooeyStretchAndSnapSample(
                         .imePadding()
                         .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
+                    Text("Dynamic shape", color = Color.White)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        DebugToggleText("Circle", dynamicShape == DynamicBlobShape.Circle) { dynamicShape = DynamicBlobShape.Circle }
+                        DebugToggleText("Rect", dynamicShape == DynamicBlobShape.Rect) { dynamicShape = DynamicBlobShape.Rect }
+                        DebugToggleText("RoundRect", dynamicShape == DynamicBlobShape.RoundedRect) { dynamicShape = DynamicBlobShape.RoundedRect }
+                    }
+
+                    Spacer(Modifier.height(10.dp))
+
+                    when (dynamicShape) {
+                        DynamicBlobShape.Circle -> {
+                            Text("Dynamic radius = ${"%.0f".format(dynamicCircleRadiusPx)} px", color = Color.White)
+                            Slider(dynamicCircleRadiusPx, { dynamicCircleRadiusPx = it.coerceIn(60f, 260f) }, valueRange = 60f..260f)
+                        }
+                        DynamicBlobShape.Rect, DynamicBlobShape.RoundedRect -> {
+                            Text("Dynamic rect width = ${"%.0f".format(dynamicRectWidthPx)} px", color = Color.White)
+                            Slider(dynamicRectWidthPx, { dynamicRectWidthPx = it.coerceIn(120f, 520f) }, valueRange = 120f..520f)
+
+                            Text("Dynamic rect height = ${"%.0f".format(dynamicRectHeightPx)} px", color = Color.White)
+                            Slider(dynamicRectHeightPx, { dynamicRectHeightPx = it.coerceIn(120f, 520f) }, valueRange = 120f..520f)
+
+                            if (dynamicShape == DynamicBlobShape.RoundedRect) {
+                                val maxCorner = min(dynamicRectWidthPx, dynamicRectHeightPx) * 0.5f
+                                Text("Dynamic corner = ${"%.0f".format(dynamicCornerPx)} px", color = Color.White)
+                                Slider(
+                                    value = dynamicCornerPx.coerceIn(0f, maxCorner),
+                                    onValueChange = { dynamicCornerPx = it.coerceIn(0f, maxCorner) },
+                                    valueRange = 0f..max(1f, maxCorner)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(14.dp))
+
                     Text("Static shape", color = Color.White)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         DebugToggleText("Circle", staticShape == StaticBlobShape.Circle) { staticShape = StaticBlobShape.Circle }
@@ -217,11 +270,6 @@ fun GooeyStretchAndSnapSample(
 
                     Spacer(Modifier.height(10.dp))
 
-                    Text("Dynamic radius = ${"%.0f".format(dynamicRadiusPx)} px", color = Color.White)
-                    Slider(dynamicRadiusPx, { dynamicRadiusPx = it.coerceIn(60f, 260f) }, valueRange = 60f..260f)
-
-                    Spacer(Modifier.height(6.dp))
-
                     Text("Static rect width = ${"%.0f".format(staticRectWidthPx)} px", color = Color.White)
                     Slider(staticRectWidthPx, { staticRectWidthPx = it.coerceIn(240f, 1400f) }, valueRange = 240f..1400f)
 
@@ -229,14 +277,14 @@ fun GooeyStretchAndSnapSample(
                     Slider(staticRectHeightPx, { staticRectHeightPx = it.coerceIn(120f, 720f) }, valueRange = 120f..720f)
 
                     val maxCorner = min(staticRectWidthPx, staticRectHeightPx) * 0.5f
-                    Text("Corner radius = ${"%.0f".format(staticCornerPx)} px", color = Color.White)
+                    Text("Static corner radius = ${"%.0f".format(staticCornerPx)} px", color = Color.White)
                     Slider(
                         value = staticCornerPx.coerceIn(0f, maxCorner),
                         onValueChange = { staticCornerPx = it.coerceIn(0f, maxCorner) },
                         valueRange = 0f..max(1f, maxCorner)
                     )
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(14.dp))
 
                     Text("Detach wobble amplitude = ${"%.0f".format(detachWobbleMaxPx)} px", color = Color.White)
                     Slider(detachWobbleMaxPx, { detachWobbleMaxPx = it.coerceIn(0f, 48f) }, valueRange = 0f..48f)
@@ -248,6 +296,8 @@ fun GooeyStretchAndSnapSample(
 
                     Text("shallowOverlapBandPx = ${"%.0f".format(shallowOverlapBandPx)} px", color = Color.White)
                     Slider(shallowOverlapBandPx, { shallowOverlapBandPx = it.coerceIn(5f, 240f) }, valueRange = 5f..240f)
+
+                    Spacer(Modifier.height(10.dp))
 
                     Text("bridgeThicknessMaxPx = ${"%.1f".format(bridgeThicknessMaxPx)}", color = Color.White)
                     Slider(bridgeThicknessMaxPx, { bridgeThicknessMaxPx = it.coerceIn(2f, 60f) }, valueRange = 2f..60f)
@@ -262,7 +312,7 @@ fun GooeyStretchAndSnapSample(
                     Text("bridgeHandleScale = ${"%.2f".format(bridgeHandleScale)}", color = Color.White)
                     Slider(bridgeHandleScale, { bridgeHandleScale = it.coerceIn(0.10f, 2.50f) }, valueRange = 0.10f..2.50f)
 
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.height(12.dp))
 
                     Text("Debug", color = Color.White)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -284,29 +334,36 @@ fun GooeyStretchAndSnapSample(
 private fun GooeyStretchAndSnapCanvas(
     modifier: Modifier,
 
-    dynamicRadiusPx: Float,
+    // Dynamic
+    dynamicShape: DynamicBlobShape,
+    dynamicCircleRadiusPx: Float,
+    dynamicRectWidthPx: Float,
+    dynamicRectHeightPx: Float,
+    dynamicCornerPx: Float,
+
+    // Static
+    staticShape: StaticBlobShape,
     staticCircleRadiusPx: Float,
     staticRectWidthPx: Float,
     staticRectHeightPx: Float,
     staticRectCornerRadiusPx: Float,
-    staticShape: StaticBlobShape,
 
+    // Stretch + bridge
     minStretchScaleAtTouch: Float,
     shallowOverlapBandPx: Float,
-
     bridgeThicknessMaxPx: Float,
     bridgeThicknessMinPx: Float,
     bridgeHandleScale: Float,
-
     detachWobbleMaxPx: Float,
 
+    // Debug
     debugEnabled: Boolean,
     debugDrawLigament: Boolean,
     debugDrawHandles: Boolean,
     debugDrawVectors: Boolean,
     debugDrawArcSpans: Boolean,
 
-    onDebugState: (GooeyDebugState) -> Unit
+    onDebugState: (GeometryDebugState) -> Unit
 ) {
     val dynamicBlobPath = remember { Path() }
     val staticBlobPath = remember { Path() }
@@ -330,6 +387,7 @@ private fun GooeyStretchAndSnapCanvas(
         }
     }
 
+    // --- State machine (attach/detach) ---
     var isAttached by remember { mutableStateOf(true) }
     val detachGapThresholdPx = 0.5f
     val attachGapThresholdPx = -1.5f
@@ -337,9 +395,6 @@ private fun GooeyStretchAndSnapCanvas(
     var previousGapPx by remember { mutableFloatStateOf(Float.NaN) }
     var gapVelocityEma by remember { mutableFloatStateOf(0f) }
     var isPullingApart by remember { mutableStateOf(false) }
-
-    var lastDynamicFacingAngleRad by remember { mutableFloatStateOf(0f) }
-    var lastStaticFacingAngleRad by remember { mutableFloatStateOf(PI.toFloat()) }
 
     val stretchAmount = remember { Animatable(0f) }
 
@@ -349,43 +404,61 @@ private fun GooeyStretchAndSnapCanvas(
     val staticCenter = remember(canvasSize) { Offset(canvasSize.width / 2f, canvasSize.height / 2f) }
     val dynamicCenter = if (pointerPosition == Offset.Unspecified) staticCenter else pointerPosition
 
-    val halfW = staticRectWidthPx * 0.5f
-    val halfH = staticRectHeightPx * 0.5f
-    val corner = staticRectCornerRadiusPx.coerceIn(0f, min(halfW, halfH))
+    // Static extents
+    val sHalfW = staticRectWidthPx * 0.5f
+    val sHalfH = staticRectHeightPx * 0.5f
+    val sCorner = staticRectCornerRadiusPx.coerceIn(0f, min(sHalfW, sHalfH))
 
-    // ---------- TRUE GAP + CONTACT ----------
-    val pLocal = dynamicCenter - staticCenter
+    // Dynamic extents
+    val dHalfW = dynamicRectWidthPx * 0.5f
+    val dHalfH = dynamicRectHeightPx * 0.5f
+    val dCorner = dynamicCornerPx.coerceIn(0f, min(dHalfW, dHalfH))
 
+    // ---------- TRUE GAP + STATIC CONTACT (static SDF) ----------
+    val pLocalStatic = dynamicCenter - staticCenter
     val sdStatic: Float = when (staticShape) {
         StaticBlobShape.Circle -> (dynamicCenter - staticCenter).getDistance() - staticCircleRadiusPx
-        StaticBlobShape.Rect -> signedDistanceBox(pLocal, halfW, halfH)
-        StaticBlobShape.RoundedRect -> signedDistanceRoundedBox(pLocal, halfW, halfH, corner)
+        StaticBlobShape.Rect -> signedDistanceBox(pLocalStatic, sHalfW, sHalfH)
+        StaticBlobShape.RoundedRect -> signedDistanceRoundedBox(pLocalStatic, sHalfW, sHalfH, sCorner)
     }
-
-    val gapPx = sdStatic - dynamicRadiusPx
 
     val staticContactPoint: Offset = when (staticShape) {
         StaticBlobShape.Circle -> {
             val dir = normalizeSafe(dynamicCenter - staticCenter)
             staticCenter + dir * staticCircleRadiusPx
         }
-        StaticBlobShape.Rect -> staticCenter + closestPointOnBox(pLocal, halfW, halfH)
-        StaticBlobShape.RoundedRect -> staticCenter + closestPointOnRoundedBox(pLocal, halfW, halfH, corner)
+        StaticBlobShape.Rect -> staticCenter + closestPointOnBox(pLocalStatic, sHalfW, sHalfH)
+        StaticBlobShape.RoundedRect -> staticCenter + closestPointOnRoundedBox(pLocalStatic, sHalfW, sHalfH, sCorner)
     }
+
+    // Direction from dynamic center toward the contact region (for dynamic "support radius")
+    val dynToContactDir = normalizeSafe(staticContactPoint - dynamicCenter)
+
+    // Dynamic "support distance" along dynToContactDir (approx boundary distance in that direction)
+    val dynamicSupportPx = when (dynamicShape) {
+        DynamicBlobShape.Circle -> dynamicCircleRadiusPx
+        DynamicBlobShape.Rect -> rayDistanceToBox(dynToContactDir, dHalfW, dHalfH)
+        DynamicBlobShape.RoundedRect -> rayDistanceToRoundedBox(dynToContactDir, dHalfW, dHalfH, dCorner)
+    }
+
+    val gapPx = sdStatic - dynamicSupportPx
 
     // ---------- OUTWARD NORMAL AT CONTACT (STATIC) ----------
     val staticOutwardNormal: Offset = when (staticShape) {
         StaticBlobShape.Circle -> normalizeSafe(staticContactPoint - staticCenter)
-        StaticBlobShape.Rect -> outwardNormalOnBox(staticContactPoint - staticCenter, halfW, halfH)
-        StaticBlobShape.RoundedRect -> outwardNormalOnRoundedBox(staticContactPoint - staticCenter, halfW, halfH, corner)
+        StaticBlobShape.Rect -> outwardNormalOnBox(staticContactPoint - staticCenter, sHalfW, sHalfH)
+        StaticBlobShape.RoundedRect -> outwardNormalOnRoundedBox(staticContactPoint - staticCenter, sHalfW, sHalfH, sCorner)
     }
 
-    // Orient normal so it faces towards the circle (robust even when overlapping)
+    // Orient so it faces dynamic (robust even if overlapping)
     val staticToDynamic = dynamicCenter - staticContactPoint
     val staFacingDir = oriented(staticOutwardNormal, staticToDynamic)
 
-    // Dynamic faces toward contact point (always stable)
+    // Dynamic faces toward static contact (stable)
     val dynFacingDir = normalizeSafe(staticContactPoint - dynamicCenter)
+
+    val dynamicFacingAngleRad = angleOf(dynFacingDir)
+    val staticFacingAngleRad = angleOf(staFacingDir)
 
     // ---------- Attached state ----------
     LaunchedEffect(gapPx) {
@@ -415,12 +488,9 @@ private fun GooeyStretchAndSnapCanvas(
         }
     }
 
-    // Facing angles only needed for stretch; derive from dirs
-    val dynamicFacingAngleRad = angleOf(dynFacingDir).also { lastDynamicFacingAngleRad = it }
-    val staticFacingAngleRad = angleOf(staFacingDir).also { lastStaticFacingAngleRad = it }
-
     fun smoothstep(x: Float): Float = x * x * (3f - 2f * x)
 
+    // Phase controls (same behavior across dynamic shapes)
     val stretchBandPx = 90f
     val bridgeBandPx = 28f
 
@@ -471,9 +541,10 @@ private fun GooeyStretchAndSnapCanvas(
     val attachedStretchPx = if (isAttached) effectiveStretchPx else 0f
     val detachedWobblePx = if (!isAttached) detachWobbleMaxPx * detachWobble.value else 0f
 
+    // Dynamic stretches while attached (and wobbles after detach)
     val dynamicDrivePx = attachedStretchPx + detachedWobblePx
 
-    // IMPORTANT: static does NOT stretch while attached
+    // Static does NOT stretch while attached; only wobble after detach
     val staticDrivePx = detachedWobblePx * 0.9f
 
     val phase =
@@ -481,17 +552,21 @@ private fun GooeyStretchAndSnapCanvas(
         else if (!(isAttached && isPullingApart) || targetStretch <= 0f) StretchPhase.None
         else if (bridgeStrength <= 0f) StretchPhase.Early else StretchPhase.Late
 
-    var geometryResult by remember { mutableStateOf<GooeyGeometryResult?>(null) }
+    var geometryResult by remember { mutableStateOf<PathGeometryResult?>(null) }
 
     LaunchedEffect(
         dynamicCenter,
         staticCenter,
-        dynamicRadiusPx,
+        dynamicShape,
+        dynamicCircleRadiusPx,
+        dynamicRectWidthPx,
+        dynamicRectHeightPx,
+        dCorner,
+        staticShape,
         staticCircleRadiusPx,
         staticRectWidthPx,
         staticRectHeightPx,
-        staticRectCornerRadiusPx,
-        staticShape,
+        sCorner,
         dynamicFacingAngleRad,
         staticFacingAngleRad,
         dynamicDrivePx,
@@ -507,10 +582,20 @@ private fun GooeyStretchAndSnapCanvas(
         isAttached
     ) {
         geometryResult = withContext(Dispatchers.Default) {
-            val dynamicPoints = buildStretchedBlobPoints(
+            // Dynamic base boundary samples (circle/rect/roundrect), then deform along boundary normal
+            val dynamicBase = buildBoundarySamplePointsForDynamic(
                 center = dynamicCenter,
-                baseRadiusPx = dynamicRadiusPx,
-                samplePointCount = 140,
+                shape = dynamicShape,
+                circleRadiusPx = dynamicCircleRadiusPx,
+                rectWidthPx = dynamicRectWidthPx,
+                rectHeightPx = dynamicRectHeightPx,
+                cornerRadiusPx = dCorner,
+                samplePointCount = 170
+            )
+
+            val dynamicPoints = deformAlongBoundaryNormal(
+                center = dynamicCenter,
+                basePoints = dynamicBase,
                 stretchPx = dynamicDrivePx,
                 facingAngleRad = dynamicFacingAngleRad,
                 neckFocusPower = neckFocusPower,
@@ -523,8 +608,8 @@ private fun GooeyStretchAndSnapCanvas(
                 circleRadiusPx = staticCircleRadiusPx,
                 rectWidthPx = staticRectWidthPx,
                 rectHeightPx = staticRectHeightPx,
-                cornerRadiusPx = staticRectCornerRadiusPx,
-                samplePointCount = 220
+                cornerRadiusPx = sCorner,
+                samplePointCount = 240
             )
 
             val staticPoints = deformAlongBoundaryNormal(
@@ -542,11 +627,9 @@ private fun GooeyStretchAndSnapCanvas(
                         firstCenter = dynamicCenter,
                         firstPoints = dynamicPoints,
                         firstFacingDir = dynFacingDir,
-
                         secondCenter = staticCenter,
                         secondPoints = staticPoints,
                         secondFacingDir = staFacingDir,
-
                         strength = bridgeStrength,
                         bridgeThicknessMaxPx = bridgeThicknessMaxPx,
                         bridgeThicknessMinPx = bridgeThicknessMinPx,
@@ -554,7 +637,7 @@ private fun GooeyStretchAndSnapCanvas(
                     )
                 } else null
 
-            GooeyGeometryResult(
+            PathGeometryResult(
                 dynamicPoints = dynamicPoints,
                 staticPoints = staticPoints,
                 ligament = ligament,
@@ -566,7 +649,7 @@ private fun GooeyStretchAndSnapCanvas(
     SideEffect {
         val ligament = geometryResult?.ligament
         onDebugState(
-            GooeyDebugState(
+            GeometryDebugState(
                 isAttached = isAttached,
                 isPullingApart = isPullingApart,
                 gapPx = gapPx,
@@ -728,7 +811,6 @@ private fun closestPointOnRoundedBox(p: Offset, hx: Float, hy: Float, r: Float):
     return if (len > 1e-4f) {
         clamped + (delta / len) * rr
     } else {
-        // inside inner box: project to nearest straight segment of inner box (not corner)
         val dx = ix - abs(p.x)
         val dy = iy - abs(p.y)
         if (dx < dy) {
@@ -749,7 +831,6 @@ private fun outwardNormalOnBox(contactLocal: Offset, hx: Float, hy: Float): Offs
     return when {
         ax >= hx - eps && ay <= hy + eps -> Offset(sign(contactLocal.x.takeIf { it != 0f } ?: 1f), 0f)
         ay >= hy - eps && ax <= hx + eps -> Offset(0f, sign(contactLocal.y.takeIf { it != 0f } ?: 1f))
-        // Fallback (corner-ish): pick dominant axis
         ax > ay -> Offset(sign(contactLocal.x.takeIf { it != 0f } ?: 1f), 0f)
         else -> Offset(0f, sign(contactLocal.y.takeIf { it != 0f } ?: 1f))
     }
@@ -763,62 +844,127 @@ private fun outwardNormalOnRoundedBox(contactLocal: Offset, hx: Float, hy: Float
 
     val ax = abs(contactLocal.x)
     val ay = abs(contactLocal.y)
-
     val onArc = ax > ix + eps && ay > iy + eps
 
     return if (onArc) {
-        // corner circle center
         val cx = ix * sign(contactLocal.x.takeIf { it != 0f } ?: 1f)
         val cy = iy * sign(contactLocal.y.takeIf { it != 0f } ?: 1f)
         normalizeSafe(contactLocal - Offset(cx, cy))
     } else {
-        // straight segments: same as box but using full hx/hy boundary
         outwardNormalOnBox(contactLocal, hx, hy)
     }
 }
 
-// -------------------- stretch + sampling --------------------
+// -------------------- Ray distance (support) for dynamic gap --------------------
 
-private fun buildStretchedBlobPoints(
+private fun rayDistanceToBox(dirUnit: Offset, hx: Float, hy: Float): Float {
+    val ux = abs(dirUnit.x).coerceAtLeast(1e-5f)
+    val uy = abs(dirUnit.y).coerceAtLeast(1e-5f)
+    val tx = hx / ux
+    val ty = hy / uy
+    return min(tx, ty)
+}
+
+private fun rayDistanceToRoundedBox(dirUnit: Offset, hx: Float, hy: Float, r: Float): Float {
+    val rr = r.coerceIn(0f, min(hx, hy))
+    val ix = (hx - rr).coerceAtLeast(0f)
+    val iy = (hy - rr).coerceAtLeast(0f)
+
+    val ux = dirUnit.x
+    val uy = dirUnit.y
+    val ax = abs(ux)
+    val ay = abs(uy)
+
+    // Degenerate -> treat as box
+    if (rr <= 1e-4f) return rayDistanceToBox(dirUnit, hx, hy)
+    if (ix <= 1e-4f || iy <= 1e-4f) {
+        // Very round; still handle via corner solve
+        return solveCornerRayDistance(dirUnit, hx, hy, rr)
+    }
+
+    // Intersect with inner box first
+    val tx = if (ax > 1e-5f) ix / ax else Float.POSITIVE_INFINITY
+    val ty = if (ay > 1e-5f) iy / ay else Float.POSITIVE_INFINITY
+    val tInner = min(tx, ty)
+
+    val pInner = Offset(ux * tInner, uy * tInner)
+    val onVertical = abs(pInner.x) >= ix - 1e-3f && abs(pInner.y) <= iy + 1e-3f
+    val onHorizontal = abs(pInner.y) >= iy - 1e-3f && abs(pInner.x) <= ix + 1e-3f
+
+    // If ray hits a flat segment before needing corner arc
+    if (onVertical && abs(pInner.y) <= iy - 1e-3f) return if (ax > 1e-5f) hx / ax else tInner
+    if (onHorizontal && abs(pInner.x) <= ix - 1e-3f) return if (ay > 1e-5f) hy / ay else tInner
+
+    // Otherwise, solve against corner circle
+    return solveCornerRayDistance(dirUnit, hx, hy, rr)
+}
+
+private fun solveCornerRayDistance(dirUnit: Offset, hx: Float, hy: Float, r: Float): Float {
+    val ux = dirUnit.x
+    val uy = dirUnit.y
+    val cx = (hx - r) * sign(ux.takeIf { it != 0f } ?: 1f)
+    val cy = (hy - r) * sign(uy.takeIf { it != 0f } ?: 1f)
+    // Ray: p = t * u, circle center c, radius r => |t u - c|^2 = r^2
+    val a = ux * ux + uy * uy // = 1 ideally
+    val b = -2f * (ux * cx + uy * cy)
+    val c = cx * cx + cy * cy - r * r
+
+    val disc = b * b - 4f * a * c
+    if (disc < 0f) return rayDistanceToBox(dirUnit, hx, hy) // fallback
+    val sqrtDisc = sqrt(disc)
+    val t0 = (-b - sqrtDisc) / (2f * a)
+    val t1 = (-b + sqrtDisc) / (2f * a)
+    val t = listOf(t0, t1).filter { it >= 0f }.minOrNull() ?: 0f
+    return t
+}
+
+// -------------------- sampling + deformation --------------------
+
+private fun buildBoundarySamplePointsForDynamic(
     center: Offset,
-    baseRadiusPx: Float,
-    samplePointCount: Int,
-    stretchPx: Float,
-    facingAngleRad: Float,
-    neckFocusPower: Float,
-    stretchBias: Float
+    shape: DynamicBlobShape,
+    circleRadiusPx: Float,
+    rectWidthPx: Float,
+    rectHeightPx: Float,
+    cornerRadiusPx: Float,
+    samplePointCount: Int
 ): FloatArray {
-    if (samplePointCount < 16) return FloatArray(0)
-
-    val points = FloatArray((samplePointCount + 1) * 2)
-    val angleStepRad = (2.0 * PI / samplePointCount).toFloat()
-
-    fun smoothstep(x: Float): Float = x * x * (3f - 2f * x)
-
-    fun neckMask(thetaRad: Float): Float {
-        val facingCos = cos(thetaRad - facingAngleRad).coerceIn(-1f, 1f)
-        val facingFraction = (facingCos + 1f) * 0.5f
-        val smoothedFacing = smoothstep(facingFraction)
-        return smoothedFacing.pow(neckFocusPower)
+    return when (shape) {
+        DynamicBlobShape.Circle -> {
+            val n = max(32, samplePointCount)
+            val points = FloatArray((n + 1) * 2)
+            val step = (2.0 * PI / n).toFloat()
+            for (i in 0..n) {
+                val a = i * step
+                val idx = i * 2
+                points[idx] = center.x + circleRadiusPx * cos(a)
+                points[idx + 1] = center.y + circleRadiusPx * sin(a)
+            }
+            points
+        }
+        DynamicBlobShape.Rect -> {
+            buildStaticBoundarySamplePoints(
+                center = center,
+                shape = StaticBlobShape.Rect,
+                circleRadiusPx = 0f,
+                rectWidthPx = rectWidthPx,
+                rectHeightPx = rectHeightPx,
+                cornerRadiusPx = 0f,
+                samplePointCount = samplePointCount
+            )
+        }
+        DynamicBlobShape.RoundedRect -> {
+            buildStaticBoundarySamplePoints(
+                center = center,
+                shape = StaticBlobShape.RoundedRect,
+                circleRadiusPx = 0f,
+                rectWidthPx = rectWidthPx,
+                rectHeightPx = rectHeightPx,
+                cornerRadiusPx = cornerRadiusPx,
+                samplePointCount = samplePointCount
+            )
+        }
     }
-
-    fun radiusAtAngle(thetaRad: Float): Float {
-        val mask = neckMask(thetaRad)
-        val neckInflationPx = (stretchPx * stretchBias) * mask
-        val farMask = 1f - mask
-        val farCompressionPx = -0.22f * stretchPx * farMask
-        return baseRadiusPx + neckInflationPx + farCompressionPx
-    }
-
-    for (i in 0..samplePointCount) {
-        val angleRad = i * angleStepRad
-        val r = radiusAtAngle(angleRad)
-        val idx = i * 2
-        points[idx] = center.x + r * cos(angleRad)
-        points[idx + 1] = center.y + r * sin(angleRad)
-    }
-
-    return points
 }
 
 private fun buildStaticBoundarySamplePoints(
@@ -1029,7 +1175,7 @@ private fun fillPathFromPoints(outPath: Path, points: FloatArray) {
 
 // -------------------- ligament: CONTACT-DRIVEN --------------------
 
-private data class LigamentGeometry(
+private data class LigamentStretchGeometry(
     val firstCenter: Offset,
     val secondCenter: Offset,
 
@@ -1045,6 +1191,13 @@ private data class LigamentGeometry(
 
     val ligamentThicknessPx: Float,
     val handleLengthPx: Float
+)
+
+data class AnchorPair(
+    val top: Offset,
+    val bottom: Offset,
+    val topTangentUnit: Offset,
+    val bottomTangentUnit: Offset
 )
 
 private fun anchorsFromPolyline(
@@ -1130,7 +1283,7 @@ private fun computeLigamentFromPointArrays(
     bridgeThicknessMaxPx: Float,
     bridgeThicknessMinPx: Float,
     bridgeHandleScale: Float
-): LigamentGeometry {
+): LigamentStretchGeometry {
     fun smoothstep(x: Float): Float = x * x * (3f - 2f * x)
     fun clamp01(x: Float): Float = x.coerceIn(0f, 1f)
 
@@ -1170,7 +1323,7 @@ private fun computeLigamentFromPointArrays(
     val secondBottomControl = second.bottom + secondBottomTan * handleLengthPx
     val firstBottomControl = first.bottom + firstBottomTan * handleLengthPx
 
-    return LigamentGeometry(
+    return LigamentStretchGeometry(
         firstCenter = firstCenter,
         secondCenter = secondCenter,
 
@@ -1203,6 +1356,6 @@ private fun DebugToggleText(label: String, enabled: Boolean, onToggle: () -> Uni
 
 @Preview(showBackground = true, widthDp = 420, heightDp = 720)
 @Composable
-private fun GooeyStretchAndSnapSample_Preview() {
-    GooeyStretchAndSnapSample(Modifier.fillMaxSize())
+private fun GooeyStretchDynamicShapeSamplePreview() {
+    GooeyStretchDynamicShapeSample(Modifier.fillMaxSize())
 }
