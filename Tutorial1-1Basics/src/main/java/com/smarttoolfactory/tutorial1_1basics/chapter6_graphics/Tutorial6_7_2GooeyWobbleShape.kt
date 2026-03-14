@@ -82,7 +82,7 @@ data class GooeyDebugState(
 private data class GooeyGeometryResult(
     val dynamicPoints: FloatArray,
     val staticPoints: FloatArray,
-    val ligament: LigamentGeometry?,
+    val ligament: LigGeometry?,
     val staticContactPoint: Offset,
 )
 
@@ -1029,7 +1029,7 @@ private fun fillPathFromPoints(outPath: Path, points: FloatArray) {
 
 // -------------------- ligament: CONTACT-DRIVEN --------------------
 
-private data class LigamentGeometry(
+private data class LigGeometry(
     val firstCenter: Offset,
     val secondCenter: Offset,
 
@@ -1130,7 +1130,7 @@ private fun computeLigamentFromPointArrays(
     bridgeThicknessMaxPx: Float,
     bridgeThicknessMinPx: Float,
     bridgeHandleScale: Float
-): LigamentGeometry {
+): LigGeometry {
     fun smoothstep(x: Float): Float = x * x * (3f - 2f * x)
     fun clamp01(x: Float): Float = x.coerceIn(0f, 1f)
 
@@ -1170,7 +1170,7 @@ private fun computeLigamentFromPointArrays(
     val secondBottomControl = second.bottom + secondBottomTan * handleLengthPx
     val firstBottomControl = first.bottom + firstBottomTan * handleLengthPx
 
-    return LigamentGeometry(
+    return LigGeometry(
         firstCenter = firstCenter,
         secondCenter = secondCenter,
 
