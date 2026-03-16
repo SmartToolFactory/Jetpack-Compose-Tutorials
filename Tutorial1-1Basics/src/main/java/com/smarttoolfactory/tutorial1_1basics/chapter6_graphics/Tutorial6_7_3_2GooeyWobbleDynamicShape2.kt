@@ -3,7 +3,9 @@
 package com.smarttoolfactory.tutorial1_1basics.chapter6_graphics
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -62,11 +64,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -83,6 +87,17 @@ enum class StaticShape { Circle, Rect, RoundedRect }
  * Available shapes for the dynamic (pointer-following) blob.
  */
 enum class DynamicShape { Circle, Rect, RoundedRect }
+
+/**
+ * Controls how the static shape reacts when the dynamic blob detaches.
+ *
+ * [NeckWobble] – original behaviour: a concentrated bulge at the detach
+ * point that oscillates via the spring, using [deformAlongBoundaryNormal].
+ *
+ * [WavePropagation] – new behaviour: a sinusoidal wave that travels
+ * outward from the detach point along the boundary.
+ */
+enum class DetachEffect { NeckWobble, WavePropagation }
 
 /**
  * All tunable parameters for the gooey union computation.
@@ -111,6 +126,12 @@ enum class DynamicShape { Circle, Rect, RoundedRect }
  * @param bridgeBandPx gap range over which bridge strength ramps from 0 to 1
  * @param detachGapThresholdPx positive gap at which the shapes detach
  * @param attachGapThresholdPx negative gap at which the shapes re-attach
+ * @param dynamicDetachEffect selects detach deformation for the dynamic (pointer-following) blob
+ * @param staticDetachEffect selects detach deformation for the static (stationary) blob
+ * @param waveFrequency spatial frequency of the wave (oscillations per radian)
+ * @param waveDecayRate exponential spatial decay rate along angular distance
+ * @param waveAmplitudePx peak displacement of the wave at the detach point
+ * @param wavePropagationMs duration in milliseconds for the wave front to reach π radians
  */
 data class GooeyUnionParams(
     val dynamicShape: DynamicShape = DynamicShape.Circle,
@@ -142,6 +163,16 @@ data class GooeyUnionParams(
 
     val detachGapThresholdPx: Float = 0.5f,
     val attachGapThresholdPx: Float = -1.5f,
+
+    // ── Detach effect modes (independent per shape) ──
+    val dynamicDetachEffect: DetachEffect = DetachEffect.NeckWobble,
+    val staticDetachEffect: DetachEffect = DetachEffect.NeckWobble,
+
+    // ── Wave propagation parameters (used when WavePropagation is selected) ──
+    val waveFrequency: Float = 6f,
+    val waveDecayRate: Float = 1.0f,
+    val waveAmplitudePx: Float = 22f,
+    val wavePropagationMs: Int = 1000,
 )
 
 /**
@@ -178,7 +209,9 @@ data class GooeyUnionResult(
  * @param isAttached current attach/detach state
  * @param isPullingApart whether the user is actively dragging away
  * @param stretchAmount current animated stretch factor in 0..1
- * @param detachWobbleAmount current animated wobble factor in 0..1
+ * @param detachWobbleAmount current animated wobble factor (oscillating via spring)
+ * @param detachAngleRad angle on the static shape where detachment occurred
+ * @param wavePhase how far the wave front has propagated (0..π)
  * @return [GooeyUnionResult] containing newly-created paths and state info
  */
 fun computeGooeyUnion(
@@ -189,6 +222,8 @@ fun computeGooeyUnion(
     isPullingApart: Boolean,
     stretchAmount: Float,
     detachWobbleAmount: Float,
+    detachAngleRad: Float,
+    wavePhase: Float,
 ): GooeyUnionResult {
     val dynamicPath = Path()
     val staticPath = Path()
@@ -278,9 +313,6 @@ fun computeGooeyUnion(
         val attachedStretch = if (isAttached) effectiveStretch else 0f
         val detachedWobble = if (!isAttached) detachWobbleMaxPx * detachWobbleAmount else 0f
 
-        val dynamicDrive = attachedStretch + detachedWobble
-        val staticDrive = detachedWobble * 0.9f
-
         val dynBase = buildBoundarySamplePointsForDynamic(
             center = dynamicCenter,
             shape = dynamicShape,
@@ -290,14 +322,57 @@ fun computeGooeyUnion(
             cornerRadiusPx = dCorner,
             samplePointCount = dynamicSampleCount
         )
-        val dynPoints = deformAlongBoundaryNormal(
-            center = dynamicCenter,
-            basePoints = dynBase,
-            stretchPx = dynamicDrive,
-            facingAngleRad = dynamicFacingAngle,
-            neckFocusPower = neckFocusPower,
-            stretchBias = 1.0f
-        )
+
+        // Dynamic shape: branch on dynamicDetachEffect for detached wobble behavior
+        val dynPoints: FloatArray
+        val isDynDetachedWobbling = !isAttached && abs(detachWobbleAmount) > 0.001f
+
+        if (isDynDetachedWobbling) {
+            when (dynamicDetachEffect) {
+                DetachEffect.NeckWobble -> {
+                    // Original: concentrated bulge via neck mask + spring
+                    val dynamicDrive = attachedStretch + detachedWobble
+                    dynPoints = deformAlongBoundaryNormal(
+                        center = dynamicCenter,
+                        basePoints = dynBase,
+                        stretchPx = dynamicDrive,
+                        facingAngleRad = dynamicFacingAngle,
+                        neckFocusPower = neckFocusPower,
+                        stretchBias = 1.0f
+                    )
+                }
+
+                DetachEffect.WavePropagation -> {
+                    if (wavePhase > 0f) {
+                        // Detach angle points from dynamic toward static,
+                        // so the wave origin is the side that faced the static shape
+                        val dynDetachAngle = detachAngleRad + PI.toFloat()
+                        dynPoints = applyWavePropagation(
+                            center = dynamicCenter,
+                            basePoints = dynBase,
+                            amplitudePx = waveAmplitudePx * detachWobbleAmount,
+                            detachAngleRad = dynDetachAngle,
+                            wavePhase = wavePhase,
+                            waveFrequency = waveFrequency,
+                            waveDecayRate = waveDecayRate,
+                        )
+                    } else {
+                        dynPoints = dynBase
+                    }
+                }
+            }
+        } else {
+            // Attached or no wobble: normal neck-based stretch
+            val dynamicDrive = attachedStretch
+            dynPoints = deformAlongBoundaryNormal(
+                center = dynamicCenter,
+                basePoints = dynBase,
+                stretchPx = dynamicDrive,
+                facingAngleRad = dynamicFacingAngle,
+                neckFocusPower = neckFocusPower,
+                stretchBias = 1.0f
+            )
+        }
 
         val staBase = buildStaticBoundarySamplePoints(
             center = staticCenter,
@@ -308,14 +383,56 @@ fun computeGooeyUnion(
             cornerRadiusPx = sCorner,
             samplePointCount = staticSampleCount
         )
-        val staPoints = deformAlongBoundaryNormal(
-            center = staticCenter,
-            basePoints = staBase,
-            stretchPx = staticDrive,
-            facingAngleRad = staticFacingAngle,
-            neckFocusPower = neckFocusPower,
-            stretchBias = 0.9f
-        )
+
+        // Static shape: branch on staticDetachEffect for detached wobble behaviour
+        val staPoints: FloatArray
+        val isStaDetachedWobbling = !isAttached && abs(detachWobbleAmount) > 0.001f
+
+        if (isStaDetachedWobbling) {
+            when (staticDetachEffect) {
+                DetachEffect.NeckWobble -> {
+                    // Original behavior: concentrated bulge via deformAlongBoundaryNormal
+                    val staticDrive = detachWobbleMaxPx * detachWobbleAmount * 0.9f
+                    staPoints = deformAlongBoundaryNormal(
+                        center = staticCenter,
+                        basePoints = staBase,
+                        stretchPx = staticDrive,
+                        facingAngleRad = staticFacingAngle,
+                        neckFocusPower = neckFocusPower,
+                        stretchBias = 0.9f
+                    )
+                }
+
+                DetachEffect.WavePropagation -> {
+                    if (wavePhase > 0f) {
+                        // Wave propagation: traveling sine wave from detach point
+                        staPoints = applyWavePropagation(
+                            center = staticCenter,
+                            basePoints = staBase,
+                            amplitudePx = waveAmplitudePx * detachWobbleAmount,
+                            detachAngleRad = detachAngleRad,
+                            wavePhase = wavePhase,
+                            waveFrequency = waveFrequency,
+                            waveDecayRate = waveDecayRate,
+                        )
+                    } else {
+                        staPoints = staBase
+                    }
+                }
+            }
+        } else {
+            // Attached state: use original neck-based deformation for stretch
+            val attachedStaticDrive =
+                if (isAttached) effectiveStretch * 0.15f else 0f
+            staPoints = deformAlongBoundaryNormal(
+                center = staticCenter,
+                basePoints = staBase,
+                stretchPx = attachedStaticDrive,
+                facingAngleRad = staticFacingAngle,
+                neckFocusPower = neckFocusPower,
+                stretchBias = 0.9f
+            )
+        }
 
         fillPathFromPoints(dynamicPath, dynPoints)
         fillPathFromPoints(staticPath, staPoints)
@@ -375,6 +492,98 @@ fun computeGooeyUnion(
 }
 
 /**
+ * Applies a traveling wave deformation to the boundary sample points,
+ * propagating outward from [detachAngleRad] in both directions.
+ *
+ * The wave displacement at each boundary point is:
+ *   `amplitudePx * sin(freq * angDist - freq * wavePhase) * exp(-decay * angDist) * frontEnvelope`
+ *
+ * where `angDist` is the angular distance from the detach point (0..π),
+ * `wavePhase` controls the wave front position, and `frontEnvelope` fades
+ * the displacement smoothly to zero at the wave front.
+ *
+ * @param center shape center, used for normal computation
+ * @param basePoints interleaved x,y boundary samples (first == last)
+ * @param amplitudePx signed peak amplitude (sign from wobble spring gives oscillation)
+ * @param detachAngleRad angle where detachment occurred (radians)
+ * @param wavePhase how far the wave front has propagated (0..π)
+ * @param waveFrequency spatial frequency (oscillations per radian)
+ * @param waveDecayRate exponential spatial decay rate
+ * @return new interleaved x,y [FloatArray] with wave-deformed positions
+ */
+private fun applyWavePropagation(
+    center: Offset,
+    basePoints: FloatArray,
+    amplitudePx: Float,
+    detachAngleRad: Float,
+    wavePhase: Float,
+    waveFrequency: Float,
+    waveDecayRate: Float,
+): FloatArray {
+    val n = (basePoints.size / 2) - 1
+    if (n < 8 || abs(amplitudePx) < 0.01f) return basePoints
+
+    fun pAt(i: Int): Offset {
+        val ii = ((i % n) + n) % n
+        return Offset(basePoints[ii * 2], basePoints[ii * 2 + 1])
+    }
+
+    fun tangentAt(i: Int): Offset = normalizeSafe(pAt(i + 1) - pAt(i - 1))
+
+    val out = FloatArray(basePoints.size)
+    val waveFront = wavePhase.coerceAtLeast(0.001f)
+
+    for (i in 0 until n) {
+        val p = pAt(i)
+        val t = tangentAt(i)
+        // Outward normal
+        var normal = Offset(-t.y, t.x)
+        if (dot(normal, p - center) < 0f) normal = -normal
+
+        // Angular distance from detach point, wrapped to [0, π]
+        val theta = atan2((p - center).y, (p - center).x)
+        val angDist = abs(wrapAngleDiff(theta - detachAngleRad))
+
+        val disp: Float
+        if (angDist <= waveFront + 0.05f) {
+            // Spatial decay: wave amplitude decreases with distance from detach point
+            val spatialDecay = exp(-waveDecayRate * angDist)
+
+            // Traveling wave: sin(k*x - k*vt) pattern
+            // The wave pattern shifts outward as wavePhase increases
+            val waveValue = sin(waveFrequency * angDist - waveFrequency * wavePhase)
+
+            // Smooth envelope at the wave front so it doesn't appear abruptly
+            val frontEdge = 0.35f // radians of soft edge at the front
+            val frontEnvelope = smoothstep(
+                ((waveFront - angDist) / frontEdge).coerceIn(0f, 1f)
+            )
+
+            disp = amplitudePx * waveValue * spatialDecay * frontEnvelope
+        } else {
+            disp = 0f
+        }
+
+        val q = p + normal * disp
+        out[i * 2] = q.x
+        out[i * 2 + 1] = q.y
+    }
+    out[n * 2] = out[0]
+    out[n * 2 + 1] = out[1]
+    return out
+}
+
+/**
+ * Returns the signed angular difference wrapped to (-π, π].
+ */
+private fun wrapAngleDiff(diff: Float): Float {
+    var d = diff % (2f * PI.toFloat())
+    if (d > PI.toFloat()) d -= 2f * PI.toFloat()
+    if (d <= -PI.toFloat()) d += 2f * PI.toFloat()
+    return d
+}
+
+/**
  * Snapshot of every value that feeds into the background computation.
  * Used by [snapshotFlow] inside [rememberGooeyUnionState] to detect changes.
  */
@@ -386,6 +595,8 @@ private data class ComputeInput(
     val isPullingApart: Boolean,
     val stretchAmount: Float,
     val wobbleAmount: Float,
+    val detachAngleRad: Float,
+    val wavePhase: Float,
 )
 
 /**
@@ -433,6 +644,12 @@ class GooeyUnionState internal constructor(initialParams: GooeyUnionParams) {
     internal val stretchAnim = Animatable(0f)
     internal val wobbleAnim = Animatable(0f)
     internal var prevAttached by mutableStateOf(true)
+
+    /** Angle (radians) on the static shape where the most recent detach occurred. */
+    internal var detachAngleRad by mutableFloatStateOf(0f)
+
+    /** Animated wave front position: 0 → π as the wave propagates across the static boundary. */
+    internal val wavePhaseAnim = Animatable(0f)
 }
 
 /**
@@ -497,14 +714,41 @@ fun rememberGooeyUnionState(
         else state.stretchAnim.snapTo(0f)
     }
 
-    // Detach wobble spring
+    // Detach wobble spring + optional wave propagation
     LaunchedEffect(state.isAttached) {
         if (state.prevAttached && !state.isAttached) {
+            // Capture the detach angle (direction from static center to dynamic center)
+            val dir = state.dynamicCenter - state.staticCenter
+            state.detachAngleRad = atan2(dir.y, dir.x)
+
+            // Snap animations to starting values
             state.wobbleAnim.snapTo(1f)
-            state.wobbleAnim.animateTo(
-                targetValue = 0f,
-                animationSpec = spring(dampingRatio = 0.35f, stiffness = 280f)
-            )
+
+            // 1. Wobble spring provides amplitude oscillation + decay (both modes use this)
+            launch {
+                state.wobbleAnim.animateTo(
+                    targetValue = 0f,
+                    animationSpec = spring(dampingRatio = 0.35f, stiffness = 280f)
+                )
+            }
+
+            // 2. Wave phase: needed when either shape uses WavePropagation
+            val needsWave =
+                state.params.dynamicDetachEffect == DetachEffect.WavePropagation ||
+                        state.params.staticDetachEffect == DetachEffect.WavePropagation
+            if (needsWave) {
+                state.wavePhaseAnim.snapTo(0f)
+                launch {
+                    state.wavePhaseAnim.animateTo(
+                        targetValue = PI.toFloat(),
+                        animationSpec = tween(
+                            durationMillis = state.params.wavePropagationMs,
+                            easing = FastOutSlowInEasing
+                        )
+                    )
+                }
+            }
+
             state.isPullingApart = false
             state.gapVelocityEma = 0f
         }
@@ -522,6 +766,8 @@ fun rememberGooeyUnionState(
                 isPullingApart = state.isPullingApart,
                 stretchAmount = state.stretchAnim.value,
                 wobbleAmount = state.wobbleAnim.value,
+                detachAngleRad = state.detachAngleRad,
+                wavePhase = state.wavePhaseAnim.value,
             )
         }
             .mapLatest { input ->
@@ -534,6 +780,8 @@ fun rememberGooeyUnionState(
                         isPullingApart = input.isPullingApart,
                         stretchAmount = input.stretchAmount,
                         detachWobbleAmount = input.wobbleAmount,
+                        detachAngleRad = input.detachAngleRad,
+                        wavePhase = input.wavePhase,
                     )
                 }
             }
@@ -1095,7 +1343,7 @@ data class AnchorOffsetPoints(
  * aligned with [facingDir], then walks outward to find two points
  * that straddle the facing direction with enough chord width.
  *
- * @param center shape centre, used for radial direction tests
+ * @param center shape center, used for radial direction tests
  * @param points interleaved x,y boundary samples (first == last)
  * @param facingDir unit direction the ligament should face toward
  * @param halfThickness desired half-width of the ligament at the anchor
@@ -1238,6 +1486,13 @@ private fun GooeyUnionPreview() {
     var bridgeHandleScale by remember { mutableFloatStateOf(1.0f) }
     var detachWobbleMaxPx by remember { mutableFloatStateOf(18f) }
 
+    var dynamicDetachEffect by remember { mutableStateOf(DetachEffect.NeckWobble) }
+    var staticDetachEffect by remember { mutableStateOf(DetachEffect.NeckWobble) }
+    var waveFrequency by remember { mutableFloatStateOf(6f) }
+    var waveDecayRate by remember { mutableFloatStateOf(1.0f) }
+    var waveAmplitudePx by remember { mutableFloatStateOf(22f) }
+    var wavePropagationMs by remember { mutableFloatStateOf(1000f) }
+
     var debugEnabled by remember { mutableStateOf(true) }
     var debugDrawLigament by remember { mutableStateOf(true) }
     var debugDrawHandles by remember { mutableStateOf(true) }
@@ -1261,6 +1516,12 @@ private fun GooeyUnionPreview() {
         bridgeThicknessMinPx = bridgeThicknessMinPx,
         bridgeHandleScale = bridgeHandleScale,
         detachWobbleMaxPx = detachWobbleMaxPx,
+        dynamicDetachEffect = dynamicDetachEffect,
+        staticDetachEffect = staticDetachEffect,
+        waveFrequency = waveFrequency,
+        waveDecayRate = waveDecayRate,
+        waveAmplitudePx = waveAmplitudePx,
+        wavePropagationMs = wavePropagationMs.toInt(),
     )
 
     val state = rememberGooeyUnionState(params)
@@ -1393,6 +1654,7 @@ private fun GooeyUnionPreview() {
                     if (result != null) {
                         append(" gap=${"%.1f".format(result.gapPx)}")
                     }
+                    append(" wave=${"%.2f".format(state.wavePhaseAnim.value)}")
                 },
                 color = Color.White,
                 maxLines = 2,
@@ -1415,7 +1677,7 @@ private fun GooeyUnionPreview() {
                 contentWindowInsets = { WindowInsets.safeDrawing }
             ) {
                 var selectedTab by rememberSaveable { mutableStateOf(0) }
-                val tabTitles = listOf("Shapes", "Tuning")
+                val tabTitles = listOf("Shapes", "Tuning", "Detach")
 
                 Column(
                     modifier = Modifier
@@ -1611,7 +1873,7 @@ private fun GooeyUnionPreview() {
                                 Spacer(Modifier.height(10.dp))
                             }
 
-                            else -> {
+                            1 -> {
                                 Text(
                                     "Detach wobble amplitude = ${"%.0f".format(detachWobbleMaxPx)} px",
                                     color = Color.White
@@ -1711,6 +1973,107 @@ private fun GooeyUnionPreview() {
                                         "Spans",
                                         debugDrawArcSpans
                                     ) { debugDrawArcSpans = !debugDrawArcSpans }
+                                }
+
+                                Spacer(Modifier.height(18.dp))
+                            }
+
+                            2 -> {
+                                Text("Dynamic detach effect", color = Color.White)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DebugToggleText(
+                                        "NeckWobble",
+                                        dynamicDetachEffect == DetachEffect.NeckWobble
+                                    ) {
+                                        dynamicDetachEffect = DetachEffect.NeckWobble
+                                    }
+                                    DebugToggleText(
+                                        "WavePropagation",
+                                        dynamicDetachEffect == DetachEffect.WavePropagation
+                                    ) {
+                                        dynamicDetachEffect = DetachEffect.WavePropagation
+                                    }
+                                }
+
+                                Spacer(Modifier.height(14.dp))
+
+                                Text("Static detach effect", color = Color.White)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DebugToggleText(
+                                        "NeckWobble",
+                                        staticDetachEffect == DetachEffect.NeckWobble
+                                    ) {
+                                        staticDetachEffect = DetachEffect.NeckWobble
+                                    }
+                                    DebugToggleText(
+                                        "WavePropagation",
+                                        staticDetachEffect == DetachEffect.WavePropagation
+                                    ) {
+                                        staticDetachEffect = DetachEffect.WavePropagation
+                                    }
+                                }
+
+                                Spacer(Modifier.height(14.dp))
+
+                                val eitherUsesWave =
+                                    dynamicDetachEffect == DetachEffect.WavePropagation ||
+                                            staticDetachEffect == DetachEffect.WavePropagation
+
+                                if (eitherUsesWave) {
+                                    Text(
+                                        "Wave parameters (shared)",
+                                        color = Color(0xFF7CFFB2)
+                                    )
+
+                                    Spacer(Modifier.height(6.dp))
+
+                                    Text(
+                                        "Wave frequency = ${"%.1f".format(waveFrequency)} osc/rad",
+                                        color = Color.White
+                                    )
+                                    Slider(
+                                        value = waveFrequency,
+                                        onValueChange = {
+                                            waveFrequency = it.coerceIn(1f, 20f)
+                                        },
+                                        valueRange = 1f..20f
+                                    )
+
+                                    Text(
+                                        "Wave decay rate = ${"%.2f".format(waveDecayRate)}",
+                                        color = Color.White
+                                    )
+                                    Slider(
+                                        value = waveDecayRate,
+                                        onValueChange = {
+                                            waveDecayRate = it.coerceIn(0f, 4f)
+                                        },
+                                        valueRange = 0f..4f
+                                    )
+
+                                    Text(
+                                        "Wave amplitude = ${"%.0f".format(waveAmplitudePx)} px",
+                                        color = Color.White
+                                    )
+                                    Slider(
+                                        value = waveAmplitudePx,
+                                        onValueChange = {
+                                            waveAmplitudePx = it.coerceIn(2f, 60f)
+                                        },
+                                        valueRange = 2f..60f
+                                    )
+
+                                    Text(
+                                        "Wave propagation duration = ${"%.0f".format(wavePropagationMs)} ms",
+                                        color = Color.White
+                                    )
+                                    Slider(
+                                        value = wavePropagationMs,
+                                        onValueChange = {
+                                            wavePropagationMs = it.coerceIn(200f, 3000f)
+                                        },
+                                        valueRange = 200f..3000f
+                                    )
                                 }
 
                                 Spacer(Modifier.height(18.dp))
